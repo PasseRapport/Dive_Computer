@@ -645,7 +645,7 @@
         "uuid": "6749645a-a7ea-4eb0-9e4c-e6953362916c"
       }
     ],
-    "used_designators": "R6-9,J1,#PWR16-19,BATTERIE1,TP1,JP1",
+    "used_designators": "#PWR6,#PWR21,R10,C9-10",
     "variants": []
   },
   "sheets": [
