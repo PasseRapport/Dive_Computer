@@ -4463,12 +4463,6 @@
 		(uuid "3247bd05-3fd1-469a-ab50-471a1e75aba3")
 	)
 	(junction
-		(at 60.96 39.37)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "3bdb03cc-c708-412d-a631-23b2fa0ab35f")
-	)
-	(junction
 		(at 259.08 90.17)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4479,12 +4473,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "478fc1d3-c1f5-487e-a01d-c50a0948a901")
-	)
-	(junction
-		(at 60.96 43.18)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "4a89e457-82bb-461f-ac74-3557c45108a2")
 	)
 	(junction
 		(at 251.46 90.17)
@@ -4892,16 +4880,6 @@
 	)
 	(wire
 		(pts
-			(xy 60.96 39.37) (xy 66.04 39.37)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "30207d77-db99-41d9-8553-ef983b98ade7")
-	)
-	(wire
-		(pts
 			(xy 48.26 41.91) (xy 48.26 39.37)
 		)
 		(stroke
@@ -5112,7 +5090,7 @@
 	)
 	(wire
 		(pts
-			(xy 59.69 39.37) (xy 60.96 39.37)
+			(xy 59.69 39.37) (xy 66.04 39.37)
 		)
 		(stroke
 			(width 0)
@@ -5132,7 +5110,7 @@
 	)
 	(wire
 		(pts
-			(xy 220.98 57.15) (xy 237.49 57.15)
+			(xy 220.98 57.15) (xy 231.14 57.15)
 		)
 		(stroke
 			(width 0)
@@ -5842,16 +5820,6 @@
 	)
 	(wire
 		(pts
-			(xy 60.96 39.37) (xy 60.96 43.18)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c8555066-4dcf-4164-88bd-8f07fcc38a1a")
-	)
-	(wire
-		(pts
 			(xy 217.17 85.09) (xy 217.17 87.63)
 		)
 		(stroke
@@ -6160,16 +6128,6 @@
 		)
 		(uuid "03a2155f-61d5-4d2f-942c-735ef999d639")
 	)
-	(label "BAT+"
-		(at 22.86 104.14 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "057c2d02-8ec9-4200-bbd8-91f07a770ac6")
-	)
 	(label "CS"
 		(at 91.44 107.95 180)
 		(effects
@@ -6249,16 +6207,6 @@
 			(justify left bottom)
 		)
 		(uuid "42fd0b63-bb12-4b34-9830-cc1f7d55c785")
-	)
-	(label "BAT+"
-		(at 237.49 57.15 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "44ce6ea5-431a-47b5-8504-657a2d302cf7")
 	)
 	(label "Data{slash}Command"
 		(at 91.44 115.57 180)
@@ -7820,6 +7768,85 @@
 		)
 	)
 	(symbol
+		(lib_id "power:VCC")
+		(at 231.14 57.15 270)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "53a81438-4224-4aca-8cdb-8ef3df9f60a8")
+		(property "Reference" "#PWR023"
+			(at 227.33 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "VCC"
+			(at 234.95 57.1499 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 231.14 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 231.14 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"VCC\""
+			(at 231.14 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "9e39a57f-8447-4744-aefa-4384d4b4cd3d")
+		)
+		(instances
+			(project "Dive_Computer"
+				(path "/6749645a-a7ea-4eb0-9e4c-e6953362916c"
+					(reference "#PWR023")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+3.3V")
 		(at 82.55 102.87 270)
 		(unit 1)
@@ -9155,7 +9182,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_1210_3225Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 116.84 63.5 0)
 			(hide yes)
 			(show_name no)
@@ -9474,7 +9501,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_1210_3225Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 259.08 85.09 0)
 			(hide yes)
 			(show_name no)
@@ -9755,6 +9782,84 @@
 			(project "Dive_Computer"
 				(path "/6749645a-a7ea-4eb0-9e4c-e6953362916c"
 					(reference "#PWR020")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:VCC")
+		(at 22.86 104.14 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "a74a9c8a-3dd0-44f4-b5e0-604401b8984e")
+		(property "Reference" "#PWR022"
+			(at 22.86 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "VCC"
+			(at 22.86 99.06 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 22.86 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 22.86 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"VCC\""
+			(at 22.86 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "f8509e01-b4f2-4ba2-afd2-970cab1643f6")
+		)
+		(instances
+			(project "Dive_Computer"
+				(path "/6749645a-a7ea-4eb0-9e4c-e6953362916c"
+					(reference "#PWR022")
 					(unit 1)
 				)
 			)
