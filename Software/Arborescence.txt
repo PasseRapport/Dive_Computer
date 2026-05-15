@@ -1,0 +1,26 @@
+DiveComputer/
+├── CMakeLists.txt (Racine)
+├── sdkconfig
+├── main/
+│   ├── CMakeLists.txt
+│   ├── idf_component.yml
+│   ├── main.c
+│   ├── components/
+│   │   ├── lps28dfw_reg.c
+│   │   ├── lps28dfw_reg.h
+│   │   ├── oled_display.c
+│   │   ├── oled_display.h
+│   ├── images/
+│   │   ├── CMakeLists.txt
+│   │   ├── fish.c
+│   │   ├── icon_sun.c
+│   │   ├── nautilus.c
+│   │   └── sanic.c
+│   └── ui/
+│       ├── ui_controller.c
+│       ├── ui_controller.h
+│       ├── ui_layout.c
+│       ├── ui_layout.h
+│       └── ui_model.h
+└── build
+    
