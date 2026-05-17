@@ -1,4 +1,4 @@
-# \## Nautilus Dive Computer
+# \# Nautilus Dive Computer
 
 # 
 
@@ -6,7 +6,7 @@
 
 # 
 
-# \### Key Features
+# \## Key Features
 
 # 
 
@@ -36,7 +36,7 @@
 
 # 
 
-# \### Mechanical Design
+# \## Mechanical Design
 
 # 
 
@@ -52,7 +52,7 @@
 
 # 
 
-# \### Tech Stack \& Components
+# \## Tech Stack \& Components
 
 # 
 
