@@ -1,68 +1,56 @@
-# \# 🌊 Nautilus Dive Computer
+# \## Nautilus Dive Computer
 
 # 
 
-# !\[Nautilus Cover](https://via.placeholder.com/800x400?text=Nautilus+Dive+Computer+Cover+Image)
-
-# \*Note: Replace the link above with a real photo of your finished prototype.\*
+# Nautilus is a prototype dive computer specifically designed for freediving and spearfishing. Powered by an ESP32 microcontroller, it features a sealed, buttonless waterproof enclosure utilizing accelerometer-based tap detection and wireless charging.
 
 # 
 
-# \*\*Nautilus\*\* is a custom-built, open-source dive computer powered by an ESP32 microcontroller. Designed for freedivers and underwater explorers, it features a vibrant OLED display, fluid UI animations, and a completely sealed waterproof enclosure utilizing accelerometer-based tap detection instead of traditional mechanical buttons.
+# \### Key Features
 
 # 
 
-# \## ✨ Key Features
+# \*\*Hardware \& Interface\*\*
+
+# \* \*\*1.27" Color OLED Display:\*\* High-contrast screen ensuring perfect readability in every condition.
+
+# \* \*\*Fluid UI:\*\* Custom user interface built with LVGL, featuring smooth 60fps transitions.
+
+# \* \*\*Tap-to-Control:\*\* Navigation is handled by an internal accelerometer that detects physical taps on the casing, eliminating the need for mechanical buttons and preventing leaks.
+
+# \* \*\*Wireless Charging:\*\* Completely sealed power management using a dedicated wireless charging receiver.
 
 # 
 
-# \### 🖥️ Hardware \& Interface
+# \*\*Dive Tracking\*\*
 
-# \* \*\*1.27" Color OLED Display:\*\* High-contrast screen ensuring perfect readability underwater, even in low-light or murky conditions.
+# \* \*\*Real-Time Metrics:\*\* Current Depth, Dive Time, Water Temperature, and Last Dive Depth.
 
-# \* \*\*Fluid UI powered by LVGL:\*\* Custom-built user interface featuring 60fps smooth transitions, ease-in-out animations, and an intuitive sliding carousel menu.
+# \* \*\*Surface Recovery Timer:\*\* Automatically triggers upon surfacing.
 
-# \* \*\*Tap-to-Control (Accelerometer):\*\* Zero hull penetrations required. Navigation is handled by an internal accelerometer that detects physical taps on the casing, ensuring maximum depth rating and zero leak points.
+# \* \*\*Session Statistics:\*\* Tracks Max Depth, Total Run Time, Max Dive Time, and Total Dives.
 
-# \* \*\*High-Precision Pressure Sensor:\*\* Real-time depth and temperature monitoring.
+# \* \*\*Environment Selection:\*\* Toggle between Fresh Water and Salt Water for accurate pressure-to-depth conversion.
 
-# 
-
-# \### 🤿 Dive Tracking \& Software
-
-# \* \*\*Real-Time Dive Metrics:\*\* Displays Current Depth, Dive Time, Water Temperature, and Last Dive Depth.
-
-# \* \*\*Surface Recovery Timer:\*\* Automatically triggers a highly visible recovery timer upon surfacing.
-
-# \* \*\*Session Statistics:\*\* Tracks and saves Max Depth, Total Run Time, Max Dive Time, and Total Number of Dives.
-
-# \* \*\*Environment Selection:\*\* Toggle between Fresh Water and Salt Water for accurate water density calculations (1.000 vs \~1.025).
-
-# \* \*\*BLE Connectivity:\*\* Bluetooth Low Energy integration allows you to sync and download your latest session statistics directly to your smartphone after a dive.
+# \* \*\*BLE Connectivity:\*\* Bluetooth Low Energy integration to sync session statistics to a smartphone.
 
 # 
 
-# \## ⚙️ Mechanical Design
+# \### Mechanical Design
 
 # 
 
-# The enclosure is designed to withstand high pressure while maintaining a compact, wearable form factor.
+# The enclosure is designed to withstand high pressure while maintaining a compact form factor.
 
 # 
 
-# \* 🔗 \*\*\[View the 3D Model on Onshape](https://cad.onshape.com/documents/cc2f090fad22f578b68190d0/w/ffbf50c58a8e366da5acdcdc/e/88baec5796e801b1a2b4a1f3)\*\*
+# \* \[View the 3D Model on Onshape](https://cad.onshape.com/documents/cc2f090fad22f578b68190d0/w/ffbf50c58a8e366da5acdcdc/e/88baec5796e801b1a2b4a1f3)
 
-# \* 📄 \*\*\[Download the Exploded View PDF](./Exploded\_view.pdf)\*\* \*(Make sure to place `Exploded\_view.pdf` in the root of your repository).\*
-
-# 
-
-# > \*\*Tip:\*\* You can also add a screenshot of your exploded view here for quick visualization!
-
-# > `!\[Exploded View](path\_to\_your\_screenshot.png)`
+# \* \[Download the Exploded View PDF](./Exploded\_view.pdf) \*(Note: Ensure the PDF is placed in the root of the repository)\*
 
 # 
 
-# \## 🛠️ Tech Stack \& Components
+# \### Tech Stack \& Components
 
 # 
 
@@ -70,35 +58,13 @@
 
 # \* \*\*Framework:\*\* ESP-IDF (C/C++)
 
-# \* \*\*Graphics Library:\*\* LVGL (Light and Versatile Graphics Library)
+# \* \*\*Graphics Library:\*\* LVGL
 
-# \* \*\*Sensors:\*\* \* Accelerometer (for UI navigation)
+# \* \*\*Sensors:\*\* \* Accelerometer (for UI navigation): \*\*LIS12DUX1\*\*
 
-# &#x20; \* High-resolution absolute pressure sensor (Depth/Temp)
+# &#x20; \* Absolute pressure \& temperature: \*\*MS583730BA01-50\*\*
 
-# \* \*\*Display Driver:\*\* SSD1351 (SPI interface overclocked for fluid 60fps rendering)
+# \* \*\*Power Management:\*\* Wireless Power Receiver \*\*LTC4120EUD-4.2#PBF\*\*
 
-# 
-
-# \## 🚀 Getting Started
-
-# 
-
-# \### Prerequisites
-
-# \* \[ESP-IDF](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/) (v5.0 or later recommended)
-
-# \* C/C++ build tools
-
-# 
-
-# \### Installation
-
-# 1\. Clone the repository:
-
-# &#x20;  ```bash
-
-# &#x20;  git clone \[https://github.com/](https://github.com/)\[YourUsername]/Nautilus.git
-
-# &#x20;  cd Nautilus
+# \* \*\*Display Driver:\*\* SSD1351 (SPI interface)
 
