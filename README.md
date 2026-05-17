@@ -44,9 +44,11 @@
 
 # 
 
-# \* \[View the 3D Model on Onshape](https://cad.onshape.com/documents/cc2f090fad22f578b68190d0/w/ffbf50c58a8e366da5acdcdc/e/88baec5796e801b1a2b4a1f3)
+# !\[Exploded View](./Exploded\_view.png)
 
-# \* \[Download the Exploded View PDF](./Exploded\_view.pdf) \*(Note: Ensure the PDF is placed in the root of the repository)\*
+# 
+
+# \* \[View the 3D Model on Onshape](https://cad.onshape.com/documents/cc2f090fad22f578b68190d0/w/ffbf50c58a8e366da5acdcdc/e/88baec5796e801b1a2b4a1f3)
 
 # 
 
