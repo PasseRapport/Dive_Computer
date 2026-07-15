@@ -50,10 +50,16 @@
         "silk_text_thickness": 0.1,
         "silk_text_upright": false,
         "zones": {
-          "min_clearance": 0.2
+          "min_clearance": 0.1
         }
       },
-      "diff_pair_dimensions": [],
+      "diff_pair_dimensions": [
+        {
+          "gap": 0.0,
+          "via_gap": 0.0,
+          "width": 0.0
+        }
+      ],
       "drc_exclusions": [],
       "meta": {
         "version": 2
@@ -126,20 +132,20 @@
         "max_error": 0.005,
         "min_clearance": 0.0,
         "min_connection": 0.0,
-        "min_copper_edge_clearance": 0.5,
+        "min_copper_edge_clearance": 0.1,
         "min_groove_width": 0.0,
-        "min_hole_clearance": 0.25,
+        "min_hole_clearance": 0.1,
         "min_hole_to_hole": 0.25,
-        "min_microvia_diameter": 0.2,
-        "min_microvia_drill": 0.1,
+        "min_microvia_diameter": 0.1,
+        "min_microvia_drill": 0.01,
         "min_resolved_spokes": 2,
         "min_silk_clearance": 0.0,
         "min_text_height": 0.8,
         "min_text_thickness": 0.08,
-        "min_through_hole_diameter": 0.3,
+        "min_through_hole_diameter": 0.1,
         "min_track_width": 0.2,
         "min_via_annular_width": 0.1,
-        "min_via_diameter": 0.5,
+        "min_via_diameter": 0.2,
         "solder_mask_to_copper_clearance": 0.0,
         "use_height_for_length_calcs": true
       },
@@ -187,7 +193,9 @@
           "td_width_to_size_filter_ratio": 0.9
         }
       ],
-      "track_widths": [],
+      "track_widths": [
+        0.0
+      ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
           "corner_radius_percentage": 80,
@@ -214,7 +222,12 @@
           "spacing": 0.6
         }
       },
-      "via_dimensions": [],
+      "via_dimensions": [
+        {
+          "diameter": 0.0,
+          "drill": 0.0
+        }
+      ],
       "zones_allow_external_fillets": false
     },
     "ipc2581": {
@@ -492,8 +505,8 @@
         "schematic_color": "rgba(0, 0, 0, 0.000)",
         "track_width": 0.2,
         "tuning_profile": "",
-        "via_diameter": 0.6,
-        "via_drill": 0.3,
+        "via_diameter": 0.4,
+        "via_drill": 0.2,
         "wire_width": 6
       }
     ],
@@ -508,7 +521,7 @@
     "last_paths": {
       "idf": "",
       "netlist": "",
-      "plot": "",
+      "plot": "fab/",
       "specctra_dsn": "",
       "vrml": ""
     },
@@ -876,6 +889,54 @@
           "label": "#",
           "name": "${ITEM_NUMBER}",
           "show": false
+        },
+        {
+          "group_by": false,
+          "label": "VF typ. (V)",
+          "name": "VF typ. (V)",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "ΦV typ. (lm)",
+          "name": "ΦV typ. (lm)",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Φe typ. (mW)",
+          "name": "Φe typ. (mW)",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "λDom typ. (nm)",
+          "name": "λDom typ. (nm)",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "λPeak typ. (nm)",
+          "name": "λPeak typ. (nm)",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "2θ50% typ. (°)",
+          "name": "2θ50% typ. (°)",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Chip Technology",
+          "name": "Chip Technology",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Emitting Color",
+          "name": "Emitting Color",
+          "show": false
         }
       ],
       "filter_string": "",
@@ -926,7 +987,7 @@
         "uuid": "7a02f2ae-d906-40da-801c-cd0217bd4d3c"
       }
     ],
-    "used_designators": "C1,C6-8,D3-4,#PWR4-12,L1,J1,R4-15",
+    "used_designators": "H1-4",
     "variants": []
   },
   "sheets": [
