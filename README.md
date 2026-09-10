@@ -51,9 +51,7 @@ As a maker, making waterproof buttons and moving parts that survive water pressu
 
 ## Mechanical Design
 
-The enclosure is a sealed housing designed without buttons, external ports, or dynamic seals that could leak under pressure. The only external physical control is a slider with an embedded magnet that switches power through the solid casing wall. Outside of that, the only interfaces are the front OLED window, the pressure sensor port, and the wireless charging coil on the back.
-
-The enclosure is designed as a two-part sandwich assembly. Waterproofing is maintained by a static O-ring compressed between the two halves with 12 M2 screws to ensure even clamping pressure around the perimeter, while the front protective glass is bonded and sealed using UV-cure resin.
+The housing is a two-part sandwich assembly designed without push-buttons, external connectors, or dynamic seals. Waterproofing relies entirely on static seals: a perimeter O-ring evenly compressed between the two halves by 12 M2 screws, and a front protective glass bonded with UV-cure resin. The only physical control is an external magnetic slider that switches power through the solid case wall without any hull penetration.
 
 <p align="center">
   <img src="./Exploded_view.png" alt="Exploded View of the Enclosure" width="50%">
