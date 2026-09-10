@@ -135,15 +135,18 @@ Software/DiveComputer/main/
 ### Dive State Machine
 
 ```
-                  depth > 1.0m                    depth < 0.3m
-    ┌─────────┐ ───────────────> ┌───────────┐ ───────────────> ┌────────────┐
-    │ SURFACE │                  │  DIVING   │                  │ POST-DIVE  │
-    │         │ <─────────────── │           │                  │ (Recovery) │
-    └─────────┘   recovery > 10m └───────────┘                  └────────────┘
-         ^                                                            │
-         │                                                            │
-         └────────────────────────────────────────────────────────────┘
-                              recovery timer expires
+                 depth > 1.0m
+   ┌──────────┐ ───────────────> ┌──────────┐
+   │ SURFACE  │                  │  DIVING  │ <──────┐
+   └──────────┘                  └──────────┘        │
+        ^                             │              │ depth > 1.0m
+        │                             │ depth < 0.3m │ (next dive)
+        │                             v              │
+        │                      ┌─────────────┐       │
+        └───────────────────── │  POST-DIVE  │ ──────┘
+           recovery >= 10 min  │ (Recovery)  │
+                               └─────────────┘
+
 ```
 
 ### Tap Detection Pipeline
