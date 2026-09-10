@@ -6,7 +6,7 @@
 
 A wearable freediving computer developed as a hardware and software **Proof of Concept (PoC)** to validate two core design ideas: **accelerometer tap navigation** and **contactless inductive charging** inside a 100% sealed, penetration-free enclosure.
 
-In underwater instrumentation, mechanical push-buttons and charging contacts are the primary failure points (O-ring degradation, salt jams, and contact corrosion). This prototype eliminates through-hull penetrations by testing:
+For an independent maker, fabricating pressure-proof moving parts—such as dynamic O-ring push-buttons or sealed charging ports—without industrial CNC tolerances or injection molding is notoriously difficult and error-prone. Instead of fighting mechanical leak paths, this prototype bypasses them entirely through a 100% solid-state, penetration-free approach:
 1. **Tap-based gesture navigation** — using an accelerometer with hardware interrupts to replace mechanical buttons.
 2. **Inductive wireless charging** — delivering power through the casing with an LTC4120 receiver and LTC4125 charging dock.
 3. **Magnetic battery cutoff** — isolating the LiPo battery with an external magnet for zero-drain storage.
