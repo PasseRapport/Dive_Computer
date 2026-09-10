@@ -3,7 +3,7 @@
 #include "ui_model.h"
 #include "oled_display.h"
 #include "esp_timer.h"
-
+#include "battery.h"
 // Instanciation de la variable globale du Modèle avec les nouveaux champs
 dive_state_t system_state = {
     .current_depth = 0.0f,
@@ -35,7 +35,7 @@ static void dive_logic_task(lv_timer_t * timer) {
     ui_refresh_temp(system_state.temperature);
 
     // 1. DÉTECTION DÉBUT DE PLONGÉE
-    if (!system_state.is_diving && system_state.current_depth > 0.5f) {
+    if (!system_state.is_diving && system_state.current_depth > 1.0f) {
         system_state.is_diving = true;
         system_state.dive_start_us = esp_timer_get_time();
         system_state.total_dives++;
@@ -93,10 +93,20 @@ static void dive_logic_task(lv_timer_t * timer) {
     }
 }
 
+
+
+// --- Logique de la Batterie ---
+static void update_battery_cb(lv_timer_t * timer) {
+    update_battery_percentage();
+    ui_refresh_battery(system_state.battery_percentage);
+}
+
 void init_ui_controllers(void) {
     lv_timer_create(update_runtime_cb, 60000, NULL);
     lv_timer_create(dive_logic_task, 100, NULL);
+    lv_timer_create(update_battery_cb, 10000, NULL);
     update_runtime_cb(NULL);
+    update_battery_cb(NULL);
 }
 
 // --- Logique de la Luminosité ---
@@ -107,3 +117,5 @@ void handle_brightness_change(uint8_t new_level) {
     uint8_t hw_level = new_level * 3; 
     set_display_brightness(hw_level);
 }
+
+

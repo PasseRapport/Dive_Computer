@@ -29,6 +29,7 @@ typedef struct {
     uint32_t total_dives;    // Nombre de plongées de la session
     bool is_salt_water;      // true = Mer, false = Eau Douce
     uint8_t brightness_lvl;  // Niveau actuel (0 à 5)
+    uint8_t battery_percentage; // % de batterie (0-100)
 } dive_state_t;
 
 // Variable globale accessible partout

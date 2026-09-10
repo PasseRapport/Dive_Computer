@@ -13,7 +13,7 @@
 #define MOSI_PIN  6
 #define DC_PIN    7
 #define CS_PIN    2
-#define RST_PIN   3
+#define RST_PIN   5
 
 #define LCD_HOST       SPI2_HOST
 #define SCREEN_WIDTH   128
@@ -141,5 +141,13 @@ void set_display_brightness(uint8_t level) {
     
     if (io_handle != NULL) {
         esp_lcd_panel_io_tx_param(io_handle, 0xC7, &level, 1);
+    }
+}
+
+void oled_display_power_off(void) {
+    if (io_handle != NULL) {
+        // Commande 0xAE : Set Display OFF (Sleep Mode)
+        // Cela coupe le convertisseur DC-DC de l'écran pour une conso minimale
+        esp_lcd_panel_io_tx_param(io_handle, 0xAE, NULL, 0);
     }
 }

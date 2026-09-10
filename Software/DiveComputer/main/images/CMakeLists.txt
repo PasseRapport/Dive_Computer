@@ -5,5 +5,7 @@ target_sources(${COMPONENT_LIB} PRIVATE
     "nautilus.c"
     "sanic.c"
     "turn_fish.c"
+    "icon_drop.c"
+    "icon_wave.c"
    
 )

@@ -4,7 +4,7 @@ set(SOURCES "main.c")
 # Enregistrement avec les chemins d'inclusion pour que VS Code trouve les .h
 idf_component_register(SRCS "${SOURCES}"
                        INCLUDE_DIRS "." "components" "ui"
-                       REQUIRES esp_lcd lvgl driver esp_timer)
+                       REQUIRES esp_lcd lvgl driver esp_timer esp_adc)
 
 # On délègue le remplissage des sources aux sous-dossiers
 add_subdirectory(components)
