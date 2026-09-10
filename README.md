@@ -53,6 +53,8 @@ As a maker, making waterproof buttons and moving parts that survive water pressu
 
 The enclosure is a sealed housing designed without buttons, external ports, or dynamic seals that could leak under pressure. The only external physical control is a slider with an embedded magnet that switches power through the solid casing wall. Outside of that, the only interfaces are the front OLED window, the pressure sensor port, and the wireless charging coil on the back.
 
+The enclosure is designed as a two-part sandwich assembly. Waterproofing is maintained by a static O-ring compressed between the two halves with 12 M2 screws to ensure even clamping pressure around the perimeter, while the front protective glass is bonded and sealed using UV-cure resin.
+
 <p align="center">
   <img src="./Exploded_view.png" alt="Exploded View of the Enclosure" width="50%">
 </p>
@@ -153,3 +155,6 @@ The accelerometer's hardware tap interrupt wakes the ESP32, which performs a 100
 ```
 [HW Interrupt] ──> [ISR Queue] ──> [Burst Read (100 samples)] ──> [Axis Analysis] ──> [Direction Filter] ──> [UI Event]
 ```
+
+
+
