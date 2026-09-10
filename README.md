@@ -4,15 +4,15 @@
   <img src="./picture_finished.jpg" alt="Freediving Computer Prototype" width="55%">
 </p>
 
-A wearable freediving computer developed as a hardware and software **Proof of Concept (PoC)** to validate two core design ideas: **accelerometer tap navigation** and **contactless inductive charging** inside a 100% sealed, penetration-free enclosure.
+A freediving computer prototype I built to test two main ideas: **tap navigation via accelerometer** and **wireless charging** in a completely sealed case.
 
-For an independent maker, fabricating pressure-proof moving parts—such as dynamic O-ring push-buttons or sealed charging ports—without industrial CNC tolerances or injection molding is notoriously difficult and error-prone. Instead of fighting mechanical leak paths, this prototype bypasses them entirely through a 100% solid-state, penetration-free approach:
-1. **Tap-based gesture navigation** — using an accelerometer with hardware interrupts to replace mechanical buttons.
-2. **Inductive wireless charging** — delivering power through the casing with an LTC4120 receiver and LTC4125 charging dock.
-3. **Magnetic battery cutoff** — isolating the LiPo battery with an external magnet for zero-drain storage.
-4. **Hybrid mechanical integration** — designing a custom 4-layer PCB tailored around an off-the-shelf color OLED module.
+As an engineering student building this at home, making waterproof buttons and moving parts that survive water pressure without leaking is nearly impossible. To avoid leaks, I skipped physical buttons and external connectors entirely:
+1. **Tap navigation** — tapping the case scrolls and selects menus; the accelerometer detects the shock direction.
+2. **Wireless charging** — sealed inside the case with an LTC4120 receiver, powered by a custom induction dock.
+3. **Magnetic power switch** — an external magnet disconnects the battery so it doesn't drain when stored.
+4. **Custom 4-layer PCB** — designed around the form factor of an off-the-shelf color OLED module.
 
-> **Active Development**: This V1 successfully validated the core architecture in water. A **V2 is currently in active development**, featuring a significantly more compact form factor, higher integration, and additional freediving features.
+> **Status**: This V1 worked and proved the concept in water. I'm now working on a **V2** that is much more compact, with better integration and extra freediving features.
 
 ---
 
