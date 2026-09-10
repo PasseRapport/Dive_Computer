@@ -1,6 +1,6 @@
-﻿# Firmware — Nautilus Dive Computer
+﻿# Firmware — Platypus Dive Computer
 
-ESP-IDF firmware for the Nautilus freediving computer. Targets the **ESP32-C3** (RISC-V, single core, BLE).
+ESP-IDF firmware for the Platypus freediving computer (PoC). Targets the **ESP32-C3** (RISC-V, single core, BLE).
 
 ## Quick Start
 

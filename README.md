@@ -1,12 +1,16 @@
-﻿# Nautilus — Freediving Computer
+﻿# Platypus — Freediving Computer (PoC)
 
 <p align="center">
-  <img src="./picture_finished.jpg" alt="Nautilus Dive Computer" width="55%">
+  <img src="./picture_finished.jpg" alt="Platypus Dive Computer" width="55%">
 </p>
 
-Nautilus is a fully custom dive computer built from scratch — PCB, firmware, enclosure, and UI — designed specifically for **freediving and spearfishing**. No off-the-shelf modules, no dev boards in the final product: just a purpose-built embedded system running on an ESP32-C3.
+**Platypus** is a wearable freediving computer developed as a hardware and software **Proof of Concept (PoC)** to validate a **zero-penetration, hermetically sealed architecture**.
 
-This is a personal project that covers the full product development cycle: schematic capture, 4-layer PCB layout, waterproof mechanical design, real-time firmware, and a custom graphical interface.
+In underwater instrumentation, mechanical push-buttons and exposed charging pins are the primary vectors of failure: dynamic O-rings wear out, salt crusts jam button cavities, and contacts corrode. This PoC eliminates through-hull penetrations entirely by testing:
+1. **Accelerometer-based tap navigation** as a solid-state button replacement.
+2. **Inductive wireless charging** through a completely sealed casing.
+3. **Magnetic battery cutoff** for zero shelf-discharge without opening the housing.
+4. **Hybrid mechanical integration** pairing an off-the-shelf color OLED module with a custom 4-layer carrier PCB.
 
 ---
 
@@ -22,11 +26,11 @@ This is a personal project that covers the full product development cycle: schem
   <img src="./dive_test.gif" alt="Dive Test" width="55%">
 </p>
 
-<p align="center"><em>Live depth tracking during a pool test — automatic dive detection and surface recovery timer.</em></p>
+<p align="center"><em>Live depth tracking during a test — automatic dive detection and surface recovery timer.</em></p>
 
 ---
 
-## Features
+## Key Features
 
 | Category | Details |
 |---|---|
@@ -34,17 +38,18 @@ This is a personal project that covers the full product development cycle: schem
 | **Dive State Machine** | Auto-triggers at 1.0 m depth. Tracks dive time, max depth per dive, and session statistics. |
 | **Surface Recovery Timer** | Starts automatically on surfacing. Color-coded: red until 2× dive time, then green. Auto-hides after 10 min. |
 | **Session Statistics** | Max dive time, max depth, total dives, and device run time — all tracked per session. |
-| **Tap Navigation** | LIS2DUX12 accelerometer detects directional taps on the casing. Left/right to scroll, down to select. No buttons, no seals to fail. |
-| **Battery Monitoring** | ADC with hardware calibration curve. Voltage divider maps LiPo range (3.0–4.2 V) to percentage. |
+| **Tap Navigation** | LIS2DUX12 accelerometer detects directional taps on the casing. Left/right to scroll, down to select. No buttons, no dynamic seals. |
+| **Magnetic Battery Cutoff** | Integrated magnetic switch isolates the LiPo battery with an external magnet (true 0 µA shelf storage while sealed). |
+| **Wireless Charging** | Completely sealed enclosure — power delivered through the case via LTC4120 wireless power receiver. |
 | **Display** | 1.27" SSD1351 color OLED (128×96), driven over SPI with DMA. LVGL handles 60 fps animated transitions. |
+| **Battery Monitoring** | ADC with hardware calibration curve. Voltage divider maps LiPo range (3.0–4.2 V) to percentage. |
 | **Deep Sleep** | Full power-off via menu. GPIO wakeup from accelerometer interrupt. OLED and SPI bus shut down cleanly. |
-| **Wireless Charging** | Sealed enclosure — power is delivered through the case via LTC4120 wireless power receiver. |
 
 ---
 
 ## Mechanical Design
 
-The enclosure is a pressure-rated, sealed housing with no external buttons, ports, or gaskets that could compromise waterproofing. The only interface is the OLED window and the wireless charging coil.
+The enclosure is a pressure-rated, sealed housing with no external buttons, ports, or gaskets that could compromise waterproofing. The only interface is the OLED front window, the pressure port, and the wireless charging coil on the back.
 
 <p align="center">
   <img src="./Exploded_view.png" alt="Exploded View of the Enclosure" width="50%">
@@ -52,31 +57,46 @@ The enclosure is a pressure-rated, sealed housing with no external buttons, port
 
 <p align="center">
   <a href="https://cad.onshape.com/documents/cc2f090fad22f578b68190d0/w/ffbf50c58a8e366da5acdcdc/e/88baec5796e801b1a2b4a1f3">
-    View the 3D model on Onshape →
+    View the 3D model on Onshape ↗
   </a>
 </p>
 
 ---
 
-## Hardware
+## Hardware Architecture
 
-Both PCBs are custom-designed 4-layer boards in KiCad.
+The electronics are split between the wrist unit and a dedicated charging dock.
 
-### Dive Computer Board
+### 1. Dive Computer Board (Wrist Unit)
+
+The core electronics are built around a custom **4-layer PCB** designed in KiCad, dimensioned to mate directly with an off-the-shelf color OLED module:
+
+- **Form Factor & Display**: Sourced a compact 1.27" 128×96 color OLED module (SSD1351 controller, SPI) and tailored the custom 4-layer PCB and enclosure footprint around this geometry.
+- **MCU**: ESP32-C3 (RISC-V core, low power modes, BLE).
+- **Pressure Sensor**: TE MS5837-30BA (gel-protected submersible pressure & temperature sensor on I2C).
+- **Accelerometer**: ST LIS2DUX12 (ultra-low-power, configured for shock/tap detection with hardware interrupt).
+- **Wireless Power Receiver**: Analog Devices LTC4120 with an internal Würth planar receiver coil (WE-WPCC-RX), delivering CC/CV charging to the internal 3.7V LiPo cell.
+- **Magnetic Power Switch**: Integrated Hall-effect sensor / magnetic switch controlling a P-MOSFET gate, enabling complete physical battery disconnection via an external magnet without unsealing the housing.
 
 | Component | Part | Role |
 |---|---|---|
-| MCU | ESP32-C3 | RISC-V core, Wi-Fi/BLE, low power modes |
-| Pressure Sensor | MS5837-30BA | Absolute pressure & temperature (I2C) |
+| MCU | ESP32-C3 | RISC-V core, sensor aggregation, LVGL rendering |
+| Pressure Sensor | MS5837-30BA | Absolute pressure & temperature (I2C @ 100 kHz) |
 | Accelerometer | LIS2DUX12 | Tap detection with hardware interrupt (I2C) |
-| Display | SSD1351 | 1.27" 128×96 color OLED (SPI) |
-| Battery | LiPo 3.7V | Single cell, voltage-divided ADC monitoring |
+| Wireless Charger RX | LTC4120 | Wireless power receiver & CC/CV LiPo charger |
+| Magnetic Disconnect | A1102 + P-MOS | Physical battery isolation via external magnet (0 µA storage) |
+| Display Module | SSD1351 (Off-the-shelf) | 1.27" 128×96 color OLED (SPI with DMA) |
+| Battery | LiPo 3.7V | Single cell, monitored via calibrated ADC voltage divider |
 
-### Wireless Charger Board
+### 2. Wireless Charger Dock (Transmitter)
+
+A companion transmitter base powered via USB-C:
 
 | Component | Part | Role |
 |---|---|---|
-| Receiver IC | LTC4120 | Wireless power receiver, CC/CV LiPo charging |
+| Transmitter IC | LTC4125 | 5W AutoResonant wireless power transmitter |
+| Transmit Coil | Würth WE-WPCC-TX | 24 µH primary coil for inductive power transfer |
+| Input | USB-C (5V) | Power supply |
 
 Source files (KiCad projects, gerbers, BOM): [`Hardware/V1/`](Hardware/V1/)
 
@@ -114,21 +134,22 @@ Software/DiveComputer/main/
 
 ```
                   depth > 1.0m                    depth < 0.3m
-    ┌─────────┐ ───────────────→ ┌────────────┐ ──────────────→ ┌────────────┐
-    │ SURFACE │                  │   DIVING   │                 │ POST-DIVE  │
-    │         │ ←─────────────── │            │                 │ (Recovery) │
-    └─────────┘   recovery > 10m └────────────┘                 └────────────┘
-         ↑                                                            │
+    ┌─────────┐ ───────────────> ┌───────────┐ ───────────────> ┌────────────┐
+    │ SURFACE │                  │  DIVING   │                  │ POST-DIVE  │
+    │         │ <─────────────── │           │                  │ (Recovery) │
+    └─────────┘   recovery > 10m └───────────┘                  └────────────┘
+         ^                                                            │
+         │                                                            │
          └────────────────────────────────────────────────────────────┘
                               recovery timer expires
 ```
 
 ### Tap Detection Pipeline
 
-The accelerometer's hardware tap interrupt wakes the ESP32, which then performs a 100-sample burst read (~10 ms) to capture the full shock waveform. The axis with the largest amplitude delta wins, and its sign determines the direction. A 2000-unit noise floor filter rejects vibrations.
+The accelerometer's hardware tap interrupt wakes the ESP32, which performs a 100-sample burst read (~10 ms) to capture the full shock waveform. The axis with the largest amplitude delta wins, and its sign determines the direction. A 2000-unit noise floor filter rejects accidental vibrations.
 
 ```
-HW Interrupt → ISR Queue → Burst Read (100 samples) → Axis Analysis → Direction → UI Event
+[HW Interrupt] ──> [ISR Queue] ──> [Burst Read (100 samples)] ──> [Axis Analysis] ──> [Direction Filter] ──> [UI Event]
 ```
 
 ---
@@ -152,8 +173,8 @@ idf.py -p COMx flash monitor
 Dive_Computer/
 ├── Hardware/
 │   └── V1/
-│       ├── Computer/       # Main board KiCad project + gerbers
-│       └── Charger/        # Wireless charger KiCad project + gerbers
+│       ├── Computer/       # Main board (4-layer) KiCad project + gerbers
+│       └── Charger/        # Wireless charger dock KiCad project + gerbers
 ├── Software/
 │   └── DiveComputer/       # ESP-IDF firmware project
 ├── Exploded_view.png
