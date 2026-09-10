@@ -1,6 +1,6 @@
-﻿# Firmware — Platypus Dive Computer
+﻿# Firmware — Freediving Computer (PoC)
 
-ESP-IDF firmware for the Platypus freediving computer (PoC). Targets the **ESP32-C3** (RISC-V, single core, BLE).
+ESP-IDF firmware for the freediving computer Proof of Concept (PoC). Targets the **ESP32-C3** (RISC-V, single core, BLE).
 
 ## Quick Start
 
