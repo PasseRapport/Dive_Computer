@@ -1,4 +1,4 @@
-﻿# Freediving Computer (PoC)
+﻿# Freediving Computer
 
 <p align="center">
   <img src="./picture_finished.jpg" alt="Freediving Computer Prototype" width="55%">
@@ -54,7 +54,7 @@ As a maker, making waterproof buttons and moving parts that survive water pressu
 The housing is a two-part sandwich assembly designed without push-buttons, external connectors, or dynamic seals. Waterproofing relies entirely on static seals: a perimeter O-ring evenly compressed between the two halves by 12 M2 screws, and a front protective glass bonded with UV-cure resin. The only physical control is an external magnetic slider that switches power through the solid case wall without any hull penetration.
 
 <p align="center">
-  <img src="./Exploded_view.png" alt="Exploded View of the Enclosure" width="50%">
+  <img src="./Exploded_view.png" alt="Exploded View of the Enclosure" width="70%">
 </p>
 
 <p align="center">
