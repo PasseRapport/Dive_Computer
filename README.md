@@ -6,13 +6,13 @@
 
 A freediving computer prototype I built to test two main ideas: **tap navigation via accelerometer** and **wireless charging** in a completely sealed case.
 
-As an engineering student building this at home, making waterproof buttons and moving parts that survive water pressure without leaking is nearly impossible. To avoid leaks, I skipped physical buttons and external connectors entirely:
+As a maker, making waterproof buttons and moving parts that survive water pressure without leaking is nearly impossible. To avoid leaks, I skipped physical buttons and external connectors entirely:
 1. **Tap navigation** — tapping the case scrolls and selects menus; the accelerometer detects the shock direction.
 2. **Wireless charging** — sealed inside the case with an LTC4120 receiver, powered by a custom induction dock.
 3. **Magnetic power switch** — an external magnet disconnects the battery so it doesn't drain when stored.
 4. **Custom 4-layer PCB** — designed around the form factor of an off-the-shelf color OLED module.
 
-> **Status**: This V1 worked and proved the concept in water. I'm now working on a **V2** that is much more compact, with better integration and extra freediving features.
+> **Status**: This V1 worked and proved the concept in water. I am now working on a **V2** that is more compact, with better integration and extra freediving features.
 
 ---
 
@@ -51,7 +51,7 @@ As an engineering student building this at home, making waterproof buttons and m
 
 ## Mechanical Design
 
-The enclosure is a pressure-rated, sealed housing with no external buttons, ports, or gaskets that could compromise waterproofing. The only interface is the OLED front window, the pressure port, and the wireless charging coil on the back.
+The enclosure is a sealed housing designed without buttons, external ports, or dynamic seals that could leak under pressure. The only external physical control is a slider with an embedded magnet that switches power through the solid casing wall. Outside of that, the only interfaces are the front OLED window, the pressure sensor port, and the wireless charging coil on the back.
 
 <p align="center">
   <img src="./Exploded_view.png" alt="Exploded View of the Enclosure" width="50%">
@@ -153,40 +153,3 @@ The accelerometer's hardware tap interrupt wakes the ESP32, which performs a 100
 ```
 [HW Interrupt] ──> [ISR Queue] ──> [Burst Read (100 samples)] ──> [Axis Analysis] ──> [Direction Filter] ──> [UI Event]
 ```
-
----
-
-## Build & Flash
-
-Requires [ESP-IDF v5.x](https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/get-started/).
-
-```bash
-cd Software/DiveComputer
-idf.py set-target esp32c3
-idf.py build
-idf.py -p COMx flash monitor
-```
-
----
-
-## Repository Structure
-
-```
-Dive_Computer/
-├── Hardware/
-│   └── V1/
-│       ├── Computer/       # Main board (4-layer) KiCad project + gerbers
-│       └── Charger/        # Wireless charger dock KiCad project + gerbers
-├── Software/
-│   └── DiveComputer/       # ESP-IDF firmware project
-├── Exploded_view.png
-├── picture_finished.jpg
-├── interface_demo.gif
-└── dive_test.gif
-```
-
----
-
-## License
-
-This is a personal portfolio project. Source code and hardware designs are shared for educational and demonstration purposes.
