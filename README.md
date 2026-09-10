@@ -25,7 +25,7 @@ As a maker, making waterproof buttons and moving parts that survive water pressu
 <p align="center"><em>Tap-based navigation through the interface — accelerometer detects directional impacts on the casing.</em></p>
 
 <p align="center">
-  <img src="./dive_test.gif" alt="Dive Test" width="55%">
+  <img src="./dive_test.gif" alt="Dive Test" width="90%">
 </p>
 
 <p align="center"><em>Live depth tracking during a test — automatic dive detection and surface recovery timer.</em></p>
