@@ -6,13 +6,13 @@
 
 A freediving computer prototype I built to test two main ideas: **tap navigation via accelerometer** and **wireless charging** in a completely sealed case.
 
-Building waterproof buttons and moving parts that survive water pressure without leaking is nearly impossible without industrial tooling. To avoid leaks, I skipped physical buttons and external connectors entirely:
+As a maker, building waterproof buttons and moving parts that survive water pressure without leaking is nearly impossible. To avoid leaks, I skipped physical buttons and external connectors entirely:
 1. **Tap navigation** — tapping the case scrolls and selects menus; the accelerometer detects the shock direction.
 2. **Wireless charging** — sealed inside the case with an LTC4120 receiver, powered by a custom induction dock.
 3. **Magnetic power switch** — an external magnet disconnects the battery so it doesn't drain when stored.
 4. **Custom 4-layer PCB** — designed around the form factor of an off-the-shelf color OLED module.
 
-> **Status**: V1 successfully validated the concept in water. I am now working on a **V2** that is more compact, with higher integration and additional features.
+> **Status**: This V1 worked and proved the concept. I am now working on a **V2** that is more compact, with better integration and additional features.
 
 ---
 
