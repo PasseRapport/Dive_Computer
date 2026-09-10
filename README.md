@@ -1,16 +1,18 @@
-﻿# Platypus — Freediving Computer (PoC)
+﻿# Freediving Computer (PoC)
 
 <p align="center">
-  <img src="./picture_finished.jpg" alt="Platypus Dive Computer" width="55%">
+  <img src="./picture_finished.jpg" alt="Freediving Computer Prototype" width="55%">
 </p>
 
-**Platypus** is a wearable freediving computer developed as a hardware and software **Proof of Concept (PoC)** to validate a **zero-penetration, hermetically sealed architecture**.
+A wearable freediving computer developed as a hardware and software **Proof of Concept (PoC)** to validate two core design ideas: **accelerometer tap navigation** and **contactless inductive charging** inside a 100% sealed, penetration-free enclosure.
 
-In underwater instrumentation, mechanical push-buttons and exposed charging pins are the primary vectors of failure: dynamic O-rings wear out, salt crusts jam button cavities, and contacts corrode. This PoC eliminates through-hull penetrations entirely by testing:
-1. **Accelerometer-based tap navigation** as a solid-state button replacement.
-2. **Inductive wireless charging** through a completely sealed casing.
-3. **Magnetic battery cutoff** for zero shelf-discharge without opening the housing.
-4. **Hybrid mechanical integration** pairing an off-the-shelf color OLED module with a custom 4-layer carrier PCB.
+In underwater instrumentation, mechanical push-buttons and charging contacts are the primary failure points (O-ring degradation, salt jams, and contact corrosion). This prototype eliminates through-hull penetrations by testing:
+1. **Tap-based gesture navigation** — using an accelerometer with hardware interrupts to replace mechanical buttons.
+2. **Inductive wireless charging** — delivering power through the casing with an LTC4120 receiver and LTC4125 charging dock.
+3. **Magnetic battery cutoff** — isolating the LiPo battery with an external magnet for zero-drain storage.
+4. **Hybrid mechanical integration** — designing a custom 4-layer PCB tailored around an off-the-shelf color OLED module.
+
+> **Active Development**: This V1 successfully validated the core architecture in water. A **V2 is currently in active development**, featuring a significantly more compact form factor, higher integration, and additional freediving features.
 
 ---
 
