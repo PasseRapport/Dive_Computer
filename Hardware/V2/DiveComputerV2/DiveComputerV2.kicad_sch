@@ -687,6 +687,297 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "easyeda2kicad:DRV2624YFFR"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "U"
+				(at 0 10.16 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "DRV2624YFFR"
+				(at 0 -10.16 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "easyeda2kicad:DSBGA-9_L1.4-W1.3-R3-C3-P0.40-BL"
+				(at 0 -12.7 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" "https://lcsc.com/product-detail/Motor-Drivers_Texas-Instruments-Texas-Instruments-DRV2624YFFR_C881487.html"
+				(at 0 -15.24 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Manufacturer" "TI(德州仪器)"
+				(at 0 -17.78 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "MPN" "DRV2624YFFR"
+				(at 0 -20.32 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "LCSC Part" "C881487"
+				(at 0 -22.86 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "Motor Driver ICs"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "DRV2624YFFR_0_1"
+				(rectangle
+					(start -11.43 7.62)
+					(end 11.43 -7.62)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(circle
+					(center -10.16 6.35)
+					(radius 0.38)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at -13.97 5.08 0)
+					(length 2.54)
+					(name "TRIG/INTZ"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "A1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at -13.97 2.54 0)
+					(length 2.54)
+					(name "REG"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "A2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at -13.97 0 0)
+					(length 2.54)
+					(name "OUT+"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "A3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at -13.97 -2.54 0)
+					(length 2.54)
+					(name "SDA"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "B1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at -13.97 -5.08 0)
+					(length 2.54)
+					(name "NRST"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "B2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 13.97 -3.81 180)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "B3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 13.97 -1.27 180)
+					(length 2.54)
+					(name "SCL"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "C1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 13.97 1.27 180)
+					(length 2.54)
+					(name "VDD"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "C2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 13.97 3.81 180)
+					(length 2.54)
+					(name "OUT"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "C3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "easyeda2kicad:LIS2DW12TR"
 			(exclude_from_sim no)
 			(in_bom yes)
@@ -2043,6 +2334,243 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "easyeda2kicad:TLI493DA2B6HTSA1"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "U"
+				(at 0 7.62 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "TLI493DA2B6HTSA1"
+				(at 0 -7.62 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "easyeda2kicad:TSOP-6_L3.0-W1.5-P0.95-LS2.8-BR"
+				(at 0 -10.16 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" "https://www.lcsc.com/datasheet/C1559664.pdf"
+				(at 0 -12.7 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Manufacturer" "Infineon(英飞凌)"
+				(at 0 -15.24 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "MPN" "TLI493DA2B6HTSA1"
+				(at 0 -17.78 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "LCSC Part" "C1559664"
+				(at 0 -20.32 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "Magnetic Sensors"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "TLI493DA2B6HTSA1_0_1"
+				(rectangle
+					(start -10.16 5.08)
+					(end 10.16 -5.08)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(circle
+					(center -8.89 3.81)
+					(radius 0.38)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at -12.7 2.54 0)
+					(length 2.54)
+					(name "SCL/INT"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at -12.7 0 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at -12.7 -2.54 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 12.7 -2.54 180)
+					(length 2.54)
+					(name "VDD"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 12.7 0 180)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 12.7 2.54 180)
+					(length 2.54)
+					(name "SDA"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "power:+3.3V"
 			(power global)
 			(pin_numbers
@@ -2299,7 +2827,7 @@
 		)
 	)
 	(rectangle
-		(start 330.2 199.39)
+		(start 330.2 168.91)
 		(end 403.86 248.92)
 		(stroke
 			(width 0)
@@ -2309,6 +2837,30 @@
 			(type none)
 		)
 		(uuid "0e445e8e-e948-439e-8c62-1d9dd9b76c3c")
+	)
+	(rectangle
+		(start 170.18 167.64)
+		(end 243.84 280.67)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(uuid "331bf0b0-d490-4ab3-bfdc-411b59059730")
+	)
+	(rectangle
+		(start 29.21 99.06)
+		(end 102.87 148.59)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(uuid "3a1e5d92-b138-4b06-b7a7-6ea0d4d7ec8a")
 	)
 	(rectangle
 		(start 41.91 218.44)
@@ -2322,6 +2874,18 @@
 		)
 		(uuid "5c84b56a-dab7-4b1f-942b-735220e11b88")
 	)
+	(rectangle
+		(start 182.88 85.09)
+		(end 256.54 134.62)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(uuid "c5bb42b7-ab39-4719-9420-9c772069c583")
+	)
 	(text "PRESSURE SENSOR"
 		(exclude_from_sim no)
 		(at 61.722 221.742 0)
@@ -2334,7 +2898,7 @@
 	)
 	(text "ACCELEROMETER"
 		(exclude_from_sim no)
-		(at 346.964 202.438 0)
+		(at 346.964 171.958 0)
 		(effects
 			(font
 				(size 2.54 2.54)
@@ -2342,7 +2906,27 @@
 		)
 		(uuid "31566d16-bb57-441e-b080-b248537f219c")
 	)
-	(text "To add:\n-hall sensor\n-haptic motor & driver\n-nfc comm & charging\n-screen connector\n-jtag"
+	(text "MAGNETOMETER"
+		(exclude_from_sim no)
+		(at 200.406 89.916 0)
+		(effects
+			(font
+				(size 2.54 2.54)
+			)
+		)
+		(uuid "74c99dc4-18ef-4b23-9d67-517d2df9f31d")
+	)
+	(text "HAPTIC DRIVER"
+		(exclude_from_sim no)
+		(at 46.736 103.886 0)
+		(effects
+			(font
+				(size 2.54 2.54)
+			)
+		)
+		(uuid "9265ae50-81dd-458e-8757-9bae61ab9a9f")
+	)
+	(text "To add:\n-haptic motor\n-nfc comm & charging\n-screen connector\n-jtag"
 		(exclude_from_sim no)
 		(at 24.638 46.228 0)
 		(effects
@@ -2353,8 +2937,18 @@
 		)
 		(uuid "a1b81527-117a-46a1-a3e6-ccc78fe594c6")
 	)
+	(text "STM32"
+		(exclude_from_sim no)
+		(at 179.324 171.196 0)
+		(effects
+			(font
+				(size 2.54 2.54)
+			)
+		)
+		(uuid "fdd9cb7a-0663-43a1-b6ad-00d1f9763a52")
+	)
 	(junction
-		(at 375.92 218.44)
+		(at 375.92 187.96)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "1ee1ce46-5138-41a1-a4d1-58522dd9763c")
@@ -2366,25 +2960,25 @@
 		(uuid "38ae922e-78ed-4ced-b3fa-cc026b528f1b")
 	)
 	(junction
-		(at 375.92 226.06)
+		(at 375.92 195.58)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "61c404fb-14f2-4e50-9687-09456e94cfcf")
 	)
 	(junction
-		(at 375.92 231.14)
+		(at 375.92 200.66)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "926affcd-faab-4155-87f7-457c04a08f8b")
 	)
 	(junction
-		(at 383.54 231.14)
+		(at 383.54 200.66)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "96a58af6-d0eb-47e3-bbb0-bb73c91ed05b")
 	)
 	(junction
-		(at 341.63 220.98)
+		(at 341.63 190.5)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "a2dcbec3-0ed2-4736-93b7-d44427c60e31")
@@ -2396,20 +2990,20 @@
 		(uuid "d049b035-a648-45b6-8543-6191d55a9ad5")
 	)
 	(junction
-		(at 383.54 226.06)
+		(at 383.54 195.58)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "da6fa80b-5452-4ca3-820a-ff224ab778ff")
 	)
 	(junction
-		(at 383.54 218.44)
+		(at 383.54 187.96)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "dbaea92d-9a23-4f4c-b9b1-c14c777c3b2e")
 	)
 	(wire
 		(pts
-			(xy 350.52 226.06) (xy 354.33 226.06)
+			(xy 350.52 195.58) (xy 354.33 195.58)
 		)
 		(stroke
 			(width 0)
@@ -2419,7 +3013,7 @@
 	)
 	(wire
 		(pts
-			(xy 364.49 231.14) (xy 375.92 231.14)
+			(xy 364.49 200.66) (xy 375.92 200.66)
 		)
 		(stroke
 			(width 0)
@@ -2439,7 +3033,7 @@
 	)
 	(wire
 		(pts
-			(xy 341.63 223.52) (xy 354.33 223.52)
+			(xy 341.63 193.04) (xy 354.33 193.04)
 		)
 		(stroke
 			(width 0)
@@ -2449,7 +3043,7 @@
 	)
 	(wire
 		(pts
-			(xy 383.54 212.09) (xy 383.54 218.44)
+			(xy 383.54 181.61) (xy 383.54 187.96)
 		)
 		(stroke
 			(width 0)
@@ -2459,7 +3053,7 @@
 	)
 	(wire
 		(pts
-			(xy 375.92 226.06) (xy 375.92 231.14)
+			(xy 375.92 195.58) (xy 375.92 200.66)
 		)
 		(stroke
 			(width 0)
@@ -2469,7 +3063,7 @@
 	)
 	(wire
 		(pts
-			(xy 350.52 218.44) (xy 354.33 218.44)
+			(xy 350.52 187.96) (xy 354.33 187.96)
 		)
 		(stroke
 			(width 0)
@@ -2479,7 +3073,7 @@
 	)
 	(wire
 		(pts
-			(xy 372.11 220.98) (xy 375.92 220.98)
+			(xy 372.11 190.5) (xy 375.92 190.5)
 		)
 		(stroke
 			(width 0)
@@ -2509,7 +3103,7 @@
 	)
 	(wire
 		(pts
-			(xy 375.92 220.98) (xy 375.92 218.44)
+			(xy 375.92 190.5) (xy 375.92 187.96)
 		)
 		(stroke
 			(width 0)
@@ -2529,7 +3123,7 @@
 	)
 	(wire
 		(pts
-			(xy 341.63 215.9) (xy 341.63 220.98)
+			(xy 341.63 185.42) (xy 341.63 190.5)
 		)
 		(stroke
 			(width 0)
@@ -2539,7 +3133,7 @@
 	)
 	(wire
 		(pts
-			(xy 361.95 208.28) (xy 361.95 213.36)
+			(xy 361.95 177.8) (xy 361.95 182.88)
 		)
 		(stroke
 			(width 0)
@@ -2549,7 +3143,7 @@
 	)
 	(wire
 		(pts
-			(xy 375.92 226.06) (xy 372.11 226.06)
+			(xy 375.92 195.58) (xy 372.11 195.58)
 		)
 		(stroke
 			(width 0)
@@ -2569,7 +3163,7 @@
 	)
 	(wire
 		(pts
-			(xy 372.11 223.52) (xy 375.92 223.52)
+			(xy 372.11 193.04) (xy 375.92 193.04)
 		)
 		(stroke
 			(width 0)
@@ -2579,7 +3173,7 @@
 	)
 	(wire
 		(pts
-			(xy 375.92 218.44) (xy 383.54 218.44)
+			(xy 375.92 187.96) (xy 383.54 187.96)
 		)
 		(stroke
 			(width 0)
@@ -2589,7 +3183,7 @@
 	)
 	(wire
 		(pts
-			(xy 391.16 226.06) (xy 391.16 223.52)
+			(xy 391.16 195.58) (xy 391.16 193.04)
 		)
 		(stroke
 			(width 0)
@@ -2599,7 +3193,7 @@
 	)
 	(wire
 		(pts
-			(xy 372.11 218.44) (xy 375.92 218.44)
+			(xy 372.11 187.96) (xy 375.92 187.96)
 		)
 		(stroke
 			(width 0)
@@ -2609,7 +3203,7 @@
 	)
 	(wire
 		(pts
-			(xy 383.54 226.06) (xy 383.54 231.14)
+			(xy 383.54 195.58) (xy 383.54 200.66)
 		)
 		(stroke
 			(width 0)
@@ -2619,7 +3213,7 @@
 	)
 	(wire
 		(pts
-			(xy 383.54 231.14) (xy 383.54 234.95)
+			(xy 383.54 200.66) (xy 383.54 204.47)
 		)
 		(stroke
 			(width 0)
@@ -2629,7 +3223,7 @@
 	)
 	(wire
 		(pts
-			(xy 375.92 231.14) (xy 383.54 231.14)
+			(xy 375.92 200.66) (xy 383.54 200.66)
 		)
 		(stroke
 			(width 0)
@@ -2639,7 +3233,7 @@
 	)
 	(wire
 		(pts
-			(xy 375.92 223.52) (xy 375.92 226.06)
+			(xy 375.92 193.04) (xy 375.92 195.58)
 		)
 		(stroke
 			(width 0)
@@ -2659,7 +3253,7 @@
 	)
 	(wire
 		(pts
-			(xy 383.54 223.52) (xy 383.54 226.06)
+			(xy 383.54 193.04) (xy 383.54 195.58)
 		)
 		(stroke
 			(width 0)
@@ -2679,7 +3273,7 @@
 	)
 	(wire
 		(pts
-			(xy 341.63 220.98) (xy 354.33 220.98)
+			(xy 341.63 190.5) (xy 354.33 190.5)
 		)
 		(stroke
 			(width 0)
@@ -2699,7 +3293,7 @@
 	)
 	(wire
 		(pts
-			(xy 383.54 226.06) (xy 391.16 226.06)
+			(xy 383.54 195.58) (xy 391.16 195.58)
 		)
 		(stroke
 			(width 0)
@@ -2709,7 +3303,7 @@
 	)
 	(wire
 		(pts
-			(xy 364.49 208.28) (xy 364.49 213.36)
+			(xy 364.49 177.8) (xy 364.49 182.88)
 		)
 		(stroke
 			(width 0)
@@ -2719,7 +3313,7 @@
 	)
 	(wire
 		(pts
-			(xy 341.63 220.98) (xy 341.63 223.52)
+			(xy 341.63 190.5) (xy 341.63 193.04)
 		)
 		(stroke
 			(width 0)
@@ -2739,7 +3333,7 @@
 	)
 	(wire
 		(pts
-			(xy 383.54 218.44) (xy 391.16 218.44)
+			(xy 383.54 187.96) (xy 391.16 187.96)
 		)
 		(stroke
 			(width 0)
@@ -2758,7 +3352,7 @@
 		(uuid "0b1d1c5f-08f4-4cd1-81c7-aa38f977433a")
 	)
 	(label "SDA"
-		(at 350.52 226.06 0)
+		(at 350.52 195.58 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -2768,7 +3362,7 @@
 		(uuid "4a619f57-9672-42c3-8c03-f8586e4e9ff1")
 	)
 	(label "INT2"
-		(at 364.49 208.28 270)
+		(at 364.49 177.8 270)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -2778,7 +3372,7 @@
 		(uuid "af4c3b4e-2f0c-489b-8a8a-c164778c7d23")
 	)
 	(label "INT1"
-		(at 361.95 208.28 270)
+		(at 361.95 177.8 270)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -2788,7 +3382,7 @@
 		(uuid "dffe50e7-fbae-4ba1-9fc7-e82e06b0ea72")
 	)
 	(label "SCL"
-		(at 350.52 218.44 0)
+		(at 350.52 187.96 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -2809,7 +3403,7 @@
 	)
 	(symbol
 		(lib_id "easyeda2kicad:LIS2DW12TR")
-		(at 359.41 175.26 0)
+		(at 360.68 228.6 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -2817,10 +3411,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "07030102-68f6-4884-981a-fe843cdd97cd")
 		(property "Reference" "U2"
-			(at 358.775 161.29 0)
+			(at 360.045 214.63 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2830,7 +3423,7 @@
 			)
 		)
 		(property "Value" "LIS2DW12TR"
-			(at 358.775 163.83 0)
+			(at 359.918 217.424 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2840,7 +3433,7 @@
 			)
 		)
 		(property "Footprint" "easyeda2kicad:LGA-12_L2.0-W2.0-P0.50-BL"
-			(at 359.41 190.5 0)
+			(at 360.68 243.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2851,7 +3444,7 @@
 			)
 		)
 		(property "Datasheet" "https://lcsc.com/product-detail/Motion-Sensors-Accelerometers_STMicroelectronics_LIS2DW12TR_LIS2DW12TR_C189624.html"
-			(at 359.41 193.04 0)
+			(at 360.68 246.38 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2862,7 +3455,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 359.41 175.26 0)
+			(at 360.68 228.6 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2873,7 +3466,7 @@
 			)
 		)
 		(property "Manufacturer" "ST(意法半导体)"
-			(at 359.41 195.58 0)
+			(at 360.68 248.92 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2884,7 +3477,7 @@
 			)
 		)
 		(property "MPN" "LIS2DW12TR"
-			(at 359.41 198.12 0)
+			(at 360.68 251.46 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2895,7 +3488,7 @@
 			)
 		)
 		(property "LCSC Part" "C189624"
-			(at 359.41 200.66 0)
+			(at 360.68 254 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2951,8 +3544,142 @@
 		)
 	)
 	(symbol
+		(lib_id "easyeda2kicad:DRV2624YFFR")
+		(at 58.42 125.73 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "1fe8538b-462e-444a-b1ec-f082358afce3")
+		(property "Reference" "U4"
+			(at 58.42 113.03 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "DRV2624YFFR"
+			(at 58.42 115.57 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "easyeda2kicad:DSBGA-9_L1.4-W1.3-R3-C3-P0.40-BL"
+			(at 58.42 138.43 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/Motor-Drivers_Texas-Instruments-Texas-Instruments-DRV2624YFFR_C881487.html"
+			(at 58.42 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 58.42 125.73 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "TI(德州仪器)"
+			(at 58.42 143.51 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "DRV2624YFFR"
+			(at 58.42 146.05 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC Part" "C881487"
+			(at 58.42 148.59 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "A1"
+			(uuid "70962bd7-0a11-40c3-8490-c12a1679673e")
+		)
+		(pin "A2"
+			(uuid "cc6538f5-4a98-4417-9f41-d9ea64bd7abb")
+		)
+		(pin "B2"
+			(uuid "0d58877b-8838-47e1-b271-77c34ebbdd4e")
+		)
+		(pin "B1"
+			(uuid "d3319c2f-925f-4499-b378-22919d9638a2")
+		)
+		(pin "C3"
+			(uuid "05da90bc-a527-4219-a1c1-d32ec1b40027")
+		)
+		(pin "C2"
+			(uuid "89ea6833-6265-4310-bf5d-5d24318b72b4")
+		)
+		(pin "A3"
+			(uuid "07356541-df95-4ab7-bf1d-f17e4dfe1187")
+		)
+		(pin "B3"
+			(uuid "6cec8349-cb43-44b7-82f5-f651ac7715a5")
+		)
+		(pin "C1"
+			(uuid "b835fcc8-9a21-4389-ab00-70ff61352e40")
+		)
+		(instances
+			(project "DiveComputerV2"
+				(path "/5e4dc322-0afb-4d6b-99ca-6f3217511809"
+					(reference "U4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Custom:lis2dux12")
-		(at 359.41 218.44 0)
+		(at 359.41 187.96 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -2961,8 +3688,8 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "26d1089f-fc63-4e9c-a42d-484db80559dc")
-		(property "Reference" "LIS12DUX1"
-			(at 360.426 221.996 0)
+		(property "Reference" "LIS2DW12TR"
+			(at 360.426 191.516 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2973,7 +3700,7 @@
 			)
 		)
 		(property "Value" ""
-			(at 366.1726 214.63 0)
+			(at 366.1726 184.15 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2984,7 +3711,7 @@
 			)
 		)
 		(property "Footprint" "Package_LGA:LGA-12_2x2mm_P0.5mm"
-			(at 359.664 207.772 0)
+			(at 359.664 177.292 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2995,7 +3722,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.st.com/resource/en/datasheet/lis2dux12.pdf"
-			(at 357.886 203.708 0)
+			(at 357.886 173.228 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3006,7 +3733,18 @@
 			)
 		)
 		(property "Description" "Ultralow-power 3-axis smart accelerometer with AI, antialiasing filter, and advanced digital features"
-			(at 360.172 205.74 0)
+			(at 360.172 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC Part" "C189624"
+			(at 359.41 187.96 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3055,7 +3793,7 @@
 		(instances
 			(project "DiveComputerV2"
 				(path "/5e4dc322-0afb-4d6b-99ca-6f3217511809"
-					(reference "LIS12DUX1")
+					(reference "LIS2DW12TR")
 					(unit 1)
 				)
 			)
@@ -3063,7 +3801,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Small")
-		(at 391.16 220.98 0)
+		(at 391.16 190.5 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -3074,7 +3812,7 @@
 		(fields_autoplaced yes)
 		(uuid "2fa25ad3-fb97-4f6f-9d13-30da3618d83e")
 		(property "Reference" "C2"
-			(at 393.7 219.7162 0)
+			(at 393.7 189.2362 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3085,7 +3823,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 393.7 222.2562 0)
+			(at 393.7 191.7762 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3096,7 +3834,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 391.16 220.98 0)
+			(at 391.16 190.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3107,7 +3845,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 391.16 220.98 0)
+			(at 391.16 190.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3118,7 +3856,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 391.16 220.98 0)
+			(at 391.16 190.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3145,7 +3883,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Small")
-		(at 383.54 220.98 0)
+		(at 383.54 190.5 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -3156,7 +3894,7 @@
 		(fields_autoplaced yes)
 		(uuid "4a339837-27eb-4387-bc81-c1509bfa28ec")
 		(property "Reference" "C1"
-			(at 386.08 219.7162 0)
+			(at 386.08 189.2362 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3167,7 +3905,7 @@
 			)
 		)
 		(property "Value" "10u"
-			(at 386.08 222.2562 0)
+			(at 386.08 191.7762 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3178,7 +3916,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 383.54 220.98 0)
+			(at 383.54 190.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3189,7 +3927,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 383.54 220.98 0)
+			(at 383.54 190.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3200,7 +3938,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 383.54 220.98 0)
+			(at 383.54 190.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3226,8 +3964,133 @@
 		)
 	)
 	(symbol
+		(lib_id "easyeda2kicad:TLI493DA2B6HTSA1")
+		(at 205.74 106.68 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "736f3262-ff8f-4487-890a-e474080740f2")
+		(property "Reference" "U3"
+			(at 205.74 96.52 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "TLI493DA2B6HTSA1"
+			(at 205.74 99.06 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "easyeda2kicad:TSOP-6_L3.0-W1.5-P0.95-LS2.8-BR"
+			(at 205.74 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C1559664.pdf"
+			(at 205.74 119.38 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 205.74 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Infineon(英飞凌)"
+			(at 205.74 121.92 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "TLI493DA2B6HTSA1"
+			(at 205.74 124.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC Part" "C1559664"
+			(at 205.74 127 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "6"
+			(uuid "ec0cda47-e2ae-4cc5-abed-32e67ad87d82")
+		)
+		(pin "5"
+			(uuid "a0ec5d16-2d69-4bd1-8500-4f1053d21705")
+		)
+		(pin "4"
+			(uuid "f349d999-c9b3-4224-9b46-79df49f73c2d")
+		)
+		(pin "3"
+			(uuid "f13b0230-a169-45d9-8384-32e3d89ffaba")
+		)
+		(pin "1"
+			(uuid "297c78c7-2cd2-41b4-a58b-7f2bc7267481")
+		)
+		(pin "2"
+			(uuid "376ebb42-03ee-4a45-a035-d30594400f6b")
+		)
+		(instances
+			(project "DiveComputerV2"
+				(path "/5e4dc322-0afb-4d6b-99ca-6f3217511809"
+					(reference "U3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+3.3V")
-		(at 383.54 212.09 0)
+		(at 383.54 181.61 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -3238,7 +4101,7 @@
 		(fields_autoplaced yes)
 		(uuid "8827c31d-b6ab-4deb-9785-9cc8c2e2677a")
 		(property "Reference" "#PWR02"
-			(at 383.54 215.9 0)
+			(at 383.54 185.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3249,7 +4112,7 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 383.54 207.01 0)
+			(at 383.54 176.53 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3259,7 +4122,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 383.54 212.09 0)
+			(at 383.54 181.61 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3270,7 +4133,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 383.54 212.09 0)
+			(at 383.54 181.61 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3281,7 +4144,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
-			(at 383.54 212.09 0)
+			(at 383.54 181.61 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3305,7 +4168,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 383.54 234.95 0)
+		(at 383.54 204.47 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -3316,7 +4179,7 @@
 		(fields_autoplaced yes)
 		(uuid "9a339405-e43d-4419-a2b2-2a416867a6c3")
 		(property "Reference" "#PWR01"
-			(at 383.54 241.3 0)
+			(at 383.54 210.82 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3327,7 +4190,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 383.54 240.03 0)
+			(at 383.54 209.55 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3337,7 +4200,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 383.54 234.95 0)
+			(at 383.54 204.47 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3348,7 +4211,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 383.54 234.95 0)
+			(at 383.54 204.47 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3359,7 +4222,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 383.54 234.95 0)
+			(at 383.54 204.47 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3544,7 +4407,7 @@
 	)
 	(symbol
 		(lib_id "power:+3.3V")
-		(at 341.63 215.9 0)
+		(at 341.63 185.42 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -3555,7 +4418,7 @@
 		(fields_autoplaced yes)
 		(uuid "d1d96943-7bf9-42c8-aed7-9917688a6317")
 		(property "Reference" "#PWR03"
-			(at 341.63 219.71 0)
+			(at 341.63 189.23 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3566,7 +4429,7 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 341.63 210.82 0)
+			(at 341.63 180.34 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3576,7 +4439,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 341.63 215.9 0)
+			(at 341.63 185.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3587,7 +4450,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 341.63 215.9 0)
+			(at 341.63 185.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3598,7 +4461,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
-			(at 341.63 215.9 0)
+			(at 341.63 185.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
