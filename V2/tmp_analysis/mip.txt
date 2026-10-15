@@ -1,0 +1,2041 @@
+                        仕様書パターン 2   CAS表紙
+
+
+
+
+                                                     Ver.03
+
+
+                                            Date : Feb 05, 2018
+
+
+
+
+        Specification
+[Product Name : LPM013M091A]
+
+
+
+
+                                                         JDG01-E-01E
+CONTENTS ……………………………………………………………………………………… 1
+ 1. BASIC SPECIFICATIONS …………………………………………………………………… 2
+   1.1 STRUCTURES ……………………………………………………………………………… 2
+   1.2 BLOCK DIAGRAM ………………………………………………………………………… 3
+   1.3 I/O PINS …………………………………………………………………………………… 4
+ 2. ABSOLUTE MAXIMUM RATING…………………………………………………………… 5
+ 3. ELECTRICAL SPECIFICATIONS …………………………………………………………… 6
+   3.1 Operating Conditions ……………………………………………………………………… 6
+     3.1.1 Input and output power supply voltage conditions …………………………………… 6
+      3.1.2 Input signal voltage conditions (DC conditions)      ………………………………… 6
+     3.1.3 DC characteristic power consumption characteristics, input threshold ………………. 7
+     3.1.4 Backlight Operating Conditions ……………………………………………………… 7
+  4. INTERFACE            ……………………………………………………………………………… 8
+   4.1 MIPI INTERFACE           ……………………………………………………………………… 8
+   4.2 MIPI DC CHARACTERISTICS ………………………………………………………… 12
+   4.3 MIPI AC CHARACTERISTICS ………………………………………………………… 13
+   4.4 SPI ……………………………………………………………………………………… 22
+ 5. POWER SEQUENCE …………………………………………………………………………27
+   5.1 Power ON/OFF sequence          …………………………………………………………………27
+   5.2 Reset Timing Characteristics …………………………………………………………………28
+ 6. CHANGE STATUS ……………………………………………………………………………29
+    6.1 Status flow ………………………………………………………………………………… 29
+     6.1.1 Sequence 1(A,B-1,B-2,N-1,N-2) ……………………………………………………… 30
+     6.1.2 Sequence 2(C,D,E,F,L,M,N,O,Y,Z……………………………………………………… 31
+     6.1.3 Sequence 3(G-1,G-2,O-1,O-2)        ……………………………………………………… 32
+     6.1.4 Sequence 4(H-1,H-2,I-1,I-2)        ……………………………………………………… 33
+   6.2 ID read address      ……………………………………………………………………………34
+ 7. OPTICAL SPECIFICATION ………………………………………………………………… 35
+  7.1 OPTICAL CHARACTERISTICS …………………………………………………………… 35
+     7.1.1 Reflective mode …………………………………………………………………………35
+     7.1.2 Transmissive mode …………………………………………………………………… 35
+   7.2 DEFINITION AND CONDITION OF OPTICAL CHARACTERISTICS …………………36
+ 8. INSPECTION            ………………………………………………………………………………38
+ 9. RELIABILITY TEST …………………………………………………………………………39
+  9.1 CONDITIONS OF RELIABILITY AND MECHANICAL TEST ………………………… 39
+  9.2 CRITERIA FOR JUDGEMENT …………………………………………………………… 39
+ 10. PACKING SPECIFICATIONS …………………………………………………………………40
+  10.1 MASTER CARTON …………………………………………………………………… 40
+  10.2 INNER CARTON               ………………………………………………………………………41
+ 11. DESIGNATION OF LOT MARK                         ……………………………………………… 42
+ 12. LCD MODULE USAGE AND PRECAUTION ……………………………………………… 43
+   12.1 HANDLING ……………………………………………………………………………… 43
+   12.2 DESIGN OF APPLICATION ………………………………………………………………44
+   12.3 DISPLAY CHARACTERISTICS ………………………………………………………… 45
+   12.4 KEEPING ……………………………………………………………………………… 45
+   12.5 DISPOSAL ……………………………………………………………………………… 45
+   12.6 OTHERS ………………………………………………………………………………… 45
+13. OUTLINE DRAWING …………………………………………………………………………46
+
+
+                                                  Sh.
+ Japan Display Inc.         Date   Feb 5, 2018
+                                                  No.
+                                                              JDG10000677-03          Page   1/46
+  1. BASIC SPECIFICATIONS
+          This product is the reflective display which can perform 2 types, super low power 8 colors of MIP
+      (Memory In Pixel) mode and normal 262k colors by the command changes. Therefore, the specification
+       is defined in reflective mode only unless otherwise specified in the specification sheet.
+
+     1.1 STRUCTURES
+
+      No.        FACTOR                                          SPECIFICATIONS                      UNIT
+       1 LCD structure                      LTPS AC-VCOM
+                                                                                                          -
+                                            Analog(Normal) driving mode or Memory in Pixel mode
+        2   Outward (W x H x D)             37.28×38.18×1.55( *1-1)                                      mm
+        3   Weight                          2.8(Typ.)                                                     g
+        4   Screen size                     34.08 (1.34 inch) *round type                                mm
+        5   Number of dots                  77,782(320xRGBx300)                                          dot
+        6   Dot pitch (Horizontal x Vertica 0.0355×0.1065                                                mm
+        7   Dot layout                      RGB Stripe                                                    -
+        8   Interface                       SPI / 1-lane MIPI DSI                                         -
+                                            8 colors at MIP mode
+        9   Number of colors                                                                             -
+                                            or 262k colors at normal mode
+       10   LCD optical mode                ECB normally black (Reflective type)                          -
+       11   Polarizer                       Hard Coat type (*Pencil Hardness : 2H)                        -
+       12   Light source type               Backlight with white LED (1chip)                              -
+
+      (*1-1) Excluding FPC and part of protruding. See attached drawing for details.
+
+
+
+
+                                                       Sh.
+Japan Display Inc.          Date      Feb 5, 2018
+                                                       No.
+                                                                       JDG10000677-03             Page        2/46
+1.2 BLOCK DIAGRAM
+
+  The block diagram is shown below.
+
+
+
+
+                                     1.342inch(Round)
+    Scan Direction
+
+                     V-Driver                                V-Driver
+                                         77,782 dots
+                                  (320 x RGB x 300 pixels)
+                                          Dot Pitch
+      (Normal)
+                                35.5um x 106.5um(238.5ppi)
+
+
+
+
+                                         Selector
+                                          (NT35350)
+
+
+                                LED         FPC
+
+
+
+
+                                                      Sh.
+Japan Display Inc.              Date   Feb 5, 2018
+                                                      No.
+                                                             JDG10000677-03   Page   3/46
+  1.3 I/O PINS
+ Pin No. LCD_TEST(GND)    I/O   Power/Signal                        Description
+    1         N.C.          -         -      LCD TEST Pin (Please open)
+    2          VCI          I     Power      Power Supply for Analog Circuit
+    3         VDDI          I     Power      Power Supply for I/O
+    4         GND           -         -      GND
+    5      HSSI_D0_N      I/O      Signal    MIPI negative data signal
+    6       HSSI_D0_P     I/O      Signal    MIPI positive data signal
+    7         GND           -         -      GND
+    8     HSSI_CLK_N        I      Signal    MIPI negative clock signal
+    9      HSSI_CLK_P       I      Signal    MIPI positive clock signal
+   10         GND           -         -      GND
+   11          SDI        I/O      Signal    Serial data input/output
+   12         SCL           I     Signal     Synchronous clock signal
+                                             Connect to VDDI for 3 wires mode, or data command
+   13        DCX           I       Signal
+                                             select signal for 4 wires mode in SPI.
+   14       CSX            I       Signal    Chip select signal
+   15       GND            -          -      GND
+   16       RESX           I       Signal    Reset pin (Active Low)
+                                             GND for 3 wires mode,or connect to VDDI for 4
+   17        IM0           I      Signal
+                                             wires mode in SPI.
+   18   LCD_TEST(GND)      -          -      LCD TEST Pin(Please connect to GND)
+   19      LEDPWM          O       Signal    PWM feedback Signal for LED Driver
+   20         TE           O      Signal     Frame Head Signal
+   21        N.C.          -          -      LCD TEST Pin (Please open)
+   22       LED_A          I       Power     Power supply for LED backlight anode
+   23       LED_K          I       Power     Power supply for LED backlight cathode
+
+
+
+
+                                   1pin       23pin
+
+
+
+
+                                               Sh.
+Japan Display Inc.       Date   Feb 5, 2018
+                                               No.
+                                                            JDG10000677-03          Page   4/46
+  2. ABSOLUTE MAXIMUM RATING
+            Item                     Symbol                    Rated value             Unit             Description
+  Power Supply for I/O                VDDI                     -0.3 ~ +4.0               V
+    Power Supply for
+                                       VCI                      -0.3 ~ +5.5               V
+     Analog Circuit
+  Digital input terminal             VIN                    -0.3 ~ VDDI+0.3               V
+         voltage                     VO                     -0.3 ~ VDDI+0.3               V
+    Differential input          HSSI_CLK_P/N
+                                                                -0.3~+1.45                V
+         voltage                 HSSI_D0_P/N
+  Operating temperature
+           range                       Topr                     -20 ~ +70                 ℃               (*2-1)
+   (LCD panel surface)
+   Storage temperature
+                                       Tstg                     -30 ~ +80                 ℃               (*2-1)
+           range
+  LED Forward current                   Iled                        +35                  mA
+
+      Note)
+      (*2-1): Maximum humidity is defined as follows:
+       Ta≦40°C : 85%RH Max.
+       Ta> 40°C : Absolute humidity needs to be equal or less than the numeric value at the condition
+              of Ta=40°C, 85%RH.
+        Don't condense dew.
+      (*2-2): Ambient Temperature vs Allowable Forward Current is due to the following graph.
+
+
+
+
+                                                              Sh.
+Japan Display Inc.              Date      Feb 5, 2018
+                                                              No.
+                                                                               JDG10000677-03                   Page   5/46
+3. ELECTRICAL SPECIFICATIONS
+3.1. Operating Conditions
+
+ 3.1.1 Input and output power supply voltage conditions                    (GND=0V)
+             Item                   Symbol     Min.      Typ.       Max.     Unit
+     Power Supply for I/O            VDDI      1.7       1.8        1.9       V
+ Power Supply for Analog Circuit      VCI      3.0       3.1        3.2       V
+
+
+  3.1.2 Input signal voltage conditions (DC conditions)
+                                                                                      Application
+              Item                  Symbol     Min.      Typ.       Max.     Unit
+                                                                                       Terminal
+   High level threshold voltage      VIH     0.8xVDDI     -         VDDI      V
+   Low level threshold voltage       VIL        VSS       -       0.2xVDDI    V        All Input
+    High level current leakage       ILIH        -        -           10      uA       terminal
+    Low level current leakage        ILIL       -10       -            -      uA
+
+
+
+
+                                                   Sh.
+Japan Display Inc.           Date    Feb 5, 2018
+                                                   No.
+                                                                JDG10000677-03           Page       6/46
+3.1.3 DC characteristic power consumption characteristics, input threshold
+   VDDI=1.8V , VCI=3.1V
+                                                                                      Application
+        Item           Symbol      Measurement condition       Min.   Typ.   Max. Unit
+                                                                                       Terminal
+    Normal Mode        Ivvdi                                      -   1.11   1.40       VDDI
+                                 Ta=25℃,White raster display
+ consumption current    Ivci                                      -   1.75   2.70        VCI
+     MIP Mode          Ivvdi                                      -   0.23   0.34       VDDI
+                                 Ta=25℃,White raster display                       mA
+ consumption current    Ivci                                      -   0.13   0.22        VCI
+     Sleep Mode        Ivvdi                                      -     -    0.200      VDDI
+                                           Ta=25℃
+ consumption current    Ivci                                      -     -    0.005       VCI
+
+
+
+3.1.4 Backlight Operating Conditions                                     (Iled=20mA)
+              Item                Symbol       Min.        Typ.       Max.    Unit
+   Backlight forward voltage       Vfbl         -          2.9        3.2      V
+
+
+
+
+                                                    Sh.
+Japan Display Inc.        Date      Feb 5, 2018
+                                                    No.
+                                                                  JDG10000677-03         Page   7/46
+4. INTERFACE
+   4.1 MIPI INTERFACE
+
+   Follow the MIPI Standerd.
+      D-PHY: V1.0
+      DSI:1.01.00
+      DCS:1.01.00
+   MIPI I/F Supported 1 data lane (MIPI CLK speed up to 300Mbps).
+   MIPI I/F Supported only command mode.
+
+
+
+
+                                             Sh.
+Japan Display Inc.      Date   Feb 5, 2018
+                                             No.
+                                                         JDG10000677-03   Page   8/46
+                                          Sh.
+Japan Display Inc.   Date   Feb 5, 2018
+                                          No.
+                                                JDG10000677-03   Page   9/46
+                                          Sh.
+Japan Display Inc.   Date   Feb 5, 2018
+                                          No.
+                                                JDG10000677-03   Page   10/46
+                                          Sh.
+Japan Display Inc.   Date   Feb 5, 2018
+                                          No.
+                                                JDG10000677-03   Page   11/46
+  4.2 MIPI DC CHARACTERISTICS
+
+
+
+
+                                          Sh.
+Japan Display Inc.   Date   Feb 5, 2018
+                                          No.
+                                                JDG10000677-03   Page   12/46
+  4.3 MIPI AC CHARACTERISTICS
+
+
+
+
+                                          Sh.
+Japan Display Inc.   Date   Feb 5, 2018
+                                          No.
+                                                JDG10000677-03   Page   13/46
+                                          Sh.
+Japan Display Inc.   Date   Feb 5, 2018
+                                          No.
+                                                JDG10000677-03   Page   14/46
+                                          Sh.
+Japan Display Inc.   Date   Feb 5, 2018
+                                          No.
+                                                JDG10000677-03   Page   15/46
+                                          Sh.
+Japan Display Inc.   Date   Feb 5, 2018
+                                          No.
+                                                JDG10000677-03   Page   16/46
+                                          Sh.
+Japan Display Inc.   Date   Feb 5, 2018
+                                          No.
+                                                JDG10000677-03   Page   17/46
+                                          Sh.
+Japan Display Inc.   Date   Feb 5, 2018
+                                          No.
+                                                JDG10000677-03   Page   18/46
+                                          Sh.
+Japan Display Inc.   Date   Feb 5, 2018
+                                          No.
+                                                JDG10000677-03   Page   19/46
+                                          Sh.
+Japan Display Inc.   Date   Feb 5, 2018
+                                          No.
+                                                JDG10000677-03   Page   20/46
+                                          Sh.
+Japan Display Inc.   Date   Feb 5, 2018
+                                          No.
+                                                JDG10000677-03   Page   21/46
+ 4.4 SPI
+
+    Command Write for LoSSI
+    The host CPU drives the CSX pin low and starts by setting the D/CX-bit on SDI or by DCX
+    pin. The bit is read by the display on the first rising
+    edge of SCL. For 4-Wires Mode, first bit is data bit (D7) is set on SDI by the CPU. Then on
+    the next falling edge of SCL the MSB data bit (D6) is
+    set on SDI by the CPU and so on. For 3-Wires Mode, the next falling edge of SCL the MSB
+    data bit (D7) is set on SDI by the CPU. On the next
+    falling edge of SCL the next bit (D6) is set on SDI and so on. This continues until all 8 Data
+    bits have been transmitted as shown in below figures:
+    Command Write.
+
+
+
+
+                         Command/GRAM Write for 3-Wires Mode 9-bit Type SPI
+
+
+
+
+                         Command/GRAM Write for 4-Wires Mode 8-bit Type SPI
+
+
+
+Note:
+(*4-1)The GRAM write command should be 2Ch/3Ch.
+
+(*4-2)When using SPI,differential input voltage for MIPI,such as HSSI_D0_N,HSSI_D0_P,HSSI_CLK_N,
+      HSSI_CLK_P,should be fixed 1.2V,which is the high level of the differential input voltage. The power on
+      sequence for these pins should follow LP11(See Page.27) even if not using MIPI.
+
+
+
+
+                                                      Sh.
+Japan Display Inc.           Date     Feb 5, 2018
+                                                      No.
+                                                                     JDG10000677-03             Page    22/46
+                                          Sh.
+Japan Display Inc.   Date   Feb 5, 2018
+                                          No.
+                                                JDG10000677-03   Page   23/46
+                                          Sh.
+Japan Display Inc.   Date   Feb 5, 2018
+                                          No.
+                                                JDG10000677-03   Page   24/46
+2
+       SPI SPEC
+
+
+
+
+         Figure1. Serial Interface Operation for 3‐Wires/4‐Wires 9/8‐bit Type SPI
+
+                Register access(excluding 2C/3C command) SPI SPEC
+                                   Ite m                   Symbol   Min .   Typ.   Max.     U n it
+
+            SCL clock cycle time Write (received)         t SCYCW    80      -     20,000   ns
+
+            SCL clock cycle time Read (transmitted)       t SCYCR   280      -     20,000   ns
+
+            SCL “High” pulse width Write (received)        t SHW     40      -       -      ns
+
+            SCL “High” pulse width Read (transmitted)      t SHR    140      -       -      ns
+
+            SCL “Low” pulse width Write (received)         t SLW     40      -       -      ns
+            SCL “Low” pulse width Read (transmitted)       t SLR    140      -       -      ns
+
+            SCL clock rise/fall time                       tr,tf      -      -      10      ns
+
+            Chip select setup time                         t CSS     20      -       -       ns
+
+            Chip select hold time                          t CSH     50      -       -       ns
+
+            Input data setup time                          t SDS     20      -       -       ns
+
+            Input data hold time                           t SDH     20      -       -       ns
+
+            DCX to SCL Write setup time                     tAST     20      -       -       ns
+            DCX to SCL Write hold time                      tAHT     2       -       -      ns
+
+            Output data access time                        t ACC      -      -      120      ns
+
+            Output data hold time                           t OH     5       -       -       ns
+
+            Chip deselect “High” pulse width               t CHW     40      -       -       ns
+
+
+
+
+                                                                    Sh.
+    Japan Display Inc.                     Date     Feb 5, 2018
+                                                                    No.
+                                                                                          JDG10000677-03   Page   25/46
+2
+            2C/3C command(GRAM access) SPI SPEC
+
+                                 Ite m                        Symbol      Min .   Typ.   Max.     U n it
+
+      SCL clock cycle time Write (received)                  t SCYCW       16      -     20,000   ns
+
+      SCL clock cycle time Read (transmitted)                 t SCYCR     280      -     20,000   ns
+      SCL “High” pulse width Write (received)                     t SHW    8       -       -      ns
+      SCL “High” pulse width Read (transmitted)                   t SHR   140      -       -      ns
+
+      SCL “Low” pulse width Write (received)                      t SLW    8       -       -      ns
+      SCL “Low” pulse width Read (transmitted)                    t SLR   140      -       -      ns
+      SCL clock rise/fall time                                tr,tf         -      -      10      ns
+
+      Chip select setup time                                      t CSS    4       -       -       ns
+      Chip select hold time                                       t CSH    12      -       -       ns
+      Input data setup time                                       t SDS    5       -       -       ns
+      Input data hold time                                        t SDH    5       -       -       ns
+
+      DCX to SCL Write setup time                                 tAST     20      -       -      ns
+      DCX to SCL Write hold time                                  tAHT     2       -       -      ns
+      Output data access time                                     t ACC     -      -      120      ns
+
+      Output data hold time                                       t OH     5       -       -       ns
+      Chip deselect “High” pulse width
+                                                               t CHW       8       -       -       ns
+      Fro m GRAM Write( 2C/3C) to GRAM Write (2C/3C)
+      Chip deselect “High” pulse width
+                                                               t CHW      1000     -       -       ns
+      Fro m GRAM Write( 2C/3C) to command (n ot 2C/ 3C)
+
+
+
+
+                                                            Sh.
+    Japan Display Inc.              Date      Feb 5, 2018
+                                                            No.
+                                                                            JDG10000677-03                 Page   26/46
+  5. POWER SEQUENCE
+    5.1 Power ON/OFF sequence
+
+    VDDI
+                          t1                                                                                                                                       t8
+                   t9                                                                                                                                                   t12
+
+    VCI
+                                      t2                                                                                                               t7
+                           t10                                                                                                                                   t11
+
+   RESET
+                                                  t3                                                                                        t6
+                                                          Initial setting
+HSSI_D0_P/N
+                                        LP-11                                   LP-11                   LP-11
+HSSI_CLK_P/N
+                                                                                              1
+                                 t4                                                                                                                         t5
+                                      ※If you don't use MIPI , please fix the MIPI pin to LP11 (1.2 V) at the timing of the power
+                                      ON / OFF sequence.
+    SDI
+
+
+
+ SCL / CSX
+  DCX(*)
+                                      ※During the period that the SPI is not active, If CSX = H, SCL and SDI and DCX should set H or L. (Hi‐z is prohibited.)
+                               1       However, recommendations are CSX = H, SCL = H, SDI = L and DCX = H.
+
+                                                                Min     Typ   Max     unit                    Min    Typ     Max     unit              Command Address
+                                                         t1      0       -     -      ms               t5      0      -       -      ms                  (HEX)     (HEX)
+                    90%
+                                                         t2     10       -     -      ms               t6     10     80       -      ms                Wait more than 10ms
+                                                         t3     10      50     -      ms               t7      0      -       -      ms                    FF        E0
+                                                         t4      0       5     -      ms               t8      0      -       -      ms                    28        40
+                                                         t9      -       -    2*      ms              t11      1      -      10      ms                    28        0
+             10%
+                                                        t10      1       -    10      ms              t12      -      -      10      ms                Wait more than 10ms
+                                                                                                                                                           FF        10
+             Lower line    Upper line                  *If t9 over than 2ms, please add right command in front of "Initinal setting"
+
+
+
+
+                                                                                             Sh.
+ Japan Display Inc.                               Date            Feb 5, 2018
+                                                                                             No.
+                                                                                                                    JDG10000677-03                               Page         27/47
+5.2 Reset Timing Characteristics
+
+
+
+
+                                           Sh.
+Japan Display Inc.    Date   Feb 5, 2018
+                                           No.
+                                                 JDG10000677-03   Page   28/46
+ 6. CHANGE STATUS
+   6.1 Status flow
+
+                                                                                                         Deep Standby
+                                                            Power OFF
+                                                                                                            Mode
+
+                                            (D)Power OFF                 (A)Power ON     (E)Enter DSTB               (F)Exit DSTB
+
+                                                                                  (N)Enter STB
+                                                                                                           Standby
+                                                            Sleep Mode
+                                                                                                            Mode
+                                                                                  (O)Exit STB
+
+
+
+(N‐1)ON Sequence to MM by MIPI                                                                   (B‐1)ON Sequence to AM by MIPI
+                                                       (C)OFF Sequence
+(N‐2)ON Sequence to MM by SPI                                                                    (B‐2)ON Sequence to AM by SPI
+                                                     (G‐1)Enter MIP by MIPI
+                                                     (G‐2)Enter MIP by SPI
+                                        MM                                            AM
+                                   (Memory Mode)                                (Analog Mode)
+                                                     (I‐1)Exit MIP by MIPI
+                                                     (I‐2)Exit MIP by SPI
+
+
+                        (H‐1)MM Write new image by MIPI                  (O‐1)AM Write new image by MIPI
+                        (H‐2)MM Write new image by SPI                   (O‐2)AM Write new image by SPI
+
+                       AM= Analog Mode                     DSTB= Deep Standby             *trial use only
+                         = Normal Mode                                                    (L)Frame rate 30Hz in AM
+                                                            STB= Standby                  (M)Frame rate 60Hz in AM
+                       MM= Memory Mode
+                         = MIP Mode                          BL= Back Light
+
+
+                                 BACKLIGHT OFF
+
+
+                       (Z)BL OFF                 (Y)BL ON
+
+
+                                 BACKLIGHT ON
+
+
+
+
+                                                                   Sh.
+Japan Display Inc.                   Date      Feb 5, 2018
+                                                                   No.
+                                                                                       JDG10000677-03                   Page      29/46
+    6.1.1 Sequence 1 (A,B-1,B-2,N-1,N-2)
+        (A)Power ON
+                              Data      Para.    Command      Parameter
+        Write/     DCS/
+                              Type      Num.     address        value     Description
+         Read     Generic
+                              (HEX)    (DEC)      (HEX)        (HEX)
+                                    Pwer OFF
+
+                            Power supply on VDDI                          DSI input should be at GND level while VDDI/VCI off.
+                             Wait more than 0ms
+                             Power supply on VCI                          DSI input should be at GND level while VDDI/VCI off.
+                             Wait more than 5ms
+                 Set MIPI-DSI to LP-11, SPI to halt state                 Refer to "Power ON_OFF sequence"
+                            Wait more than 10ms
+                              Hard Reset L=>H
+                            Wait more than 50ms
+                                    Sleep Mode
+
+
+        (B-1)ON Sequence to AM by MIPI
+                              Data      Para.    Command      Parameter
+        Write/     DCS/
+                              Type      Num.     address        value     Description
+         Read     Generic
+                              (HEX)    (DEC)      (HEX)        (HEX)
+                                    Sleep Mode
+
+        Write      DCS         05        -         01             -       Soft reset
+                            Wait more than 10ms
+
+2       Write      DCS         15        1         FB            01       RELOAD       cancel
+        Write      DCS         15        1         3A            06       Set the color format (18bit:06h 16bit:05h)
+        Write      DCS         05        -         11             -       Sleep out
+                            Wait more than 10ms
+        Write      DCS         39        -        2C/3C           -       Transfer image data ※note1,note5   2
+                            Wait more than 120ms
+        Write      DCS         05        -         29             -       Display On ※note2
+                                 Analog Mode
+
+
+        (B-2)ON Sequence to AM by SPI
+                              Data      Para.    Command      Parameter
+        Write/     DCS/
+                              Type      Num.     address        value     Description
+         Read     Generic
+                              (HEX)    (DEC)      (HEX)        (HEX)
+                                    Sleep Mode
+
+        Write        -          -        -         01             -       Soft reset
+                            Wait more than 10ms
+        Write        -          -        -         FB            01       RELOAD       cancel
+2
+        Write        -          -        -         F3            02       SPI GRAM access enable
+        Write        -          -        -         3A            06       Set the color format (18bit:06h 16bit:05h)
+        Write        -          -        -         11             -       Sleep out
+                            Wait more than 10ms
+        Write        -          -        -        2C/3C           -       Transfer image data ※note1,note6
+                                                                                                              2
+                            Wait more than 120ms
+        Write        -          -        -         29             -       Display On ※note2
+        Write        -          -        -         BB            00
+2                                Analog Mode
+
+
+
+        (N-1)ON Sequence to MM by MIPI
+                              Data      Para.    Command      Parameter
+        Write/     DCS/
+                              Type      Num.     address        value     Description
+         Read     Generic
+                              (HEX)    (DEC)      (HEX)        (HEX)
+                                    Sleep Mode
+
+        Write      DCS         05        -         01             -       Soft reset
+                            Wait more than 10ms
+        Write    GenericSP     23        1         FF            20
+        Write      DCS         15        1         FB            01
+2       Write    GenericSP     23        1         6D            74
+        Write      DCS         15        1         FF            10
+        Write      DCS         15        1         FB            01
+        Write      DCS         15        1         B3            15
+        Write      DCS         15        1         BB            10
+        Write      DCS         15        1         3A            06       Set the color format (18bit:06h 16bit:05h)
+        Write      DCS         05        -         11             -       Sleep out
+                            Wait more than 10ms
+        Write      DCS         39        -        2C/3C           -       Transfer image data ※note1,note5
+                                                                                                              2
+                            Wait more than 120ms
+
+2       Write      DCS         05        -         29             -       Display On ※note2
+                                                                                                2
+        Write      DCS         15        1         BB            00
+        Write      DCS         15        1         B3            35
+        Write    GenericSP     23        1         FF            20
+        Write    GenericSP     23        1         0B            00
+                                Memory Mode
+
+
+
+        (N-2)ON Sequence to MM by SPI
+                              Data      Para.    Command      Parameter
+        Write/     DCS/
+                              Type      Num.     address        value     Description
+         Read     Generic
+                              (HEX)    (DEC)      (HEX)        (HEX)
+                                    Sleep Mode
+
+        Write        -          -        -         01             -       Soft reset
+                            Wait more than 10ms
+        Write        -          -        -         FF            20
+        Write        -          -        -         FB            01
+        Write        -          -        -         6D            74
+2       Write        -          -        -         FF            10
+        Write        -          -        -         FB            01
+        Write        -          -        -         B3            15
+        Write        -          -        -         BB            10
+        Write        -          -        -         F3            02
+        Write        -          -        -         3A            06       Set the color format (18bit:06h 16bit:05h 3bit_Type1:01h 3bit_Type2:09h , Refer to datasheet.)
+                                                                                                                                                                           2
+        Write        -          -        -         11             -       Sleep out
+                            Wait more than 10ms
+                                                          2
+        Write        -          -        -        2C/3C           -       Transfer image data ※note1,note6
+                                                                                                             2
+                            Wait more than 120ms
+                                                          2
+    2
+        Write        -          -        -         29             -       Display On ※note2     2
+        Write        -          -        -         BB            00
+        Write        -          -        -         B3            35
+        Write        -          -        -         FF            20
+        Write        -          -        -         0B            00
+                                Memory Mode
+
+
+
+
+                                                                                                    Sh.
+Japan Display Inc.                                      Date            Feb 5, 2018
+                                                                                                    No.
+                                                                                                                       JDG10000677-03                           Page           30/46
+6.1.2 Sequence 2 (C,D,E,F,L,M,N,O,Y,Z)
+     (C)OFF Sequence
+                            Data      Para.    Command Parameter
+     Write/      DCS/
+                            Type      Num.     address    value    Description
+      Read      Generic
+                            (HEX)    (DEC)      (HEX)    (HEX)
+                               Analog Mode
+
+     Write         -          -        -         FF        10      Select CMD1 (If already setted CMD1, skip this command)
+     Write       DCS         05        -         28         -      Display Off
+                          Wait more than 20ms
+     Write       DCS         05        -         10         -      Sleep In
+                          Wait more than 100ms
+                                  Sleep Mode
+
+
+
+     (D)Power OFF
+                            Data      Para.    Command Parameter
+     Write/      DCS/
+                            Type      Num.     address    value    Description
+      Read      Generic
+                            (HEX)    (DEC)      (HEX)    (HEX)
+                                  Sleep Mode
+
+                            Hard Reset H=>L
+                          Power supply off VCI
+                          Power supply off VDDI                    DSI input should be at GND level while VDDI off.
+                                  Pwer OFF
+
+
+
+     (E)Enter DSTB
+                            Data      Para.    Command Parameter
+     Write/      DCS/
+                            Type      Num.     address    value    Description
+      Read      Generic
+                            (HEX)    (DEC)      (HEX)    (HEX)
+                                  Sleep Mode
+
+     Write       DCS         15        1         4F        01      Enter DSTB
+              Set MIPI-DSI to ULPM, SPI to halt state
+                            Deep Standby Mode
+
+
+
+     (F)Exit DSTB
+                            Data      Para.    Command Parameter
+     Write/      DCS/
+                            Type      Num.     address    value    Description
+      Read      Generic
+                            (HEX)    (DEC)      (HEX)    (HEX)
+                            Deep Standby Mode
+
+                          Wait more than 10ms
+                            Hard Reset H=>L
+                           Wait more than 3ms
+                            Hard Reset L=>H
+                          Wait more than 50ms
+              Set MIPI-DSI to LP-11, SPI to halt state
+                                  Sleep Mode
+
+
+
+     (L)Frame rate 30Hz
+                            Data      Para.    Command Parameter
+     Write/      DCS/
+                            Type      Num.     address    value    Description
+      Read      Generic
+                            (HEX)    (DEC)      (HEX)    (HEX)
+                               Analog Mode
+
+     Write    GenericSP      23        1         FF        24
+     Write    GenericSP      23        1         D8        C1
+     Write    GenericSP      23        1         D9        3E
+                               Analog Mode
+
+
+     (M)Frame rate 60Hz
+                            Data      Para.    Command Parameter
+     Write/      DCS/
+                            Type      Num.     address    value    Description
+      Read      Generic
+                            (HEX)    (DEC)      (HEX)    (HEX)
+                               Analog Mode
+
+     Write    GenericSP      23        1         FF        24
+     Write    GenericSP      23        1         D8        41
+     Write    GenericSP      23        1         D9        1E
+                               Analog Mode
+
+
+
+     (N)Enter STB
+                            Data      Para.    Command Parameter
+     Write/      DCS/
+                            Type      Num.     address    value    Description
+      Read      Generic
+                            (HEX)    (DEC)      (HEX)    (HEX)
+                                  Sleep Mode
+
+                          Power supply off VCI
+                              Standby Mode
+
+
+
+     (O)Exit STB
+                            Data      Para.    Command Parameter
+     Write/      DCS/
+                            Type      Num.     address    value    Description
+      Read      Generic
+                            (HEX)    (DEC)      (HEX)    (HEX)
+                              Standby Mode
+
+                           Power supply on VCI
+                                  Sleep Mode
+
+
+
+     (Y)BL ON
+                            Data      Para.    Command Parameter
+     Write/      DCS/
+                            Type      Num.     address    value    Description
+      Read      Generic
+ 1                          (HEX)    (DEC)      (HEX)    (HEX)
+                               Analog Mode
+
+     Write       DCS         15        1         FF        10      Select CMD1 (If already setted CMD1, skip this command)
+     Write       DCS         15        1         53        24      BACKLIGHT ON
+     Write       DCS         15        1         51        xx      LEDPWMduty setting(00h:0% 〜 FFh:100%）
+
+
+     (Z)BL OFF
+                            Data      Para.    Command Parameter
+     Write/      DCS/
+                            Type      Num.     address    value    Description
+      Read      Generic
+1                           (HEX)    (DEC)      (HEX)    (HEX)
+                               Analog Mode
+
+     Write       DCS         15        1         FF        10      Select CMD1 (If already setted CMD1, skip this command)
+     Write       DCS         15        1         53        00      BACKLIGHT OFF
+
+
+
+
+                                                                                                                 Sh.
+Japan Display Inc.                                              Date             Feb 5, 2018
+                                                                                                                 No.
+                                                                                                                             JDG10000677-03   Page   31/46
+    6.1.3 Sequence 3 (G-1,G-2,O-1,O-2)
+    (G-1)Enter MIP by MIPI
+                           Data   Para.    Command        Parameter
+    Write/     DCS/
+                           Type   Num.     address          value     Description
+     Read     Generic
+                          (HEX)   (DEC)     (HEX)          (HEX)
+                             Analog Mode
+
+    Write      DCS          15     1         FF              10       Select CMD1 (If already setted CMD1, skip this command)
+    Write      DCS          15     1         BB              10
+    Write      DCS          15     1         F3              00       MIPI GRAM access enable
+    Write      DCS          15     1         3A              06       Set the color format (18bit:06h 16bit:05h)
+    Write      DCS          39     1         2A              00       Set X-direction display address
+                                   2                         00
+                                   3                         01                                                            It can set the range of partial
+                                   4                         3F                                                            update area.
+    Write      DCS          39     1         2B              00       Set Y-direction display address
+                                   2                         00
+                                   3                         01
+                                   4                         2B
+    Write    GenericSP      23     1         FF              20
+2   Write    GenericSP      23     1         6D              74
+    Write      DCS          15     1         FF              10
+    Write      DCS          15     1         B3              15
+                         Wait more than 50ms
+                                                  2
+    Write      DCS          39      -       2C/3C             -       Transfer image data ※note1,note5
+                                                                                                         2
+    Write      DCS          15     1         BB              00
+    Write      DCS          15     1         B3              35
+    Write    GenericSP      23     1         FF              20
+    Write    GenericSP      23     1         0B              00
+                             Memory Mode
+
+
+
+    (G-2)Enter MIP by SPI
+                           Data   Para.    Command        Parameter
+    Write/     DCS/
+                           Type   Num.     address          value     Description
+     Read     Generic
+                          (HEX)   (DEC)     (HEX)          (HEX)
+                             Analog Mode
+
+    Write        -          -       -        FF              10       Select CMD1 (If already setted CMD1, skip this command)
+    Write        -          -       -        BB              10
+    Write        -          -       -        F3              02       SPI GRAM access enable
+2
+    Write        -          -       -        3A              09       Set the color format (18bit:06h 16bit:05h 3bit_Type1:01h 3bit_Type2:09h , Refer to datasheet.)
+    Write        -          -      1         2A              00       Set X-direction display address                                                                  2
+                                   2                         00
+                                   3                         01                                                            It can set the range of partial
+                                   4                         3F                                                            update area.
+    Write        -          -      1         2B              00       Set Y-direction display address
+                                   2                         00
+                                   3                         01
+                                   4                         2B
+    Write        -          -       -        FF              20
+2
+    Write        -          -       -        6D              74
+    Write        -          -       -        FF              10
+    Write        -          -       -        B3              15
+                         Wait more than 50ms
+                                                  2
+    Write        -          -       -       2C/3C             -       Transfer image data ※note1,note6
+                                                                                                          2
+                         Wait more than 1us
+                                                  2
+    Write        -          -       -        BB              00
+    Write        -          -       -        B3              35
+    Write        -          -       -        FF              20
+    Write        -          -       -        0B              00
+                             Memory Mode
+
+
+
+    (O-1)AM Write new image by MIPI
+                           Data   Para.    Command        Parameter
+    Write/     DCS/
+                           Type   Num.     address          value     Description
+     Read     Generic
+                          (HEX)   (DEC)     (HEX)          (HEX)
+                             Analog Mode
+
+    Write      DCS          15     1         FF              10       Select CMD1 (If already setted CMD1, skip this command)
+    Write      DCS          15     1         3A              06       Set the color format (18bit:06h 16bit:05h)
+    Write      DCS          39     1         2A              00       Set X-direction display address
+                                   2                         00
+                                                                                                                           It can set the range of partial
+                                   3                         01
+                                   4                         3F                                                            update area.
+    Write      DCS          39     1         2B              00       Set Y-direction display address
+                                   2                         00
+                                   3                         01
+                                   4                         2B
+    Write      DCS          39      -       2C/3C             -       Transfer image data ※note1,note5
+                                                                                                          2
+                             Analog Mode
+
+
+
+    (O-2)AM Write new image by SPI
+                           Data   Para.    Command        Parameter
+    Write/     DCS/
+                           Type   Num.     address          value     Description
+     Read     Generic
+                          (HEX)   (DEC)     (HEX)          (HEX)
+                             Analog Mode
+
+    Write        -          -       -        FF              10       Select CMD1 (If already setted CMD1, skip this command)
+    Write        -          -       -        BB              10
+    Write        -          -       -        F3              02       SPI GRAM access enable
+    Write        -          -       -        3A              06       Set the color format (18bit:06h 16bit:05h)
+    Write        -          -       -        2A              00       Set X-direction display address
+                                                             00
+                                                                                                                           It can set the range of partial
+                                                             01
+                                                             3F                                                            update area.
+    Write        -          -       -        2B              00       Set Y-direction display address
+                                                             00
+                                                             01
+                                                             2B
+    Write        -          -       -       2C/3C             -       Transfer image data ※note1,note6
+                                                                                                          2
+                         Wait more than 1us
+                                                      2
+    Write        -          -       -        BB              00
+                             Analog Mode
+
+
+
+
+                                                                                                        Sh.
+    Japan Display Inc.                                     Date           Feb 5, 2018
+                                                                                                        No.
+                                                                                                                             JDG10000677-03                                Page   32/46
+    6.1.4 Sequence 4 (H-1,H-2,I-1,I-2)                                                      2
+
+    (H-1)MM Write new image by MIPI(※note3)
+                           Data    Para.   Command        Parameter
+    Write/     DCS/
+                           Type    Num.    address          value     Description
+     Read     Generic
+                           (HEX)   (DEC)    (HEX)          (HEX)
+                             Memory Mode
+
+    Write      DCS          15      1        FF              10       Select CMD1 (If already setted CMD1, skip this command)
+    Write      DCS          15      1        BB              10
+    Write      DCS          15      1        3A              06       Set the color format (18bit:06h 16bit:05h)
+    Write      DCS          39      1        2A              00       Set X-direction display address
+                                    2                        00
+                                                                                                                           It can set the range of partial
+                                    3                        01
+                                    4                        3F                                                            update area.
+    Write      DCS          39      1        2B              00       Set Y-direction display address
+                                    2                        00
+                                    3                        01
+                                    4                        2B
+    Write      DCS          39       -      2C/3C             -       Transfer image data ※note1,note5
+                                                                                                          2
+    Write      DCS          15      1        BB              00
+    Write      DCS          15      1        B3              35
+                             Memory Mode
+
+
+
+    (H-2)MM Write new image by SPI(※note3)
+                           Data    Para.   Command        Parameter
+    Write/     DCS/
+                           Type    Num.    address          value     Description
+     Read     Generic
+                           (HEX)   (DEC)    (HEX)          (HEX)
+                             Memory Mode
+
+    Write        -           -       -       FF              10       Select CMD1 (If already setted CMD1, skip this command)
+    Write        -           -       -       BB              10
+    Write        -           -       -       F3              02       SPI GRAM access enable     2
+    Write        -           -       -       3A              09       Set the color format (18bit:06h 16bit:05h 3bit_Type1:01h 3bit_Type2:09h , Refer to datasheet.)
+    Write        -           -       -       2A              00       Set X-direction display address
+                                                             00
+                                                                                                                           It can set the range of partial
+                                                             01
+                                                             3F                                                            update area.
+    Write        -           -       -       2B              00       Set Y-direction display address
+                                                             00
+                                                             01
+                                                             2B
+    Write        -           -       -      2C/3C             -       Transfer image data ※note1,note6
+                                                                                                          2
+                         Wait more than 1us
+    Write        -           -       -       BB
+                                                      2      00
+    Write        -           -       -       B3              35
+                             Memory Mode
+
+
+
+    (I-1)Exit MIP by MIPI
+                           Data    Para.   Command        Parameter
+    Write/     DCS/
+                           Type    Num.    address          value     Description
+     Read     Generic
+                           (HEX)   (DEC)    (HEX)          (HEX)
+                             Memory Mode
+
+    Write      DCS          15      1        FF              10       Select CMD1 (If already setted CMD1, skip this command)
+    Write      DCS          15      1        BB              10
+    Write      DCS          15      1        F3              00       MIPI GRAM access enable
+    Write      DCS          15      1        3A              06       Set the color format (18bit:06h 16bit:05h)
+    Write      DCS          39      1        2A              00       Set X-direction display address
+                                    2                        00
+                                    3                        01
+                                    4                        3F
+    Write      DCS          39      1        2B              00       Set Y-direction display address
+                                    2                        00
+                                    3                        01
+                                    4                        2B
+    Write      DCS          39       -      2C/3C             -       Transfer image data ※note1,note4,note5
+                                                                                                                   2
+    Write    GenericSP      23      1        FF              20
+    Write    GenericSP      23      1        0B              88
+2
+    Write      DCS          15      1        FF              10
+    Write      DCS          15      1        B3              02
+                             Analog Mode
+
+
+
+    (I-2)Exit MIP by SPI
+                           Data    Para.   Command        Parameter
+    Write/     DCS/
+                           Type    Num.    address          value     Description
+     Read     Generic
+                           (HEX)   (DEC)    (HEX)          (HEX)
+                             Memory Mode
+
+    Write        -           -       -       FF              10       Select CMD1 (If already setted CMD1, skip this command)
+    Write        -           -       -       F3              02       SPI GRAM access enable
+    Write        -           -       -       BB              10
+    Write        -           -       -       3A              06       Set the color format (18bit:06h 16bit:05h)
+    Write        -           -       -       2A              00       Set X-direction display address
+                                                             00
+                                                             01
+                                                             3F
+    Write        -           -       -       2B              00       Set Y-direction display address
+                                                             00
+                                                             01
+                                                             2B
+    Write        -           -       -      2C/3C             -       Transfer image data ※note1,note4,note6
+                         Wait more than 1us
+                                                                                                                   2
+                                                  2
+    Write        -           -       -       BB              00
+    Write        -           -       -       FF              20
+2   Write        -           -       -       0B              88
+    Write        -           -       -       FF              10
+    Write        -           -       -       B3              02
+                             Analog Mode
+
+
+
+
+                                                                                                 Sh.
+    Japan Display Inc.                                    Date         Feb 5, 2018
+                                                                                                 No.
+                                                                                                                       JDG10000677-03                            Page   33/46
+  note1：If the communication is interrupted during transmission of the 2Ch/3Ch command, please re-send 2Ch/3Ch command from the beginning of the frame
+         【example】
+         ・18bit/16bit mode
+                      2Ch(ADD), xxh(data),…,xxh(data) ⇒ Data is transmitted for 320 pixels.（1st line）
+                      3Ch(ADD), xxh(data),…,xxh(data) ⇒ Data is transmitted for 320 pixels.（2nd line）
+                             （repeat 3Ch command）
+                      3Ch(ADD), xxh(data),…,xxh(data) ⇒ Data is transmitted for 320 pixels.（300th line）
+         ・RGB1-1-1 mode（RGB 1-1-1-bits is only supported on 3-Wire mode 9-bit SPI interface.）
+                      2Ch(ADD), xxh(data),…,xxh(data) ⇒ Data is transmitted for 320 x 300 pixels.（1frame data）
+
+                                                                                         2
+  note2： After Display on, TE signal is output. Timing is as belows.
+          TE：Frequency 15.84ms(1V=63.1Hz)、H width 0.56ms
+
+                          15.84ms(1V=63.1Hz)
+
+
+
+
+         0.56ms
+
+
+
+
+2 note4 When switching from (AM to MM) or (MM to AM), please update the display image data with RGB format suitable for each mode.
+            The display image to be updated at AM is sent with RGB 666 or RGB 656 format. Be careful if you are using RGB 111 at MM.
+
+
+2 note5 When using MIPI I/F, For the 2C / 3C command, it must be used the High speed mode,
+            and for the other commands, it must be used the Low Power mode.
+
+
+        When using
+2 note6 When usingSPI
+                   SPII/F,
+                       I/F,about
+                            aboutCS=H
+                                  CS=Hperiod,
+                                       period,specifications of of
+                                                specifications  2C /
+                                                                   2C3C  command
+                                                                      / 3C       andand
+                                                                           command   other commands
+                                                                                        other           different.
+                                                                                                    are are
+                                                                                              commands       different.
+           Please
+            Pleaserefer
+                   refertoto SPI_4,5
+                           25,26page.page.
+           The register
+           The registeraccess
+                        accesscan
+                               canbe
+                                   besent
+                                      sentbybyseparating
+                                               separatingCSCS
+                                                            byby
+                                                               address and
+                                                                 address   data,
+                                                                         and     butbut
+                                                                             data,   when sending
+                                                                                        when           3C/ 3C
+                                                                                                  2C /2C
+                                                                                             sending      command,
+                                                                                                              command,
+            it must
+            it must be
+                    be sent
+                        sentall
+                             allofof{2C
+                                     {2C++data}
+                                           data}oror{3C
+                                                     {3C++
+                                                         data} with
+                                                           data}    CSCS
+                                                                 with  = L=state.
+                                                                            L state.
+
+
+                [note6]
+                [note6]
+                 CS
+                 CS
+
+                 data
+                 data                       2C/3C
+                                             2C/3C+ +display
+                                                      displaydata
+                                                              data
+
+
+
+    6.2 ID read address
+
+    (CMD１_DAh) : Read ID1
+          DAh        D7                            D6                  D5          D4          D3            D2          D1                  D0
+     1st parameter     0                           0                   Prototype Level                        Prototype No.
+
+
+
+
+    ◆Prototype Level (2bit)                                    ◆Prototype Number (2bit)
+    Prototype Level     Bit                                    Prototype No.  Bit
+          WS            00                                           1       0000
+          ES            01                                           2       0001
+          CS            10                                           3       0010
+          MP            11                                         ・・・        ・・・
+                                                                    14       1101
+                                                                    15       1110
+                                                                    16       1111
+
+
+
+
+                                                                                  Sh.
+ Japan Display Inc.                            Date          Feb 5, 2018
+                                                                                  No.
+                                                                                                  JDG10000677-03                      Page        34/46
+ 7. OPTICAL SPECIFICATION
+ 7.1 OPTICAL CHARACTERISTICS
+ 7.1.1 Reflective mode
+    *Vcom frequency :60Hz±10%
+    *VCI=3.1V / VDDI=1.8V
+    *Analog(Normal) driving mode
+                         Temp.         Rating                        Definition
+     Item       Symbol                                    Unit                            Remark
+                          (℃)     Min. Typ. Max.                 (Measurement setup)
+   Contrast      CR        25      10    20    -           -             1
+                  tr                -     3   6                                        Black → White
+   Response               25                              ms
+                 td                 -     6   10                         2             White → Black
+                 Rx                 -  0.505   -
+                 Ry                 -  0.315   -
+                 Gx                 -  0.300   -
+   Color         Gy                 -  0.445   -
+                          25                               -             3
+ Coordinates     Bx                 -  0.170   -
+                 By                 -  0.175   -
+                 Wx                 -  0.315   -
+                 Wy                 -  0.335   -
+  NTSC ratio       -      25        -    23    -           %             4
+  Reflectance      -      25        -    21    -           %             -
+                 θL                45    60    -
+   Viewing                                                                               Horizontal
+                 θR                50    65    -
+    Angle                 25                              deg.           5
+                 θT                50    65    -
+   (CR>2)                                                                                 Vertical
+                 θB                45    60    -
+
+
+7.1.2 Transmissive mode
+     *Vcom frequency :60Hz±10%
+     *VCI=3.1V / VDDI=1.8V / ILED=20mA
+     *Analog(Normal) driving mode, White raster
+                         Temp.         Rating                        Definition
+     Item       Symbol                                    Unit                            Remark
+                          (℃)     Min. Typ. Max.                 (Measurement setup)
+  Brightness      B        25      -    10    -       cd/㎡
+
+
+
+
+                                                    Sh.
+Japan Display Inc.             Date   Feb 5, 2018
+                                                    No.
+                                                                    JDG10000677-03           Page     35/46
+7.2 DEFINITION AND CONDITION OF OPTICAL CHARACTERISTICS
+
+  Definition 1
+          This is a ratio between the screen surface reflectance of the white raster and the black raster
+                                     Reflection intensity on all pixels White
+           Contrast ratio (CR) =
+                                     Reflection intensity on all pixels Black
+
+ Definition 2
+         The response time is defined as the following figure and shall be measured by matching the input signal for
+        “Black” and “White”.
+  ・Normally Black mode
+
+         Black
+          10%                                                                            tr：Response time from Black to White
+
+                                                                                         tf：Response time from White to Black
+
+
+
+
+            Brightness
+
+
+
+          90%
+
+         W hite
+                                     tr                                tf        Time
+
+  Definition 3
+        This is the x-y coordinate of Red, Green, Blue and White colors specified on the CIE1931 chromaticity
+        Diagram. (* It is not a guaranteed value)
+
+  Definition 4
+         This is an area of a triangle shaped by R, G, B coordinates on the CIE1931 chromaticity diagram.
+
+  Definition 5
+          This is a maximum angle θ from the normal direction that keeps having the contrast more than 2.
+                                                   θ=0
+                                                          θT
+                                                               Top
+                                                                            θR
+                                θL
+
+
+                         Left                                                Right
+
+
+
+                                θB
+                                          Bottom
+                                     *FPC side
+
+
+
+
+                                                                            Sh.
+Japan Display Inc.                        Date           Feb 5, 2018
+                                                                            No.
+                                                                                        JDG10000677-03                      Page   36/47
+- Measurement method of optical characteristics -
+
+< Basic measurement conditions >
+  a) Driving voltage
+       VCI = 3.1V
+       VDDI= 1.8V
+  b) Measurement temperature
+      25°C unless otherwise specified
+  c) Measurement point
+      Center of the Active area (one point) unless otherwise specified
+
+
+< Measurement system-I for reflective mode>
+   Light source:
+      Parallel light source
+      ・D65 / 2 degree viewing angle
+      ・Light source input direction             : from opposite side of FPC (30°)
+      ・Light source receive direction           : at LCD center (0°)
+
+
+
+                    Measurment            Light source
+ Light source                    LCD-5200 or equivalent
+
+                    equipment
+
+
+
+
+                  30°
+                         30°
+
+          LCD center
+                   LCD Module
+
+                                                                Driving Circuit
+                                     FPC side
+
+
+
+< Measurement system-II for transparent mode>
+
+                 Receiver lens
+                                          Optical fiber      Measurement equipment
+                                                             CS-2000A or equivalent
+
+                                                  LCD Module
+                A side
+                                                  Stage
+
+
+
+
+                                                               Sh.
+Japan Display Inc.                 Date      Feb 5, 2018
+                                                               No.
+                                                                              JDG10000677-03   Page   37/47
+8. INSPECTION
+
+    Please refer to the shipment inspection standard for LPM013M091A ver.02.
+
+
+
+
+                                              Sh.
+Japan Display Inc.      Date   Feb 5, 2018
+                                              No.
+                                                          JDG10000677-03       Page   38/47
+9. RELIABILITY TEST
+  9.1 CONDITIONS OF RELIABILITY AND MECHANICAL TEST
+  No.            TEST ITEM                               CONDITION                           REMARK
+   1      High Temperature Storage                  Ta=80℃                         240h
+   2      Low Temperature Storage                   Ta=-30℃                        240h
+            High Temperature &                  Ta=60℃/90%RH
+   3                                                                               240h
+           High Humidity Storage                (No condensation)
+            High Temperature &                  Ta=40℃/90%RH
+   4                                                                               240h
+          High Humidity Operation               (No condensation)
+   5     High Temperature Operation                 Ta=70℃                         240h
+   6     Low Temperature Operation                  Ta=-20℃                        240h
+               Thermal shock                    Ta=-30℃ to 80℃
+   7                                                                              50cycles
+               (non-operating)                    (30min each)
+                                              HBM IEC 61340-3-1,
+                                                 ESD STM5.1                  1 time each
+   8                 ESD
+                                              V=±1.0kV(contact)                terminal
+                                               R=1.5kΩ,C=100pF
+                                                    100G,6ms                    3 times
+   9                Shock
+                                                    ±X,±Y,±Z                Each direction
+                                                                               101min
+  10          Packing Vibration                 Random Vibration
+                                                                             Direction:Z
+                                              Height 60cm,1 corner           1 time Each
+  11            Packing Drop
+                                               3 edges,6 surfaces             direction
+
+ Note)
+ If a nonconformance is found, both parties will have a discussion to solve it.
+
+
+9.2 CRITERIA FOR JUDGEMENT
+   After the above tests, return samples to the normal temperature and moisture environment in the
+thermostat chamber room over 30 minutes not to condense. Inspect samples kept for more than 1 hour
+after pulling them out of the thermostat chamber room.
+
+(1) There shall be no abnormality in the functions (Ex. No display, abnormal display, line defects).
+
+(2) There shall be no serious degradation (Ex. Brightness uniformity, reversible changes, optical changes.
+    The degradation due to backlight or polarizer is ignored).
+
+
+
+
+                                                      Sh.
+Japan Display Inc.           Date     Feb 5, 2018
+                                                      No.
+                                                                     JDG10000677-03             Page   39/46
+10. PACKING SPECIFICATIONS
+10.1 INNER CARTON
+
+
+                                    Empty
+
+
+
+
+    Module                       Tray
+                                              20pcs LCD modules per tray
+                                              10 trays with products + empty tray as cover
+                                              = 11 trays
+                                              Tray is inverted 180 degrees and piled up.
+
+
+
+
+                                            Bag
+
+
+
+
+                                             Inner Carton
+
+
+
+
+                                   Note)
+                                   Tray orientation must be alternately arranged.
+                                   If you do not stack trays alternately, it will lead to panel damaged.
+
+
+
+
+                                            Sh.
+Japan Display Inc.   Date   Feb 5, 2018
+                                            No.
+                                                            JDG10000677-03              Page   40/46
+10.2 MASTER CARTON
+
+
+    Inner Carton
+
+
+
+                                    Insert four (4) inner cartons within a master carton.
+                                    Maximum quantity per a master carton : 20 × 10 × 4 = 800pcs
+
+
+
+
+                                           Master Carton
+
+
+
+
+                                   [C]
+                     [D
+                     ]
+
+
+
+
+                                     [B]        (Notes)
+             [A                                 Master carton size : W395 × L596 ×H223 (mm).
+             ]                                  Gap is filled if necessary.
+                                                Tape is applied if necessary.
+                                                Tied if necessary.
+
+
+
+
+               ≪Outer label≫     Indication onto [A] [B] [C] [D] on master carton are shown as below.
+
+
+
+
+                                                   Sh.
+Japan Display Inc.        Date   Feb 5, 2018
+                                                   No.
+                                                                 JDG10000677-03               Page      41/46
+11. DESIGNATION OF LOT MARK
+
+   Lot mark is printed on the rear of the LCD module.
+
+
+ Printing Area
+
+
+
+
+                                                        Sh.
+Japan Display Inc.            Date      Feb 5, 2018
+                                                        No.
+                                                              JDG10000677-03   Page   42/46
+12. LCD MODULE USAGE AND PRECAUTIONS
+  12.1 HANDLING
+    (1) The display panel is made of glass. Do not subject it to mechanical shock such as dropping it from a high position, etc.
+    (2) If the display panel is damaged and internal liquid crystal substance leaks out, be sure not to inhale or consume it. If
+    the internal liquid crystal substance comes into contact with skin or clothing, promptly wash it off using soap and running
+    water.
+    (3) Do not apply excessive force on the surface, perimeter or adjoining areas of LCD module since this may cause display
+    panel color tone to vary.
+    (4) The polarizer covering the display panel surface of the LCD module is soft and can be easily scratched. Handle the LCD
+    module carefully.
+    (5) If the surface polarizer becomes contaminated, use the following recommended or equivalent adhesive tape for
+    contaminants removal.
+    • Scotch‐brand mending tape (No. 810)
+    (6) Do not breathe on the display surface or use solvents such as Ethyl Alcohol to remove contaminants. Those may cause
+    polarizer discoloration. Additionally, the following liquids can damage the polarizer.
+    • Water
+    • Ketones
+    • Aromatic solvents
+    (7) When mounting the LCD Module, be sure that it is free from twisting, warping, or distortion. Any stress can bring great
+    influence on the display quality. Be sure to secure sufficient stiffness on the outer case and the frame for a robust design.
+    (8) Do not apply pressure at or around the FPC bonding area and the surrounding area.
+    (9) Do not attempt to disassemble or rework the LCD module.
+    (10) To prevent destruction of the elements by static electricity, be careful to maintain an optimum working environment.
+    • Be sure to ground your body before handling the LCD module.
+    • Make sure that solder guns and all other tools required for assembly have been grounded.
+    • To reduce occurrence of static electricity, avoid using this product in dry environments.
+    • A protective film has been attached to the surface of the LCD panel. When peeling off the protective film, be careful to
+    prevent electrostatic discharges.
+    (11) To minimize performance degradation of the LCD module caused by destructive forces such as static electricity, etc.,
+    avoid direct contact to the following sections when handling the LCD module.
+    • Terminal electrodes of connector
+    • Wiring pattern on FPC
+    (12) The protective film attached on the LCD panel must be removed before final product installation. After removal of
+    protective film, some adhesive residues may be left on the LCD panel, especially after a long storage period. Please refer
+    to section (5) listed above for proper contaminant removal procedure.
+    (13) Take precaution to minimize corrosion of electrodes. Corrosion of electrodes is accelerated by moisture,
+    condensation or a current flow in a high‐humidity environment.
+    (14) Do not apply excessive pressure to the FPC part. Force type such as twist, warp, etc., may cause FPC patterning
+    damage and/or peeling FPC.
+    (15) Keep the LCD module away from rigid objects such as a tool. Don't put any heavy object on the display surface. Don't
+    stack or pile up the LCD modules. As the polarizer material tends to be easily scratched, the LCD module must be handled
+    with due care to avoid being touched, pressed or rubbed with any rigid object.
+
+
+
+
+                                                                Sh.
+Japan Display Inc.               Date       Feb 5, 2018
+                                                                No.
+                                                                                  JDG10000677-03                   Page      43/46
+  (16) Do not touch or handle the LCD module directly with bare hands. Residue of dirt, oil or water may have the
+  possibility to cause corrosion. Be sure to wear finger sacks or gloves when handling LCD modules. When holding an
+  LCD panel module, carefully hold the panel by the edges of the glass plate.
+  (17) Avoid using LCD module under condensation or high humidity environment because polarizer etc. maybe
+  damaged in these conditions.
+  (18) Trays are used to package LCD modules for shipment. If LCD modules scratch the tray during shipment, material
+  of the scratched tray may be left on LCD modules. In such case, clean up LCD modules after removal from trays.
+  (19) When installing LCD module, don't apply excess stress of bending or stretching to the input cable (FPC).
+  (20) Keep NC terminals open electrically unless otherwise specified.
+  (21) After storage under high humidity or condensation environment, keep LCD module under room temperature
+  more than 30 minutes before operation.
+  (22) Take precautions to handle LCD module because the glass plate has very keen edges.
+
+
+
+
+12.2 DESIGN OF APPLICATION
+
+  (1) The absolute maximum ratings represent the rated values which LCD module cannot exceed. When LCD modules
+  are used beyond these rated values, the operating characteristics may be adversely affected.
+  (2) To prevent the occurrence of erroneous operation caused by noise, special attention on satisfying VIL, VIH
+  specified values is required. This includes taking the precautionary measures of using short cables for signal
+  transferring.
+  (3) An inherent characteristic of liquid crystal display is its temperature dependency. Be sure to use the LCD modules
+  within the specified operating temperature range. Recognition of the display becomes difficult when the LCD
+  module is used outside its range. Also, keep in mind that the voltage levels necessary for clear display images will
+  vary according to temperature.
+  (4) It is recommended that power supply lines (V_SYS, V_INTERFACE, LED+) include current surge protection. (Fuse
+  etc. recommend value: 0.5A)
+   (5) Note the peripheral devices can cause mutual noise interference with LCD modules. Especially, input devices
+  such as Touch Panel, etc., may output operational level by radiation noise even when these devices are not in
+  operation. Actual performance confirmation and verification under actual usage environment by actual final product
+  are highly recommended.
+  (6) To avoid EMI, preventive measures should be implemented for the final product.
+  (7) Display abnormality may occur with sudden removal of the battery pack. Electric design should be well studied so
+  that sudden electric power interruption will not occur. LCD module quality cannot be guaranteed under the
+  condition that unexpected power shutdown can possibly occur.
+  (8) Ensure sufficient light shading measures during design phase and then mount the LCD module.
+  (9) Ensure sufficient light shading measures in the inspection process.
+  (10) As well as general electronic components, ESD may cause the LCD IC to malfunction. Provide ESD prevention
+  measures entirely around the LCD module.
+  (11) While display data may be kept, the data can be easily changed by external noise. Noise can be minimized at
+  device or system level.
+  (12) Unexpected external noise may cause abnormal display and/or IC malfunction. Periodic refresh operation such
+  as resending commands and display data is highly recommended as a part of the software routine.
+  (13) When logic circuit power is off, do not apply any signals to the input terminals.
+  (14) As the pressure bonding of the FPC tends to be easily peeled by mechanical stress, never hold the LCD module
+  by the FPC when handling. Additionally, when mounting the LCD Module and/or fixing the FPC, keep them free from
+  twisting or bending. Those may cause wiring pattern breaks and/or bonding separation. Remember not to bend/pull
+  them toward the direction in which the bonding goes separate because there is a high possibility of wiring pattern
+  breaks.
+
+
+
+
+                                                                 Sh.
+Japan Display Inc.                Date       Feb 5, 2018
+                                                                 No.
+                                                                                  JDG10000677-03                   Page    44/46
+  12.3 DISPLAY CHARACTERISTECS
+   (1) Because the optimum LCD driving voltage depends on the ambient temperature, display may slightly flicker at
+   the environment of high temperature.
+   (2) One of the special characteristics of liquid crystal is that it freezes when stored at the temperature below the
+   storage temperature range. Such freezing may cause orientation defects or bubbles (black or white) to appear in
+   the LCD panel. Bubbles may also occur if the panel receives an impact in a low‐temperature environment.
+   (3) If the LCD module is left operating for a long time with the same display showing, the displayed pattern may
+   leave traces on the screen or the contrast may become inconsistent. These issues will usually recover in time, but
+   the phenomenon may persist in significant cases.
+   It is unavoidable with the current technology. The final product must be designed with this property in mind and
+   need to avoid displaying a fixed pattern for a long period. Any afterimage issue is excluded from the LCD Module
+   appearance specifications that we warrant.
+
+
+  12.4 KEEPING
+   (1) When keeping LCD modules, avoid the following condition or environment.
+   • Exposure to direct sunlight or fluorescent lamp lighting.
+   • High‐temperature/high‐humidity or very low‐temperature (below 0°C) environments.
+   • Exposure to water droplets, condensation, etc.
+   Furthermore, keep LCD modules in anti‐static bags to prevent static electricity charge ups. Whenever possible, LCD
+   modules should be stored in the same conditions in which they were shipped from Japan Display Inc.
+   (2) Take precaution to minimize corrosion of electrodes. Corrosion of electrodes is accelerated by moisture,
+   condensation or a current flow in a high‐humidity environment.
+   (3) Recommended keeping conditions.
+   • Keeping environment : +15°C to 35°C, less than 65%RH
+   • Duration: up to 2 months after shipping date
+   (4) Excessive load can damage or destroy the carton boxes. Please follow the printed instruction on the carton for
+   maximum number of stacks of cartons for both storage and transportation.
+
+
+  12.5 DISPOSAL
+   (1) Abide by national laws, legislation and local regulations when disposing of this LCD module.
+   (2) Consult a company specialized in industrial waste treatment which is permitted by the government or local
+   authority. When incineration is the method of LCD module disposal, law of environmental hygienic must be
+   obeyed.
+
+
+  12.6 OTHERS
+
+   (1) This product is designed to be used in ordinary electronic devices. Do not use this product in other applications,
+   especially in devices that may directly affect end users (such as weapons, military purposes, aerospace equipment,
+   life‐support system equipment, or safety equipment).
+   (2) Japan Display Inc. shall not be responsible for defects that occur in this product if the product is used in an
+   environment that exceeds the ranges specified in this document, or in an environment not described in this
+   document.
+
+
+
+
+                                                                Sh.
+Japan Display Inc.               Date       Feb 5, 2018
+                                                                No.
+                                                                                  JDG10000677-03                   Page     45/46
+13. OUTLINE DRAWING
+
+
+
+
+      Note:
+      (*13-1)Unit:mm
+      (*13-2)No specified size tolerance:±0.2
+      (*13-3)Example of suitable FPC connector : FH35C-23S-0.3SHW(50) 23pin / Hirose
+      (*13-4)Do not bend FPC around area where mounted components and solder are located, in addtion to around FPC crimping area,
+              so that these areas on the FPC do not have any stress.
+      (*13-5)Viewing Direction is the direction to get the best reflective performance.
+                                                                                                                                                          Sh.
+                                                                                                                Japan Display Inc.   Date   Feb 5, 2018
+                                                                                                                                                          No.
+                                                                                                                                                                JDG10000677-03   Page   46/46
+                               仕様書パターン 2   CAS表紙
+
+
+
+
+                                                           Ver.02
+
+
+                                                   Date : July 6, 2017
+
+
+
+
+Shipment inspection standard for LPM013M091A
+
+
+
+
+                                                      1    Confidential
+
+                                                               JDG01-E-01E
+CONTENTS ……………………………………………………………………………………… 1
+ 1. QUALITY STANDARD    …………………………………………………………… 2
+ 2. ZONE DEFINITION     …………………………………………………………… 4
+ 3. INSPECTIN CONDITION …………………………………………………………… 4
+
+
+
+
+                                                                   1   Confidential
+
+                                            Sh.
+ Japan Display Inc.   Date   July,6, 2017
+                                            No.
+                                                  JDG10000677-02       Page    1/4
+ 1 QUALITY STANDARD
+ 1.1 DISPLAY APPEARANCE STANDARD
+                Item                                                Criteria
+                                       Zone                                                            Remarks
+   Name                Cause                            Size(mm)                      N
+ Line defect       Open/Short           A                      No line defect
+                   B/W spot                             D ≦ 0.15                    Ignore
+                (Dent in glass or       A            0.15 ＜ D ≦ 0.25                  2
+                 upper polarizer,                        0.25 < D                     0      Keep two dots distance
+  Dot type
+                    Particle,                           D ≦ 0.25                    Ignore           more than 5mm
+   defect
+                       Swell)           B            0.25 ＜ D ≦ 0.3                   3
+                 Bright/Dark dot                         0.3 ＜ D                      0
+                       defect           C                           Ignore
+               Scratch on polarizer                     W ≦ 0.03                    Ignore
+                         or             A         0.03 < W ≦ 0.08, L ≦2               2
+  Line type     Foreign material                     0.08 < W or 2 < L                0      Keep two dots distance
+   defect           between                          W ≦ 0.10, L ≦3                   3              more than 5mm
+                                        B
+               Upper polarizer and                   0.10 < W or 3 < L                0
+                       glass            C                           Ignore
+                                                        D2 ≦ 0.25                     2
+                                        A               D1 ≦ 0.20                     2
+ Air bubble        Air bubble                          0.5 < D1+D2                    0
+                                        B                           Ignore
+                                        C                           Ignore
+
+
+
+       Spot                                             Scratch
+
+
+
+
+       Aggregate of small air bubble                   Big air bubble
+
+
+
+
+       (*1-1) Total defect quantity : A zone(N≦4) each inspection(lighting/appearance), B zone(N≦5)
+       (*1-2) When there is an agreement limit samples, Item is judged according to limit sample.
+       (*1-3) Count defects separately in reflective mode and transmissive mode. Individual values are not
+            summed up.
+       (*1-4) Other items are to be decided by agreement between both parties.
+       (*1-5) Aggregate of small air bubbles : The longer one is defined as D1 among Da and Db.
+       (*1-6) Big air bubble : The longer one is defined as D2 among Da and Db.
+
+
+
+                                                                                                 1        Confidential
+
+                                                              Sh.
+Japan Display Inc.                    Date    July,6, 2017
+                                                              No.
+                                                                                JDG10000677-02             Page      2/4
+ 1.2 EXTERNAL APPEARANCE STANDARD
+           Item                        Size(mm)                        N                      Remarks
+                             (A） W ≦ 3 , L ≦ 0.2 , T=1/2t            Ignore                       Fig.1
+         Chipping            (B） W ≦ 3 , L ≦ 0.6 , T<1/2t            Ignore                       Fig.2
+                                    Except (A) & (B)                   0
+   Chipping on the corner                 Refer to the Fig.3                                      Fig.3
+                                   W ≦ 0.3 , L ≦ 5.0                 Ignore
+         Projection                                                                               Fig.4
+                                   0.3 < W or 5.0 < L                  0
+                                   W ≦ 0.5 , L ≦ 5.0                 Ignore
+        Corner burr                                                                               Fig.5
+                                   0.5 < W or 5.0 < L                  0
+                                   W ≦ 3.0 , L ≦ 0.5                 Ignore
+         Crack(*1)                                                                V-shaped chipping included, Fig.6
+                                   3.0 < W or 0.5 < L                  0
+
+     (*1-7) “Crack” means the one which would progress further.
+
+
+   Fig.1 The state the amount of all one glass is missing
+
+
+
+
+    Fig.2 The state the amount of all one glass is not missing
+
+
+
+
+    Fig.3 One side ≦ 2mm is acceptable,                                       Fig.4
+          But two sides sum should ≦3mm.
+
+                                                                                                    Projection
+
+
+                                                                     W                                L
+
+
+                                         Fig.                                    Fig.
+                                         5                                       6
+                                                                                              L
+                                                                                                          W
+
+
+
+
+                                                                                                          1      Confidential
+
+                                                               Sh.
+Japan Display Inc.             Date      July,6, 2017
+                                                               No.
+                                                                                  JDG10000677-02                 Page    3/4
+1.3 MODULE APPEARANCE STANDARD
+
+
+
+
+2 ZONE DEFINITION
+      A zone              : Active area
+      B zone              : Viewing area
+      C zone              : No active and Border area including assemble parts.
+                                            Ａ zone
+
+
+
+                                            B zone
+
+
+
+
+                                            C zone
+
+
+
+
+     (*1) For detail dimensions refer to outline drawing.
+
+
+
+3 INSPECTION CONDITION
+   (1) Ambient Conditions
+        (a) Temperature                  : 25℃ (±5℃)
+        (b) Humidity                     : 60％（±20%）
+        (c) Ambient Luminance            : 1000 – 2000 lux
+        (d) Supply Voltage               : Typical value specified in this specification (p.6)
+   (2) Viewing Distance
+       The distance between the LCD and the inspector’s eyes should be 30cm(±10cm).
+   (3) Viewing Angle
+       Viewing angle : 0±45 degrees(LCD:on, reflection mode for appearance check)
+                       Normal line(LCD:on, transmissive mode)
+                         45゜   Z
+
+
+
+                     Y
+
+                                      45゜
+
+
+               X
+
+
+
+
+                                                                                                 1   Confidential
+
+                                                            Sh.
+Japan Display Inc.                 Date      July,6, 2017
+                                                            No.
+                                                                           JDG10000677-02            Page    4/4
+                                                      Issued No.                      JDG010000677
+                                                       Revision                            03
+
+
+     Revision History                               Product Name                 LPM013M091A
+                                                      Customer
+                                                      Part No.                             -
+
+Date/Rev.                  Contents of change                                Reasons             Remarks
+
+May 15,2017    -                   New Release                                    -            LPM013M091A(01)
+
+
+                       p02,03      Clerical corrections                          C
+
+                                   Setting for not using MIPI                    A
+                         p27
+                                   Setting for SPI's inactive period             A
+
+                         P29       Trial use only                                D
+
+                         P31       (L),(M)                                       D
+
+July 06,2017   02        P33       Add note                                      A                    -
+
+                         P34       Add note                                      A
+
+                         P38       Ver change                                    C
+
+                         P40       Add note                                      A
+
+                       Shipment
+                      inspection   Add Confidential                              A
+                       standard
+
+                       P25,26      SPI SPEC                                      C
+
+                         P30       Sequence                                      C
+
+Feb 05,2018    03        P32       Sequence                                      C                    -
+
+                         P33       Sequence                                      C
+
+                         P34       note                                          A,C
+                                                                                                      -
+
+                                                                                                      -
+
+                                                                                                      -
+
+                                                                                                      -
+
+                                                                                                      -
+
+                                                                                                      -
+
+                                                                                                      -
+
+
+
+
+(C): Changed        (A): Appended         (D): Deleted          (F): Filled in
+

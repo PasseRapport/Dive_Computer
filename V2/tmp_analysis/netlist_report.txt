@@ -1,0 +1,148 @@
+=== SIGNALS ===
+
+--- 1.2V_EN ---
+  U6 (TPS7A0212PYCHR) pin A1 [IN]
+
+--- 1.8V_EN ---
+  U3 (TPS7A0218PDQNR) pin 4 [IN]
+
+--- 3.1V_EN ---
+  U11 (TPS7A0331PDQNR) pin 4 [IN]
+
+--- BL ---
+  FPC1 (FH35C-23S-0.3SHW) pin 2 [2]
+  U12 (TPS75105DSKR) pin 2 [ENA]
+
+--- BL_PWM ---
+  U12 (TPS75105DSKR) pin 3 [D1A]
+  R11 (0) pin 1 []
+  R12 (0) pin 1 []
+
+--- BL_PWM_MCU ---
+  R12 (0) pin 2 []
+
+--- INT_MAG ---
+  U1 (LIS2MDL) pin 9 [Vdd]
+
+--- OUT+ ---
+  HAPTIC_MOTOR (BAT) pin 1 [Pin_1]
+
+--- OUT- ---
+  U4 (DRV2624YFFR) pin C3 [OUT-]
+
+--- SCL ---
+  U9 (TMAG3001A1Y) pin B1 [~{INT}]
+  R2 (4.7k) pin 2 []
+  U1 (LIS2MDL) pin 4 [SDA]
+  U8 (VEML6035) pin 3 [INT]
+  U4 (DRV2624YFFR) pin B1 [SDA]
+  LIS2DUX12 () pin 1 [SCL]
+  U10 (MS583730BA01-50) pin 4 [SDA]
+
+--- SCREEN_SCL ---
+  FPC1 (FH35C-23S-0.3SHW) pin 12 [12]
+
+--- SCREEN_SDI ---
+  FPC1 (FH35C-23S-0.3SHW) pin 13 [13]
+
+--- SCREEN_~{CS} ---
+  FPC1 (FH35C-23S-0.3SHW) pin 10 [10]
+
+--- SCREEN_~{RST} ---
+  FPC1 (FH35C-23S-0.3SHW) pin 8 [8]
+
+--- SDA ---
+  U1 (LIS2MDL) pin 1 [SCL]
+  U10 (MS583730BA01-50) pin 3 [SCL]
+  R1 (4.7k) pin 2 []
+  U8 (VEML6035) pin 2 [SDA]
+  U4 (DRV2624YFFR) pin C1 [SCL]
+
+--- SYNC ---
+  FPC1 (FH35C-23S-0.3SHW) pin 4 [4]
+
+=== SYMBOL PIN COUNTS ===
+U9: TMAG3001A1Y pins=6
+C28: 1u pins=2
+FPC1: FH35C-23S-0.3SHW pins=25
+C14: 22n pins=2
+U6: TPS7A0212PYCHR pins=4
+C7: 470n pins=2
+C5: 100n pins=2
+U4: DRV2624YFFR pins=9
+C22: 100n pins=2
+C49: 1u pins=2
+C43: 12p pins=2
+C46: NP pins=2
+LIS2DUX12:  pins=12
+C40: 1p pins=2
+HAPTIC_MOTOR: BAT pins=2
+C2: 100n pins=2
+C37: 1u pins=2
+R3: 42.2k pins=2
+ANT1: 2450AT18D0100E pins=4
+R11: 0 pins=2
+C23: 10u pins=2
+L5: 2.2n pins=2
+R10: 26.7k pins=2
+C47: NP pins=2
+C48: 1u pins=2
+C16: 1u pins=2
+C4: 100n pins=2
+C18: 100n pins=2
+C1: 10u pins=2
+L1: L pins=22
+C13: 10n pins=2
+C34: 100n pins=2
+C33: 100n pins=2
+R2: 4.7k pins=2
+C17: 10u pins=2
+C8: 22n pins=2
+U5: BQ51051BRHLR pins=21
+C27: 1u pins=2
+C36: 1u pins=2
+C24: 100n pins=2
+U8: VEML6035 pins=6
+C6:  pins=5
+C44: 12p pins=2
+X1: ECS-320-CDX-2152 pins=4
+C9: 10n pins=2
+C20: 100n pins=2
+C39: 100p pins=2
+C26: 100n pins=2
+R5: 1.54k pins=2
+C45: 12p pins=2
+BATTERY: BAT pins=2
+R8: 10k pins=2
+C10: 100n pins=2
+L4: 4.7n pins=2
+U2: NRF52833-QDAA-R pins=41
+U12: TPS75105DSKR pins=11
+C15: 470n pins=2
+U1: LIS2MDL pins=12
+C30: 20n pins=2
+C31: 4.7u pins=2
+NTC: 10k pins=2
+C12: 100n pins=2
+C32: 4.7u pins=2
+U11: TPS7A0331PDQNR pins=5
+C38: 47n pins=2
+C25: 1u pins=2
+C42: 12p pins=2
+L2: LQM18DN100M70L pins=2
+X2: CM8V-T1A-32.768KHZ-9PF-20PPM-TB-QC pins=2
+C41: 1.2p pins=2
+R12: 0 pins=2
+R1: 4.7k pins=2
+C11: 2.2n pins=2
+C3: 100n pins=2
+C35: 100n pins=2
+C29: 1u pins=2
+R4: 200 pins=2
+C21: 220n pins=2
+U3: TPS7A0218PDQNR pins=5
+U10: MS583730BA01-50 pins=4
+R7: 0 pins=2
+L3: LQW15AN15NG00D pins=2
+R6: 6.65k pins=2
+R9: 10k pins=2

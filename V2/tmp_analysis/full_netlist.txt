@@ -1,0 +1,237 @@
+=== FULL PIN NETLIST PER IC ===
+
+--- U1 ---
+  pin 1    [SCL           ] net: SDA
+  pin 2    [NC            ] net: None FLOAT
+  pin 3    [CS            ] net: None NC FLOAT
+  pin 4    [SDA           ] net: SCL
+  pin 5    [C1            ] net: None NC FLOAT
+  pin 6    [GND           ] net: None NC FLOAT
+  pin 7    [INT/DRDY      ] net: None FLOAT
+  pin 8    [GND           ] net: None FLOAT
+  pin 9    [Vdd           ] net: INT_MAG
+  pin 10   [Vdd_IO        ] net: None FLOAT
+  pin 11   [NC            ] net: None FLOAT
+  pin 12   [NC            ] net: None FLOAT
+
+--- U2 ---
+  pin 1    [DEC1          ] net: None FLOAT
+  pin 2    [P0.00_XL1     ] net: None FLOAT
+  pin 3    [P0.01_XL2     ] net: None FLOAT
+  pin 4    [P0.04_AIN2    ] net: None FLOAT
+  pin 5    [P0.05_AIN3    ] net: None FLOAT
+  pin 6    [P1.09         ] net: None FLOAT
+  pin 7    [P0.11         ] net: None FLOAT
+  pin 8    [VDD           ] net: None FLOAT
+  pin 9    [VDDH          ] net: None FLOAT
+  pin 10   [VBUS          ] net: None FLOAT
+  pin 11   [DECUSB        ] net: None FLOAT
+  pin 12   [D-            ] net: None FLOAT
+  pin 13   [D+            ] net: None FLOAT
+  pin 14   [P0.15         ] net: None FLOAT
+  pin 15   [P0.17         ] net: None FLOAT
+  pin 16   [P0.18_nRESET  ] net: None FLOAT
+  pin 17   [P0.20         ] net: None FLOAT
+  pin 18   [VDD           ] net: None FLOAT
+  pin 19   [SWDIO         ] net: None FLOAT
+  pin 20   [SWDCLK        ] net: None FLOAT
+  pin 21   [DEC5          ] net: None FLOAT
+  pin 22   [P0.09_NFC1    ] net: None FLOAT
+  pin 23   [P0.10_NFC2    ] net: None FLOAT
+  pin 24   [ANT           ] net: None FLOAT
+  pin 25   [VSS_PA        ] net: None FLOAT
+  pin 26   [DEC6          ] net: None FLOAT
+  pin 27   [DEC3          ] net: None FLOAT
+  pin 28   [XC1           ] net: None FLOAT
+  pin 29   [XC2           ] net: None FLOAT
+  pin 30   [VDD           ] net: None FLOAT
+  pin 31   [P0.03_AIN1    ] net: None FLOAT
+  pin 32   [P0.02_AIN0    ] net: None FLOAT
+  pin 33   [P0.28_AIN4    ] net: None FLOAT
+  pin 34   [P0.29_AIN5    ] net: None FLOAT
+  pin 35   [P0.30_AIN6    ] net: None FLOAT
+  pin 36   [P0.31_AIN7    ] net: None FLOAT
+  pin 37   [VSS           ] net: None FLOAT
+  pin 38   [DEC4          ] net: None FLOAT
+  pin 39   [DCC           ] net: None FLOAT
+  pin 40   [VDD           ] net: None FLOAT
+  pin 41   [VSS           ] net: None FLOAT
+
+--- U3 ---
+  pin 1    [OUT           ] net: None FLOAT
+  pin 2    [GND           ] net: None FLOAT
+  pin 3    [EN            ] net: None FLOAT
+  pin 4    [IN            ] net: 1.8V_EN
+  pin 5    [EP            ] net: None FLOAT
+
+--- U4 ---
+  pin A1   [TRIG/INTZ     ] net: None FLOAT
+  pin A2   [REG           ] net: None FLOAT
+  pin A3   [OUT+          ] net: None FLOAT
+  pin B1   [SDA           ] net: SCL
+  pin B2   [NRST          ] net: None FLOAT
+  pin B3   [GND           ] net: None FLOAT
+  pin C1   [SCL           ] net: SDA
+  pin C2   [VDD           ] net: None FLOAT
+  pin C3   [OUT-          ] net: OUT-
+
+--- U5 ---
+  pin 1    [PGND          ] net: None FLOAT
+  pin 2    [AC1           ] net: None FLOAT
+  pin 3    [BOOT1         ] net: None FLOAT
+  pin 4    [BAT           ] net: None FLOAT
+  pin 5    [CLAMP1        ] net: None FLOAT
+  pin 6    [COMM1         ] net: None FLOAT
+  pin 7    [~{CHG}        ] net: None FLOAT
+  pin 8    [~{AD-EN}      ] net: None FLOAT
+  pin 9    [AD            ] net: None FLOAT
+  pin 10   [TERM          ] net: None FLOAT
+  pin 11   [EN2           ] net: None FLOAT
+  pin 12   [ILIM          ] net: None FLOAT
+  pin 13   [TS/CTRL       ] net: None FLOAT
+  pin 14   [FOD           ] net: None FLOAT
+  pin 15   [COMM2         ] net: None FLOAT
+  pin 16   [CLAMP2        ] net: None FLOAT
+  pin 17   [BOOT2         ] net: None FLOAT
+  pin 18   [RECT          ] net: None FLOAT
+  pin 19   [AC2           ] net: None FLOAT
+  pin 20   [PGND          ] net: None FLOAT
+  pin 21   [GPAD          ] net: None FLOAT
+
+--- U6 ---
+  pin A1   [IN            ] net: 1.2V_EN
+  pin A2   [OUT           ] net: None FLOAT
+  pin B1   [EN            ] net: None FLOAT
+  pin B2   [GND           ] net: None FLOAT
+
+--- U8 ---
+  pin 1    [GND           ] net: None FLOAT
+  pin 2    [SDA           ] net: SDA
+  pin 3    [INT           ] net: SCL
+  pin 4    [NC            ] net: None NC FLOAT
+  pin 5    [SCL           ] net: INT_LIGHT
+  pin 6    [VDD           ] net: None FLOAT
+
+--- U9 ---
+  pin A1   [VCC           ] net: None FLOAT
+  pin A2   [ADDR          ] net: None FLOAT
+  pin B1   [~{INT}        ] net: SCL
+  pin B2   [GND           ] net: None FLOAT
+  pin C1   [SDA           ] net: None FLOAT
+  pin C2   [SCL           ] net: INT_ENC
+
+--- U10 ---
+  pin 1    [GND           ] net: None FLOAT
+  pin 2    [VDD           ] net: None FLOAT
+  pin 3    [SCL           ] net: SDA
+  pin 4    [SDA           ] net: SCL
+
+--- U11 ---
+  pin 1    [OUT           ] net: None FLOAT
+  pin 2    [GND           ] net: None FLOAT
+  pin 3    [EN            ] net: None FLOAT
+  pin 4    [IN            ] net: 3.1V_EN
+  pin 5    [EP            ] net: None FLOAT
+
+--- U12 ---
+  pin 1    [ENB           ] net: None NC FLOAT
+  pin 2    [ENA           ] net: BL
+  pin 3    [D1A           ] net: BL_PWM
+  pin 4    [D2A           ] net: None FLOAT
+  pin 5    [GND           ] net: None FLOAT
+  pin 6    [NC            ] net: None FLOAT
+  pin 7    [D2B           ] net: None FLOAT
+  pin 8    [D1B           ] net: None FLOAT
+  pin 9    [VIN           ] net: None NC FLOAT
+  pin 10   [ISET          ] net: None NC FLOAT
+  pin 11   [EP            ] net: None FLOAT
+
+--- LIS2DUX12 ---
+  pin 1    [SCL           ] net: SCL
+  pin 2    [CS            ] net: None FLOAT
+  pin 3    [SDO           ] net: None FLOAT
+  pin 4    [SDA           ] net: None FLOAT
+  pin 5    [NC            ] net: INT_ACC1
+  pin 6    [GND           ] net: INT_ACC2
+  pin 7    [RES           ] net: None FLOAT
+  pin 8    [GND           ] net: None FLOAT
+  pin 9    [Vdd           ] net: None FLOAT
+  pin 10   [Vdd_IO        ] net: None FLOAT
+  pin 11   [INT2          ] net: None FLOAT
+  pin 12   [INT1          ] net: None FLOAT
+
+--- FPC1 ---
+  pin 1    [1             ] net: None FLOAT
+  pin 2    [2             ] net: BL
+  pin 3    [3             ] net: None NC FLOAT
+  pin 4    [4             ] net: SYNC
+  pin 5    [5             ] net: None FLOAT
+  pin 6    [6             ] net: None FLOAT
+  pin 7    [7             ] net: None FLOAT
+  pin 8    [8             ] net: SCREEN_~{RST}
+  pin 9    [9             ] net: None FLOAT
+  pin 10   [10            ] net: SCREEN_~{CS}
+  pin 11   [11            ] net: None FLOAT
+  pin 12   [12            ] net: SCREEN_SCL
+  pin 13   [13            ] net: SCREEN_SDI
+  pin 14   [14            ] net: None FLOAT
+  pin 15   [15            ] net: None FLOAT
+  pin 16   [16            ] net: None FLOAT
+  pin 17   [17            ] net: None FLOAT
+  pin 18   [18            ] net: None FLOAT
+  pin 19   [19            ] net: None FLOAT
+  pin 20   [20            ] net: None FLOAT
+  pin 21   [21            ] net: None FLOAT
+  pin 22   [22            ] net: None FLOAT
+  pin 23   [23            ] net: None NC FLOAT
+  pin 24   [24            ] net: None FLOAT
+  pin 25   [25            ] net: None FLOAT
+
+=== RESISTORS OF INTEREST ===
+  R1 (4.7k): pin1:None, pin2:SDA
+  R2 (4.7k): pin1:None, pin2:SCL
+  R8 (10k): pin1:None, pin2:INT_ENC
+  R9 (10k): pin1:None, pin2:INT_LIGHT
+  R10 (26.7k): pin1:None, pin2:None
+  R11 (0): pin1:BL_PWM, pin2:None
+  R12 (0): pin1:BL_PWM, pin2:BL_PWM_MCU
+  R7 (0): pin1:None, pin2:None
+  R3 (42.2k): pin1:None, pin2:None
+  R5 (1.54k): pin1:None, pin2:None
+  R6 (6.65k): pin1:None, pin2:None
+  R4 (200): pin1:None, pin2:None
+
+=== ALL LABELS WITH NOTHING CONNECTED ===
+  label 'SDA' at (143.51, 177.8): no non-power pin on net (power syms: [])
+  label 'INT_LIGHT' at (143.51, 162.56): no non-power pin on net (power syms: [])
+  label 'SWDCLK' at (181.61, 134.62): no non-power pin on net (power syms: [])
+  label 'BL_PWM_MCU' at (143.51, 157.48): no non-power pin on net (power syms: [])
+  label 'SDA' at (26.67, 105.41): no non-power pin on net (power syms: [])
+  label 'SCREEN_SCL' at (143.51, 147.32): no non-power pin on net (power syms: [])
+  label 'SCREEN_SDI' at (143.51, 144.78): no non-power pin on net (power syms: [])
+  label 'OUT+' at (19.05, 64.77): no non-power pin on net (power syms: [])
+  label 'nRESET' at (121.92, 240.03): no non-power pin on net (power syms: [])
+  label 'SWDIO' at (176.53, 134.62): no non-power pin on net (power syms: [])
+  label '3.1V_EN' at (143.51, 187.96): no non-power pin on net (power syms: [])
+  label 'INT_ACC1' at (143.51, 165.1): no non-power pin on net (power syms: [])
+  label '1.8V_EN' at (143.51, 185.42): no non-power pin on net (power syms: [])
+  label 'QI_EN' at (143.51, 182.88): no non-power pin on net (power syms: [])
+  label 'SDA' at (26.67, 182.88): no non-power pin on net (power syms: [])
+  label 'INT_HAPTIC' at (69.85, 59.69): no non-power pin on net (power syms: [])
+  label 'OUT-' at (114.3, 275.59): no non-power pin on net (power syms: [])
+  label 'SCREEN_~{RST}' at (143.51, 152.4): no non-power pin on net (power syms: [])
+  label '~{CHG}' at (143.51, 180.34): no non-power pin on net (power syms: [])
+  label 'nRESET' at (161.29, 134.62): no non-power pin on net (power syms: [])
+  label 'INT_ENC' at (143.51, 172.72): no non-power pin on net (power syms: [])
+  label 'SYNC' at (143.51, 154.94): no non-power pin on net (power syms: [])
+  label '1.2V_EN' at (143.51, 190.5): no non-power pin on net (power syms: [])
+  label 'INT_MAG' at (143.51, 170.18): no non-power pin on net (power syms: [])
+  label 'Bl_EN' at (143.51, 160.02): no non-power pin on net (power syms: [])
+  label 'BAT+' at (19.05, 59.69): no non-power pin on net (power syms: [])
+  label 'SWDIO' at (121.92, 245.11): no non-power pin on net (power syms: [])
+  label '~{CHG}' at (368.3, 193.04): no non-power pin on net (power syms: [])
+  label 'INT_ACC2' at (143.51, 167.64): no non-power pin on net (power syms: [])
+  label 'QI_EN' at (368.3, 203.2): no non-power pin on net (power syms: [])
+  label 'SCREEN_~{CS}' at (143.51, 149.86): no non-power pin on net (power syms: [])
+  label 'SWDCLK' at (121.92, 242.57): no non-power pin on net (power syms: [])
+  label 'SCL' at (143.51, 175.26): no non-power pin on net (power syms: [])

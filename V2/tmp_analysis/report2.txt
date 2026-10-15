@@ -1,0 +1,232 @@
+=== SIGNALS (label -> connected pins) ===
+
+--- 1.2V_EN ---
+  U6 (TPS7A0212PYCHR) pin A1 [IN]
+
+--- 1.8V_EN ---
+  U3 (TPS7A0218PDQNR) pin 4 [IN]
+
+--- 3.1V_EN ---
+  U11 (TPS7A0331PDQNR) pin 4 [IN]
+
+--- BL ---
+  FPC1 (FH35C-23S-0.3SHW) pin 2 [2]
+  U12 (TPS75105DSKR) pin 2 [ENA]
+
+--- BL_PWM ---
+  U12 (TPS75105DSKR) pin 3 [D1A]
+  R11 (0) pin 1 []
+  R12 (0) pin 1 []
+
+--- BL_PWM_MCU ---
+  R12 (0) pin 2 []
+
+--- INT_ACC1 ---
+  LIS2DUX12 () pin 5 [NC]
+
+--- INT_ACC2 ---
+  LIS2DUX12 () pin 6 [GND]
+
+--- INT_ENC ---
+  U9 (TMAG3001A1Y) pin C2 [SCL]
+  R8 (10k) pin 2 []
+
+--- INT_LIGHT ---
+  U8 (VEML6035) pin 5 [SCL]
+  R9 (10k) pin 2 []
+
+--- INT_MAG ---
+  U1 (LIS2MDL) pin 9 [Vdd]
+
+--- OUT+ ---
+  HAPTIC_MOTOR (BAT) pin 1 [Pin_1]
+
+--- OUT- ---
+  U4 (DRV2624YFFR) pin C3 [OUT-]
+
+--- SCL ---
+  U9 (TMAG3001A1Y) pin B1 [~{INT}]
+  R2 (4.7k) pin 2 []
+  U1 (LIS2MDL) pin 4 [SDA]
+  U8 (VEML6035) pin 3 [INT]
+  U4 (DRV2624YFFR) pin B1 [SDA]
+  LIS2DUX12 () pin 1 [SCL]
+  U10 (MS583730BA01-50) pin 4 [SDA]
+
+--- SCREEN_SCL ---
+  FPC1 (FH35C-23S-0.3SHW) pin 12 [12]
+
+--- SCREEN_SDI ---
+  FPC1 (FH35C-23S-0.3SHW) pin 13 [13]
+
+--- SCREEN_~{CS} ---
+  FPC1 (FH35C-23S-0.3SHW) pin 10 [10]
+
+--- SCREEN_~{RST} ---
+  FPC1 (FH35C-23S-0.3SHW) pin 8 [8]
+
+--- SDA ---
+  U1 (LIS2MDL) pin 1 [SCL]
+  U10 (MS583730BA01-50) pin 3 [SCL]
+  R1 (4.7k) pin 2 []
+  U8 (VEML6035) pin 2 [SDA]
+  U4 (DRV2624YFFR) pin C1 [SCL]
+
+--- SYNC ---
+  FPC1 (FH35C-23S-0.3SHW) pin 4 [4]
+
+=== nRF52833 (U2) PIN NETS ===
+  pin 1 [DEC1] net=-
+  pin 2 [P0.00_XL1] net=-
+  pin 3 [P0.01_XL2] net=-
+  pin 4 [P0.04_AIN2] net=-
+  pin 5 [P0.05_AIN3] net=-
+  pin 6 [P1.09] net=-
+  pin 7 [P0.11] net=-
+  pin 8 [VDD] net=-
+  pin 9 [VDDH] net=-
+  pin 10 [VBUS] net=-
+  pin 11 [DECUSB] net=-
+  pin 12 [D-] net=-
+  pin 13 [D+] net=-
+  pin 14 [P0.15] net=-
+  pin 15 [P0.17] net=-
+  pin 16 [P0.18_nRESET] net=-
+  pin 17 [P0.20] net=-
+  pin 18 [VDD] net=-
+  pin 19 [SWDIO] net=-
+  pin 20 [SWDCLK] net=-
+  pin 21 [DEC5] net=-
+  pin 22 [P0.09_NFC1] net=-
+  pin 23 [P0.10_NFC2] net=-
+  pin 24 [ANT] net=-
+  pin 25 [VSS_PA] net=-
+  pin 26 [DEC6] net=-
+  pin 27 [DEC3] net=-
+  pin 28 [XC1] net=-
+  pin 29 [XC2] net=-
+  pin 30 [VDD] net=-
+  pin 31 [P0.03_AIN1] net=-
+  pin 32 [P0.02_AIN0] net=-
+  pin 33 [P0.28_AIN4] net=-
+  pin 34 [P0.29_AIN5] net=-
+  pin 35 [P0.30_AIN6] net=-
+  pin 36 [P0.31_AIN7] net=-
+  pin 37 [VSS] net=-
+  pin 38 [DEC4] net=-
+  pin 39 [DCC] net=-
+  pin 40 [VDD] net=-
+  pin 41 [VSS] net=-
+
+=== FPC1 (screen conn) PIN NETS ===
+  pin 1 net=-
+  pin 2 net=BL
+  pin 3 net=-
+  pin 4 net=SYNC
+  pin 5 net=-
+  pin 6 net=-
+  pin 7 net=-
+  pin 8 net=SCREEN_~{RST}
+  pin 9 net=-
+  pin 10 net=SCREEN_~{CS}
+  pin 11 net=-
+  pin 12 net=SCREEN_SCL
+  pin 13 net=SCREEN_SDI
+  pin 14 net=-
+  pin 15 net=-
+  pin 16 net=-
+  pin 17 net=-
+  pin 18 net=-
+  pin 19 net=-
+  pin 20 net=-
+  pin 21 net=-
+  pin 22 net=-
+  pin 23 net=-
+  pin 24 net=-
+  pin 25 net=-
+
+=== ALL SYMBOLS ===
+U9: TMAG3001A1Y @ (45.72, 109.22) rot=0.0 mirror=''
+C28: 1u @ (323.85, 157.48) rot=0.0 mirror=''
+FPC1: FH35C-23S-0.3SHW @ (209.55, 248.92) rot=0.0 mirror=''
+C14: 22n @ (326.39, 218.44) rot=90.0 mirror=''
+U6: TPS7A0212PYCHR @ (345.44, 101.6) rot=0.0 mirror=''
+C7: 470n @ (326.39, 189.23) rot=90.0 mirror=''
+C5: 100n @ (59.69, 107.95) rot=180.0 mirror=''
+U4: DRV2624YFFR @ (44.45, 67.31) rot=0.0 mirror=''
+C22: 100n @ (397.51, 213.36) rot=180.0 mirror=''
+C49: 1u @ (367.03, 102.87) rot=0.0 mirror=''
+C43: 12p @ (231.14, 62.23) rot=270.0 mirror=''
+C46: NP @ (232.41, 105.41) rot=180.0 mirror=''
+LIS2DUX12:  @ (35.56, 175.26) rot=0.0 mirror=''
+C40: 1p @ (199.39, 105.41) rot=180.0 mirror=''
+HAPTIC_MOTOR: BAT @ (125.73, 273.05) rot=0.0 mirror=''
+C2: 100n @ (67.31, 181.61) rot=0.0 mirror=''
+C37: 1u @ (151.13, 38.1) rot=180.0 mirror=''
+R3: 42.2k @ (378.46, 212.09) rot=180.0 mirror=''
+ANT1: 2450AT18D0100E @ (254.0, 100.33) rot=0.0 mirror=''
+R11: 0 @ (167.64, 260.35) rot=90.0 mirror=''
+C23: 10u @ (59.69, 219.71) rot=0.0 mirror=''
+L5: 2.2n @ (222.25, 100.33) rot=0.0 mirror=''
+R10: 26.7k @ (66.04, 256.54) rot=180.0 mirror=''
+C47: NP @ (242.57, 105.41) rot=180.0 mirror=''
+C48: 1u @ (325.12, 100.33) rot=0.0 mirror=''
+C16: 1u @ (375.92, 193.04) rot=180.0 mirror=''
+C4: 100n @ (27.94, 77.47) rot=0.0 mirror=''
+C18: 100n @ (308.61, 194.31) rot=90.0 mirror=''
+C1: 10u @ (59.69, 181.61) rot=0.0 mirror=''
+L1: L @ (300.99, 204.47) rot=180.0 mirror=''
+C13: 10n @ (326.39, 214.63) rot=90.0 mirror=''
+C34: 100n @ (166.37, 146.05) rot=180.0 mirror=''
+C33: 100n @ (115.57, 64.77) rot=0.0 mirror=''
+R2: 4.7k @ (96.52, 180.34) rot=180.0 mirror=''
+C17: 10u @ (389.89, 213.36) rot=180.0 mirror=''
+C8: 22n @ (326.39, 193.04) rot=90.0 mirror=''
+U5: BQ51051BRHLR @ (346.71, 196.85) rot=0.0 mirror=''
+C27: 1u @ (325.12, 129.54) rot=0.0 mirror=''
+C36: 1u @ (115.57, 49.53) rot=180.0 mirror=''
+C24: 100n @ (66.04, 219.71) rot=0.0 mirror=''
+U8: VEML6035 @ (39.37, 30.48) rot=0.0 mirror=''
+C6:  @ (102.87, 231.14) rot=0.0 mirror=''
+C44: 12p @ (91.44, 80.01) rot=270.0 mirror=''
+X1: ECS-320-CDX-2152 @ (219.71, 69.85) rot=270.0 mirror=''
+C9: 10n @ (326.39, 196.85) rot=90.0 mirror=''
+C20: 100n @ (383.54, 193.04) rot=180.0 mirror=''
+C39: 100p @ (210.82, 85.09) rot=180.0 mirror=''
+C26: 100n @ (55.88, 30.48) rot=0.0 mirror=''
+R5: 1.54k @ (370.84, 218.44) rot=270.0 mirror=''
+C45: 12p @ (91.44, 69.85) rot=270.0 mirror=''
+BATTERY: BAT @ (102.87, 271.78) rot=0.0 mirror=''
+R8: 10k @ (19.05, 111.76) rot=180.0 mirror=''
+C10: 100n @ (30.48, 140.97) rot=180.0 mirror=''
+L4: 4.7n @ (207.01, 100.33) rot=0.0 mirror=''
+U2: NRF52833-QDAA-R @ (157.48, 91.44) rot=0.0 mirror=''
+U12: TPS75105DSKR @ (46.99, 265.43) rot=0.0 mirror=''
+C15: 470n @ (326.39, 222.25) rot=90.0 mirror=''
+U1: LIS2MDL @ (36.83, 218.44) rot=0.0 mirror=''
+C30: 20n @ (308.61, 187.96) rot=90.0 mirror=''
+C31: 4.7u @ (114.3, 118.11) rot=0.0 mirror=''
+NTC: 10k @ (367.03, 198.12) rot=270.0 mirror=''
+C12: 100n @ (308.61, 200.66) rot=90.0 mirror=''
+C32: 4.7u @ (106.68, 109.22) rot=0.0 mirror=''
+U11: TPS7A0331PDQNR @ (344.17, 157.48) rot=0.0 mirror=''
+C38: 47n @ (160.02, 38.1) rot=180.0 mirror=''
+C25: 1u @ (367.03, 129.54) rot=0.0 mirror=''
+C42: 12p @ (231.14, 80.01) rot=270.0 mirror=''
+L2: LQM18DN100M70L @ (140.97, 52.07) rot=90.0 mirror=''
+X2: CM8V-T1A-32.768KHZ-9PF-20PPM-TB-QC @ (99.06, 74.93) rot=270.0 mirror=''
+C41: 1.2p @ (214.63, 105.41) rot=180.0 mirror=''
+R12: 0 @ (167.64, 255.27) rot=90.0 mirror=''
+R1: 4.7k @ (91.44, 180.34) rot=180.0 mirror=''
+C11: 2.2n @ (314.96, 205.74) rot=0.0 mirror=''
+C3: 100n @ (59.69, 77.47) rot=0.0 mirror=''
+C35: 100n @ (200.66, 53.34) rot=180.0 mirror=''
+C29: 1u @ (365.76, 157.48) rot=0.0 mirror=''
+R4: 200 @ (378.46, 224.79) rot=0.0 mirror=''
+C21: 220n @ (35.56, 229.87) rot=0.0 mirror=''
+U3: TPS7A0218PDQNR @ (345.44, 129.54) rot=0.0 mirror=''
+U10: MS583730BA01-50 @ (45.72, 142.24) rot=0.0 mirror=''
+R7: 0 @ (237.49, 100.33) rot=270.0 mirror=''
+L3: LQW15AN15NG00D @ (140.97, 40.64) rot=90.0 mirror=''
+R6: 6.65k @ (370.84, 222.25) rot=270.0 mirror=''
+R9: 10k @ (17.78, 29.21) rot=180.0 mirror=''

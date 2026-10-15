@@ -1,0 +1,534 @@
+              产品规格书
+
+客户名称
+客户料号
+
+
+     客户承认签章
+
+
+
+
+文件编号                                     版本              2
+
+ 品名描述
+
+
+ 型号                            VLV041035L-FP249
+送样日期
+设计               审核                      批准
+
+
+
+
+ 2025.09.15           2025.09.15            2025.09.15
+
+
+
+
+              sales
+                    PRODUCT SPECIFICATION          VLV041035L-FP249
+                                                       NO: 2/12
+
+
+
+
+                        - 目录/Content           -
+
+ 封面/Cover                                          1/12
+
+ 目录/Contents                                       2/12
+
+ 更改记录/Revision History                             3/12
+
+1.适用范围/Scope of Application                        4/12
+
+2.使用条件/Standard operating condition                4/12
+
+
+3.测试条件/Testing condition                           5/12
+
+4.特 性/Characteristics                              5/12-6/12
+
+5.可靠性试验/Reliability Test                           7/12
+  判定标准/Judging standard                            8/12
+
+6.使用注意事项/Caution                                   9/12
+
+7.环保要求/Environmental protection                    10/12
+  Requirements
+
+8.马达外形图/Vibration Outside View                     11/12
+
+
+9.包装/Packaging                                     12/12
+
+
+
+
+                                                                      Sams
+                                                                      http:
+
+
+                              - 2 -
+                           www.vybronics.com
+                                PRODUCT SPECIFICATION               VLV041035L-FP249
+                                PRODUCT SPECIFICATION               VC0625B001L
+                                                                         NO: 3/12
+                                                                      No: /
+
+ . 更改记录/ Records of Revision
+.
+  Revision         Revision                                             Approval
+        No.          Date                Revision Contents
+                                                                     Draft   Approval
+    .         .      .              .
+  preliminary      2019.10.25           Preliminary Specification
+
+                  2025.09.15            初始规格/Preliminary spec
+
+
+
+
+                                                                                        Sams
+                                                                                        http:
+
+
+                                             - 3 -
+
+
+                                        www.vybronics.com
+                                        www.vybronics.com
+                           PRODUCT SPECIFICATION                   VLV041035L-FP249
+                                                                       NO: 4/12
+
+
+
+
+1.适用范围/Scope of application
+   本规格书适用于振动马达 VLV041035L-FP249。
+   This specification sheet is applied for vibration motor VLV041035L-FP249.
+
+  型号名称标准/Standard of model
+  name: VLV 0410
+
+
+           尺寸规格/SIZE SPEC.:宽度/ Width ：4.0mm, 长度/ length：10mm
+
+           Linear vibration Motor
+
+
+
+
+2.使用条件/Standard operating condition
+
+
+
+  NO.                项目/Item                              规格/Specifications
+
+                     额定电压
+  2-1                                                   1.8Vrms AC, Sine wave
+                   Rated voltage
+                  使用电压范围
+  2-2                                                     0.1～1.85Vrms AC
+              Operating voltage range
+                     振动方向
+  2-3                                                          Z axis
+                Direction of vibration
+                   额定工作频率
+  2-4                                                          250Hz
+             Rated operating Frequency
+                   使用温度范围                               -20℃~+60℃,Ordinary
+  2-5
+            Operating temperature range                  Humidity:65±20%RH
+                   保存环境范围                               -30℃~+70℃,Ordinary
+  2-6
+             Storage temperature range                   Humidity:65±20%RH
+
+
+
+
+                                                                                      Sam
+                                                                                      http
+
+
+                                         - 4 -
+
+                                    www.vybronics.com
+                           PRODUCT SPECIFICATION                       VLV041035L-FP249
+                                                                           NO: 5/12
+
+
+
+  NO.              项目/Item                                 规格/Specifications
+                     温度
+  3-1                                                           25℃±3
+                 Temperature
+                     湿度
+  3-2                                                        45% ~85%RH
+                   Humidity
+                   电源电压
+  3-3                                                 1.8±0.05Vrms AC, Sine wave
+          Power Supply, Voltage Source
+                   工作频率
+  3-4                                                         250 ±10Hz
+             Operational Frequency
+
+4.特性/Electrical characteristic
+  NO.      项目/Item           规格/SPEC.                       条件/Condition
+           额定电流/
+  4-1                       MAX.60mArms                Standard Testing condition
+         Rated Current
+             阻抗/
+  4-2                         29±10%Ω                  Standard Testing condition
+          Resistance
+                             1.4Grms Min              Standard Testing condition，
+         F0 点的振动量/             （参考）                     100g Rectangular fixture
+  4-3
+          Acceleration      0.37Grms Min              Standard Testing condition，
+                              （标准值）                       100g Square fixture
+                             250 ±10 HZ               Standard Testing condition，
+           频率特性/               （参考）                     100g Rectangular fixture
+  4-4      Frequency         250 ± 10 HZ
+                                                      Standard Testing condition，
+         Characteristics      （标准值）
+                                                          100g Square fixture
+                            （参考图形 1）
+                                                    Standard Testing condition
+                             Max 40msec
+                                                    0-50% normal Acceleration,
+                              （参考）
+           上升时间/                                     100g Rectangular fixture
+  4-5
+           Rise Time                                Standard Testing condition
+                             Max 40msec
+                                                    0-50% normal Acceleration,
+                             （标准值）
+                                                        100g Square fixture
+                                                    Standard Testing condition
+                             Max 60msec
+                                                  100%-50% normal Acceleration,
+           下降时间/              （参考）
+  4-6                                                100g Rectangular fixture
+           Fall Time
+                             Max 70msec             Standard Testing condition
+                             （标准值）                100%-50% normal Acceleration,
+
+                                                                                          Sams
+                                                                                          http:
+
+
+                                      5 
+
+                                  ZZZY\EURQLFVFRP
+                      PRODUCT SPECIFICATION                        VLV041035L-FP249
+                                                                       NO: 6/12
+
+
+
+
+                                                      100g Square fixture
+        重量/
+4-7                     1.0±0.1 gram               Standard Testing condition
+        Weight
+      马达声音/             Max.45dB(A)
+                                               10cm distance from microphone,
+4-8   Mechanical      Refer To Figure 2
+                                                 Standard Testing condition
+        Noise          (参考图形 2）
+      绝缘电阻/
+                                               100V DC input, between Case
+4-9   Insulation         Min.10 MΩ
+                                           and Lead Wire or PCB
+      Resistance
+
+
+
+
+        扫频范围 230-270HZ 测试工装 100g 六面体工装
+        Figure 1: Linear Vibrator Frequency Characteristics/频率特性
+        * Standard Testing condition
+        * The equipment model ： BK2120C
+
+
+
+
+                   Figure 2：Noise measurement condition                               Sams
+                                                                                      http:
+
+
+                                  - 6 -
+
+                               www.vybronics.com
+                          PRODUCT SPECIFICATION                        VLV041035L-FP249
+                                                                           NO: 7/12
+
+
+
+
+5.可靠性试验/Reliability Test
+ NO       项目/Item                                 条件/Condition
+                         在-30℃的环境下放置168小时，然后在常温常湿下恢复4小时后
+        低温贮存试验
+                         测试。
+ 5-1   Low temperature
+                         Exposed at -30℃ for 168hours, then reurn to normal
+         Storage test
+                         temperature and humidity for 4 hours before test.
+                        在+70℃的环境下放置168小时，然后在常温常湿下恢复4小时
+         高温贮存试验
+                        后测试。
+ 5-2   High temperature
+                        Exposed at +70℃ for 168hours, then return to normal
+         Storage test
+                        temperature and humidity for 4 hours before test.
+                         在+55℃,95%RH的环境下放置120小时，然后在常温常湿下恢
+        高湿贮存试验
+                         复4h后测试。
+ 5-3    High humidity
+                         Exposed at +55℃ 95%RH for 120hours, then return to normal
+        Storage test
+                         temperature and humidity for 4 hours before test.
+                         马达按照以下试验条件放置 15 个周期，然后在常温常湿下放置
+                         4 小时后测试。
+                         Confirmed to operating of motor during 15 cycles as following
+                         test condition, then return to normal temperature and humidity
+                         for 4 hours before test.
+                         试验条件/Test condition:
+          温冲试验                                 1 cycle
+
+ 5-4    Thermal shock    +85℃
+            test
+                         -40℃
+
+                                       1h        2h       3h      4h
+
+                         高低温转换时间：≤5分钟
+                         Transfer time between high temperature and low
+                         temperature:≤5min
+                         将马达固定在30g的塑料夹具上，从1.5米的高度跌落到水泥地
+                         面上，六个面的每个面都跌落3次。
+            跌落
+ 5-5                     The motor that is attached to a 30g jig (plastic housing) and
+          Drop test
+                         drop it onto the concrete floor from 1.5m height. Drop thrice in
+                         each of the six planes.
+                                                                                            Sams
+                                                                                            http:
+
+
+
+
+                                   www.vybronics.com
+                          PRODUCT SPECIFICATION                       VLV041035L-FP249
+                                                                          NO: 8/12
+
+
+
+
+                         将马达固定在150g的塑料夹具上，按以下要求进行试验：
+                         1)扫频范围:10-55Hz
+                         2)全振幅:1.5mm
+                         3)扫频变化：10-55-10 约10分钟
+                         4)振动方向:三个垂直方向
+         振动试验            5)持续时间:每个方向10分钟（共30分钟）
+5-6                      The motor that is attached to a 150g jig (plastic housing) and
+       Vibration test
+                         test according following condition:
+                         1)Vibration frequency range: 10~55Hz
+                         2)Total amplitude: 1.5mm
+                         3)Sweep ratio: 10~55~10Hz approximate 10min
+                         4)Direction of vibration: Three perpendicular directions
+                         5)Duration: 10min (30min in total)
+
+
+
+
+                         1.试验循环/Test cycle:300,000 cycle
+                            (cycle:1sec on/2sec off)
+                         2.测试设备/Test equipment:寿命试验机/
+         寿命试验               Life time test machine
+5-7
+         Life test       3.输入电压（1.8VrmsAC,Sine wave）,输入频率：250Hz
+                           Input Source 250Hz,1.8Vrms AC, Sine wave
+
+
+
+
+判定标准/Judgment standard
+试验后，测试数据必须符合以下规格：
+1.加速度、电阻、电流变化率：不得超过初始值的±30%
+2.噪音：45dB Max
+3.外形，结构方面无异常发生
+
+After test, following specifications must be satisfied
+ 1.The fluctuation of Acceleration, Resistance, Rated Current: initial Value±30%
+ 2.Noise:55dB Max
+ 3.There should be no abnormalities to happen in structure
+
+
+                                                                                          Sams
+                                                                                          http:
+
+
+                                      - 8 -
+
+
+
+                                   www.vybronics.com
+                              PRODUCT SPECIFICATION                        VLV041035L-FP249
+                                                                               NO: 9/12
+
+
+
+
+6.注意事项/Caution
+(1)该马达是微型精密产品，在运输过程或使用时不要承受超过0.5 kgf的力，否则会引起外形
+或性能的变化.
+As this motor is small and precise, do not press it over 0.5kgf force or while transportation or
+operation, it can cause the transformation of performance or external appearance.
+(2) 请注意马达不要浸入到液体性物质中（比如：水，酒精等）
+Please be careful, not to be drop into fluid substances (such as: water, alcohol etc.)
+(3) 不要将马达长时间放置在高温或高湿下，否则有可能导致电机的性能下降。
+Do not expose the motor to high temperature or high humidity for a long periods of time, it
+may cause a decline in performance.
+(4) 马达不要靠近腐蚀性气体如H2S、SO2、NO2等,否则会引起腐蚀。
+Do not use near Corrosive gases(such as:H2S、SO2、NO2 etc.), while cause erosion
+(5) 请不要在靠近磁铁或带有磁场的仪器旁边使用或存放马达，否则有可能导致电机的性能下
+降。
+Please do not operate or store the motor adjacent to magnet or apparatus that has a
+magnetic field, it may cause a decline in performance.
+(6)为优化振动量,额定电压和频率可根据客户装配条件进行更改。
+To optimize the vibration force, rated voltage and frequency could be changed as to
+customer assemble condition.
+(7) 如有任何问题，宝龙和客户双方应共同努力解决。
+If any problems occur, both the user and BAOLONG shall try to solve the problem.
+(8)马达符合有关环境的法律和法规的要求（如ROHS2.0、REACH、H/F等）
+The motor complies with relevant environmental laws and regulations (such as: ROHS2.0,
+REACH, H/F etc.)
+
+
+
+
+                                                                                                   Sams
+                                                                                                   http:
+
+
+                                           - 9 -
+
+                                        www.vybronics.com
+                             PRODUCT SPECIFICATION           VLV041035L-FP249
+                                                                 NO: 10/12
+
+
+
+
+7.环保要求/Environmental protection Requirements
+本产品所有零部件符合欧盟RoHS指令（2011/65/EU,(EU)2015/863）/无卤/REACH指令要求，
+具体环境有害物质管控限制如下/
+This product conforms to the EU ROHS（2011/65/EU,(EU)2015/863），Halogen-Free
+and REACH certification,Specific contentas follows:
+铅及其化合物最大允许含量为1000ppm/Lead and Lead compounds≤1000ppm
+镉及其化合物最大允许含量为100ppm/Cadmium and cadmium compounds≤100ppm
+汞及其化合物最大允许含量为1000ppm/Mercury and Mercury compounds≤1000ppm
+六价铬化物最大允许含量为1000ppm/Hexavalent chromium compounds≤1000ppm
+多溴联苯(PBB)最大允许含量为1000ppm/Polybrominated biphenylethers≤1000ppm
+多溴联苯醚(PBDE)最大允许含量为1000ppm/Polybrominated diphenylethers≤1000ppm
+领苯二甲酸二异丁酯（DIBP）最大允许含量为1000ppm /DIBP≤1000ppm
+邻苯二甲酸二丁酯(DBP)最大允许含量为1000ppm /DBP≤1000ppm
+邻苯二甲酸苄基酯(BBP)最大允许含量为1000ppm/BBP≤1000ppm
+邻苯二甲酸二（2-乙基己基）酯(DEHP)最大允许含量为1000ppm/DEHP≤1000ppm
+六溴环十二烷(HBCDD)最大允许含量为1000ppm/HBCDD≤1000ppm
+溴Br最大允许含量为900ppm/Br≤900ppm
+氯Cl最大允许含量为900ppm/Cl≤900ppm
+溴加氯之和最大允许含量为1500ppm/Br+Cl≤1500ppm
+REACH 指令按最新法规内容管控执行/The instructions are subject to the latest regulations
+
+包装材料环保管控要求/Environmental control requirements for packaging materials：
+Pb+Cd+Hg+Cr6 < 100ppm (其中, Cd<50ppm)
+
+
+
+
+                                                                                Sams
+                                                                                http:
+
+
+
+
+                                      www.vybronics.com
+                      PRODUCT SPECIFICATION              VLV041035L-FP249
+                                                             NO: 11/12
+
+
+
+
+8. 外形图/Outside view
+
+
+
+
+                                             镀金铜箔面
+
+
+
+
+                                                 撕手离型位
+
+
+
+
+                                                                            Sams
+                                                                            http:
+
+
+
+
+                             www.vybronics.com
+                   PRODUCT SPECIFICATION          VLV041035L-FP249
+                                                     NO: 12/12
+
+
+
+
+9. 包装/Packaging
+
+
+
+                  吸塑盒尺寸(长:250mm 宽:210m 高:11mm)
+                  Tray dimension
+                   (L:250mm W:210mm H:11mm)
+                  每个吸塑盒放 100 只
+                  100 Pcs per tray
+
+
+
+
+                  内箱尺寸(长:260mm 宽:215mm 高:80mm)
+                  Inner-box dimension (L:260mm W:215mm
+                  H:80mm)
+                  每 11 个吸塑盒捆在一起,数量为 1000 只
+                  Put into inner-box 11 tray together
+                  with tape 1000Pcs per 11 tray .
+
+
+
+
+                  4 个内箱装入外箱，数量共 4000 只；
+                  Put four Inner-box into outer boxes,
+                  totaling 4000.
+                  外箱尺寸: (450mm 宽:280mm 高:180mm)
+                  Outer-box dimension:
+                  (L:450mm W:280mm H:180mm)
+
+
+
+
+                                                                     Sams
+                                                                     http:
+
+
+                             - 11 -
+
+                          www.vybronics.com
+

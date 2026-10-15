@@ -1,0 +1,289 @@
+=== FULL PIN NETLIST (correct transform) ===
+
+--- U1 (LIS2MDL) ---
+  pin 1    [SCL           ] SCL
+  pin 2    [NC            ] - NC FLOAT
+  pin 3    [CS            ] 1.8V
+  pin 4    [SDA           ] SDA
+  pin 5    [C1            ] - FLOAT
+  pin 6    [GND           ] ND
+  pin 7    [INT/DRDY      ] INT_MAG
+  pin 8    [GND           ] ND
+  pin 9    [Vdd           ] 1.8V
+  pin 10   [Vdd_IO        ] 1.8V
+  pin 11   [NC            ] - NC FLOAT
+  pin 12   [NC            ] - NC FLOAT
+
+--- U2 (NRF52833-QDAA-R) ---
+  pin 1    [DEC1          ] - FLOAT
+  pin 2    [P0.00_XL1     ] - FLOAT
+  pin 3    [P0.01_XL2     ] - FLOAT
+  pin 4    [P0.04_AIN2    ] - FLOAT
+  pin 5    [P0.05_AIN3    ] - FLOAT
+  pin 6    [P1.09         ] - FLOAT
+  pin 7    [P0.11         ] - FLOAT
+  pin 8    [VDD           ] DD
+  pin 9    [VDDH          ] AT+
+  pin 10   [VBUS          ] - NC FLOAT
+  pin 11   [DECUSB        ] - NC FLOAT
+  pin 12   [D-            ] - NC FLOAT
+  pin 13   [D+            ] - NC FLOAT
+  pin 14   [P0.15         ] - FLOAT
+  pin 15   [P0.17         ] - FLOAT
+  pin 16   [P0.18_nRESET  ] nRESET
+  pin 17   [P0.20         ] - FLOAT
+  pin 18   [VDD           ] DD
+  pin 19   [SWDIO         ] SWDIO
+  pin 20   [SWDCLK        ] SWDCLK
+  pin 21   [DEC5          ] - FLOAT
+  pin 22   [P0.09_NFC1    ] - NC FLOAT
+  pin 23   [P0.10_NFC2    ] - NC FLOAT
+  pin 24   [ANT           ] - FLOAT
+  pin 25   [VSS_PA        ] ND
+  pin 26   [DEC6          ] .3V
+  pin 27   [DEC3          ] - FLOAT
+  pin 28   [XC1           ] - FLOAT
+  pin 29   [XC2           ] - FLOAT
+  pin 30   [VDD           ] DD
+  pin 31   [P0.03_AIN1    ] - FLOAT
+  pin 32   [P0.02_AIN0    ] - FLOAT
+  pin 33   [P0.28_AIN4    ] - FLOAT
+  pin 34   [P0.29_AIN5    ] - FLOAT
+  pin 35   [P0.30_AIN6    ] - FLOAT
+  pin 36   [P0.31_AIN7    ] - FLOAT
+  pin 37   [VSS           ] ND
+  pin 38   [DEC4          ] .3V
+  pin 39   [DCC           ] - FLOAT
+  pin 40   [VDD           ] DD
+  pin 41   [VSS           ] ND
+
+--- U3 (TPS7A0218PDQNR) ---
+  pin 1    [OUT           ] 1.8V
+  pin 2    [GND           ] ND
+  pin 3    [EN            ] 1.8V_EN
+  pin 4    [IN            ] AT+
+  pin 5    [EP            ] ND
+
+--- U4 (DRV2624YFFR) ---
+  pin A1   [TRIG/INTZ     ] INT_HAPTIC
+  pin A2   [REG           ] - FLOAT
+  pin A3   [OUT+          ] OUT+
+  pin B1   [SDA           ] SDA
+  pin B2   [NRST          ] BAT+
+  pin B3   [GND           ] ND
+  pin C1   [SCL           ] SCL
+  pin C2   [VDD           ] AT+
+  pin C3   [OUT-          ] OUT-
+
+--- U5 (BQ51051BRHLR) ---
+  pin 1    [PGND          ] ND
+  pin 2    [AC1           ] - FLOAT
+  pin 3    [BOOT1         ] - FLOAT
+  pin 4    [BAT           ] AT+
+  pin 5    [CLAMP1        ] - FLOAT
+  pin 6    [COMM1         ] - FLOAT
+  pin 7    [~{CHG}        ] ~{CHG}
+  pin 8    [~{AD-EN}      ] - FLOAT
+  pin 9    [AD            ] ND NC
+  pin 10   [TERM          ] - FLOAT
+  pin 11   [EN2           ] QI_EN
+  pin 12   [ILIM          ] - FLOAT
+  pin 13   [TS/CTRL       ] - FLOAT
+  pin 14   [FOD           ] - FLOAT
+  pin 15   [COMM2         ] - FLOAT
+  pin 16   [CLAMP2        ] - FLOAT
+  pin 17   [BOOT2         ] - FLOAT
+  pin 18   [RECT          ] - FLOAT
+  pin 19   [AC2           ] - FLOAT
+  pin 20   [PGND          ] ND
+  pin 21   [GPAD          ] ND
+
+--- U6 (TPS7A0212PYCHR) ---
+  pin A1   [IN            ] AT+
+  pin A2   [OUT           ] 1.2V
+  pin B1   [EN            ] 1.2V_EN
+  pin B2   [GND           ] ND
+
+--- U8 (VEML6035) ---
+  pin 1    [GND           ] ND
+  pin 2    [SDA           ] SDA
+  pin 3    [INT           ] INT_LIGHT
+  pin 4    [NC            ] - NC FLOAT
+  pin 5    [SCL           ] SCL
+  pin 6    [VDD           ] 1.8V
+
+--- U9 (TMAG3001A1Y) ---
+  pin A1   [VCC           ] 1.8V
+  pin A2   [ADDR          ] ND
+  pin B1   [~{INT}        ] INT_ENC
+  pin B2   [GND           ] ND
+  pin C1   [SDA           ] SDA
+  pin C2   [SCL           ] SCL
+
+--- U10 (MS583730BA01-50) ---
+  pin 1    [GND           ] ND
+  pin 2    [VDD           ] 1.8V
+  pin 3    [SCL           ] SCL
+  pin 4    [SDA           ] SDA
+
+--- U11 (TPS7A0331PDQNR) ---
+  pin 1    [OUT           ] 3.1V
+  pin 2    [GND           ] ND
+  pin 3    [EN            ] 3.1V_EN
+  pin 4    [IN            ] AT+
+  pin 5    [EP            ] ND
+
+--- U12 (TPS75105DSKR) ---
+  pin 1    [ENB           ] ND
+  pin 2    [ENA           ] BL_PWM
+  pin 3    [D1A           ] BL
+  pin 4    [D2A           ] - NC FLOAT
+  pin 5    [GND           ] ND
+  pin 6    [NC            ] - NC FLOAT
+  pin 7    [D2B           ] - NC FLOAT
+  pin 8    [D1B           ] - NC FLOAT
+  pin 9    [VIN           ] AT+
+  pin 10   [ISET          ] - FLOAT
+  pin 11   [EP            ] ND
+
+--- LIS2DUX12 () ---
+  pin 1    [SCL           ] SCL
+  pin 2    [CS            ] 1.8V
+  pin 3    [SDO           ] 1.8V
+  pin 4    [SDA           ] SDA
+  pin 5    [NC            ] - FLOAT
+  pin 6    [GND           ] ND
+  pin 7    [RES           ] ND
+  pin 8    [GND           ] ND
+  pin 9    [Vdd           ] 1.8V
+  pin 10   [Vdd_IO        ] 1.8V
+  pin 11   [INT2          ] INT_ACC2
+  pin 12   [INT1          ] INT_ACC1
+
+--- FPC1 (FH35C-23S-0.3SHW) ---
+  pin 1    [1             ] - NC FLOAT
+  pin 2    [2             ] 3.1V
+  pin 3    [3             ] 1.8V
+  pin 4    [4             ] ND
+  pin 5    [5             ] 1.2V
+  pin 6    [6             ] 1.2V
+  pin 7    [7             ] ND
+  pin 8    [8             ] 1.2V
+  pin 9    [9             ] 1.2V
+  pin 10   [10            ] ND
+  pin 11   [11            ] SCREEN_SDI
+  pin 12   [12            ] SCREEN_SCL
+  pin 13   [13            ] 1.8V
+  pin 14   [14            ] SCREEN_~{CS}
+  pin 15   [15            ] ND
+  pin 16   [16            ] SCREEN_~{RST}
+  pin 17   [17            ] ND
+  pin 18   [18            ] ND
+  pin 19   [19            ] - FLOAT
+  pin 20   [20            ] SYNC
+  pin 21   [21            ] - NC FLOAT
+  pin 22   [22            ] BL
+  pin 23   [23            ] ND
+  pin 24   [24            ] ND
+  pin 25   [25            ] ND
+
+=== RESISTORS/NTC ===
+  R1 (4.7k): 1:SDA, 2:1.8V
+  R2 (4.7k): 1:SCL, 2:1.8V
+  R8 (10k): 1:INT_ENC, 2:1.8V
+  R9 (10k): 1:INT_LIGHT, 2:1.8V
+  R10 (26.7k): 1:-, 2:ND
+  R11 (0): 1:BL_PWM, 2:-
+  R12 (0) [DNP]: 1:BL_PWM, 2:BL_PWM_MCU
+  R3 (42.2k): 1:-, 2:-
+  R4 (200): 1:-, 2:ND
+  R5 (1.54k): 1:-, 2:-
+  R6 (6.65k): 1:ND, 2:-
+  R7 (0): 1:-, 2:-
+  NTC (10k): 1:ND, 2:-
+
+=== SYMBOL PROPERTIES (MPN/footprint) ===
+  U9: value='TMAG3001A1Y' mpn='TMAG3001A1YBGR' fp='easyeda2kicad:BGA-6_L1.3-W0.8-P0.40-TL_PTMAG3001A2YBGR' dnp=no
+  C28: value='1u' mpn='CL05A105KO5NNNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  FPC1: value='FH35C-23S-0.3SHW' mpn='FH35C-23S-0.3SHW(50)' fp='easyeda2kicad:FPC-SMD_23P-P0.60_HRS_FH35C-23S-0.3SHW' dnp=no
+  C14: value='22n' mpn='0402B223K500NT' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  U6: value='TPS7A0212PYCHR' mpn='TPS7A0212PYCHR' fp='easyeda2kicad:DSBGA-4_L0.7-W0.7-R2-C2-P0.35-BL' dnp=no
+  C7: value='470n' mpn='GRM155R61E474KE01D' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C5: value='100n' mpn='CL05B104KO5NNNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  U4: value='DRV2624YFFR' mpn='DRV2624YFFR' fp='easyeda2kicad:DSBGA-9_L1.4-W1.3-R3-C3-P0.40-BL' dnp=no
+  C22: value='100n' mpn='CL05B104KB54PNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C49: value='1u' mpn='CL05A105KO5NNNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C43: value='12p' mpn='CC0402GRNPO9BN120' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C46: value='NP' mpn='' fp='Capacitor_SMD:C_0402_1005Metric' dnp=yes
+  LIS2DUX12: value='' mpn='-' fp='Package_LGA:LGA-12_2x2mm_P0.5mm' dnp=no
+  C40: value='1p' mpn='GJM1555C1H1R0WB01D' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  HAPTIC_MOTOR: value='BAT' mpn='-' fp='Connector_Hirose:Hirose_DF13-02P-1.25DSA_1x02_P1.25mm_Vertical' dnp=no
+  C2: value='100n' mpn='CL05B104KO5NNNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C37: value='1u' mpn='TCC0402X7R105K250AT' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  R3: value='42.2k' mpn='FRC0402F4222TS' fp='Resistor_SMD:R_0402_1005Metric' dnp=no
+  ANT1: value='2450AT18D0100E' mpn='2450AT18D0100E' fp='easyeda2kicad:ANT-SMD_4P-L3.2-W1.6' dnp=no
+  R11: value='0' mpn='RC0402JR-070RL' fp='Resistor_SMD:R_0402_1005Metric' dnp=no
+  C23: value='10u' mpn='CL05A106MP5NUNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  L5: value='2.2n' mpn='LQG15HS2N2B02D' fp='easyeda2kicad:L0402' dnp=no
+  R10: value='26.7k' mpn='RC-02K2672FT' fp='Resistor_SMD:R_0402_1005Metric' dnp=no
+  C47: value='NP' mpn='' fp='Capacitor_SMD:C_0402_1005Metric' dnp=yes
+  C48: value='1u' mpn='CL05A105KO5NNNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C16: value='1u' mpn='CL05A105KO5NNNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C4: value='100n' mpn='CL05B104KO5NNNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C18: value='100n' mpn='GRM31C5C1H104JA01L' fp='Capacitor_SMD:C_1206_3216Metric' dnp=no
+  C1: value='10u' mpn='CL05A106MP5NUNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  L1: value='L' mpn='-' fp='Inductor_THT:L_Axial_L5.3mm_D2.2mm_P2.54mm_Vertical_Vishay_IM-1' dnp=yes
+  C13: value='10n' mpn='GRM155R71H103KA88J' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C34: value='100n' mpn='CL05B104KB54PNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C33: value='100n' mpn='CL05B104KB54PNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  R2: value='4.7k' mpn='0402WGF4701TCE' fp='Resistor_SMD:R_0402_1005Metric' dnp=no
+  C17: value='10u' mpn='CL10A106MA8NRNC' fp='Capacitor_SMD:C_0603_1608Metric' dnp=no
+  C8: value='22n' mpn='0402B223K500NT' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  U5: value='BQ51051BRHLR' mpn='BQ51051BRHLR' fp='easyeda2kicad:VQFN-20_L4.5-W3.5-P0.50-BL-EP_BQ24100RHLR' dnp=no
+  C27: value='1u' mpn='CL05A105KO5NNNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C36: value='1u' mpn='CL05A105KO5NNNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C24: value='100n' mpn='CL05B104KO5NNNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  U8: value='VEML6035' mpn='VEML6035' fp='easyeda2kicad:SMD-6_L2.0-W2.0-P0.65-BL' dnp=no
+  C6: value='' mpn='-' fp='easyeda2kicad:SAH_Connect' dnp=no
+  C44: value='12p' mpn='CC0402GRNPO9BN120' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  X1: value='ECS-320-CDX-2152' mpn='ECS-320-CDX-2152' fp='easyeda2kicad:CRYSTAL-SMD_4P-L1.6-W1.2-BL' dnp=no
+  C9: value='10n' mpn='GRM155R71H103KA88J' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C20: value='100n' mpn='CL05B104KO5NNNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C39: value='100p' mpn='CC0402KRX7R9BB101' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C26: value='100n' mpn='CL05B104KO5NNNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  R5: value='1.54k' mpn='CRCW04021K54FKED' fp='Resistor_SMD:R_0402_1005Metric' dnp=no
+  C45: value='12p' mpn='CC0402GRNPO9BN120' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  BATTERY: value='BAT' mpn='-' fp='Connector_Hirose:Hirose_DF13-02P-1.25DSA_1x02_P1.25mm_Vertical' dnp=no
+  R8: value='10k' mpn='0402WGF1002TCE' fp='Resistor_SMD:R_0402_1005Metric' dnp=no
+  C10: value='100n' mpn='CL05B104KO5NNNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  L4: value='4.7n' mpn='LQG15HS4N7B02D' fp='easyeda2kicad:L0402-RD' dnp=no
+  U2: value='NRF52833-QDAA-R' mpn='nRF52833-QDAA-R' fp='easyeda2kicad:QFN-40_L5.0-W5.0-P0.40-TL-EP3.6' dnp=no
+  U12: value='TPS75105DSKR' mpn='TPS75105DSKR' fp='easyeda2kicad:WSON-10_L2.5-W2.5-W0.50-TL-EP' dnp=no
+  C15: value='470n' mpn='GRM155R61E474KE01D' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  U1: value='LIS2MDL' mpn='LIS2MDLTR' fp='easyeda2kicad:VLGA-12_L2.0-W2.0-P0.50-BL' dnp=no
+  C30: value='20n' mpn='GCM21B5C1H203FA16L' fp='Capacitor_SMD:C_0805_2012Metric' dnp=no
+  C31: value='4.7u' mpn='CL05A475KP5NRNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  NTC: value='10k' mpn='NCP15XH103F03RC' fp='Resistor_SMD:R_0402_1005Metric' dnp=no
+  C12: value='100n' mpn='GRM31C5C1H104JA01L' fp='Capacitor_SMD:C_1206_3216Metric' dnp=no
+  C32: value='4.7u' mpn='CL05A475KP5NRNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  U11: value='TPS7A0331PDQNR' mpn='TPS7A0331PDQNR' fp='easyeda2kicad:X2SON-4_L1.0-W1.0-P0.65-TL-EP' dnp=no
+  C38: value='47n' mpn='CL05B473KO5NNNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C25: value='1u' mpn='CL05A105KO5NNNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C42: value='12p' mpn='CC0402GRNPO9BN120' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  L2: value='LQM18DN100M70L' mpn='LQM18DN100M70L' fp='easyeda2kicad:L0603' dnp=no
+  X2: value='CM8V-T1A-32.768KHZ-9PF-20PPM-TB-QC' mpn='CM8V-T1A-32.768kHz-9pF-20PPM-TB-QC' fp='easyeda2kicad:CRYSTAL-SMD_L2.0-W1.2' dnp=no
+  C41: value='1.2p' mpn='GJM1555C1H1R2WB01D' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  R12: value='0' mpn='RC0402JR-070RL' fp='Resistor_SMD:R_0402_1005Metric' dnp=yes
+  R1: value='4.7k' mpn='0402WGF4701TCE' fp='Resistor_SMD:R_0402_1005Metric' dnp=no
+  C11: value='2.2n' mpn='GRM1555C1H222GA01D' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C3: value='100n' mpn='CL05B104KO5NNNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C35: value='100n' mpn='CL05B104KB54PNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  C29: value='1u' mpn='CL05A105KO5NNNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  R4: value='200' mpn='0402WGF2000TCE' fp='Resistor_SMD:R_0402_1005Metric' dnp=no
+  C21: value='220n' mpn='CL05B224KO5NNNC' fp='Capacitor_SMD:C_0402_1005Metric' dnp=no
+  U3: value='TPS7A0218PDQNR' mpn='TPS7A0218PDQNR' fp='easyeda2kicad:X2SON-4_L1.0-W1.0-P0.65-TL-EP' dnp=no
+  U10: value='MS583730BA01-50' mpn='MS583730BA01-50' fp='easyeda2kicad:SENSOR-SMD_4P-L3.3-W3.3-P2.00-BL' dnp=no
+  R7: value='0' mpn='RC0402JR-070RL' fp='Resistor_SMD:R_0402_1005Metric' dnp=no
+  L3: value='LQW15AN15NG00D' mpn='LQW15AN15NG00D' fp='easyeda2kicad:IND-SMD_L1.0-W0.5-2' dnp=no
+  R6: value='6.65k' mpn='CRCW04026K65FKED' fp='Resistor_SMD:R_0402_1005Metric' dnp=no
+  R9: value='10k' mpn='0402WGF1002TCE' fp='Resistor_SMD:R_0402_1005Metric' dnp=no
