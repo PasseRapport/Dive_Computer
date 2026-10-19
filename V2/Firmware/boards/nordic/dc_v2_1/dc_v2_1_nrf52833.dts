@@ -1,0 +1,150 @@
+/*
+ * Dive Computer V2 rev 1 - nRF52833 QDAA (QFN40)
+ *
+ * Board hardware description, matching the KiCad schematic.
+ * Power architecture: high-voltage mode (VDDH = battery on pin 9, VDD
+ * pins decoupling only) - the internal REG0 LDO generates the 1.8 V
+ * digital supply (REGOUT0 default), so all GPIO levels are 1.8 V.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/dts-v1/;
+#include <nordic/nrf52833_qdaa.dtsi>
+#include "dc_v2_1_nrf52833-pinctrl.dtsi"
+
+/ {
+	model = "Dive Computer V2 rev 1";
+	compatible = "dive,dc-v2-1";
+
+	chosen {
+		zephyr,sram = &sram0;
+		zephyr,flash = &flash0;
+		zephyr,code-partition = &slot0_partition;
+		/* No UART is routed on this board (no spare QFN40 GPIO);
+		 * use SEGGER RTT over SWD for console output. */
+	};
+
+	/* GPIO pin assignments (gpio-leds/gpio-keys, sensor and screen
+	 * control pins, SPI chip select) live in app.overlay so they are
+	 * visible and editable in the Devicetree Visual Editor. */
+};
+
+/* GPIO ports and GPIOTE are disabled by default in the SoC dtsi;
+ * enable them explicitly like the Nordic reference boards do. */
+&gpiote {
+	status = "okay";
+};
+
+&gpio0 {
+	status = "okay";
+};
+
+&gpio1 {
+	status = "okay";
+};
+
+/* P0.18/nRESET is wired to the debug connector: configure it as
+ * hardware reset so a locked/sleeping device can always be
+ * re-attached (same effect as nrfjprog --pinresetenable). */
+&uicr {
+	gpio-as-nreset;
+};
+
+&i2c0 {
+	status = "okay";
+	pinctrl-0 = <&i2c0_default>;
+	pinctrl-1 = <&i2c0_sleep>;
+	pinctrl-names = "default", "sleep";
+	clock-frequency = <400000>;
+
+	/* Magnetometer, I2C mode (CS pin tied high), fixed address.
+	 * INT/DRDY not routed to the MCU: polled. */
+	lis2mdl@1e {
+		compatible = "st,lis2mdl";
+		reg = <0x1e>;
+	};
+
+	/* Accelerometer, I2C mode (CS high), SA0 high. INT1 routed
+	 * (wake-on-motion, assigned in app.overlay); INT2 not routed
+	 * per pin budget decision. */
+	acc: lis2dux12@19 {
+		compatible = "st,lis2dux12";
+		reg = <0x19>;
+	};
+
+	/* Pressure sensor, fixed address. */
+	ms5837: ms5837@76 {
+		compatible = "meas,ms5837-30ba";
+		reg = <0x76>;
+	};
+
+	/* 3D Hall sensor for the rotary encoder, ADDR pin to GND. */
+	enc: tmag3001@35 {
+		compatible = "ti,tmag3001";
+		reg = <0x35>;
+	};
+
+	/* Ambient light sensor (out-of-tree driver, fixed address). */
+	veml6035@10 {
+		compatible = "vishay,veml6035";
+		reg = <0x10>;
+	};
+
+	/* Haptic driver, LRA 250 Hz (out-of-tree driver, fixed address). */
+	drv2624@5a {
+		compatible = "ti,drv2624";
+		reg = <0x5a>;
+	};
+};
+
+&spi1 {
+	status = "okay";
+	pinctrl-0 = <&spi1_default>;
+	pinctrl-1 = <&spi1_sleep>;
+	pinctrl-names = "default", "sleep";
+
+	/* JDI LPM013M091A, 320x300 RGB111 memory-in-pixel, 3-wire 9-bit
+	 * SPI (IM0=GND, DCX=VDDI). Out-of-tree display driver; TE (SYNC)
+	 * input for tear-free updates. Chip select, reset and TE pins are
+	 * assigned in app.overlay. */
+	lcd: lpm013m091a@0 {
+		compatible = "jdi,lpm013m091a";
+		reg = <0>;
+		spi-max-frequency = <8000000>;
+		width = <320>;
+		height = <300>;
+	};
+};
+
+&flash0 {
+	partitions {
+		ranges;
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		boot_partition: partition@0 {
+			compatible = "zephyr,mapped-partition";
+			label = "mcuboot";
+			reg = <0x00000000 0xc000>;
+		};
+
+		slot0_partition: partition@c000 {
+			compatible = "zephyr,mapped-partition";
+			label = "image-0";
+			reg = <0x0000c000 0x37000>;
+		};
+
+		slot1_partition: partition@43000 {
+			compatible = "zephyr,mapped-partition";
+			label = "image-1";
+			reg = <0x00043000 0x37000>;
+		};
+
+		storage_partition: partition@7a000 {
+			compatible = "zephyr,mapped-partition";
+			label = "storage";
+			reg = <0x0007a000 0x00006000>;
+		};
+	};
+};

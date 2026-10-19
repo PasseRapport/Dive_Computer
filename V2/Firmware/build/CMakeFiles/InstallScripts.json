@@ -1,0 +1,15 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/cmake_install.cmake",
+		"/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/_sysbuild/cmake_install.cmake",
+		"/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/_sysbuild/sysbuild/images/cmake_install.cmake",
+		"/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/_sysbuild/sysbuild/images/bootloader/cmake_install.cmake",
+		"/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/_sysbuild/sysbuild/images/firmware_loader/cmake_install.cmake",
+		"/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/modules/nrf/cmake_install.cmake",
+		"/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/modules/mcuboot/cmake_install.cmake",
+		"/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/_sysbuild/sysbuild/images/boards/cmake_install.cmake",
+		"/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/_sysbuild/sysbuild/images/soc/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

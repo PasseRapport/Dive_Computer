@@ -1,0 +1,7 @@
+default: Firmware
+build_dir: /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build
+domains:
+  - name: Firmware
+    build_dir: /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware
+flash_order:
+  - Firmware

@@ -1,0 +1,11 @@
+# Dive Computer V2 rev 1 board configuration
+
+# Copyright (c) 2026
+# SPDX-License-Identifier: Apache-2.0
+
+if BOARD_DC_V2_1
+
+config HW_STACK_PROTECTION
+	default ARCH_HAS_STACK_PROTECTION
+
+endif # BOARD_DC_V2_1

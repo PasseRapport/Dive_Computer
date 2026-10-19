@@ -1,0 +1,13 @@
+# Target labels
+ Firmware
+# Source files and their labels
+/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/_sysbuild/sysbuild/images/CMakeFiles/Firmware
+/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/_sysbuild/sysbuild/images/CMakeFiles/Firmware.rule
+/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/_sysbuild/sysbuild/images/CMakeFiles/Firmware-complete.rule
+/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/_sysbuild/sysbuild/images/Firmware-prefix/src/Firmware-stamp/Firmware-build.rule
+/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/_sysbuild/sysbuild/images/Firmware-prefix/src/Firmware-stamp/Firmware-configure.rule
+/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/_sysbuild/sysbuild/images/Firmware-prefix/src/Firmware-stamp/Firmware-download.rule
+/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/_sysbuild/sysbuild/images/Firmware-prefix/src/Firmware-stamp/Firmware-install.rule
+/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/_sysbuild/sysbuild/images/Firmware-prefix/src/Firmware-stamp/Firmware-mkdir.rule
+/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/_sysbuild/sysbuild/images/Firmware-prefix/src/Firmware-stamp/Firmware-patch.rule
+/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/_sysbuild/sysbuild/images/Firmware-prefix/src/Firmware-stamp/Firmware-update.rule

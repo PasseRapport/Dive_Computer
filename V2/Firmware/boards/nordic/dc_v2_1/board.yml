@@ -1,0 +1,6 @@
+board:
+  name: dc_v2_1
+  full_name: Dive Computer V2 rev 1
+  vendor: nordic
+  socs:
+  - name: nrf52833

@@ -1,0 +1,64 @@
+/*
+ * Dive Computer V2 rev 1 - pin control definitions
+ *
+ * Final pinout, validated against the KiCad schematic netlist and the
+ * nRF52833 QDAA (QFN40) pin assignments (product spec v1.2, Table 140).
+ *
+ * Only bonded QFN40 GPIOs are used. Per Table 140, P0.02, P0.03, P0.09,
+ * P0.10 and P0.28-P0.30 are standard-drive, low-frequency only (<= 10 kHz)
+ * pins: they carry the slow control/event signals below. All fast signals
+ * (I2C at 400 kHz, screen SPI at 8 MHz) are on full-speed GPIOs.
+ *
+ * Fast GPIOs : P0.04, P0.05, P0.11, P1.09, P0.15, P0.17, P0.20, P0.31
+ * Slow GPIOs : P0.02, P0.03, P0.09, P0.10, P0.28, P0.29, P0.30
+ * Reserved   : P0.00/P0.01 (32 kHz crystal XL1/XL2), P0.18 (nRESET)
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+&pinctrl {
+	/* Shared sensor bus: LIS2MDL (0x1E), LIS2DUX12 (0x19), VEML6035,
+	 * TMAG3001 (ADDR=GND), MS5837-30BA (0x76), DRV2624 (0x5A).
+	 * External 4.7k pull-ups to the always-on 1.8 V rail. */
+	i2c0_default: i2c0_default {
+		group1 {
+			psels = <NRF_PSEL(TWIM_SCL, 0, 15)>,
+				<NRF_PSEL(TWIM_SDA, 0, 17)>;
+		};
+	};
+
+	i2c0_sleep: i2c0_sleep {
+		group1 {
+			psels = <NRF_PSEL(TWIM_SCL, 0, 15)>,
+				<NRF_PSEL(TWIM_SDA, 0, 17)>;
+			/* High-Z in sleep: the external pull-ups to the
+			 * always-on 1.8 V rail keep the bus defined while
+			 * the sensors stay powered for wake-up events. */
+			low-power-enable;
+		};
+	};
+
+	/* JDI LPM013M091A, 3-wire 9-bit SPI. 9-bit frames are produced by
+	 * packing 8 frames into 9 bytes and issuing one transfer per line
+	 * with CS held low (nRF SPIM is 8-bit only). tSCYCW min = 16 ns for
+	 * GRAM writes, so 8 MHz is within spec. */
+	spi1_default: spi1_default {
+		group1 {
+			psels = <NRF_PSEL(SPIM_SCK, 0, 4)>,
+				<NRF_PSEL(SPIM_MOSI, 0, 5)>;
+		};
+	};
+
+	spi1_sleep: spi1_sleep {
+		group1 {
+			psels = <NRF_PSEL(SPIM_SCK, 0, 4)>,
+				<NRF_PSEL(SPIM_MOSI, 0, 5)>;
+			/* Screen rails are gated off in sleep; keep the SPI
+			 * lines low so the unpowered panel is not back-
+			 * powered through its ESD diodes (JDI requires
+			 * interface lines at GND level while VDDI/VCI off). */
+			low-power-enable;
+			bias-pull-down;
+		};
+	};
+};

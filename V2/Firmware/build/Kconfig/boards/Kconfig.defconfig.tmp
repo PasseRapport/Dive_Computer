@@ -1,0 +1,2 @@
+# Load Zephyr board defconfig descriptions.
+osource "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/boards/nordic/dc_v2_1/Kconfig.defconfig"

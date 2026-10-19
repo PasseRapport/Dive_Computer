@@ -1,0 +1,56 @@
+cmake:
+  application:
+    configuration-dir: '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware'
+    source-dir: '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware'
+  board:
+    name: 'dc_v2_1'
+    path:
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/boards/nordic/dc_v2_1'
+    qualifiers: 'nrf52833'
+    revision: ''
+  devicetree:
+    bindings-dirs:
+     - '/home/Bilal/ncs/v3.4.1/nrf/dts/bindings'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/bindings'
+    files:
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/boards/nordic/dc_v2_1/dc_v2_1_nrf52833.dts'
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/app.overlay'
+    include-dirs:
+     - '/home/Bilal/ncs/v3.4.1/nrf/include'
+     - '/home/Bilal/ncs/v3.4.1/nrf/dts/common'
+     - '/home/Bilal/ncs/v3.4.1/nrf/dts/riscv'
+     - '/home/Bilal/ncs/v3.4.1/nrf/dts/arm'
+     - '/home/Bilal/ncs/v3.4.1/nrf/dts'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/include'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/include/zephyr'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/common'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/vendor'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/rx'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/x86'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/xtensa'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/sparc'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/riscv'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/posix'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/arm64'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/arm'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/arc'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts'
+    user-files:
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/app.overlay'
+  kconfig:
+    files:
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/boards/nordic/dc_v2_1/dc_v2_1_nrf52833_defconfig'
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/prj.conf'
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/zephyr/.config.sysbuild'
+    user-files:
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/prj.conf'
+  toolchain:
+    name: 'zephyr'
+    path: '/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk'
+  vendor-specific:
+    nordic:
+      svdfile: '/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/bsp/stable/mdk/nrf52833.svd'
+  zephyr:
+    version: '4.4.2'
+    zephyr-base: '/home/Bilal/ncs/v3.4.1/zephyr'
+version: '0.1.0'

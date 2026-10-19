@@ -1,0 +1,92 @@
+/*
+ * Devicetree overlay - Dive Computer V2 (nRF52833 QDAA, custom board)
+ *
+ * Carries the GPIO pin assignments of the design so they are visible
+ * and editable in the Devicetree Visual Editor (Pin Overview).
+ * The buses, their pinctrl and the sensor/screen nodes are defined in
+ * the board files (boards/nordic/dc_v2_1/); keep the pin numbers here
+ * in sync with the KiCad schematic.
+ *
+ * Pin map (QFN40 pin in brackets):
+ *   P0.02 [32] INT_ACC1  P0.03 [31] INT_ENC    P0.04 [4]  SCREEN_SCL
+ *   P0.05 [5]  SCREEN_SDI P0.09 [22] QI_EN     P0.10 [23] ~CHG
+ *   P0.11 [7]  SCREEN_CS  P0.15 [14] SCL       P0.17 [15] SDA
+ *   P0.20 [17] BL_PWM_MCU P0.28 [33] 1.2+1.8V_EN P0.29 [34] 3.1V_EN
+ *   P0.30 [35] INT_LIGHT P0.31 [36] SYNC (TE)  P1.09 [6]  SCREEN_RST
+ * (SPI/I2C bus pins are in dc_v2_1_nrf52833-pinctrl.dtsi.)
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/ {
+	/* Rail control outputs. All LDO enables are active high
+	 * (TPS7A02 family, internal pull-down: floating = off).
+	 * 1.2 V (MIPI LP-11 pins) and 1.8 V (VDDI/DCX) are driven by a
+	 * single GPIO; 3.1 V (VCI) stays separate to enforce the JDI
+	 * power sequence (VDDI before VCI).
+	 */
+	gpio-leds {
+		compatible = "gpio-leds";
+
+		rail_1v2_1v8_en {
+			gpios = <&gpio0 28 GPIO_ACTIVE_HIGH>;
+		};
+
+		rail_3v1_en {
+			gpios = <&gpio0 29 GPIO_ACTIVE_HIGH>;
+		};
+
+		qi_en {
+			gpios = <&gpio0 9 0>;
+		};
+
+		bl_pwm_mcu {
+			gpios = <&gpio0 20 GPIO_ACTIVE_HIGH>;
+		};
+	};
+
+	/* Event inputs. INT_ENC (TMAG3001, open-drain + R8 10k) and
+	 * INT_LIGHT (VEML6035 + R9 10k) are active low; ~CHG is the
+	 * BQ51051 open-drain charge status, active low while charging
+	 * (external pull-up still to be added on the schematic).
+	 */
+	gpio-keys {
+		compatible = "zephyr,gpio-keys";
+
+		int_acc1 {
+			gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
+		};
+
+		int_enc {
+			gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+		};
+
+		int_light {
+			gpios = <&gpio0 30 GPIO_ACTIVE_LOW>;
+		};
+	};
+
+	zephyr,user {
+		chg_n-gpios = <&gpio0 10 (GPIO_ACTIVE_LOW | GPIO_OPEN_SOURCE)>;
+	};
+};
+
+&spi1 {
+	cs-gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;
+};
+
+/* Screen control pins: reset (active low) and TE frame-sync input. */
+&lcd {
+	reset-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
+	te-gpios = <&gpio0 31 GPIO_ACTIVE_HIGH>;
+};
+
+/* Sensor interrupt pins. */
+&acc {
+	int1-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
+	status = "okay";
+};
+
+&enc {
+	int-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+};

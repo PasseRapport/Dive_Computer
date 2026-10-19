@@ -1,0 +1,17 @@
+identifier: dc_v2_1/nrf52833
+name: DC_V2-1
+type: mcu
+arch: arm
+ram: 128
+flash: 512
+toolchain:
+  - zephyr
+  - gnuarmemb
+supported:
+  - adc
+  - ble
+  - gpio
+  - pwm
+  - watchdog
+  - counter
+vendor: nordic
