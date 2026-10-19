@@ -63,6 +63,7 @@ More compact, better component integration, and additional sensors.
   <img src="./V2/3D.png" alt="V2 3D render" width="55%">
 </p>
 
+
 ### Exploded View
 
 <p align="center">
