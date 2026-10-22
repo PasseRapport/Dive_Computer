@@ -52,8 +52,8 @@
         "zones": {
           "border_display_style": 2,
           "border_hatch_pitch": 0.5,
-          "corner_radius": 0.5,
-          "corner_smoothing": 2,
+          "corner_radius": 0.1,
+          "corner_smoothing": 1,
           "fill_mode": 0,
           "hatch_gap": 1.5,
           "hatch_orientation": 0.0,
@@ -259,7 +259,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": ""
+      "sch_revision": "2.0"
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -680,7 +680,7 @@
         "uuid": "5e4dc322-0afb-4d6b-99ca-6f3217511809"
       }
     ],
-    "used_designators": "FPC1,LIS2DW12TR1,BATTERY1,L1-5,LIS12DUX1,#PWR1-79,ANT1,X1-2,LIS2DUX1,R1-13,NTC1,U1-12,HAPTIC_MOTOR1,IC2-3,CN1,J1-3,C1-51",
+    "used_designators": "CN1,J1-3,C1-51,IC2-3,LIS2DW12TR1,FPC1,BATTERY1,#PWR1-79,LIS12DUX1,L1-5,ANT1,X1-2,LIS2DUX1,R1-13,HAPTIC_MOTOR1,NTC1,U1-12",
     "variants": []
   },
   "sheets": [
