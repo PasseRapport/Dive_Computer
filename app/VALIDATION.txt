@@ -1,0 +1,52 @@
+Dive Watch 0.1.0 — bilan de validation du 25 octobre 2026
+=======================================================
+
+Périmètre : application Android et simulateur Linux de la branche
+codex/android-companion, dépôt PasseRapport/Dive_Computer.
+Aucun fichier V1/ ou V2/ modifié.
+
+Vérifications effectuées sur ordinateur :
+- 7 tests Python : fragmentation, catalogue, import complet, requêtes invalides,
+  corruption détectée, reprise après une réponse corrompue, scénarios déterministes.
+- 16 tests JVM : codec et fichiers de référence Python, contrôles CRC/SHA,
+  reprise depuis un bloc durable, refus des mauvaises identités, statistiques,
+  archives et échanges complets Kotlin <-> serveur Python indépendant.
+- 6 tests Android Room/sauvegarde sous Robolectric API 28 : restauration répétée,
+  annotations divergentes, archive corrompue, conflit de contenu, CSV et imports partiels.
+- 1 parcours d’interface Compose sous Robolectric API 28 : démarrage sans permission
+  Bluetooth, connexion à la démonstration, import des trois plongées, consultation
+  du carnet et ouverture du profil. Une capture est produite dans les rapports.
+- Compilation de l’APK debug Android 8.0 minimum / cible API 35.
+- Contrôle Android lint : aucune erreur bloquante ; avertissements conservés pour
+  les versions de bibliothèques épinglées, KAPT et les attributs réservés aux API récentes.
+- Publication réelle du périphérique DiveWatch-SIM sur BlueZ/hci0 puis arrêt propre.
+  Cette publication ne constitue pas un essai de connexion depuis le téléphone.
+- Vérification de la signature APK debug par apksigner.
+
+Commandes depuis app/ :
+  python3 -m unittest discover -s simulator -v
+  ./gradlew :core:test :android:testDebugUnitTest :android:assembleDebug :android:lintDebug
+
+La première exécution locale télécharge Gradle, les dépendances et les images
+Android de test. JDK 17 et SDK Android 35 requis. Aucun logiciel système Java ou
+Bluetooth n’a été remplacé ; les outils préparés pour cet essai sont dans /tmp.
+
+Premier passage complet GitHub réussi :
+https://github.com/PasseRapport/Dive_Computer/actions/runs/40188572659
+Les vérifications sont relancées sur les modifications de app/.
+
+Encore à vérifier avec le téléphone :
+- installation et ergonomie sur sa version Android et son écran ;
+- permissions de scan/connexion, découverte réelle de DiveWatch-SIM ;
+- notifications et import par la radio Android <-> PC ;
+- interruption, reconnexion et reprise sur cette liaison réelle.
+
+Encore à vérifier avec la future montre :
+- implantation du même contrat dans le firmware Nordic ;
+- identité, appairage/chiffrement et protection des données réelles ;
+- débit, paramètres radio, stockage et consommation mesurés ;
+- exactitude des mesures et des événements enregistrés ;
+- faisabilité et validation des mises à jour MCUmgr/SMP + MCUboot.
+
+La V1 ne calcule pas de décompression et ne modifie pas les réglages de la montre.
+Les données de démonstration et les alertes associées sont fictives.
