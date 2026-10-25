@@ -8,6 +8,7 @@ Dans Montre, choisis « Connecter la démonstration », puis « Synchroniser ».
 
 2. Connecter le simulateur PC
 Démarre le simulateur BLE sur le PC. Active le Bluetooth du téléphone et autorise l’accès aux appareils à proximité. Dans Montre, recherche DiveWatch-SIM puis sélectionne-le. Connexion et synchronisation sont deux actions distinctes.
+Sur Android 11 et antérieur, autorise aussi la localisation et active-la dans les raccourcis du téléphone pour permettre la recherche Bluetooth. Aucune position GPS n’est enregistrée par l’application. La recherche dure 15 secondes et indique ensuite si une montre a été trouvée.
 Le simulateur initial est ouvert pour les essais ; le nom Bluetooth ne prouve pas l’identité d’une montre.
 
 3. Récupérer les plongées

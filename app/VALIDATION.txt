@@ -1,4 +1,4 @@
-Dive Watch 0.1.0 — bilan de validation du 25 octobre 2026
+Dive Watch 0.1.1 — bilan de validation du 25 octobre 2026
 =======================================================
 
 Périmètre : application Android et simulateur Linux de la branche
@@ -16,11 +16,19 @@ Vérifications effectuées sur ordinateur :
 - 1 parcours d’interface Compose sous Robolectric API 28 : démarrage sans permission
   Bluetooth, connexion à la démonstration, import des trois plongées, consultation
   du carnet et ouverture du profil. Une capture est produite dans les rapports.
+- 3 régressions Android sous Robolectric API 28 : localisation désactivée,
+  fin explicite de la recherche après 15 secondes et ordre réel des callbacks
+  Nordic après activation des notifications. Les trois tests échouent avant
+  les correctifs correspondants. Le dernier utilise les requêtes Nordic réelles
+  avec une file d’initialisation contrôlée, sans simuler une radio complète.
 - Compilation de l’APK debug Android 8.0 minimum / cible API 35.
 - Contrôle Android lint : aucune erreur bloquante ; avertissements conservés pour
   les versions de bibliothèques épinglées, KAPT et les attributs réservés aux API récentes.
-- Publication réelle du périphérique DiveWatch-SIM sur BlueZ/hci0 puis arrêt propre.
-  Cette publication ne constitue pas un essai de connexion depuis le téléphone.
+- Publication réelle de DiveWatch-SIM sur BlueZ/hci0. Sur le téléphone Android 10,
+  découverte confirmée après activation de la localisation ; le PC reçoit
+  l’activation des notifications. La version 0.1.0 abandonne ensuite à cause
+  d’un indicateur mis à jour trop tard. La 0.1.1 exécute ce callback immédiatement,
+  comme la continuation de connexion Nordic, avant la fin de l’initialisation.
 - Vérification de la signature APK debug par apksigner.
 
 Commandes depuis app/ :
@@ -36,9 +44,9 @@ https://github.com/PasseRapport/Dive_Computer/actions/runs/40188572659
 Les vérifications sont relancées sur les modifications de app/.
 
 Encore à vérifier avec le téléphone :
-- installation et ergonomie sur sa version Android et son écran ;
-- permissions de scan/connexion, découverte réelle de DiveWatch-SIM ;
-- notifications et import par la radio Android <-> PC ;
+- installation de la mise à jour 0.1.1 et ergonomie sur son écran ;
+- connexion complète, réception des informations et import Android <-> PC
+  avec la 0.1.1 ; le test automatisé d’ordre des callbacks ne valide pas la radio ;
 - interruption, reconnexion et reprise sur cette liaison réelle.
 
 Encore à vérifier avec la future montre :

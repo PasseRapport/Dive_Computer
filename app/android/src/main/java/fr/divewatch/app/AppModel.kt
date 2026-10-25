@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.*
+import android.location.LocationManager
+import android.os.Build
 import android.os.ParcelUuid
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -44,16 +46,34 @@ class AppModel(application: Application): AndroidViewModel(application) {
         stopScan();devices.value=emptyList()
         val bluetooth=adapter
         if(bluetooth==null||!bluetooth.isEnabled) { report("Active le Bluetooth du téléphone.");return }
+        if(Build.VERSION.SDK_INT<=30) {
+            val location=getApplication<Application>().getSystemService(LocationManager::class.java)
+            val enabled=if(Build.VERSION.SDK_INT>=28) location?.isLocationEnabled==true else
+                location?.let { it.isProviderEnabled(LocationManager.GPS_PROVIDER)||it.isProviderEnabled(LocationManager.NETWORK_PROVIDER) }==true
+            if(!enabled) { report("Active la localisation du téléphone pour rechercher une montre sur Android 11 ou antérieur.");return }
+        }
+        val scanner=bluetooth.bluetoothLeScanner
+        if(scanner==null) { report("Recherche Bluetooth indisponible. Vérifie que le Bluetooth est activé.");return }
         scan=object: ScanCallback() {
             override fun onScanResult(type: Int,result: ScanResult) {
+                if(scan!==this)return
                 val item=DeviceChoice(result.scanRecord?.deviceName?:result.device.name?:"Montre NUS",result.device.address)
                 devices.update { previous -> (previous.filter { it.address!=item.address }+item).sortedBy { it.name } }
             }
-            override fun onScanFailed(errorCode: Int) { report("Recherche Bluetooth impossible ($errorCode)") }
+            override fun onScanFailed(errorCode: Int) {
+                if(scan!==this)return
+                stopScan();report("Recherche Bluetooth impossible ($errorCode)")
+            }
         }
-        bluetooth.bluetoothLeScanner.startScan(listOf(ScanFilter.Builder().setServiceUuid(ParcelUuid(Nus.SERVICE)).build()),ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build(),scan)
         report("Recherche pendant 15 secondes…")
-        scanJob=viewModelScope.launch { delay(15000);stopScan() }
+        try {
+            scanner.startScan(listOf(ScanFilter.Builder().setServiceUuid(ParcelUuid(Nus.SERVICE)).build()),ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build(),scan)
+            scanJob=viewModelScope.launch {
+                delay(15000)
+                scanJob=null;stopScan()
+                report(if(devices.value.isEmpty()) "Aucune montre trouvée. Vérifie que DiveWatch-SIM est lancé sur le PC, puis relance la recherche." else "Recherche terminée. Sélectionne ta montre.")
+            }
+        } catch(e: SecurityException) { stopScan();report("Autorise l’accès Bluetooth et à la localisation dans les paramètres de l’application.") }
     }
     fun stopScan() { scanJob?.cancel();scanJob=null;scan?.let { runCatching { adapter?.bluetoothLeScanner?.stopScan(it) } };scan=null }
     fun connectDemo()=connect(null)
