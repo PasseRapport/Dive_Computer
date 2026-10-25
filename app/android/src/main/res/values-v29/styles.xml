@@ -1,0 +1,6 @@
+<resources>
+    <!-- Compose owns both light and dark palettes. Android must not recolor them. -->
+    <style name="DiveWatchTheme" parent="BaseDiveWatchTheme">
+        <item name="android:forceDarkAllowed">false</item>
+    </style>
+</resources>

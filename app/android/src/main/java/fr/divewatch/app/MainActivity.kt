@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 class MainActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if(Build.VERSION.SDK_INT>=29)window.decorView.isForceDarkAllowed=false
         setContent {
             val model: AppModel=viewModel()
             val permissions=androidx.activity.compose.rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { granted ->

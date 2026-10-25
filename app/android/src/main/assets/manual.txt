@@ -38,3 +38,6 @@ Les réglages de la montre et les mises à jour Bluetooth ne sont pas disponible
 
 PARAMÈTRES
 Le bouton Paramètres de la barre du bas permet de choisir Nuit OLED, Océan sombre ou Clair. Le changement est immédiat et conservé après fermeture. Les futures mises à jour de la montre par Bluetooth (OTA) seront regroupées ici ; elles ne sont pas encore disponibles.
+
+CARNET ET SUPPRESSION
+Choisis Apnée ou Bouteille pour consulter les plongées correspondantes. Un appui long sur une plongée affiche les cases de sélection. Coche les plongées voulues ou Sélectionner tous (uniquement la catégorie affichée), puis Supprimer et confirme. Annuler la sélection quitte ce mode. La suppression concerne uniquement le carnet du téléphone, conserve les notes des sorties et ne vide pas la montre. Si les plongées sont encore sur la montre, Synchroniser peut les importer à nouveau. Sauvegarde ton carnet avant de supprimer des plongées que tu veux conserver ailleurs.

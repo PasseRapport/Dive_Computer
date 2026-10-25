@@ -50,10 +50,11 @@ fun DiveWatchApp(model: AppModel,search: ()->Unit,backup: ()->Unit,restore: ()->
     val row=dives.firstOrNull { it.watchId+it.diveId==selected }
     BackHandler(selected!=null) { selected=null }
     MaterialTheme(colorScheme=theme.colors()) {
-        Scaffold(bottomBar={NavigationBar { listOf("Carnet","Montre","Manuel","Paramètres").forEachIndexed { i,label ->
+        val scrollState=key(tab,selected) { rememberScrollState() }
+        Scaffold(containerColor=MaterialTheme.colorScheme.background,contentColor=MaterialTheme.colorScheme.onBackground,bottomBar={NavigationBar { listOf("Carnet","Montre","Manuel","Paramètres").forEachIndexed { i,label ->
             NavigationBarItem(selected=tab==i,onClick={tab=i;selected=null},icon={Text(listOf("≋","◉","?","⚙")[i])},label={Text(label)})
         } } }) { padding ->
-            Column(Modifier.fillMaxSize().padding(padding).padding(horizontal=20.dp).verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(14.dp)) {
+            Column(Modifier.fillMaxSize().padding(padding).padding(horizontal=20.dp).verticalScroll(scrollState),verticalArrangement=Arrangement.spacedBy(14.dp)) {
                 Spacer(Modifier.height(10.dp));Text("DIVE WATCH",style=MaterialTheme.typography.labelLarge,color=Aqua)
                 if(row!=null) Detail(row,outings,model)
                 else when(tab) {

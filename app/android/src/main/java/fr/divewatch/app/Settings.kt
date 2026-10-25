@@ -40,12 +40,23 @@ enum class AppTheme(val label: String,val description: String) {
             surfaceContainer=Color(0xff14232d),surfaceContainerLow=Color(0xff101f29),
             surfaceContainerHigh=Color(0xff1c2d37),surfaceContainerHighest=Color(0xff263842))
         LIGHT -> lightColorScheme(
-            primary=Color(0xff2b5969),onPrimary=Color.White,
-            primaryContainer=Color(0xffd2e6ed),onPrimaryContainer=Color(0xff102e38),
-            secondary=Color(0xff485f69),tertiary=Color(0xff884e38),
-            background=Color(0xfff5f8fa),surface=Color(0xfff5f8fa),
-            onBackground=Color(0xff172126),onSurface=Color(0xff172126),
-            surfaceVariant=Color(0xffdce5e9),onSurfaceVariant=Color(0xff3d4b52))
+            primary=Color(0xff17645e),onPrimary=Color.White,
+            primaryContainer=Color(0xffd5eeea),onPrimaryContainer=Color(0xff103d39),
+            secondary=Color(0xff3e6661),onSecondary=Color.White,
+            secondaryContainer=Color(0xffdcece7),onSecondaryContainer=Color(0xff153e38),
+            tertiary=Color(0xff8a482a),onTertiary=Color.White,
+            tertiaryContainer=Color(0xffffdbc9),onTertiaryContainer=Color(0xff341405),
+            background=Color(0xfff3f7f5),onBackground=Color(0xff172d29),
+            surface=Color(0xfff3f7f5),onSurface=Color(0xff172d29),
+            surfaceVariant=Color(0xffe1eae5),onSurfaceVariant=Color(0xff465e55),
+            surfaceContainerLowest=Color.White,surfaceContainerLow=Color.White,
+            surfaceContainer=Color(0xffeaf1ed),surfaceContainerHigh=Color(0xffe4ece7),
+            surfaceContainerHighest=Color(0xffdde7e1),
+            outline=Color(0xff6b8177),outlineVariant=Color(0xffbfcec4),
+            inverseSurface=Color(0xff263c33),inverseOnSurface=Color(0xffeef5ef),
+            inversePrimary=Color(0xff9ed7ca),surfaceTint=Color(0xff17645e),
+            error=Color(0xffad2a23),onError=Color.White,
+            errorContainer=Color(0xffffdad4),onErrorContainer=Color(0xff400500))
     }
 }
 
@@ -55,8 +66,7 @@ internal fun receptionDate(ms: Long?,zone: ZoneId=ZoneId.systemDefault()): Strin
 @Composable
 internal fun SettingsScreen(theme: AppTheme,onTheme: (AppTheme)->Unit) {
     Text("Paramètres",style=MaterialTheme.typography.headlineLarge)
-    Text("Apparence",style=MaterialTheme.typography.titleLarge)
-    Text("Le thème s’applique immédiatement et reste mémorisé.")
+    Text("Thème",style=MaterialTheme.typography.titleLarge)
     Column(Modifier.fillMaxWidth().selectableGroup()) {
         AppTheme.entries.forEach { option ->
             Row(Modifier.fillMaxWidth().selectable(selected=theme==option,onClick={onTheme(option)},role=Role.RadioButton).padding(vertical=12.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)) {

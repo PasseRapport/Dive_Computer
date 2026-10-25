@@ -51,3 +51,6 @@ Consulter `VALIDATION.txt` pour les résultats réellement obtenus. La compilati
 Le manuel embarqué explique uniquement les fonctions implémentées et distingue les procédures matérielles encore non validées. Aucun calcul de décompression n’est effectué.
 
 Apparence : onglet Paramètres, thèmes Nuit OLED (par défaut), Océan sombre et Clair. Choix conservé sur le téléphone. La rubrique OTA est un emplacement réservé, sans transfert de firmware dans cette version. Le rendu V2 du README est utilisé avec un fond transparent. Dernière réception : jj/MM/aaaa HH:mm, heure locale du téléphone.
+
+Carnet : les boutons Apnée et Bouteille ouvrent des listes séparées. Un appui long active la sélection ; les cases, Sélectionner tous (catégorie courante) et Supprimer permettent un effacement local confirmé. Les notes des sorties et les données de la montre sont conservées. Une synchronisation peut réimporter les plongées encore sur la montre.
+Le thème clair utilise une palette complète sans recoloration automatique Force Dark ; le rendu MIUI doit être vérifié sur le téléphone.
