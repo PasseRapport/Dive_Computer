@@ -10,6 +10,7 @@ Dans Montre, choisis « Connecter la démonstration », puis « Synchroniser ».
 Démarre le simulateur BLE sur le PC. Active le Bluetooth du téléphone et autorise l’accès aux appareils à proximité. Dans Montre, recherche DiveWatch-SIM puis sélectionne-le. Connexion et synchronisation sont deux actions distinctes.
 Sur Android 11 et antérieur, autorise aussi la localisation et active-la dans les raccourcis du téléphone pour permettre la recherche Bluetooth. Aucune position GPS n’est enregistrée par l’application. La recherche dure 15 secondes et indique ensuite si une montre a été trouvée.
 Le simulateur initial est ouvert pour les essais ; le nom Bluetooth ne prouve pas l’identité d’une montre.
+Après un redémarrage du simulateur, Android peut conserver d’anciens services Bluetooth. Si l’erreur « Invalid Handle » survient, l’application rafraîchit le cache de ce périphérique puis réessaie une seule fois. Si le code 1 persiste, oublie DiveWatch-SIM dans les paramètres Bluetooth et recommence la recherche.
 
 3. Récupérer les plongées
 Appuie sur Synchroniser. Seules les plongées terminées sont proposées. Une interruption conserve les blocs vérifiés ; reconnecte la même montre et relance l’import pour reprendre. La même plongée n’est pas ajoutée deux fois. La montre conserve ses données après l’import.
