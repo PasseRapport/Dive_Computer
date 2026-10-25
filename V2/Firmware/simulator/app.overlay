@@ -1,0 +1,5 @@
+&sdl_dc {
+    width = <620>;
+    height = <420>;
+    title = "Dive Watch - LVGL";
+};
