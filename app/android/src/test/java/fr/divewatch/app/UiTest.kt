@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import fr.divewatch.core.DemoLink
 import org.robolectric.annotation.GraphicsMode
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,6 +18,13 @@ import org.robolectric.annotation.Config
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class UiTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
+    @Before fun resetFixtures() {
+        compose.runOnIdle {
+            val model=ViewModelProvider(compose.activity)[AppModel::class.java]
+            kotlinx.coroutines.runBlocking(kotlinx.coroutines.Dispatchers.IO) { model.db.clearAllTables() }
+            model.setTheme(AppTheme.NIGHT)
+        }
+    }
     @Test fun connectedWatchCanImportAndEraseWithoutLosingThePhoneLogbook() {
         compose.onNodeWithText("Ton carnet").assertIsDisplayed()
         compose.onNodeWithText("Montre",useUnmergedTree=true).performClick()
@@ -90,6 +98,8 @@ class UiTest {
         compose.onNodeWithText("1 sélectionnée(s)").performScrollTo().assertExists()
         compose.onNodeWithTag("select-all").performScrollTo().performClick().assertIsOn()
         compose.onNodeWithText("2 sélectionnée(s)").assertExists()
+        compose.onNodeWithTag("check-${apnea.first().id}").performScrollTo().performClick().assertIsOff()
+        compose.onNodeWithTag("select-all").performScrollTo().assertIsOff().performClick().assertIsOn()
         screenshot("carnet-selection.png")
         compose.onNodeWithText("Supprimer").performClick()
         compose.onNodeWithText("Annuler").performClick()
@@ -107,15 +117,45 @@ class UiTest {
         compose.onNodeWithText("Synchroniser les plongées terminées").performScrollTo().performClick()
         compose.waitUntil(15000) { compose.onAllNodesWithText("2 plongée(s) importée(s). Carnet disponible hors ligne.").fetchSemanticsNodes().isNotEmpty() }
     }
-    @Test @Config(sdk=[29],qualifiers="w411dp-h891dp-mdpi-night")
+    @Test @Config(sdk=[29],qualifiers="w411dp-h891dp-night-mdpi")
     fun lightThemeRemainsReadableWithSystemNightMode() {
         compose.runOnIdle { ViewModelProvider(compose.activity)[AppModel::class.java].setTheme(AppTheme.LIGHT) }
         compose.onNodeWithText("Ton carnet").assertIsDisplayed()
         // Android must not recolor a palette already managed by the app.
         compose.runOnIdle { org.junit.Assert.assertFalse(compose.activity.window.decorView.isForceDarkAllowed) }
+        assertDarkTextOnLightBackground()
         screenshot("light-carnet.png")
+        compose.onNodeWithText("Montre",useUnmergedTree=true).performClick()
+        compose.runOnIdle { ViewModelProvider(compose.activity)[AppModel::class.java].connectForTest(DemoLink()) }
+        compose.waitUntil(15000) { compose.onAllNodesWithText("Montre simulée connectée — données fictives").fetchSemanticsNodes().isNotEmpty() }
+        compose.onNodeWithText("Synchroniser les plongées terminées").performScrollTo().performClick()
+        compose.waitUntil(15000) { compose.onAllNodesWithText("3 plongée(s) importée(s). Carnet disponible hors ligne.").fetchSemanticsNodes().isNotEmpty() }
+        compose.onNodeWithText("Ta montre").performScrollTo()
+        screenshot("light-watch.png")
+        assertDarkTextOnLightBackground()
+        compose.onNodeWithText("Carnet",useUnmergedTree=true).performClick()
+        compose.onNodeWithTag("category-APNEA").performScrollTo().performClick()
+        screenshot("light-list.png")
+        val first=fr.divewatch.core.Demo.dives().first {it.mode==fr.divewatch.core.DiveMode.APNEA}
+        compose.onNodeWithTag("dive-${first.id}").performScrollTo().performClick()
+        screenshot("light-detail.png")
         compose.onNodeWithText("Manuel",useUnmergedTree=true).performClick()
         screenshot("light-manual.png")
+        assertDarkTextOnLightBackground()
+    }
+    private fun assertDarkTextOnLightBackground() {
+        compose.runOnIdle {
+            val view=compose.activity.window.decorView
+            val bitmap=android.graphics.Bitmap.createBitmap(view.width,view.height,android.graphics.Bitmap.Config.ARGB_8888)
+            view.draw(android.graphics.Canvas(bitmap))
+            var dark=0
+            for(y in 30 until minOf(190,bitmap.height))for(x in 16 until bitmap.width-16) {
+                val p=bitmap.getPixel(x,y)
+                if(android.graphics.Color.red(p)<120&&android.graphics.Color.green(p)<120&&android.graphics.Color.blue(p)<120)dark++
+            }
+            bitmap.recycle()
+            org.junit.Assert.assertTrue("Le titre doit rester sombre sur fond clair",dark>100)
+        }
     }
     private fun screenshot(name: String) {
         val folder=java.io.File("build/reports/screenshots").apply { mkdirs() }
