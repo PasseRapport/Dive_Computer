@@ -25,8 +25,8 @@ class CarnetTest {
         blocks=File(RuntimeEnvironment.getApplication().cacheDir,"blocks-test").apply { deleteRecursively();mkdirs() }
     }
     @After fun tearDown() {db.close();blocks.deleteRecursively()}
-    private suspend fun seed() {
-        val dive=Demo.dives().first();val blob=DiveCodec.encode(dive)
+    private suspend fun seed(index: Int=0) {
+        val dive=Demo.dives()[index];val blob=DiveCodec.encode(dive)
         db.carnet().saveOuting(OutingRow("outing","Sortie test","Carrière","Note originale"))
         db.carnet().insertDive(DiveRow(dive.watchId.toString(),dive.id.toString(),sha256(blob).hex(),blob,"outing"))
     }
@@ -67,10 +67,12 @@ class CarnetTest {
         assertTrue(failed);assertArrayEquals(original.content,db.carnet().allDives().single().content)
     }
     @Test fun csvPreservesMissingTemperatureAndUnits()= runBlocking {
-        seed();val out=ByteArrayOutputStream();Archives(db,blocks).csv(out)
+        seed(1);val out=ByteArrayOutputStream();Archives(db,blocks).csv(out)
         val files=SafeArchive.read(ByteArrayInputStream(out.toByteArray()))
         assertEquals(setOf("dives.csv","samples.csv","events.csv"),files.keys)
-        assertTrue(files.getValue("samples.csv").toString(Charsets.UTF_8).contains("temperature_centi_c"))
+        val samples=files.getValue("samples.csv").toString(Charsets.UTF_8)
+        assertTrue(samples.contains("temperature_centi_c"))
+        assertTrue(samples.lineSequence().drop(1).first { it.isNotBlank() }.endsWith(",\"\""))
     }
     @Test fun incompleteImportAndBlocksRemainIncompleteAfterRestore()= runBlocking {
         val d=Demo.dives().last();val m=DiveCodec.manifest(d);val store=BlockStore(blocks)

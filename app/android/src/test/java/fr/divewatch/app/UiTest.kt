@@ -1,7 +1,6 @@
 package fr.divewatch.app
 
 import androidx.compose.ui.test.*
-import androidx.compose.ui.graphics.asAndroidBitmap
 import org.robolectric.annotation.GraphicsMode
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import org.junit.Rule
@@ -29,8 +28,14 @@ class UiTest {
         compose.onNodeWithText("PROFONDEUR MAX.").assertExists()
         compose.onNodeWithText("SIMULATION · données fictives").assertExists()
         val folder=java.io.File("build/reports/screenshots").apply { mkdirs() }
-        java.io.File(folder,"dive-detail.png").outputStream().use { output ->
-            compose.onRoot().captureToImage().asAndroidBitmap().compress(android.graphics.Bitmap.CompressFormat.PNG,100,output)
+        compose.runOnIdle {
+            val view=compose.activity.window.decorView
+            val bitmap=android.graphics.Bitmap.createBitmap(view.width,view.height,android.graphics.Bitmap.Config.ARGB_8888)
+            view.draw(android.graphics.Canvas(bitmap))
+            java.io.File(folder,"dive-detail.png").outputStream().use { output ->
+                bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,output)
+            }
+            bitmap.recycle()
         }
     }
 }

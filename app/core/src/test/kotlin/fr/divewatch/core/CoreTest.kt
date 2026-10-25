@@ -89,7 +89,7 @@ class CoreTest {
         val out=ByteArrayOutputStream();SafeArchive.write(out,mapOf("data/a.bin" to byteArrayOf(1,2,3)))
         val files=SafeArchive.read(ByteArrayInputStream(out.toByteArray()));assertContentEquals(byteArrayOf(1,2,3),files["data/a.bin"])
     }
-    @Test fun archiveTraversalAndDuplicatesAreRejected() {
+    @Test fun archiveTraversalIsRejected() {
         val out=ByteArrayOutputStream();ZipOutputStream(out).use { it.putNextEntry(ZipEntry("../evil"));it.write(1);it.closeEntry() }
         assertFails { SafeArchive.read(ByteArrayInputStream(out.toByteArray())) }
     }
