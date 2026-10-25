@@ -1,77 +1,32 @@
-Dive Watch 0.1.2 — bilan de validation du 25 octobre 2026
-=======================================================
+Dive Watch 0.2.0 — validation du 25 octobre 2026
+================================================
 
-Périmètre : application Android et simulateur Linux de la branche
-codex/android-companion, dépôt PasseRapport/Dive_Computer.
-Aucun fichier V1/ ou V2/ modifié.
+Évolution de l’écran Montre :
+- indicateur animé pendant la recherche BLE, lié au démarrage/arrêt/erreur du scan ;
+- image fournie de la montre à côté des informations connectées ;
+- retrait de l’affichage surface/plongée et de la démonstration sans périphérique ;
+- bouton Vider la mémoire à côté de Déconnecter, sous Synchroniser.
 
-Vérifications effectuées sur ordinateur :
-- 7 tests Python : fragmentation, catalogue, import complet, requêtes invalides,
-  corruption détectée, reprise après une réponse corrompue, scénarios déterministes.
-- 16 tests JVM : codec et fichiers de référence Python, contrôles CRC/SHA,
-  reprise depuis un bloc durable, refus des mauvaises identités, statistiques,
-  archives et échanges complets Kotlin <-> serveur Python indépendant.
-- 6 tests Android Room/sauvegarde sous Robolectric API 28 : restauration répétée,
-  annotations divergentes, archive corrompue, conflit de contenu, CSV et imports partiels.
-- 1 parcours d’interface Compose sous Robolectric API 28 : démarrage sans permission
-  Bluetooth, connexion à la démonstration, import des trois plongées, consultation
-  du carnet et ouverture du profil. Une capture est produite dans les rapports.
-- 6 régressions Android sous Robolectric API 28 : localisation désactivée,
-  fin explicite de la recherche après 15 secondes et ordre réel des callbacks
-  Nordic après activation des notifications. Les trois tests échouent avant
-  les correctifs correspondants. Le dernier utilise les requêtes Nordic réelles
-  avec une file d’initialisation contrôlée, sans simuler une radio complète.
-  Trois tests supplémentaires parcourent open() et les callbacks GATT Android :
-  connexion normale sans rafraîchissement, Invalid Handle suivi d’un
-  rafraîchissement et d’une reconnexion, erreur persistante arrêtée après un seul
-  nouvel essai. Ils utilisent la vraie bibliothèque Nordic avec une ombre GATT
-  Robolectric rejouant le code ATT 1 capturé sur le téléphone.
-- Compilation de l’APK debug Android 8.0 minimum / cible API 35.
-- Contrôle Android lint : aucune erreur bloquante ; avertissements conservés pour
-  les versions de bibliothèques épinglées, KAPT et les attributs réservés aux API récentes.
-- Publication réelle de DiveWatch-SIM sur BlueZ/hci0.
-- Vérification de la signature APK debug par apksigner.
+Effacement :
+- capacité négociée ; une ancienne montre sans cette commande ne propose pas l’action ;
+- toutes les plongées doivent déjà exister dans le carnet avec la même empreinte ;
+- dialogue avec confirmation et annulation ; aucune suppression du carnet du téléphone ;
+- requête liée à l’identité de la montre et à l’empreinte du catalogue confirmé ;
+- refus côté serveur pendant une plongée ou si le catalogue a changé ;
+- seules les plongées terminées sont supprimées, pas les réglages ni le firmware ;
+- le simulateur recrée ses données fictives au prochain redémarrage.
 
-Commandes depuis app/ :
-  python3 -m unittest discover -s simulator -v
-  ./gradlew :core:test :android:testDebugUnitTest :android:assembleDebug :android:lintDebug
+Vérifications : 41 tests réussis (9 Python, 18 JVM dont interopérabilité Python,
+14 Android/Robolectric), compilation APK et lint réussis sur GitHub :
+https://github.com/PasseRapport/Dive_Computer/actions/runs/40239598809
+Le parcours Compose vérifie l’absence de démonstration, l’image et le retrait
+de l’état, l’import, l’annulation puis l’effacement et la conservation du carnet.
+Un second parcours vérifie l’indicateur de recherche et la désactivation du bouton.
+Captures inspectées sous Robolectric : ce ne sont pas des captures du téléphone.
+Signature locale de l’APK vérifiée identique à celle de la 0.1.2 pour permettre
+la mise à jour sans désinstallation. Aucun carnet du téléphone n’a été effacé.
+Serveur de simulation mis à jour avec la commande d’effacement.
 
-La première exécution locale télécharge Gradle, les dépendances et les images
-Android de test. JDK 17 et SDK Android 35 requis. Aucun logiciel système Java ou
-Bluetooth n’a été remplacé ; les outils préparés pour cet essai sont dans /tmp.
-
-Premier passage complet GitHub réussi :
-https://github.com/PasseRapport/Dive_Computer/actions/runs/40188572659
-Les vérifications sont relancées sur les modifications de app/.
-
-Vérifications réelles sur Xiaomi Mi 9T, Android 10 :
-- Découverte après activation de la localisation.
-- La 0.1.1 corrige un risque d’ordre des callbacks, mais ne corrige pas l’échec
-  réel. Les traces USB montrent onDescriptorWrite error 1 (ATT Invalid Handle),
-  avec des services périmés conservés par Android après redémarrage du simulateur.
-- La 0.1.2 reçoit la même erreur, rafraîchit uniquement ce périphérique via
-  shouldClearCacheWhenDisconnected(), puis se reconnecte une seule fois.
-  Les traces BluetoothGatt confirment refresh() et une nouvelle découverte.
-- Connexion 0.1.2 confirmée par l’utilisateur, StartNotify reçu sur le PC,
-  informations/état reçus dans l’application, réception actualisée à 13:31 Paris.
-- La synchronisation affiche 0 nouvelle plongée, les trois plongées fictives
-  étant déjà présentes depuis la démonstration. Cela vérifie le chemin catalogue
-  et la déduplication, pas le transfert des blocs de profils par la radio.
-- Mise à jour manuelle depuis Téléchargements, carnet conservé. L’installation
-  automatique USB est refusée par le téléphone ; aucune désinstallation effectuée.
-- Le rafraîchissement repose sur une API cachée Android, appelée par Nordic ;
-  en cas d’échec persistant, l’application donne une consigne et ne boucle pas.
-
-Encore à vérifier avec le téléphone :
-- transfert réel des blocs d’une plongée encore absente du carnet ;
-- interruption, reconnexion et reprise sur cette liaison réelle.
-
-Encore à vérifier avec la future montre :
-- implantation du même contrat dans le firmware Nordic ;
-- identité, appairage/chiffrement et protection des données réelles ;
-- débit, paramètres radio, stockage et consommation mesurés ;
-- exactitude des mesures et des événements enregistrés ;
-- faisabilité et validation des mises à jour MCUmgr/SMP + MCUboot.
-
-La V1 ne calcule pas de décompression et ne modifie pas les réglages de la montre.
-Les données de démonstration et les alertes associées sont fictives.
+À vérifier sur le téléphone : nouvelle interface et effacement via la radio réelle.
+À implémenter dans le futur firmware : capacités et ERASE_COMPLETED décrits dans
+protocol/SPEC.txt. Aucun test de la montre physique n’est revendiqué.
