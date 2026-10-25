@@ -11,7 +11,7 @@ object SafeArchive {
     private const val MAX_FILE=20*1024*1024
     private const val MAX_TOTAL=128*1024*1024
     fun write(output: OutputStream, files: Map<String,ByteArray>) {
-        require(files.size<=2000)
+        require(files.size<=2000 && files.values.sumOf { it.size.toLong() }<=MAX_TOTAL)
         ZipOutputStream(output).use { zip -> files.toSortedMap().forEach { (name,bytes) ->
             require(validName(name) && bytes.size<=MAX_FILE)
             zip.putNextEntry(ZipEntry(name).apply { time=0 });zip.write(bytes);zip.closeEntry()

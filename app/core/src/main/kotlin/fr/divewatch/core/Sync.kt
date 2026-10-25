@@ -83,7 +83,7 @@ fun atomicWrite(file: File, bytes: ByteArray) {
     Files.move(tmp.toPath(),file.toPath(),StandardCopyOption.ATOMIC_MOVE,StandardCopyOption.REPLACE_EXISTING)
 }
 class Importer(private val client: WatchClient, private val store: BlockStore) {
-    suspend fun download(watch: WatchInfo, m: Manifest, progress: suspend (Int,Int)->Unit={}): Dive {
+    suspend fun download(watch: WatchInfo, m: Manifest, progress: suspend (Int,Int)->Unit={_,_->}): Dive {
         var offset=store.nextOffset(m);progress(offset,m.size)
         while(offset<m.size) { currentCoroutineContext().ensureActive();val bytes=client.block(m,offset);store.append(m,offset,bytes);offset+=bytes.size;progress(offset,m.size) }
         val dive=DiveCodec.decode(store.complete(m))

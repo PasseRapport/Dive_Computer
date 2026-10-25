@@ -149,7 +149,7 @@ private fun Detail(row: DiveRow,outings: List<OutingRow>,model: AppModel) {
     }
     Text("Événements enregistrés",style=MaterialTheme.typography.titleLarge)
     dive.events.forEach { event ->
-        OutlinedButton(onClick={cursor=event.elapsedMs;alert=event},modifier=Modifier.fillMaxWidth()) { Text("${duration(event.elapsedMs)} · "+if(event.code==1)"Alerte de profondeur" else "Code ${event.code}") }
+        OutlinedButton(onClick={cursor=event.elapsedMs;alert=event},modifier=Modifier.fillMaxWidth()) { Text("${duration(event.elapsedMs)} · "+if(dive.simulated&&event.code==1)"Alerte de profondeur" else "Code ${event.code}") }
     }
     alert?.let { event -> AlertDialog(onDismissRequest={alert=null},confirmButton={TextButton(onClick={alert=null}){Text("Fermer")}},title={Text("Événement ${event.code}")},text={Text("Enregistré par la montre à ${duration(event.elapsedMs)}.\nNiveau : ${event.severity}\nValeur brute : ${event.value?:"indisponible"}"+(if(dive.simulated)"\nÉvénement fictif du simulateur." else ""))}) }
     val outing=outings.firstOrNull { it.id==row.outingId }
