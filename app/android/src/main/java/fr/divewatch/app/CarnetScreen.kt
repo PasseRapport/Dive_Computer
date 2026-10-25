@@ -22,8 +22,7 @@ private fun DiveRow.key()="$watchId/$diveId"
 
 @OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
-internal fun CarnetScreen(dives: List<DiveRow>,outings: List<OutingRow>,imports: List<ImportRow>,model: AppModel,busy: Boolean,backup: ()->Unit,restore: ()->Unit,csv: ()->Unit,onOpen: (DiveRow)->Unit) {
-    var category by rememberSaveable { mutableStateOf<String?>(null) }
+internal fun CarnetScreen(dives: List<DiveRow>,outings: List<OutingRow>,imports: List<ImportRow>,model: AppModel,busy: Boolean,backup: ()->Unit,restore: ()->Unit,csv: ()->Unit,category: String?,onCategory: (String?)->Unit,onOpen: (DiveRow)->Unit) {
     var selecting by rememberSaveable { mutableStateOf(false) }
     var checked by rememberSaveable { mutableStateOf(emptyList<String>()) }
     var confirm by remember { mutableStateOf<List<DiveRow>?>(null) }
@@ -32,13 +31,13 @@ internal fun CarnetScreen(dives: List<DiveRow>,outings: List<OutingRow>,imports:
     val chosen=visible.filter { it.key() in checked }
     fun leaveSelection() { selecting=false;checked=emptyList();confirm=null }
     fun toggle(row: DiveRow) { checked=if(row.key() in checked)checked-row.key() else checked+row.key() }
-    BackHandler(selecting||category!=null) { if(selecting)leaveSelection() else category=null }
+    BackHandler(selecting||category!=null) { if(selecting)leaveSelection() else onCategory(null) }
     Text("Ton carnet",style=MaterialTheme.typography.headlineLarge)
     if(category==null) {
         Text("Choisis ton type de plongée",color=MaterialTheme.colorScheme.onSurfaceVariant)
         listOf(DiveMode.APNEA to "Apnée",DiveMode.AIR to "Bouteille").forEach { (mode,label) ->
             val count=decoded.values.count { it.mode==mode }
-            Card(onClick={category=mode.name;leaveSelection()},modifier=Modifier.fillMaxWidth().heightIn(min=112.dp).testTag("category-${mode.name}"),colors=CardDefaults.cardColors(containerColor=MaterialTheme.colorScheme.primaryContainer,contentColor=MaterialTheme.colorScheme.onPrimaryContainer)) {
+            Card(onClick={onCategory(mode.name);leaveSelection()},modifier=Modifier.fillMaxWidth().heightIn(min=112.dp).testTag("category-${mode.name}"),colors=CardDefaults.cardColors(containerColor=MaterialTheme.colorScheme.primaryContainer,contentColor=MaterialTheme.colorScheme.onPrimaryContainer)) {
                 Column(Modifier.padding(22.dp),verticalArrangement=Arrangement.spacedBy(6.dp)) {
                     Text(label,style=MaterialTheme.typography.headlineMedium)
                     Text("$count plongée(s)"+(if(mode==DiveMode.AIR)" · air" else ""))
@@ -57,7 +56,7 @@ internal fun CarnetScreen(dives: List<DiveRow>,outings: List<OutingRow>,imports:
                 Spacer(Modifier.width(10.dp));Text("Sélectionner tous")
             }
             TextButton(onClick=::leaveSelection) { Text("Annuler la sélection") }
-        } else TextButton(onClick={category=null}) { Text("‹ Catégories") }
+        } else TextButton(onClick={onCategory(null)}) { Text("‹ Catégories") }
         if(visible.isEmpty())Text("Aucune plongée dans cette catégorie. Connecte ta montre pour synchroniser tes plongées.")
         outings.forEach { outing ->
             val members=visible.filter { it.outingId==outing.id }

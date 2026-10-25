@@ -55,6 +55,9 @@ class UiTest {
         compose.onNodeWithText("PROFONDEUR MAX.").assertExists()
         compose.onNodeWithText("SIMULATION · données fictives").assertExists()
         screenshot("dive-detail.png")
+        compose.activityRule.scenario.onActivity {it.onBackPressedDispatcher.onBackPressed()}
+        compose.onNodeWithText("‹ Catégories").assertExists()
+        compose.onNodeWithTag("category-APNEA").assertDoesNotExist()
     }
     @Test fun searchShowsAnAccessibleLoadingIndicator() {
         compose.onNodeWithText("Montre",useUnmergedTree=true).performClick()

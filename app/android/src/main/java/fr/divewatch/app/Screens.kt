@@ -47,6 +47,7 @@ fun DiveWatchApp(model: AppModel,search: ()->Unit,backup: ()->Unit,restore: ()->
     val theme by model.theme.collectAsStateWithLifecycle()
     val busy by model.busy.collectAsStateWithLifecycle();val message by model.message.collectAsStateWithLifecycle()
     var tab by rememberSaveable { mutableIntStateOf(0) };var selected by rememberSaveable { mutableStateOf<String?>(null) }
+    var category by rememberSaveable { mutableStateOf<String?>(null) }
     val row=dives.firstOrNull { it.watchId+it.diveId==selected }
     BackHandler(selected!=null) { selected=null }
     MaterialTheme(colorScheme=theme.colors()) {
@@ -58,7 +59,7 @@ fun DiveWatchApp(model: AppModel,search: ()->Unit,backup: ()->Unit,restore: ()->
                 Spacer(Modifier.height(10.dp));Text("DIVE WATCH",style=MaterialTheme.typography.labelLarge,color=Aqua)
                 if(row!=null) Detail(row,outings,model)
                 else when(tab) {
-                    0 -> CarnetScreen(dives,outings,imports,model,busy,backup,restore,csv,onOpen={selected=it.watchId+it.diveId})
+                    0 -> CarnetScreen(dives,outings,imports,model,busy,backup,restore,csv,category,{category=it},onOpen={selected=it.watchId+it.diveId})
                     1 -> WatchScreen(model,connection,busy,search)
                     2 -> {
                         Text("Manuel",style=MaterialTheme.typography.headlineLarge)
