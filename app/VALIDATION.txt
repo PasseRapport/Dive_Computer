@@ -1,22 +1,34 @@
-Dive Watch 0.3.0 — validation du 25 octobre 2026
+Dive Watch 0.4.0 — validation du 26 octobre 2026
 ================================================
 
-Rendu V2 du README sur fond transparent (alpha vérifié).
-Dernière réception : jj/MM/aaaa HH:mm, heure locale du téléphone.
-Onglet Paramètres : Nuit OLED (défaut), Océan sombre et Clair.
-Choix immédiat et persistant ; graphe et textes suivent le thème.
-Boutons de recherche et synchronisation moins lumineux en thème sombre.
-Rubrique OTA réservée, action désactivée ; aucun transfert de firmware.
+Carnet : deux entrées Apnée et Bouteille (air), avec compteurs.
+Retour du détail vers la catégorie choisie.
+Appui long : sélection multiple, cases individuelles et Sélectionner tous
+limité à la catégorie courante. Confirmation avant suppression locale.
+Notes des sorties et mémoire de la montre conservées. Les plongées encore
+sur la montre peuvent être réimportées manuellement. Le compteur restant
+est recalculé et interdit de vider la montre si des plongées n’existent
+plus dans le carnet. Suppression transactionnelle par identité montre + plongée.
 
-44 tests réussis : 9 Python, 18 JVM, 17 Android/Robolectric.
+Thème clair : palette complète blanc/gris/vert profond, cartes blanches,
+contrastes de texte vérifiés, courbe et alertes adaptées. Base Android claire,
+Force Dark désactivé dans le thème Android 10+ et sur la vue racine.
+Paramètres : Thème remplace Apparence, phrase explicative retirée.
+
+48 tests réussis : 9 Python, 18 JVM, 21 Android/Robolectric.
 Compilation APK et lint réussis :
-https://github.com/PasseRapport/Dive_Computer/actions/runs/40241570369
-Code validé : 8214c9ac4c66255e55df3a852e234f3473582391.
+https://github.com/PasseRapport/Dive_Computer/actions/runs/40244192431
+Code validé : 22c86f83a8581f19719e881ba958487d718e99e1.
 
-Nouvelles vérifications : format de date et fuseau, réglage par défaut,
-persistance dans un nouveau modèle et après recréation de l’activité,
-préférence inconnue, trois thèmes, OTA désactivé et accès au Manuel.
-Les parcours import/effacement, scan et tests BLE antérieurs passent.
-Captures des trois thèmes et de la montre connectée inspectées sous
-Robolectric. La nouvelle interface reste à vérifier sur le téléphone.
-Aucune validation sur une montre physique n’est revendiquée.
+Régression Android 10 en configuration système nuit : contrôle Force Dark
+rouge avant correction (exécution 40243455922), vert après correction.
+Ce contrôle vérifie le paramétrage Android, pas le moteur propre à MIUI.
+Contrôles visuels : titres sombres sur fond clair, carnet, liste de plongées,
+montre connectée, profil, manuel et paramètres. Captures Robolectric inspectées.
+Tests de sélection : cocher/décocher, tous, annuler le dialogue, supprimer,
+préserver l’autre catégorie, réimporter ; isolation des identités en base.
+Les tests de connexion BLE, d’import et d’effacement de la montre passent.
+
+Limites : le rendu final sur MIUI et les nouveaux gestes restent à confirmer
+sur le téléphone. Aucune suppression n’a été exécutée sur son carnet pendant
+la validation. Aucun test d’une montre physique n’est revendiqué.
