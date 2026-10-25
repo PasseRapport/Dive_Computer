@@ -16,7 +16,7 @@ data class Dive(val watchId: UUID, val id: UUID, val mode: DiveMode, val started
         require(samples.all { it.elapsedMs in 0..durationMs && (it.depthCm == null || it.depthCm in 0..65534) &&
             (it.temperatureCentiC == null || it.temperatureCentiC in -32767..32767) })
         require(samples.zipWithNext().all { (a,b) -> b.elapsedMs > a.elapsedMs })
-        require(events.all { it.elapsedMs in 0..durationMs } && events.map { it.id }.distinct().size == events.size)
+        require(events.all { it.elapsedMs in 0..durationMs && it.id in 0..0xffffffffL && it.code in 0..65535 && it.severity in 0..255 && it.value!=Int.MIN_VALUE } && events.map { it.id }.distinct().size == events.size)
     }
     val maximumDepthCm: Int? get() = samples.mapNotNull { it.depthCm }.maxOrNull()
     val meanDepthCm: Double? get() {

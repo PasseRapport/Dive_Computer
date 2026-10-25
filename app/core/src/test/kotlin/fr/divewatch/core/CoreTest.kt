@@ -83,7 +83,7 @@ class CoreTest {
     }
     @Test fun wrongWatchIdentityCannotPublish() = runBlocking {
         val m=DiveCodec.manifest(Demo.dives().first())
-        assertFails { Importer(WatchClient(DemoLink()),BlockStore(temp())).download(Demo.watch.copy(id=UUID.randomUUID()),m) }
+        assertFails { Importer(WatchClient(DemoLink()),BlockStore(temp())).download(Demo.watch.copy(id=UUID.randomUUID()),m) };Unit
     }
     @Test fun safeArchiveRoundTrip() {
         val out=ByteArrayOutputStream();SafeArchive.write(out,mapOf("data/a.bin" to byteArrayOf(1,2,3)))
