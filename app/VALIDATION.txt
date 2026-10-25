@@ -1,32 +1,22 @@
-Dive Watch 0.2.0 — validation du 25 octobre 2026
+Dive Watch 0.3.0 — validation du 25 octobre 2026
 ================================================
 
-Évolution de l’écran Montre :
-- indicateur animé pendant la recherche BLE, lié au démarrage/arrêt/erreur du scan ;
-- image fournie de la montre à côté des informations connectées ;
-- retrait de l’affichage surface/plongée et de la démonstration sans périphérique ;
-- bouton Vider la mémoire à côté de Déconnecter, sous Synchroniser.
+Rendu V2 du README sur fond transparent (alpha vérifié).
+Dernière réception : jj/MM/aaaa HH:mm, heure locale du téléphone.
+Onglet Paramètres : Nuit OLED (défaut), Océan sombre et Clair.
+Choix immédiat et persistant ; graphe et textes suivent le thème.
+Boutons de recherche et synchronisation moins lumineux en thème sombre.
+Rubrique OTA réservée, action désactivée ; aucun transfert de firmware.
 
-Effacement :
-- capacité négociée ; une ancienne montre sans cette commande ne propose pas l’action ;
-- toutes les plongées doivent déjà exister dans le carnet avec la même empreinte ;
-- dialogue avec confirmation et annulation ; aucune suppression du carnet du téléphone ;
-- requête liée à l’identité de la montre et à l’empreinte du catalogue confirmé ;
-- refus côté serveur pendant une plongée ou si le catalogue a changé ;
-- seules les plongées terminées sont supprimées, pas les réglages ni le firmware ;
-- le simulateur recrée ses données fictives au prochain redémarrage.
+44 tests réussis : 9 Python, 18 JVM, 17 Android/Robolectric.
+Compilation APK et lint réussis :
+https://github.com/PasseRapport/Dive_Computer/actions/runs/40241570369
+Code validé : 8214c9ac4c66255e55df3a852e234f3473582391.
 
-Vérifications : 41 tests réussis (9 Python, 18 JVM dont interopérabilité Python,
-14 Android/Robolectric), compilation APK et lint réussis sur GitHub :
-https://github.com/PasseRapport/Dive_Computer/actions/runs/40239598809
-Le parcours Compose vérifie l’absence de démonstration, l’image et le retrait
-de l’état, l’import, l’annulation puis l’effacement et la conservation du carnet.
-Un second parcours vérifie l’indicateur de recherche et la désactivation du bouton.
-Captures inspectées sous Robolectric : ce ne sont pas des captures du téléphone.
-Signature locale de l’APK vérifiée identique à celle de la 0.1.2 pour permettre
-la mise à jour sans désinstallation. Aucun carnet du téléphone n’a été effacé.
-Serveur de simulation mis à jour avec la commande d’effacement.
-
-À vérifier sur le téléphone : nouvelle interface et effacement via la radio réelle.
-À implémenter dans le futur firmware : capacités et ERASE_COMPLETED décrits dans
-protocol/SPEC.txt. Aucun test de la montre physique n’est revendiqué.
+Nouvelles vérifications : format de date et fuseau, réglage par défaut,
+persistance dans un nouveau modèle et après recréation de l’activité,
+préférence inconnue, trois thèmes, OTA désactivé et accès au Manuel.
+Les parcours import/effacement, scan et tests BLE antérieurs passent.
+Captures des trois thèmes et de la montre connectée inspectées sous
+Robolectric. La nouvelle interface reste à vérifier sur le téléphone.
+Aucune validation sur une montre physique n’est revendiquée.
