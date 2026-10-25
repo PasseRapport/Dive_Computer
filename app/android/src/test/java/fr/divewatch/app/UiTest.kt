@@ -69,7 +69,7 @@ class UiTest {
         screenshot("settings-ocean.png")
         compose.onNodeWithText("Mettre à jour la montre").performScrollTo().assertIsNotEnabled()
         compose.onNodeWithText("Manuel",useUnmergedTree=true).performClick()
-        compose.onNodeWithText("Manuel").assertExists()
+        compose.onAllNodesWithText("Manuel").assertCountEquals(2)
     }
     private fun screenshot(name: String) {
         val folder=java.io.File("build/reports/screenshots").apply { mkdirs() }
