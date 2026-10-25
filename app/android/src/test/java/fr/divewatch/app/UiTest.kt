@@ -55,6 +55,22 @@ class UiTest {
         compose.runOnIdle { ViewModelProvider(compose.activity)[AppModel::class.java].scanning.value=false }
         compose.onNodeWithContentDescription("Recherche Bluetooth en cours").assertDoesNotExist()
     }
+    @Test fun settingsSwitchesThemeAndKeepsTheChoiceAcrossActivityRecreation() {
+        compose.onNodeWithText("Paramètres",useUnmergedTree=true).performClick()
+        compose.onNodeWithText("Nuit OLED").assertExists()
+        screenshot("settings-night.png")
+        compose.onNodeWithText("Clair").performClick()
+        compose.runOnIdle { org.junit.Assert.assertEquals(AppTheme.LIGHT,ViewModelProvider(compose.activity)[AppModel::class.java].theme.value) }
+        screenshot("settings-light.png")
+        compose.activityRule.scenario.recreate()
+        compose.waitForIdle()
+        compose.runOnIdle { org.junit.Assert.assertEquals(AppTheme.LIGHT,ViewModelProvider(compose.activity)[AppModel::class.java].theme.value) }
+        compose.onNodeWithText("Océan sombre").performClick()
+        screenshot("settings-ocean.png")
+        compose.onNodeWithText("Mettre à jour la montre").performScrollTo().assertIsNotEnabled()
+        compose.onNodeWithText("Manuel",useUnmergedTree=true).performClick()
+        compose.onNodeWithText("Manuel").assertExists()
+    }
     private fun screenshot(name: String) {
         val folder=java.io.File("build/reports/screenshots").apply { mkdirs() }
         compose.runOnIdle {

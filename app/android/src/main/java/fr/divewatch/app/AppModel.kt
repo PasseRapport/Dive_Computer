@@ -21,6 +21,9 @@ data class DeviceChoice(val name: String,val address: String)
 data class ConnectionUi(val label: String="Déconnectée",val info: WatchInfo?=null,val status: WatchStatus?=null,val receivedAt: Long?=null,val stale: Boolean=true,val remaining: Int?=null,val canErase: Boolean=false)
 @SuppressLint("MissingPermission")
 class AppModel(application: Application): AndroidViewModel(application) {
+    private val settings=application.getSharedPreferences("appearance",android.content.Context.MODE_PRIVATE)
+    val theme=MutableStateFlow(AppTheme.entries.firstOrNull { it.name==settings.getString("theme",null) }?:AppTheme.NIGHT)
+    fun setTheme(value: AppTheme) { settings.edit().putString("theme",value.name).apply();theme.value=value }
     val db=Room.databaseBuilder(application,CarnetDatabase::class.java,"carnet.db").build()
     val dao=db.carnet()
     val dives=dao.observeDives().stateIn(viewModelScope,SharingStarted.WhileSubscribed(5000),emptyList())

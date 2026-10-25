@@ -35,3 +35,6 @@ Sur le simulateur PC, la mémoire reste vide jusqu’au redémarrage du simulate
 
 9. Évolutions prévues
 Les réglages de la montre et les mises à jour Bluetooth ne sont pas disponibles dans cette version. La future mise à jour utilisera un mécanisme distinct du transfert des plongées.
+
+PARAMÈTRES
+Le bouton Paramètres de la barre du bas permet de choisir Nuit OLED, Océan sombre ou Clair. Le changement est immédiat et conservé après fermeture. Les futures mises à jour de la montre par Bluetooth (OTA) seront regroupées ici ; elles ne sont pas encore disponibles.

@@ -2,7 +2,7 @@ plugins { id("com.android.application"); kotlin("android"); kotlin("plugin.compo
 android {
     namespace = "fr.divewatch.app"
     compileSdk = 35
-    defaultConfig { applicationId = "fr.divewatch.app"; minSdk = 26; targetSdk = 35; versionCode = 4; versionName = "0.2.0" }
+    defaultConfig { applicationId = "fr.divewatch.app"; minSdk = 26; targetSdk = 35; versionCode = 5; versionName = "0.3.0" }
     buildFeatures { compose = true }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
     kotlinOptions { jvmTarget = "17" }

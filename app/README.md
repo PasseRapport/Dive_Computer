@@ -49,3 +49,5 @@ Le PC annonce **DiveWatch-SIM**. Sur le téléphone : Montre → Rechercher une 
 Consulter `VALIDATION.txt` pour les résultats réellement obtenus. La compilation et les tests de fichiers ne prouvent pas la connexion Android ↔ PC, ni les performances, la consommation ou la compatibilité avec la future montre Nordic. Le firmware existant n’est pas changé.
 
 Le manuel embarqué explique uniquement les fonctions implémentées et distingue les procédures matérielles encore non validées. Aucun calcul de décompression n’est effectué.
+
+Apparence : onglet Paramètres, thèmes Nuit OLED (par défaut), Océan sombre et Clair. Choix conservé sur le téléphone. La rubrique OTA est un emplacement réservé, sans transfert de firmware dans cette version. Le rendu V2 du README est utilisé avec un fond transparent. Dernière réception : jj/MM/aaaa HH:mm, heure locale du téléphone.
