@@ -30,6 +30,10 @@ class PythonInteropTest {
                 val manifest=client.manifest(entry.id);val dive=Importer(client,BlockStore(dir)).download(watch,manifest)
                 assertEquals(entry.id,dive.id);assertContentEquals(entry.hash,sha256(DiveCodec.encode(dive)))
             }
+            assertTrue(client.supportsErase())
+            assertEquals(3,client.erase(erasePlan(watch.id,catalog)))
+            assertTrue(client.catalog().isEmpty())
+            assertEquals(0,client.status().completedDives)
         } finally {process.destroy();dir.deleteRecursively()}
     }
     @Test fun independentCorruptionIsRejectedThenCanResume()=runBlocking {
@@ -40,5 +44,22 @@ class PythonInteropTest {
             assertEquals(0,store.nextOffset(m))
             assertEquals(m.id,Importer(client,store).download(watch,m).id)
         } finally {process.destroy();dir.deleteRecursively()}
+    }
+    @Test fun independentServerRejectsDeletionDuringADiveAndForAnotherWatch()=runBlocking {
+        val process=server("active-dive")
+        try {
+            val client=WatchClient(link(process));val info=client.hello();val plan=erasePlan(info.id,client.catalog())
+            assertEquals(3,assertFailsWith<WatchCommandException> {client.erase(plan)}.code)
+            assertEquals(3,client.catalog().size)
+            assertEquals(2,assertFailsWith<WatchCommandException> {client.erase(plan.copy(watchId=java.util.UUID.randomUUID()))}.code)
+        } finally {process.destroy()}
+    }
+    @Test fun olderPeripheralWithoutEraseSupportIsNeverSentAnEraseCommand()=runBlocking {
+        val ops=mutableListOf<Int>()
+        val client=WatchClient(object: WatchLink {override suspend fun exchange(frame: Frame): Frame {
+            ops+=frame.opcode
+            return Frame(frame.opcode,frame.requestId,3,Writer().u16(1).result())
+        }})
+        assertFalse(client.supportsErase());assertEquals(listOf(7),ops)
     }
 }

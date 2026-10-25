@@ -2,6 +2,7 @@ package fr.divewatch.app
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
@@ -11,6 +12,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -56,7 +59,7 @@ fun DiveWatchApp(model: AppModel,search: ()->Unit,backup: ()->Unit,restore: ()->
                     0 -> {
                         Text("Ton carnet",style=MaterialTheme.typography.headlineLarge)
                         Text("Apnée & bouteille à l’air · disponible hors ligne",color=MaterialTheme.colorScheme.onSurfaceVariant)
-                        if(dives.isEmpty()) CardBlock { Text("La première plongée t’attend",style=MaterialTheme.typography.titleLarge);Text("Connecte le simulateur PC, ou ouvre le mode démonstration depuis Montre pour importer des plongées fictives.") }
+                        if(dives.isEmpty()) CardBlock { Text("La première plongée t’attend",style=MaterialTheme.typography.titleLarge);Text("Connecte ta montre depuis Montre, puis synchronise tes plongées.") }
                         outings.forEach { outing ->
                             val members=dives.filter { it.outingId==outing.id }
                             if(members.isNotEmpty()) {
@@ -102,32 +105,49 @@ private fun CardBlock(content: @Composable ColumnScope.()->Unit) {
 @Composable
 private fun WatchScreen(model: AppModel,c: ConnectionUi,busy: Boolean,search: ()->Unit) {
     val devices by model.devices.collectAsStateWithLifecycle();val progress by model.progress.collectAsStateWithLifecycle()
+    val scanning by model.scanning.collectAsStateWithLifecycle()
+    val importing by model.importing.collectAsStateWithLifecycle()
+    val erase by model.eraseConfirmation.collectAsStateWithLifecycle()
     Text("Ta montre",style=MaterialTheme.typography.headlineLarge)
     Text(c.label,color=Aqua,style=MaterialTheme.typography.titleLarge)
     c.info?.let { info ->
         CardBlock {
-            Text(info.model,style=MaterialTheme.typography.titleLarge)
-            Text("Firmware ${info.firmware}")
+            Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)) {
+                if(!c.stale)Image(painterResource(R.drawable.watch_render),"Ta montre connectée",Modifier.width(110.dp).height(120.dp))
+                Column(Modifier.weight(1f),verticalArrangement=Arrangement.spacedBy(6.dp)) {
+                    Text(info.model,style=MaterialTheme.typography.titleLarge)
+                    Text("Firmware ${info.firmware}")
+                    Text("Batterie : ${c.status?.battery?.let { "$it %" }?:"indisponible"}")
+                    Text("Plongées disponibles : ${c.status?.completedDives?:"inconnu"}")
+                }
+            }
             if(info.simulated)Text("SIMULATION — données fictives",color=Coral)
-            Text("État : "+when(c.status?.state){0->"surface";1->"plongée en cours";else->"inconnu"})
-            Text("Batterie : ${c.status?.battery?.let { "$it %" }?:"indisponible"}")
-            Text("Plongées disponibles : ${c.status?.completedDives?:"inconnu"}")
             Text("Restant à importer : ${c.remaining?:"à vérifier lors de la synchronisation"}")
             Text("Dernière réception : ${date(c.receivedAt)}")
             if(c.stale)Text("Informations anciennes",color=Coral)
         }
     }
     Button(onClick=model::sync,enabled=!busy&&!c.stale&&c.info!=null,modifier=Modifier.fillMaxWidth()){Text("Synchroniser les plongées terminées")}
-    if(busy){LinearProgressIndicator(progress={progress},modifier=Modifier.fillMaxWidth());OutlinedButton(onClick=model::cancelImport){Text("Interrompre l’import")}}
-    OutlinedButton(onClick=model::disconnect,enabled=!busy){Text("Déconnecter")}
+    if(importing){LinearProgressIndicator(progress={progress},modifier=Modifier.fillMaxWidth());OutlinedButton(onClick=model::cancelImport){Text("Interrompre l’import")}}
+    else if(busy)CircularProgressIndicator(Modifier.size(24.dp))
+    Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+        OutlinedButton(onClick=model::disconnect,enabled=!busy&&!c.stale,modifier=Modifier.weight(1f)){Text("Déconnecter")}
+        OutlinedButton(onClick=model::prepareErase,enabled=!busy&&!c.stale&&c.canErase&&c.remaining==0&&(c.status?.completedDives?:0)>0,modifier=Modifier.weight(1f)){Text("Vider la mémoire")}
+    }
+    if(c.info!=null&&!c.stale)Text(if(!c.canErase)"Cette montre ne prend pas encore en charge l’effacement." else "Synchronise toutes les plongées avant de vider la mémoire.",style=MaterialTheme.typography.bodySmall)
+    erase?.let { plan -> AlertDialog(onDismissRequest=model::cancelErase,
+        title={Text("Vider la mémoire de la montre ?")},
+        text={Text("Les ${plan.count} plongées terminées seront supprimées de la montre. Elles resteront dans le carnet du téléphone. Cette action est irréversible sur la montre.")},
+        dismissButton={TextButton(onClick=model::cancelErase){Text("Annuler")}},
+        confirmButton={TextButton(onClick=model::confirmErase){Text("Vider la mémoire de la montre")}}) }
     HorizontalDivider()
     Text("Bluetooth réel",style=MaterialTheme.typography.titleLarge)
     Text("Démarre DiveWatch-SIM sur le PC, puis recherche-le ici.")
-    Button(onClick=search,enabled=!busy){Text("Rechercher une montre")}
+    Button(onClick=search,enabled=!busy&&!scanning){
+        if(scanning){CircularProgressIndicator(Modifier.size(18.dp).semantics {contentDescription="Recherche Bluetooth en cours"},strokeWidth=2.dp);Spacer(Modifier.width(8.dp))}
+        Text(if(scanning)"Recherche en cours…" else "Rechercher une montre")
+    }
     devices.forEach { choice -> OutlinedButton(onClick={model.connect(choice)},enabled=!busy,modifier=Modifier.fillMaxWidth()){Text("${choice.name} · ${choice.address}")} }
-    HorizontalDivider();Text("Sans périphérique",style=MaterialTheme.typography.titleLarge)
-    Text("La démonstration utilise le même format de données et le même moteur d’import, sans passer par la radio Bluetooth.")
-    OutlinedButton(onClick=model::connectDemo,enabled=!busy){Text("Connecter la démonstration")}
 }
 @Composable
 private fun Detail(row: DiveRow,outings: List<OutingRow>,model: AppModel) {

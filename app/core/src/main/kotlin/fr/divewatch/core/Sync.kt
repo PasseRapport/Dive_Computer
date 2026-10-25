@@ -11,6 +11,18 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 interface WatchLink { suspend fun exchange(frame: Frame): Frame }
+class WatchCommandException(val code: Int): IllegalStateException(when(code) {
+    3 -> "Effacement refusé : une plongée est en cours."
+    4 -> "Le contenu de la montre a changé. Synchronise à nouveau avant de vider sa mémoire."
+    else -> "Erreur de la montre : $code"
+})
+data class ErasePlan(val watchId: UUID,val count: Int,val fingerprint: ByteArray)
+fun erasePlan(watchId: UUID,entries: List<Manifest>): ErasePlan {
+    require(entries.size<=10000)
+    val w=Writer().u16(entries.size)
+    entries.forEach { w.bytes(Messages.manifest(it)) }
+    return ErasePlan(watchId,entries.size,sha256(w.result()))
+}
 class WatchClient(private val link: WatchLink) {
     private var sequence=0
     private val mutex=Mutex()
@@ -18,11 +30,19 @@ class WatchClient(private val link: WatchLink) {
         sequence=sequence%65535+1
         val response=link.exchange(Frame(op,sequence,payload=payload))
         require(response.opcode==op && response.requestId==sequence && response.flags and 1==1) { "Réponse inattendue" }
-        if(response.flags and 2!=0) { val r=Reader(response.payload);error("Erreur de la montre : ${r.u16()}") }
+        if(response.flags and 2!=0) { val r=Reader(response.payload);val code=r.u16();r.end();throw WatchCommandException(code) }
         response.payload
     }
     suspend fun hello()=Messages.hello(request(1))
     suspend fun status()=Messages.status(request(2))
+    suspend fun supportsErase(): Boolean = try {
+        val r=Reader(request(7));val capabilities=r.u32();r.end();capabilities and 1L!=0L
+    } catch(e: WatchCommandException) { if(e.code==1)false else throw e }
+    suspend fun erase(plan: ErasePlan): Int {
+        require(plan.fingerprint.size==32 && plan.count in 1..10000)
+        val r=Reader(request(6,Writer().uuid(plan.watchId).bytes(plan.fingerprint).result()))
+        val count=r.u16();r.end();require(count==plan.count) { "Confirmation d’effacement incohérente. Reconnecte la montre pour vérifier son contenu." };return count
+    }
     suspend fun catalog(): List<Manifest> {
         var cursor=0L;var revision: Long?=null;val result=mutableListOf<Manifest>()
         val seen=mutableSetOf<Long>()

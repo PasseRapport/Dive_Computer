@@ -23,11 +23,11 @@ python3 -m unittest discover -s simulator -v
 
 APK : `android/build/outputs/apk/debug/android-debug.apk`. Android 8.0/API 26 minimum proposé pour ce premier développement ; aucune application Play Store n’est publiée. La clé de débogage n’est pas destinée à une distribution définitive.
 
-## Tester sans montre ni PC Bluetooth
+## Consulter les plongées
 
-Dans l’application : **Montre → Connecter la démonstration → Synchroniser**. Trois plongées fictives (deux apnées, une bouteille) passent par le codec et le moteur d’import. Le mode démonstration ne teste pas la radio Bluetooth.
+Connecter la montre par Bluetooth puis synchroniser. Les données restent consultables après déconnexion et redémarrage. Le mode de démonstration intégré a été retiré de l’interface ; les tests utilisent toujours des données fictives indépendantes du téléphone.
 
-Les données sont conservées après déconnexion et redémarrage. Ouvrir une plongée pour zoomer sur la courbe, sélectionner un instant, consulter les événements et annoter sa sortie. Les exports sont déclenchés depuis le carnet via le sélecteur de fichiers Android.
+Après synchronisation complète, **Vider la mémoire** supprime les plongées terminées de la montre après confirmation, tout en conservant le carnet du téléphone. Le firmware doit annoncer cette capacité. Le simulateur la prend en charge ; son redémarrage recrée ses données fictives.
 
 ## Simuler la montre sur le PC
 

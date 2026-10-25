@@ -1,10 +1,10 @@
 MANUEL — VERSION 0.1
-Application Dive Watch 0.1 • simulateur sim-0.1
+Application Dive Watch 0.2.0 • simulateur PC
 
 Ce manuel couvre l’application et le simulateur. Les procédures propres à la future montre attendent une validation sur le matériel réel.
 
-1. Démarrer sans montre
-Dans Montre, choisis « Connecter la démonstration », puis « Synchroniser ». Trois plongées fictives sont importées : deux apnées et une plongée bouteille à l’air. Les données sont identifiées SIMULATION et restent consultables après déconnexion et redémarrage.
+1. Connecter ta montre
+Dans Montre, appuie sur « Rechercher une montre ». Un indicateur tourne pendant la recherche. Sélectionne ta montre puis appuie sur « Synchroniser les plongées terminées ». Une fois connectée, son image apparaît avec les informations reçues.
 
 2. Connecter le simulateur PC
 Démarre le simulateur BLE sur le PC. Active le Bluetooth du téléphone et autorise l’accès aux appareils à proximité. Dans Montre, recherche DiveWatch-SIM puis sélectionne-le. Connexion et synchronisation sont deux actions distinctes.
@@ -28,8 +28,10 @@ Une sortie regroupe plusieurs plongées. Ajoute un titre, un site et des notes d
 Le bouton Sauvegarder crée une archive ZIP complète que tu conserves à l’emplacement de ton choix. Restaurer permet de la réimporter ; un conflit de mesures est refusé en conservant l’original. Les annotations divergentes sont conservées comme alternative. Les CSV sont destinés à l’analyse et ne remplacent pas cette sauvegarde.
 Les données restent sur le téléphone, sans compte ni serveur. Sauvegarde le carnet avant de désinstaller l’application.
 
-8. État de la montre
-La batterie et l’état surface/plongée correspondent à la dernière réception affichée. Après une coupure, ils sont marqués anciens et ne décrivent plus nécessairement l’état actuel.
+8. Informations et mémoire de la montre
+La batterie et le nombre de plongées correspondent à la dernière réception affichée. Après une coupure, ces informations sont marquées anciennes.
+« Vider la mémoire », à côté de « Déconnecter », supprime uniquement les plongées terminées de la montre après confirmation. Synchronise toutes les plongées avant : le carnet du téléphone reste conservé. Les réglages et le firmware ne sont pas effacés. L’effacement est refusé si une plongée est en cours ou si le contenu de la montre a changé depuis la confirmation. Une ancienne version du firmware peut ne pas proposer cette fonction.
+Sur le simulateur PC, la mémoire reste vide jusqu’au redémarrage du simulateur, qui recrée les plongées fictives.
 
 9. Évolutions prévues
 Les réglages de la montre et les mises à jour Bluetooth ne sont pas disponibles dans cette version. La future mise à jour utilisera un mécanisme distinct du transfert des plongées.

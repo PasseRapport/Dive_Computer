@@ -14,7 +14,7 @@ class MainActivity: ComponentActivity() {
         setContent {
             val model: AppModel=viewModel()
             val permissions=androidx.activity.compose.rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { granted ->
-                if(granted.values.all { it })model.search() else model.report("Autorisation Bluetooth refusée. Le carnet et la démonstration restent disponibles.")
+                if(granted.values.all { it })model.search() else model.report("Autorisation Bluetooth refusée. Le carnet reste disponible hors ligne.")
             }
             val backup=androidx.activity.compose.rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/zip")) { uri ->
                 uri?.let { runCatching { contentResolver.openOutputStream(it)?.let(model::backup) }.onFailure { model.report(it.message?:"Impossible d’ouvrir le fichier") } }

@@ -86,6 +86,7 @@ class Server:
         self.scenario = scenario
         self.corrupted = False
         self.blocks_sent = 0
+        self.revision = 1
 
     def reply(self, frame):
         try:
@@ -103,7 +104,7 @@ class Server:
                 if len(frame.payload)!=4: raise ValueError('cursor length')
                 cursor=struct.unpack('<I',frame.payload)[0]
                 if cursor!=0: raise ValueError('cursor')
-                body=struct.pack('<IIH',1,0xffffffff,len(self.dives))+b''.join(d.manifest() for d in self.dives)
+                body=struct.pack('<IIH',self.revision,0xffffffff,len(self.dives))+b''.join(d.manifest() for d in self.dives)
             elif frame.opcode == 4:
                 if len(frame.payload)!=16: raise ValueError('id length')
                 body=next(d.manifest() for d in self.dives if d.id.bytes==frame.payload)
@@ -118,6 +119,18 @@ class Server:
                     chunk=bytes([chunk[0]^1])+chunk[1:];self.corrupted=True
                 body=struct.pack('<IHI',offset,len(chunk),crc)+chunk
                 self.blocks_sent+=1
+            elif frame.opcode == 7:
+                if frame.payload: raise ValueError('unexpected payload')
+                body=struct.pack('<I',1)
+            elif frame.opcode == 6:
+                if len(frame.payload)!=48 or frame.payload[:16]!=WATCH_ID.bytes: raise ValueError('watch identity')
+                if self.scenario=='active-dive':
+                    return Frame(frame.opcode,frame.request_id,3,struct.pack('<H',3))
+                fingerprint=hashlib.sha256(struct.pack('<H',len(self.dives))+b''.join(d.manifest() for d in self.dives)).digest()
+                if frame.payload[16:]!=fingerprint:
+                    return Frame(frame.opcode,frame.request_id,3,struct.pack('<H',4))
+                body=struct.pack('<H',len(self.dives))
+                self.dives.clear();self.revision+=1
             else:
                 return Frame(frame.opcode,frame.request_id,3,struct.pack('<H',1))
             return Frame(frame.opcode,frame.request_id,1,body)

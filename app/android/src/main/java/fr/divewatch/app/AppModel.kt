@@ -18,7 +18,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
 data class DeviceChoice(val name: String,val address: String)
-data class ConnectionUi(val label: String="Déconnectée",val info: WatchInfo?=null,val status: WatchStatus?=null,val receivedAt: Long?=null,val stale: Boolean=true,val remaining: Int?=null)
+data class ConnectionUi(val label: String="Déconnectée",val info: WatchInfo?=null,val status: WatchStatus?=null,val receivedAt: Long?=null,val stale: Boolean=true,val remaining: Int?=null,val canErase: Boolean=false)
 @SuppressLint("MissingPermission")
 class AppModel(application: Application): AndroidViewModel(application) {
     val db=Room.databaseBuilder(application,CarnetDatabase::class.java,"carnet.db").build()
@@ -29,7 +29,10 @@ class AppModel(application: Application): AndroidViewModel(application) {
     val connection=MutableStateFlow(ConnectionUi())
     val devices=MutableStateFlow<List<DeviceChoice>>(emptyList())
     val busy=MutableStateFlow(false)
-    val message=MutableStateFlow("Prêt. Utilise le mode démonstration ou connecte le simulateur PC.")
+    val scanning=MutableStateFlow(false)
+    val importing=MutableStateFlow(false)
+    val eraseConfirmation=MutableStateFlow<ErasePlan?>(null)
+    val message=MutableStateFlow("Prêt. Recherche ta montre pour te connecter.")
     val progress=MutableStateFlow(0f)
     private val adapter get()=getApplication<Application>().getSystemService(BluetoothManager::class.java)?.adapter
     private var real: NordicLink?=null
@@ -66,6 +69,7 @@ class AppModel(application: Application): AndroidViewModel(application) {
             }
         }
         report("Recherche pendant 15 secondes…")
+        scanning.value=true
         try {
             scanner.startScan(listOf(ScanFilter.Builder().setServiceUuid(ParcelUuid(Nus.SERVICE)).build()),ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build(),scan)
             scanJob=viewModelScope.launch {
@@ -75,16 +79,20 @@ class AppModel(application: Application): AndroidViewModel(application) {
             }
         } catch(e: SecurityException) { stopScan();report("Autorise l’accès Bluetooth et à la localisation dans les paramètres de l’application.") }
     }
-    fun stopScan() { scanJob?.cancel();scanJob=null;scan?.let { runCatching { adapter?.bluetoothLeScanner?.stopScan(it) } };scan=null }
-    fun connectDemo()=connect(null)
-    fun connect(choice: DeviceChoice?) {
+    fun stopScan() { scanning.value=false;scanJob?.cancel();scanJob=null;scan?.let { runCatching { adapter?.bluetoothLeScanner?.stopScan(it) } };scan=null }
+    fun connect(choice: DeviceChoice)=connectUsing {
+        NordicLink(getApplication()) {
+            eraseConfirmation.value=null
+            connection.update { it.copy(label="Déconnectée",stale=true) }
+        }.also { real=it;it.open(requireNotNull(adapter).getRemoteDevice(choice.address)) }
+    }
+    internal fun connectForTest(link: WatchLink)=connectUsing { link }
+    private fun connectUsing(open: suspend ()->WatchLink) {
         if(busy.value)return
         disconnect();stopScan();busy.value=true;connection.value=ConnectionUi(label="Connexion…")
         viewModelScope.launch {
             try {
-                val link: WatchLink=if(choice==null) DemoLink() else NordicLink(getApplication()) {
-                    connection.update { it.copy(label="Déconnectée",stale=true) }
-                }.also { real=it;it.open(requireNotNull(adapter).getRemoteDevice(choice.address)) }
+                val link=open()
                 client=WatchClient(link)
                 val info=withContext(Dispatchers.IO) { client!!.hello() }
                 connection.value=ConnectionUi(label="Connectée",info=info)
@@ -93,6 +101,8 @@ class AppModel(application: Application): AndroidViewModel(application) {
                     val catalogue=client!!.catalog()
                     val remaining=catalogue.count { dao.find(info.id.toString(),it.id.toString())?.hash!=it.hash.hex() }
                     connection.update { it.copy(remaining=remaining) }
+                    val canErase=client!!.supportsErase()
+                    connection.update { it.copy(canErase=canErase) }
                 }
                 pollJob=viewModelScope.launch { while(isActive) { delay(5000);if(!busy.value)runCatching { refresh() }.onFailure { connection.update { c -> c.copy(stale=true) } } } }
                 report(if(info.simulated)"Montre simulée connectée — données fictives" else "Montre connectée")
@@ -106,6 +116,7 @@ class AppModel(application: Application): AndroidViewModel(application) {
         connection.update { it.copy(status=status,receivedAt=System.currentTimeMillis(),stale=false) }
     }
     fun disconnect() {
+        eraseConfirmation.value=null
         importJob?.cancel();pollJob?.cancel();real?.shutdown();real=null;client=null
         connection.update { it.copy(label="Déconnectée",stale=true) }
     }
@@ -113,7 +124,7 @@ class AppModel(application: Application): AndroidViewModel(application) {
         val c=client?:return
         val info=connection.value.info?:return
         if(busy.value)return
-        busy.value=true
+        busy.value=true;importing.value=true
         importJob=viewModelScope.launch {
             try {
                 withContext(Dispatchers.IO) {
@@ -150,7 +161,49 @@ class AppModel(application: Application): AndroidViewModel(application) {
                 }
             } catch(e: CancellationException) { report("Import interrompu. Les blocs vérifiés sont conservés.");throw e }
             catch(e: Exception) { report(e.message?:"Import interrompu — reprise disponible") }
-            finally { busy.value=false;progress.value=0f }
+            finally { importing.value=false;busy.value=false;progress.value=0f }
+        }
+    }
+    fun prepareErase() {
+        val c=client?:return
+        val info=connection.value.info?:return
+        if(busy.value||connection.value.stale||!connection.value.canErase)return
+        busy.value=true;stopScan()
+        viewModelScope.launch {
+            try {
+                val plan=withContext(Dispatchers.IO) {
+                    check(c.status().state==0) { "Effacement indisponible pendant une plongée ou si l’état de la montre est inconnu." }
+                    val entries=c.catalog()
+                    check(entries.isNotEmpty()) { "La mémoire de la montre est déjà vide." }
+                    check(entries.all { dao.find(info.id.toString(),it.id.toString())?.hash==it.hash.hex() }) { "Synchronise toutes les plongées avant de vider la mémoire de la montre." }
+                    erasePlan(info.id,entries)
+                }
+                check(client===c&&!connection.value.stale) { "Montre déconnectée" }
+                eraseConfirmation.value=plan
+            } catch(e: Exception) {report(e.message?:"Impossible de préparer l’effacement")}
+            finally {busy.value=false}
+        }
+    }
+    fun cancelErase() {eraseConfirmation.value=null}
+    fun confirmErase() {
+        val plan=eraseConfirmation.value?:return
+        val c=client?:return
+        if(busy.value)return
+        eraseConfirmation.value=null;busy.value=true
+        viewModelScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    check(connection.value.info?.id==plan.watchId&&!connection.value.stale) { "La montre connectée a changé. Recommence l’opération." }
+                    check(c.status().state==0) { "Effacement indisponible pendant une plongée." }
+                    c.erase(plan)
+                    check(c.catalog().isEmpty()) { "La mémoire n’est pas vide. Reconnecte la montre pour vérifier." }
+                }
+                refresh();connection.update {it.copy(remaining=0)}
+                report("Mémoire de la montre vidée. Tes plongées restent dans le carnet du téléphone.")
+            } catch(e: Exception) {
+                connection.update {it.copy(stale=true)}
+                report((e.message?:"Effacement non confirmé")+" Reconnecte la montre pour vérifier son contenu.")
+            } finally {busy.value=false}
         }
     }
     fun cancelImport() { importJob?.cancel() }

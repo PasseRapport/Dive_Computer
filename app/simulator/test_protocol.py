@@ -2,9 +2,30 @@ import hashlib
 import struct
 import unittest
 import zlib
-from protocol import Decoder, Frame, Server, generate_dives
+from protocol import Decoder, Frame, Server, generate_dives, WATCH_ID
 
 class ProtocolTests(unittest.TestCase):
+    def erase_request(self,server):
+        token=hashlib.sha256(struct.pack('<H',len(server.dives))+b''.join(d.manifest() for d in server.dives)).digest()
+        return Frame(6,10,payload=WATCH_ID.bytes+token)
+    def test_explicit_erase_clears_completed_dives_and_advances_catalog_revision(self):
+        server=Server();request=self.erase_request(server)
+        self.assertEqual(server.reply(Frame(7,1)).payload,struct.pack('<I',1))
+        self.assertEqual(server.reply(request),Frame(6,10,1,struct.pack('<H',3)))
+        self.assertEqual(server.dives,[])
+        catalog=server.reply(Frame(3,11,payload=struct.pack('<I',0)))
+        self.assertEqual(struct.unpack('<IIH',catalog.payload),(2,0xffffffff,0))
+        self.assertEqual(server.reply(request).flags,3)
+    def test_erase_refuses_active_dive_changed_catalog_wrong_watch_and_bad_payload(self):
+        active=Server('active-dive')
+        self.assertEqual(active.reply(self.erase_request(active)).payload,struct.pack('<H',3))
+        self.assertEqual(len(active.dives),3)
+        server=Server();request=self.erase_request(server)
+        server.dives.pop()
+        self.assertEqual(server.reply(request).payload,struct.pack('<H',4))
+        for payload in (b'',b'\x00'*48,request.payload+b'\x00'):
+            self.assertEqual(server.reply(Frame(6,12,payload=payload)).flags,3)
+        self.assertEqual(len(server.dives),2)
     def test_hello_golden(self):
         self.assertEqual(Frame(1,1).encode().hex(),'0800010101000000')
     def test_every_fragment_size(self):

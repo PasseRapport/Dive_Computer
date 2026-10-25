@@ -43,11 +43,14 @@ class ScanTest {
     @Test fun disabledLocationExplainsWhyLegacyAndroidCannotSearch() {
         shadowOf(location).setLocationEnabled(false)
         model.search()
+        assertFalse(model.scanning.value)
         assertTrue("Un message explicite doit remplacer la recherche silencieuse : "+model.message.value,model.message.value.contains("localisation",ignoreCase=true))
     }
     @Test fun noResultsEndsWithAnExplicitMessageAfterTimeout() {
         model.search()
+        assertTrue(model.scanning.value)
         shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(16))
         assertTrue("Le message de recherche doit disparaître : "+model.message.value,model.message.value.startsWith("Aucune montre trouvée"))
+        assertFalse(model.scanning.value)
     }
 }
