@@ -182,12 +182,12 @@ private fun DepthChart(dive: Dive,cursor: Long,onCursor: (Long)->Unit) {
         drawContext.canvas.nativeCanvas.drawText("m",0f,top-7.dp.toPx(),paint)
         val path=Path();var previous: Sample?=null
         dive.samples.forEach { s ->
-            val xx=x(s.elapsedMs)
-            if(s.depthCm==null||xx<left||xx>left+w)previous=null
-            else { val yy=y(s.depthCm);if(previous==null||s.elapsedMs-previous!!.elapsedMs>dive.intervalMs*1.5)path.moveTo(xx,yy) else path.lineTo(xx,yy);previous=s }
+            val xx=x(s.elapsedMs);val depthValue=s.depthCm
+            if(depthValue==null||xx<left||xx>left+w)previous=null
+            else { val yy=y(depthValue);if(previous==null||s.elapsedMs-previous!!.elapsedMs>dive.intervalMs*1.5)path.moveTo(xx,yy) else path.lineTo(xx,yy);previous=s }
         }
         drawPath(path,Aqua,style=Stroke(2.dp.toPx()))
-        dive.events.forEach { e -> val s=dive.samples.minByOrNull{abs(it.elapsedMs-e.elapsedMs)};val xx=x(e.elapsedMs);if(xx in left..left+w&&s?.depthCm!=null)drawCircle(Coral,5.dp.toPx(),Offset(xx,y(s.depthCm))) }
+        dive.events.forEach { e -> val s=dive.samples.minByOrNull{abs(it.elapsedMs-e.elapsedMs)};val xx=x(e.elapsedMs);s?.depthCm?.let { depthValue -> if(xx in left..left+w)drawCircle(Coral,5.dp.toPx(),Offset(xx,y(depthValue))) } }
         val xx=x(cursor);if(xx in left..left+w)drawLine(Color.White,Offset(xx,top),Offset(xx,top+h),1.dp.toPx())
         drawContext.canvas.nativeCanvas.drawText(duration((pan*dive.durationMs).toLong()),left,size.height-4.dp.toPx(),paint)
         drawContext.canvas.nativeCanvas.drawText(duration(((pan+1f/zoom)*dive.durationMs).toLong()),(left+w-85.dp.toPx()).coerceAtLeast(left),size.height-4.dp.toPx(),paint)

@@ -72,6 +72,10 @@ More compact, better component integration, and additional sensors.
 
 ---
 
+## Android Companion
+
+The offline Android app, Linux BLE watch simulator, and protocol tests live in [`app/`](app/README.md). Development is on a dedicated branch; V1 and V2 firmware remain independent.
+
 ## Repository Structure
 
 ```
