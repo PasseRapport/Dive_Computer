@@ -209,6 +209,23 @@ class AppModel(application: Application): AndroidViewModel(application) {
             } finally {busy.value=false}
         }
     }
+    fun deleteDives(rows: List<DiveRow>) {
+        if(busy.value||rows.isEmpty())return
+        busy.value=true
+        viewModelScope.launch {
+            try {
+                val count=withContext(Dispatchers.IO) { dao.deleteDives(rows.distinctBy { it.watchId to it.diveId }) }
+                connection.update { it.copy(remaining=null) }
+                val c=client;val info=connection.value.info
+                if(c!=null&&info!=null&&!connection.value.stale)runCatching {
+                    val remaining=withContext(Dispatchers.IO) { c.catalog().count { dao.find(info.id.toString(),it.id.toString())?.hash!=it.hash.hex() } }
+                    connection.update { it.copy(remaining=remaining) }
+                }
+                report("$count plongée(s) supprimée(s) du carnet. La mémoire de la montre est conservée.")
+            } catch(e: Exception) { report(e.message?:"Suppression impossible") }
+            finally {busy.value=false}
+        }
+    }
     fun cancelImport() { importJob?.cancel() }
     fun editOuting(row: OutingRow) { viewModelScope.launch(Dispatchers.IO) { dao.saveOuting(row) } }
     fun moveDive(row: DiveRow,outing: String) { viewModelScope.launch(Dispatchers.IO) { dao.moveDive(row.watchId,row.diveId,outing) } }

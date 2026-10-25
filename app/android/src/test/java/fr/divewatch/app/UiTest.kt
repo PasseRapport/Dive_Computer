@@ -41,8 +41,9 @@ class UiTest {
         compose.waitUntil(15000) { compose.onAllNodesWithText("Mémoire de la montre vidée. Tes plongées restent dans le carnet du téléphone.").fetchSemanticsNodes().isNotEmpty() }
         compose.onNodeWithText("Plongées disponibles : 0").assertExists()
         compose.onNodeWithText("Carnet",useUnmergedTree=true).performClick()
-        compose.waitUntil(15000) { compose.onAllNodesWithText("Apnée").fetchSemanticsNodes().size==2 }
-        compose.onAllNodesWithText("Apnée").onFirst().performScrollTo().performClick()
+        compose.onNodeWithTag("category-APNEA").performScrollTo().performClick()
+        compose.waitUntil(15000) { compose.onAllNodesWithTag("dive-"+fr.divewatch.core.Demo.dives().first().id).fetchSemanticsNodes().isNotEmpty() }
+        compose.onNodeWithTag("dive-"+fr.divewatch.core.Demo.dives().first().id).performScrollTo().performClick()
         compose.onNodeWithText("PROFONDEUR MAX.").assertExists()
         compose.onNodeWithText("SIMULATION · données fictives").assertExists()
         screenshot("dive-detail.png")
@@ -70,6 +71,51 @@ class UiTest {
         compose.onNodeWithText("Mettre à jour la montre").performScrollTo().assertIsNotEnabled()
         compose.onNodeWithText("Manuel",useUnmergedTree=true).performClick()
         compose.onAllNodesWithText("Manuel").assertCountEquals(2)
+    }
+    @Test fun categoriesAndLongPressDeletionAreScopedAndReimportable() {
+        val all=fr.divewatch.core.Demo.dives()
+        val apnea=all.filter {it.mode==fr.divewatch.core.DiveMode.APNEA}
+        val air=all.single {it.mode==fr.divewatch.core.DiveMode.AIR}
+        compose.runOnIdle { ViewModelProvider(compose.activity)[AppModel::class.java].connectForTest(DemoLink()) }
+        compose.waitUntil(15000) { compose.onAllNodesWithText("Montre simulée connectée — données fictives").fetchSemanticsNodes().isNotEmpty() }
+        compose.onNodeWithText("Montre",useUnmergedTree=true).performClick()
+        compose.onNodeWithText("Synchroniser les plongées terminées").performScrollTo().performClick()
+        compose.waitUntil(15000) { compose.onAllNodesWithText("3 plongée(s) importée(s). Carnet disponible hors ligne.").fetchSemanticsNodes().isNotEmpty() }
+        compose.onNodeWithText("Carnet",useUnmergedTree=true).performClick()
+        screenshot("carnet-categories.png")
+        compose.onNodeWithTag("category-APNEA").performScrollTo().performClick()
+        compose.onNodeWithTag("dive-${air.id}").assertDoesNotExist()
+        compose.onNodeWithTag("dive-${apnea.first().id}").performScrollTo().performTouchInput {longClick()}
+        compose.onNodeWithTag("check-${apnea.first().id}").assertIsOn()
+        compose.onNodeWithText("1 sélectionnée(s)").performScrollTo().assertExists()
+        compose.onNodeWithTag("select-all").performScrollTo().performClick().assertIsOn()
+        compose.onNodeWithText("2 sélectionnée(s)").assertExists()
+        screenshot("carnet-selection.png")
+        compose.onNodeWithText("Supprimer").performClick()
+        compose.onNodeWithText("Annuler").performClick()
+        compose.onNodeWithTag("dive-${apnea.first().id}").assertExists()
+        compose.onNodeWithText("Supprimer").performClick()
+        compose.onNodeWithText("Supprimer du carnet").performClick()
+        compose.waitUntil(15000) { compose.onAllNodesWithText("2 plongée(s) supprimée(s) du carnet. La mémoire de la montre est conservée.").fetchSemanticsNodes().isNotEmpty() }
+        compose.onNodeWithTag("dive-${apnea.first().id}").assertDoesNotExist()
+        compose.onNodeWithText("‹ Catégories").performScrollTo().performClick()
+        compose.onNodeWithTag("category-AIR").performClick()
+        compose.onNodeWithTag("dive-${air.id}").assertExists()
+        compose.onNodeWithText("Montre",useUnmergedTree=true).performClick()
+        compose.onNodeWithText("Restant à importer : 2").assertExists()
+        compose.onNodeWithText("Vider la mémoire").assertIsNotEnabled()
+        compose.onNodeWithText("Synchroniser les plongées terminées").performScrollTo().performClick()
+        compose.waitUntil(15000) { compose.onAllNodesWithText("2 plongée(s) importée(s). Carnet disponible hors ligne.").fetchSemanticsNodes().isNotEmpty() }
+    }
+    @Test @Config(sdk=[29],qualifiers="w411dp-h891dp-mdpi-night")
+    fun lightThemeRemainsReadableWithSystemNightMode() {
+        compose.runOnIdle { ViewModelProvider(compose.activity)[AppModel::class.java].setTheme(AppTheme.LIGHT) }
+        compose.onNodeWithText("Ton carnet").assertIsDisplayed()
+        // Android must not recolor a palette already managed by the app.
+        compose.runOnIdle { org.junit.Assert.assertFalse(compose.activity.window.decorView.isForceDarkAllowed) }
+        screenshot("light-carnet.png")
+        compose.onNodeWithText("Manuel",useUnmergedTree=true).performClick()
+        screenshot("light-manual.png")
     }
     private fun screenshot(name: String) {
         val folder=java.io.File("build/reports/screenshots").apply { mkdirs() }

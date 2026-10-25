@@ -31,6 +31,21 @@ class CarnetTest {
         db.carnet().insertDive(DiveRow(dive.watchId.toString(),dive.id.toString(),sha256(blob).hex(),blob,"outing"))
     }
     private suspend fun backup(): ByteArray {val out=ByteArrayOutputStream();Archives(db,blocks).write(out);return out.toByteArray()}
+    @Test fun deletingDivesUsesBothIdentifiersAndPreservesOtherDivesAndNotes()=runBlocking {
+        seed(0);seed(1)
+        val target=db.carnet().allDives().first()
+        val otherWatch=target.copy(watchId=java.util.UUID.randomUUID().toString())
+        db.carnet().insertDive(otherWatch)
+        db.carnet().saveImport(ImportRow(target.watchId,target.diveId,target.hash,100,100,"importé"))
+        assertEquals(1,db.carnet().deleteDives(listOf(target)))
+        assertNull(db.carnet().find(target.watchId,target.diveId))
+        assertEquals(2,db.carnet().allDives().size)
+        assertNotNull(db.carnet().find(otherWatch.watchId,otherWatch.diveId))
+        assertEquals("Note originale",db.carnet().allOutings().single().notes)
+        val cursor=db.openHelper.readableDatabase.query("SELECT count(*) FROM imports")
+        cursor.use {assertTrue(it.moveToFirst());assertEquals(0,it.getInt(0))}
+        assertEquals(0,db.carnet().deleteDives(listOf(target)))
+    }
     @Test fun repeatedRestoreDoesNotDuplicateDivesOrLoseNotes()= runBlocking {
         seed();val bytes=backup()
         repeat(2){Archives(db,blocks).restore(ByteArrayInputStream(bytes))}

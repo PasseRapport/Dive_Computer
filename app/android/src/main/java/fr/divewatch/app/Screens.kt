@@ -57,34 +57,7 @@ fun DiveWatchApp(model: AppModel,search: ()->Unit,backup: ()->Unit,restore: ()->
                 Spacer(Modifier.height(10.dp));Text("DIVE WATCH",style=MaterialTheme.typography.labelLarge,color=Aqua)
                 if(row!=null) Detail(row,outings,model)
                 else when(tab) {
-                    0 -> {
-                        Text("Ton carnet",style=MaterialTheme.typography.headlineLarge)
-                        Text("Apnée & bouteille à l’air · disponible hors ligne",color=MaterialTheme.colorScheme.onSurfaceVariant)
-                        if(dives.isEmpty()) CardBlock { Text("La première plongée t’attend",style=MaterialTheme.typography.titleLarge);Text("Connecte ta montre depuis Montre, puis synchronise tes plongées.") }
-                        outings.forEach { outing ->
-                            val members=dives.filter { it.outingId==outing.id }
-                            if(members.isNotEmpty()) {
-                                Text(outing.title,style=MaterialTheme.typography.titleLarge)
-                                if(outing.site.isNotBlank())Text(outing.site,color=Aqua)
-                                members.forEach { saved ->
-                                    val dive=remember(saved.hash) { DiveCodec.decode(saved.content) }
-                                    Card(onClick={selected=saved.watchId+saved.diveId},modifier=Modifier.fillMaxWidth()) {
-                                        Column(Modifier.padding(18.dp),verticalArrangement=Arrangement.spacedBy(6.dp)) {
-                                            Text(mode(dive),style=MaterialTheme.typography.titleMedium)
-                                            if(dive.simulated)Text("SIMULATION · données fictives",color=Coral,style=MaterialTheme.typography.labelMedium)
-                                            Text(date(dive.startedAtMs))
-                                            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween) { Text(depth(dive.maximumDepthCm),style=MaterialTheme.typography.headlineSmall);Text(duration(dive.durationMs)) }
-                                            Text("${dive.events.size} événement(s)",color=Aqua)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if(imports.isNotEmpty())CardBlock { Text("Imports à reprendre",color=Coral);imports.forEach { Text("${it.diveId.takeLast(8)} · ${it.state}") };Text("Reconnecte la même montre, puis Synchroniser.") }
-                        OutlinedButton(onClick={model.createOuting("Nouvelle sortie")},enabled=!busy){Text("Créer une sortie")}
-                        Row(horizontalArrangement=Arrangement.spacedBy(8.dp)) { OutlinedButton(onClick=backup,enabled=!busy){Text("Sauvegarder")};OutlinedButton(onClick=restore,enabled=!busy){Text("Restaurer")} }
-                        OutlinedButton(onClick=csv,enabled=!busy&&dives.isNotEmpty()){Text("Exporter les CSV")}
-                    }
+                    0 -> CarnetScreen(dives,outings,imports,model,busy,backup,restore,csv,onOpen={selected=it.watchId+it.diveId})
                     1 -> WatchScreen(model,connection,busy,search)
                     2 -> {
                         Text("Manuel",style=MaterialTheme.typography.headlineLarge)
@@ -102,7 +75,7 @@ fun DiveWatchApp(model: AppModel,search: ()->Unit,backup: ()->Unit,restore: ()->
 }
 @Composable
 private fun CardBlock(content: @Composable ColumnScope.()->Unit) {
-    Card(Modifier.fillMaxWidth()) { Column(Modifier.padding(18.dp),verticalArrangement=Arrangement.spacedBy(10.dp),content=content) }
+    Card(Modifier.fillMaxWidth(),colors=CardDefaults.cardColors(containerColor=MaterialTheme.colorScheme.surfaceContainerLow,contentColor=MaterialTheme.colorScheme.onSurface)) { Column(Modifier.padding(18.dp),verticalArrangement=Arrangement.spacedBy(10.dp),content=content) }
 }
 @Composable
 private fun WatchScreen(model: AppModel,c: ConnectionUi,busy: Boolean,search: ()->Unit) {

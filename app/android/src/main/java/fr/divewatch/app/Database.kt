@@ -19,6 +19,16 @@ interface CarnetDao {
     @Query("SELECT * FROM imports WHERE state != 'importé'") suspend fun allImports(): List<ImportRow>
     @Query("SELECT * FROM dives WHERE watchId=:watch AND diveId=:id") suspend fun find(watch: String,id: String): DiveRow?
     @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun insertDive(row: DiveRow)
+    @Delete suspend fun deleteDive(row: DiveRow): Int
+    @Query("DELETE FROM imports WHERE watchId=:watch AND diveId=:id") suspend fun deleteImport(watch: String,id: String)
+    @Transaction suspend fun deleteDives(rows: List<DiveRow>): Int {
+        var count=0
+        rows.forEach { row ->
+            count+=deleteDive(row)
+            deleteImport(row.watchId,row.diveId)
+        }
+        return count
+    }
     @Upsert suspend fun saveOuting(row: OutingRow)
     @Upsert suspend fun saveImport(row: ImportRow)
     @Query("UPDATE dives SET outingId=:outing WHERE watchId=:watch AND diveId=:id") suspend fun moveDive(watch: String,id: String,outing: String)
