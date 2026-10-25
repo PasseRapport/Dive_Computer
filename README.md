@@ -77,7 +77,8 @@ More compact, better component integration, and additional sensors.
 ```
 Dive_Computer/
 ├── V1/         # Prototype — full firmware + hardware source files
-└── V2/         # Current revision — in progress
+├── V2/         # Current revision — in progress
+└── app/        # Android companion, BLE simulator and protocol tests
 ```
 
 See [`V1/README.md`](V1/README.md) for detailed hardware architecture, firmware design, and dive state machine documentation.

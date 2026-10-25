@@ -1,0 +1,33 @@
+MANUEL — VERSION 0.1
+Application Dive Watch 0.1 • simulateur sim-0.1
+
+Ce manuel couvre l’application et le simulateur. Les procédures propres à la future montre attendent une validation sur le matériel réel.
+
+1. Démarrer sans montre
+Dans Montre, choisis « Connecter la démonstration », puis « Synchroniser ». Trois plongées fictives sont importées : deux apnées et une plongée bouteille à l’air. Les données sont identifiées SIMULATION et restent consultables après déconnexion et redémarrage.
+
+2. Connecter le simulateur PC
+Démarre le simulateur BLE sur le PC. Active le Bluetooth du téléphone et autorise l’accès aux appareils à proximité. Dans Montre, recherche DiveWatch-SIM puis sélectionne-le. Connexion et synchronisation sont deux actions distinctes.
+Le simulateur initial est ouvert pour les essais ; le nom Bluetooth ne prouve pas l’identité d’une montre.
+
+3. Récupérer les plongées
+Appuie sur Synchroniser. Seules les plongées terminées sont proposées. Une interruption conserve les blocs vérifiés ; reconnecte la même montre et relance l’import pour reprendre. La même plongée n’est pas ajoutée deux fois. La montre conserve ses données après l’import.
+
+4. Lire le profil
+Ouvre une plongée du carnet. La profondeur augmente vers le bas. Utilise + et − ou le pincement pour zoomer ; déplace le profil à deux doigts et touche la courbe pour lire le temps, la profondeur et la température. « Indisponible » signifie une mesure absente, pas zéro.
+
+5. Comprendre les événements
+Les repères de la courbe correspondent aux événements enregistrés par la montre. Touche leur ligne pour voir le détail. Les codes inconnus sont conservés. Le téléphone ne recalcule pas les alertes et ne calcule ni paliers ni limite sans décompression.
+
+6. Organiser le carnet
+Une sortie regroupe plusieurs plongées. Ajoute un titre, un site et des notes depuis le détail d’une plongée. Crée une sortie depuis le carnet pour y déplacer des plongées. Les mesures originales restent inchangées.
+
+7. Sauvegarder
+Le bouton Sauvegarder crée une archive ZIP complète que tu conserves à l’emplacement de ton choix. Restaurer permet de la réimporter ; un conflit de mesures est refusé en conservant l’original. Les annotations divergentes sont conservées comme alternative. Les CSV sont destinés à l’analyse et ne remplacent pas cette sauvegarde.
+Les données restent sur le téléphone, sans compte ni serveur. Sauvegarde le carnet avant de désinstaller l’application.
+
+8. État de la montre
+La batterie et l’état surface/plongée correspondent à la dernière réception affichée. Après une coupure, ils sont marqués anciens et ne décrivent plus nécessairement l’état actuel.
+
+9. Évolutions prévues
+Les réglages de la montre et les mises à jour Bluetooth ne sont pas disponibles dans cette version. La future mise à jour utilisera un mécanisme distinct du transfert des plongées.
