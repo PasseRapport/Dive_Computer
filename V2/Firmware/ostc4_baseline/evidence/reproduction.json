@@ -1,0 +1,209 @@
+{
+  "kind": "synthetic baseline observations, not independent expected schedules",
+  "source": {
+    "revision": "7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
+    "tag": "1.7.7-beta-20261003-7198d20",
+    "source": "https://github.com/mikeller/ostc4",
+    "provenance": "experimental fork beta; manufacturer stable identity unverified",
+    "correction_set": "none",
+    "audit_bundle_sha256": "ef211bb667e20e7401be0354c8621d8783f985a72bf7d45880e6d318d0c665b2",
+    "snapshot_archive_sha256": "1246153d41973d6dec4035f49439b550db66747fc62cfa6b5c541f5265e8f481",
+    "files": {
+      "Common/Src/decom.c": "f7c95aa71598f05905f6a2737eb8ca3a4346b4563d5404f66f3c167e9a71c6cd",
+      "Discovery/Src/buehlmann.c": "a977c190d1b3cc2c820a38d849cd8bc9c0b445759e92a5101f4aa747ff484dc7",
+      "Discovery/Inc/buehlmann.h": "99f64423f708181fab47cc7c47a09e6cf1dbf60cc053e1e0b3c6f78280533636",
+      "Discovery/Inc/firmwareEraseProgram.h": "4151cf2affd6c469d9539d5b60fb3248e2f2d42e6f9378f6aa31a9490f20fd2d",
+      "Common/Inc/decom.h": "e5b26f940ae860e4b881a02b44752685b12e2367c46fa43f83fb353f824eb570",
+      "Common/Inc/data_central.h": "931e386253d3f80c5af83174cef94bcb28d87cf15d1e880458627be0142b6dab",
+      "Common/Inc/settings.h": "ff9d0e1fa812193480e197d3ca2e1e4767a6ffcf1aa814fed6a621789aa8993d",
+      "Common/Inc/FirmwareData.h": "bac757962b81ae4269999fba368d3ce48e09aa975af89946c741315c7e7ab938",
+      "Common/Inc/global_constants.h": "0a3bb502fb36b611cafba61d72996a45bd1394ae7447c25bd24b236f6b962989",
+      "Common/Inc/configuration.h": "d8ed91dc5b0841c109dc33ed64b7f9d9472807c395ca5d6f21f3cc64c29d02d7",
+      "Common/Inc/calc_crush.h": "e28c2b4456c5f5943fd7674d09b76e2eb3cb0cfc093dc46705acfbfa5d4c9d5d"
+    }
+  },
+  "policy": {
+    "identity": "ostc4-beta-7198d20-unchanged-air-gf30-70-v1",
+    "status": "experimental unchanged comparison baseline, not independently verified",
+    "arrays_transcribed_from_pinned_source": {
+      "buehlmann_N2_t_halflife": [
+        5.0,
+        8.0,
+        12.5,
+        18.5,
+        27.0,
+        38.3,
+        54.3,
+        77.0,
+        109.0,
+        146.0,
+        187.0,
+        239.0,
+        305.0,
+        390.0,
+        498.0,
+        635.0
+      ],
+      "buehlmann_N2_a": [
+        1.1696,
+        1.0,
+        0.8618,
+        0.7562,
+        0.62,
+        0.5043,
+        0.441,
+        0.4,
+        0.375,
+        0.35,
+        0.3295,
+        0.3065,
+        0.2835,
+        0.261,
+        0.248,
+        0.2327
+      ],
+      "buehlmann_N2_b": [
+        0.5578,
+        0.6514,
+        0.7222,
+        0.7825,
+        0.8126,
+        0.8434,
+        0.8693,
+        0.891,
+        0.9092,
+        0.9222,
+        0.9319,
+        0.9403,
+        0.9477,
+        0.9544,
+        0.9602,
+        0.9653
+      ],
+      "nitrogen_time_constant": [
+        0.138629436111989,
+        0.0866433975699932,
+        0.0554517744447956,
+        0.0374674151654024,
+        0.0256721177985165,
+        0.0180978376125312,
+        0.0127651414467762,
+        0.00900191143584345,
+        0.00635914844550409,
+        0.00474758342849278,
+        0.00370666941475907,
+        0.00290019740820061,
+        0.00227261370675392,
+        0.00177730046297422,
+        0.0013918618083533,
+        0.00109157036308653
+      ]
+    },
+    "pressure_unit": "bar absolute",
+    "time_unit": "integer seconds, no subsecond truncation",
+    "surface_fixture_bar": 1.01325,
+    "surface_range_bar": [
+      0.8,
+      1.2
+    ],
+    "sample_range_bar": "surface to surface+6",
+    "max_interval_seconds": 3600,
+    "interpolation": "linear pressure; equal endpoints use unchanged exposure cached-factor path",
+    "fresh_initialization": "upstream decom_reset_with_ambientmbar, N2=0.7902*(surface-0.0493), helium=0",
+    "exposure_nitrogen_fraction": 0.79,
+    "water_vapour_bar": 0.0493,
+    "gf": [
+      30,
+      70
+    ],
+    "ascent_meters_per_minute": 9,
+    "depth_conversion_bar_per_meter": 0.1,
+    "last_stop_gauge_bar": 0.3,
+    "second_to_last_stop_gauge_bar": 0.6,
+    "stop_increment_bar": 0.3,
+    "stop_time_quantum_seconds": 10,
+    "stop_slots": 50,
+    "stop_index": "index 0=3m, index 1=6m, index i=(i+1)*3m",
+    "ndl": "10 minute steps; one minute refinement at <=120 minutes; capped at 240 minutes",
+    "tts": "upstream zero without deco, not travel-only TTS; deco includes travel and mandatory stops",
+    "tts_and_per_stop_cap_seconds": 59940,
+    "availability": "unavailable before 60 accumulated underwater/transition seconds, at surface, or when both NDL and TTS are zero; cap values limited; available means upstream produced an estimate, not validated guidance",
+    "anchor": "zero at explicit fresh reset; planner may raise persistent settings anchor; upstream global GF-low depth persists across accepted samples; planner immediately precedes ceiling",
+    "known_unchanged_defects": [
+      "two N2 and two He cached 10-second factors from audit; no corrections",
+      "recent beta Schreiner rates include *60 conversion absent in older snapshot"
+    ],
+    "prediction_isolation": "not claimed; single active serialized scenario; each advance runs planner and commits its settings anchor; read only copies last observation"
+  },
+  "host_math_runtime": {
+    "platform": "Linux-7.2.9-200.fc44.x86_64-x86_64-with-glibc2.43",
+    "libc": [
+      "glibc",
+      "2.43"
+    ]
+  },
+  "adapter_files_sha256": {
+    "compat/stm32f4xx_hal.h": "104f419949563500aa63cd3e9ad44751d2b2d33a47bc0e174776bc24fd65a4d3",
+    "compat/stm32f4xx_hal_rtc.h": "b0d13217f3cfc853ee509c8d55f4a6748ab766eccfa60ede21c77d3431a1d4c9",
+    "include/ostc4_baseline.h": "95b4f0ffc492001f6d4f0793fee0a6226c59b6eb6e3eb9a10237132fe0d99e74",
+    "src/ostc4_baseline.c": "2b65325df1ba9f3c3fcbae00cf74ff9cc42f5da609b223671067e500fb9c9f13",
+    "src/replay.c": "6aac1590960545e5410e3b563599194c2cd2f6d006b24971b096732e9fb7f29f"
+  },
+  "executable_sha256": "0b13540409d36768148df0c2b12c00c8941e692d6abc4fc026e08ba3af484ae7",
+  "compile_commands": [
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket01/final-build",
+      "command": "/usr/bin/gcc  -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -O3 -DNDEBUG -std=c11 -O2 -fno-fast-math -ffp-contract=off -ffunction-sections -fdata-sections -o CMakeFiles/ostc4_upstream.dir/upstream/Common/Src/decom.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Src/decom.c",
+      "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Src/decom.c",
+      "output": "CMakeFiles/ostc4_upstream.dir/upstream/Common/Src/decom.c.o"
+    },
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket01/final-build",
+      "command": "/usr/bin/gcc  -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -O3 -DNDEBUG -std=c11 -O2 -fno-fast-math -ffp-contract=off -ffunction-sections -fdata-sections -o CMakeFiles/ostc4_upstream.dir/upstream/Discovery/Src/buehlmann.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Src/buehlmann.c",
+      "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Src/buehlmann.c",
+      "output": "CMakeFiles/ostc4_upstream.dir/upstream/Discovery/Src/buehlmann.c.o"
+    },
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket01/final-build",
+      "command": "/usr/bin/gcc  -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -O3 -DNDEBUG -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off -o CMakeFiles/ostc4_baseline.dir/src/ostc4_baseline.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+      "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+      "output": "CMakeFiles/ostc4_baseline.dir/src/ostc4_baseline.c.o"
+    },
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket01/final-build",
+      "command": "/usr/bin/gcc  -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -O3 -DNDEBUG -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off -o CMakeFiles/ostc4_replay.dir/src/replay.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/replay.c",
+      "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/replay.c",
+      "output": "CMakeFiles/ostc4_replay.dir/src/replay.c.o"
+    },
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket01/final-build",
+      "command": "/usr/bin/gcc  -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -O3 -DNDEBUG -std=c11 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/test_ostc4_contract.dir/tests/test_contract.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_contract.c",
+      "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_contract.c",
+      "output": "CMakeFiles/test_ostc4_contract.dir/tests/test_contract.c.o"
+    }
+  ],
+  "link_commands": {
+    "CMakeFiles/ostc4_upstream.dir/link.txt": "/usr/bin/ar qc libostc4_upstream.a CMakeFiles/ostc4_upstream.dir/upstream/Common/Src/decom.c.o CMakeFiles/ostc4_upstream.dir/upstream/Discovery/Src/buehlmann.c.o\n/usr/bin/ranlib libostc4_upstream.a\n",
+    "CMakeFiles/ostc4_baseline.dir/link.txt": "/usr/bin/ar qc libostc4_baseline.a CMakeFiles/ostc4_baseline.dir/src/ostc4_baseline.c.o\n/usr/bin/ranlib libostc4_baseline.a\n",
+    "CMakeFiles/ostc4_replay.dir/link.txt": "/usr/bin/gcc -O3 -DNDEBUG -Wl,--gc-sections -Wl,--dependency-file=CMakeFiles/ostc4_replay.dir/link.d CMakeFiles/ostc4_replay.dir/src/replay.c.o -o ostc4_replay  libostc4_baseline.a -lm libostc4_upstream.a\n",
+    "CMakeFiles/test_ostc4_contract.dir/link.txt": "/usr/bin/gcc -O3 -DNDEBUG -Wl,--gc-sections -Wl,--dependency-file=CMakeFiles/test_ostc4_contract.dir/link.d CMakeFiles/test_ostc4_contract.dir/tests/test_contract.c.o -o test_ostc4_contract  libostc4_baseline.a libostc4_upstream.a -lm\n"
+  },
+  "profiles": [
+    {
+      "profile": "shallow.csv",
+      "input_sha256": "6d203db0a1b188fe265e73de3a09677339b035f65df0e91f88192e6c9d1de25b",
+      "input_csv": "timestamp_seconds,absolute_pressure_bar\n0,1.01325\n30,1.51325\n60,2.01325\n600,2.01325\n660,1.01325\n",
+      "output_sha256": "0aa1f33ca06a4c29a756d51c1f97703e93bbc628ed2e205fff730e2a2f0c3ecc"
+    },
+    {
+      "profile": "decompression.csv",
+      "input_sha256": "4c3e24fe0346fdc408fb3a62d710f63e7782104eeed22f5fc069ef33b7d17999",
+      "input_csv": "timestamp_seconds,absolute_pressure_bar\n0,1.01325\n120,4.01325\n2220,4.01325\n2340,2.21325\n2640,2.21325\n2820,1.31325\n3420,1.31325\n3480,1.01325\n",
+      "output_sha256": "e5d07a6713b467c1dfd71f67b9ce3bb0d66649a277e40d4d45f23bd2e7d048ff"
+    }
+  ],
+  "pc": "headless build and replay",
+  "target_build": "not performed for this ticket",
+  "physical": "not performed",
+  "numerical_acceptance": "not established"
+}

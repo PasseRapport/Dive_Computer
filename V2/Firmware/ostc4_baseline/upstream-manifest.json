@@ -1,0 +1,22 @@
+{
+  "revision": "7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
+  "tag": "1.7.7-beta-20261003-7198d20",
+  "source": "https://github.com/mikeller/ostc4",
+  "provenance": "experimental fork beta; manufacturer stable identity unverified",
+  "correction_set": "none",
+  "audit_bundle_sha256": "ef211bb667e20e7401be0354c8621d8783f985a72bf7d45880e6d318d0c665b2",
+  "snapshot_archive_sha256": "1246153d41973d6dec4035f49439b550db66747fc62cfa6b5c541f5265e8f481",
+  "files": {
+    "Common/Src/decom.c": "f7c95aa71598f05905f6a2737eb8ca3a4346b4563d5404f66f3c167e9a71c6cd",
+    "Discovery/Src/buehlmann.c": "a977c190d1b3cc2c820a38d849cd8bc9c0b445759e92a5101f4aa747ff484dc7",
+    "Discovery/Inc/buehlmann.h": "99f64423f708181fab47cc7c47a09e6cf1dbf60cc053e1e0b3c6f78280533636",
+    "Discovery/Inc/firmwareEraseProgram.h": "4151cf2affd6c469d9539d5b60fb3248e2f2d42e6f9378f6aa31a9490f20fd2d",
+    "Common/Inc/decom.h": "e5b26f940ae860e4b881a02b44752685b12e2367c46fa43f83fb353f824eb570",
+    "Common/Inc/data_central.h": "931e386253d3f80c5af83174cef94bcb28d87cf15d1e880458627be0142b6dab",
+    "Common/Inc/settings.h": "ff9d0e1fa812193480e197d3ca2e1e4767a6ffcf1aa814fed6a621789aa8993d",
+    "Common/Inc/FirmwareData.h": "bac757962b81ae4269999fba368d3ce48e09aa975af89946c741315c7e7ab938",
+    "Common/Inc/global_constants.h": "0a3bb502fb36b611cafba61d72996a45bd1394ae7447c25bd24b236f6b962989",
+    "Common/Inc/configuration.h": "d8ed91dc5b0841c109dc33ed64b7f9d9472807c395ca5d6f21f3cc64c29d02d7",
+    "Common/Inc/calc_crush.h": "e28c2b4456c5f5943fd7674d09b76e2eb3cb0cfc093dc46705acfbfa5d4c9d5d"
+  }
+}
