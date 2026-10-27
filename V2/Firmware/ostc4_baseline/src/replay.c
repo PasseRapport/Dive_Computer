@@ -11,6 +11,36 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef OSTC4_CONTINUOUS_EXPOSURE
+#include "ostc4_exposure.h"
+#define ostc4_initialize ostc4_exposure_initialize
+#define ostc4_advance ostc4_exposure_advance
+#define ostc4_read ostc4_exposure_read
+#define EXPOSURE_METADATA "\"exposure_policy\":\"" OSTC4_EXPOSURE_POLICY "\","
+static int prediction_mode;
+static int predict_between_samples(void)
+{
+    ostc4_observation now, predicted;
+    if (!prediction_mode) return 1;
+    if (ostc4_read(&now) != OSTC4_OK) return 0;
+    if (now.timestamp_seconds > UINT32_MAX - 300) return 1;
+    /* Speculative deep and shallow futures perturb both anchors and planner
+     * scratch. No future is fed back into the tracked exposure. */
+    const int count = prediction_mode == 1 ? 4 : 3;
+    for (int i = 0; i < count; ++i) {
+        const ostc4_sample future = {
+            now.timestamp_seconds + 300,
+            prediction_mode == 1 || i % 2 == 0 ? 5.01325f : 1.21325f
+        };
+        if (ostc4_exposure_predict(&future, &predicted) != OSTC4_OK) return 0;
+    }
+    return 1;
+}
+static void print_invalid_exposure(void);
+#else
+#define EXPOSURE_METADATA ""
+#endif
+
 static int parse_sample(char *line, ostc4_sample *sample)
 {
     char *end;
@@ -58,9 +88,27 @@ static void print_observation(const ostc4_observation *out)
            ostc4_availability_name(out->stops));
 }
 
+#ifdef OSTC4_CONTINUOUS_EXPOSURE
+static void print_invalid_exposure(void)
+{
+    ostc4_observation out;
+    if (ostc4_exposure_missing() == OSTC4_OK && ostc4_read(&out) == OSTC4_OK)
+        print_observation(&out);
+}
+#endif
+
 int main(int argc, char **argv)
 {
+#ifdef OSTC4_CONTINUOUS_EXPOSURE
+    if (argc == 3) {
+        if (!strcmp(argv[2], "repeated")) prediction_mode = 1;
+        else if (!strcmp(argv[2], "interleaved")) prediction_mode = 2;
+        else if (strcmp(argv[2], "none")) { fprintf(stderr, "invalid prediction mode\n"); return 2; }
+    }
+    if (argc != 2 && argc != 3) { fprintf(stderr, "usage: ostc4_continuity_replay profile.csv [none|repeated|interleaved]\n"); return 2; }
+#else
     if (argc != 2) { fprintf(stderr, "usage: ostc4_replay profile.csv\n"); return 2; }
+#endif
     if (fegetround() != FE_TONEAREST) { fprintf(stderr, "requires round-to-nearest\n"); return 2; }
     FILE *file = fopen(argv[1], "r");
     if (!file) { perror(argv[1]); return 2; }
@@ -75,6 +123,9 @@ int main(int argc, char **argv)
     while (fgets(line, sizeof(line), file)) {
         ++number;
         if (!parse_sample(line, &sample)) {
+#ifdef OSTC4_CONTINUOUS_EXPOSURE
+            print_invalid_exposure();
+#endif
             fprintf(stderr, "invalid input at line %u\n", number); fclose(file); return 2;
         }
         ostc4_status status;
@@ -82,7 +133,7 @@ int main(int argc, char **argv)
             const ostc4_initial initial = {sample.timestamp_seconds, sample.absolute_pressure_bar};
             status = ostc4_initialize(&initial);
             if (status == OSTC4_OK)
-                printf("{\"type\":\"metadata\",\"revision\":\"%s\",\"policy\":\"%s\","
+                printf("{\"type\":\"metadata\"," EXPOSURE_METADATA "\"revision\":\"%s\",\"policy\":\"%s\","
                        "\"correction_set\":\"%s\",\"provenance\":\"experimental-fork-beta\","
                        "\"synthetic\":true,\"initialization\":\"upstream-surface-equilibrium\","
                        "\"surface_pressure_bar\":%.9g,\"initial_timestamp_seconds\":%" PRIu32 ","
@@ -97,15 +148,24 @@ int main(int argc, char **argv)
                        initial.timestamp_seconds, __VERSION__, FLT_EVAL_METHOD, FLT_MANT_DIG, DBL_MANT_DIG);
         } else status = ostc4_advance(&sample);
         if (status != OSTC4_OK) {
+#ifdef OSTC4_CONTINUOUS_EXPOSURE
+            print_invalid_exposure();
+#endif
             fprintf(stderr, "calculation rejected line %u (status %d); output is incomplete\n", number, status);
             fclose(file); return 2;
         }
         ostc4_observation observed;
         if (ostc4_read(&observed) != OSTC4_OK) { fclose(file); return 2; }
         print_observation(&observed);
+#ifdef OSTC4_CONTINUOUS_EXPOSURE
+        if (!predict_between_samples()) { fclose(file); return 2; }
+#endif
     }
     const int failed = ferror(file) || number < 2;
     fclose(file);
+#ifdef OSTC4_CONTINUOUS_EXPOSURE
+    if (failed) print_invalid_exposure();
+#endif
     if (failed) { fprintf(stderr, "empty or unreadable profile\n"); return 2; }
     return fflush(stdout) == 0 ? 0 : 2;
 }

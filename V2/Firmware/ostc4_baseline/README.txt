@@ -137,3 +137,86 @@ The analytical harness reports all tissue errors and baseline/corrected NDL,
 TTS, ceiling and stop differences for complete synthetic replays. These schedule
 differences are observations, not independently accepted decompression schedules.
 PC numerical checks do not constitute target-build or physical-board evidence.
+
+Ticket 03: continuous exposure and isolated predictions
+======================================================
+Use ostc4_exposure.h and libostc4_exposure for the active portable interface.
+The comparison libraries above retain their historical rejection contracts;
+link exactly one variant into a process. The continuous variant uses ticket02
+corrected tissues. Its extra policy is ostc4-continuous-air-gf30-70-v1; the
+underlying numerical identity and correction set are unchanged.
+
+  /tmp/ostc4-baseline-build/ostc4_continuity_replay \
+    V2/Firmware/ostc4_baseline/tests/reference/repetitive.csv interleaved
+
+The optional mode is none (default), repeated, or interleaved. These execute
+identical actual exposure with different speculative deep/shallow future calls.
+Each JSONL observation includes every availability flag, so unavailable or
+invalid numeric zero is distinct from available zero. Metadata identifies fresh
+synthetic surface equilibrium, initial timestamp/pressure, source, numerical
+policy, exposure policy, correction set, compiler and math assumptions. Existing
+no-deco TTS remains explicitly qualified as upstream-zero-not-transit-time.
+
+Successful initialize is the only fresh-fixture/reset operation. A surface
+sample integrates uptake/elimination exactly like any other pressure interval.
+No recording threshold, dive-recording transition, screen or menu is an input.
+Tissues, dive counter, maximum depth and both GF anchors persist across the
+whole scenario, including the surface interval. There is no per-recording or
+per-dive anchor reset in this milestone. Initialization resets both anchors;
+read never calculates; successful advance retains upstream planner changes.
+
+The <=3600-second linear-segment contract and pressure envelope above still
+apply. A null actual sample, invalid/nonfinite pressure, duplicate/backward/
+wrapped timestamp, oversized gap or numerical failure latches every current
+availability flag INVALID. Numbers/timestamp remain the last accepted diagnostic
+state; subsequent actual samples and predictions are rejected. Explicit missing()
+marks any unobserved exposure, including gaps smaller than 3600 seconds. A
+caller supplying a complete linear interval asserts complete exposure; the
+engine cannot detect silently omitted measurements. Successful initialize is
+required to recover; it declares fresh synthetic state, never recovered history.
+An invalid initialize also invalidates an existing scenario. Null read/output
+pointers are programming errors and do not invalidate actual exposure.
+
+predict accepts one hypothetical future pressure/time segment. Its result
+uses the same availability policy. Rejected predictions zero the output with
+UNAVAILABLE flags; predictions on already incomplete exposure return INVALID.
+Neither accepted nor rejected predictions change actual tissues, settings,
+anchors, timestamps, validity or upstream scratch. All calls must be serialized
+by the caller, including calls on comparison libraries; no concurrency framework
+or synchronization primitive is provided. This is the same single-scenario
+constraint as the baseline, not a thread-safe multi-context interface.
+
+corrections/contain_planner.py verifies the pinned source hash, lifts the six
+backup statics into file scope and adds snapshot accessors in a generated copy.
+It changes storage accessibility only, not arithmetic or planner branches.
+The snapshot covers all nine planner globals (including arrays and stop state)
+and six backup statics. predict additionally saves/restores full SLifeData,
+SDiveSettings and the public observation. Remaining mutable decom.c statics
+belong only to CNS/OTU degradation helpers, unreachable from the air exposure/
+planner path (CNS exposure uses its supplied accumulator). Upstream files stay
+byte-identical. Changes to the pinned revision require a new state audit.
+
+CLI input faults after initialization terminate nonzero and append an INVALID
+observation at the last accepted timestamp. Earlier rows remain a valid prefix,
+not a complete replay. A header/initialization fault has no initialized result.
+
+tests/test_exposure.c checks faults, latched invalidity, surface integration,
+near-wrap timestamps, repeated predictions, both anchors and exact subsequent
+public-state equality. tests/reference/test_continuity_reference.py separately
+checks every nitrogen compartment through two dives plus the surface interval
+against the independently authored analytical reference, with the predeclared
+0.0005 bar history tolerance. Whole JSON observations match exactly across all
+prediction modes (zero tolerance). Tests are headless, independent of LVGL and
+Zephyr. They establish synthetic PC continuity/isolation and tissue agreement;
+they do not independently accept NDL/ceiling/stops/TTS, validate a target build,
+measure physical timing/stack, or establish fitness for real dives.
+
+Reproduce the continuous variant's observation/build bundle:
+  python3 V2/Firmware/ostc4_baseline/record_evidence.py \
+    /tmp/ostc4-baseline-build /tmp/ostc4-continuity-observations --continuous
+  python3 V2/Firmware/ostc4_baseline/tests/reference/test_continuity_reference.py \
+    /tmp/ostc4-baseline-build/ostc4_continuity_replay \
+    --output /tmp/ostc4-continuity-observations/continuity-verification.json
+The recorder checks identical output across modes on shallow, decompression
+and repetitive profiles. Numerical reference acceptance belongs to the
+separate checker; reproduction.json alone makes no such claim.

@@ -1,0 +1,14 @@
+{
+  "frozen_at_utc": "2026-10-27T22:54:00.833845+00:00",
+  "author": "continuity_reference subagent",
+  "independence": "Read only prior independent tissue_reference.py, its reference-provenance.json, and prior public-CLI verifier. No production implementation or source tables read. No repo files changed.",
+  "files": {
+    "test_continuity_reference.py": "ea30f5c7863efbdba11696d3008c4ccaca46e86711b9451f1dac7b76cb292dc3",
+    "repetitive.csv": "a68bac024b2da441a90151b57aa71b6553eeb3b6b0a652feaab1da46d9083778",
+    "tissue_reference.py": "842186e884ddd3fdba8fd7aff76322f688706de6b5b31ce7ec1da4ed4b77208a",
+    "reference-provenance.json": "d4ae614d8b041eb68cc21781b44d4a4c0d1475264c8774fe0a5a9e1675a01c8c"
+  },
+  "whole_history_absolute_tolerance_bar": 0.0005,
+  "authorship_boundary": "Production implementation authored separately by parent agent.",
+  "harness_self_check": "Oracle-only mock passes; deliberately changing interleaved ndl_seconds is rejected. This is harness validation, not production validation."
+}

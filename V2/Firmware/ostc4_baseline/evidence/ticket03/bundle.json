@@ -1,0 +1,29 @@
+{
+  "base_commit": "e80a41c",
+  "source_revision": "7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
+  "exposure_policy": "ostc4-continuous-air-gf30-70-v1",
+  "correction_set": "cached-10s-and-stable-schreiner-v1",
+  "synthetic": true,
+  "host_tests_passed": 9,
+  "maximum_tissue_error_bar": 3.2053389542596733e-07,
+  "tissue_tolerance_bar": 0.0005,
+  "prediction_observation_tolerance": "exact equality",
+  "schedule_independent_acceptance": "not established",
+  "target_build": "not performed",
+  "physical": "not performed",
+  "files_sha256": {
+    "continuity-verification.json": "bdcdaadc5a6050e48c0dc686f9db8545b69b55f402416280cc7eddcd296282b6",
+    "decompression-interleaved.jsonl": "719ba48b5b40ac2a26a1405b637a135c0bca07f8eced711af0d27a90c6010852",
+    "decompression-repeated.jsonl": "719ba48b5b40ac2a26a1405b637a135c0bca07f8eced711af0d27a90c6010852",
+    "decompression.jsonl": "719ba48b5b40ac2a26a1405b637a135c0bca07f8eced711af0d27a90c6010852",
+    "host-tests.txt": "ae70ff110db333cec3ceb5fdcd79540f323f865910fb9e0c87a4b0a68cdaa025",
+    "repetitive-interleaved.jsonl": "5bcace81bf3dfc43ec5ec412743de46b9ae7cdb3fc50621e529c5fa1e1c6cad4",
+    "repetitive-repeated.jsonl": "5bcace81bf3dfc43ec5ec412743de46b9ae7cdb3fc50621e529c5fa1e1c6cad4",
+    "repetitive.jsonl": "5bcace81bf3dfc43ec5ec412743de46b9ae7cdb3fc50621e529c5fa1e1c6cad4",
+    "reproduction.json": "c54ecaa8bcbd2b9a89f4f9c254024506b283ea09b2d5760bca3c59dd7ae073d8",
+    "review.txt": "f358e8d9e4307b2072de015e11e79d96f05fddafd82405853471f049fa7cb61d",
+    "shallow-interleaved.jsonl": "1bcfb88f6699d831e2971a367ec26ad16ad48bae4ff45a8143d8e04440f693b2",
+    "shallow-repeated.jsonl": "1bcfb88f6699d831e2971a367ec26ad16ad48bae4ff45a8143d8e04440f693b2",
+    "shallow.jsonl": "1bcfb88f6699d831e2971a367ec26ad16ad48bae4ff45a8143d8e04440f693b2"
+  }
+}

@@ -144,3 +144,75 @@ const char *ostc4_availability_name(ostc4_availability availability)
     }
     return "invalid";
 }
+
+#ifdef OSTC4_CONTINUOUS_EXPOSURE
+#include "ostc4_exposure.h"
+#include "ostc4_scratch.h"
+static bool exposure_incomplete;
+
+static void invalidate_exposure(void)
+{
+    exposure_incomplete = true;
+    current.tissues = current.ndl = current.tts = current.ceiling = current.stops = OSTC4_INVALID;
+}
+
+ostc4_status ostc4_exposure_initialize(const ostc4_initial *initial)
+{
+    ostc4_status status = ostc4_initialize(initial);
+    if (status == OSTC4_OK)
+        exposure_incomplete = false;
+    else if (initialized)
+        invalidate_exposure();
+    return status;
+}
+
+ostc4_status ostc4_exposure_read(ostc4_observation *observation)
+{
+    return ostc4_read(observation);
+}
+
+ostc4_status ostc4_exposure_missing(void)
+{
+    if (!initialized)
+        return OSTC4_NOT_INITIALIZED;
+    invalidate_exposure();
+    return OSTC4_OK;
+}
+
+ostc4_status ostc4_exposure_advance(const ostc4_sample *sample)
+{
+    if (exposure_incomplete)
+        return OSTC4_BAD_INPUT;
+    ostc4_status status = ostc4_advance(sample);
+    if (status != OSTC4_OK && initialized)
+        invalidate_exposure();
+    return status;
+}
+
+ostc4_status ostc4_exposure_predict(const ostc4_sample *future, ostc4_observation *prediction)
+{
+    if (!prediction)
+        return OSTC4_BAD_INPUT;
+    memset(prediction, 0, sizeof(*prediction));
+    if (!initialized)
+        return OSTC4_NOT_INITIALIZED;
+    if (exposure_incomplete) {
+        prediction->tissues = prediction->ndl = prediction->tts =
+            prediction->ceiling = prediction->stops = OSTC4_INVALID;
+        return OSTC4_BAD_INPUT;
+    }
+    const SLifeData saved_life = life;
+    const SDiveSettings saved_settings = settings;
+    const ostc4_observation saved_current = current;
+    ostc4_scratch scratch;
+    ostc4_scratch_save(&scratch);
+    ostc4_status status = ostc4_advance(future);
+    if (status == OSTC4_OK)
+        *prediction = current;
+    life = saved_life;
+    settings = saved_settings;
+    current = saved_current;
+    ostc4_scratch_restore(&scratch);
+    return status;
+}
+#endif

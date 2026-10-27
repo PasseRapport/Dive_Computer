@@ -1,0 +1,17 @@
+Source: /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline
+Build: /tmp/ostc4-ticket03-final
+GCC 16.2.1; C11 Release; -O2 -fno-fast-math -ffp-contract=off.
+Command: ctest --test-dir /tmp/ostc4-ticket03-final --output-on-failure
+Passed 9/9:
+upstream_source_identity
+synthetic_replay_contracts
+public_pressure_time_contract
+corrected_public_pressure_time_contract
+corrected_synthetic_replay_contracts
+independently_verified_tissues
+continuous_exposure_contract
+independent_repetitive_exposure
+continuity_replay_faults
+No LVGL, Zephyr, target image or physical hardware validation performed.
+The evidence recorder subsequently clean-rebuilt the continuity replay target;
+the separately run independent reference checker passed against that executable.

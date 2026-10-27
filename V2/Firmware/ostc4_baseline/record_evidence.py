@@ -10,7 +10,9 @@ import subprocess
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('build', type=pathlib.Path)
 parser.add_argument('output', type=pathlib.Path)
-parser.add_argument('--corrected', action='store_true', help='record the separately built tissue-correction variant')
+variants = parser.add_mutually_exclusive_group()
+variants.add_argument('--continuous', action='store_true', help='record continuous exposure and isolated predictions')
+variants.add_argument('--corrected', action='store_true', help='record the separately built tissue-correction variant')
 args = parser.parse_args()
 root = pathlib.Path(__file__).resolve().parent
 build, output = args.build.resolve(), args.output.resolve()
@@ -24,7 +26,8 @@ for line in (build / 'CMakeCache.txt').read_text().splitlines():
         cache[key.split(':', 1)[0]] = value
 if pathlib.Path(cache['CMAKE_HOME_DIRECTORY']).resolve() != root:
     raise SystemExit('build directory is configured for another source tree')
-target = 'ostc4_replay_corrected' if args.corrected else 'ostc4_replay'
+corrected = args.corrected or args.continuous
+target = 'ostc4_continuity_replay' if args.continuous else ('ostc4_replay_corrected' if corrected else 'ostc4_replay')
 subprocess.run(['cmake', '--build', str(build), '--target', target,
                 '--clean-first'], check=True)
 cli = build / target
@@ -33,11 +36,11 @@ manifest = json.loads((root / 'upstream-manifest.json').read_text())
 for name, expected in manifest['files'].items():
     if digest(root / 'upstream' / name) != expected:
         raise SystemExit('changed upstream file: ' + name)
-policy = json.loads((root / ('corrected-policy.json' if args.corrected else 'policy.json')).read_text())
+policy = json.loads((root / ('corrected-policy.json' if corrected else 'policy.json')).read_text())
 correction_set = policy.get('correction_set', 'none')
 records = []
-for name in ('shallow', 'decompression'):
-    profile = root / 'fixtures' / (name + '.csv')
+for name in (('shallow', 'decompression', 'repetitive') if args.continuous else ('shallow', 'decompression')):
+    profile = root / ('tests/reference' if name == 'repetitive' else 'fixtures') / (name + '.csv')
     replay = subprocess.check_output([str(cli), str(profile)])
     if replay != subprocess.check_output([str(cli), str(profile)]):
         raise SystemExit('nonrepeatable output: ' + name)
@@ -49,6 +52,14 @@ for name in ('shallow', 'decompression'):
             metadata['policy'] != policy['identity'] or
             metadata['correction_set'] != correction_set):
         raise SystemExit('compiled source/policy identity mismatch')
+    if args.continuous:
+        if metadata['exposure_policy'] != 'ostc4-continuous-air-gf30-70-v1':
+            raise SystemExit('compiled exposure identity mismatch')
+        for mode in ('repeated', 'interleaved'):
+            projected = subprocess.check_output([str(cli), str(profile), mode])
+            if projected != replay:
+                raise SystemExit('prediction changed actual exposure: ' + name + '/' + mode)
+            (output / (name + '-' + mode + '.jsonl')).write_bytes(projected)
     (output / (name + '.jsonl')).write_bytes(replay)
     records.append({'profile': profile.name, 'input_sha256': digest(profile),
                     'input_csv': profile.read_text(),
@@ -63,14 +74,19 @@ if not links:
         [cache['CMAKE_MAKE_PROGRAM'], '-C', str(build), '-t', 'commands', target], text=True)
 report = {'kind' : 'synthetic variant observations, not independent expected schedules',
           'source': manifest, 'policy': policy, 'correction_set': correction_set,
-          'correction_files_sha256': {str(p.relative_to(root)): digest(p) for p in sorted((root / 'corrections').glob('*')) if p.is_file()} if args.corrected else {},
-          'generated_source_sha256': digest(build / 'corrected/decom.c') if args.corrected else None,
+          'correction_files_sha256': {str(p.relative_to(root)): digest(p) for p in sorted((root / 'corrections').glob('*')) if p.is_file()} if corrected else {},
+          'generated_source_sha256': digest(build / 'corrected/decom.c') if corrected else None,
           'host_math_runtime': {'platform': platform.platform(), 'libc': platform.libc_ver()},
           'adapter_files_sha256': {str(p.relative_to(root)): digest(p) for p in
-              sorted([*root.glob('src/*.c'), *root.glob('include/*.h'), *root.glob('compat/*.h')])},
+              sorted([*root.glob('src/*.c'), *root.glob('src/*.h'), *root.glob('include/*.h'), *root.glob('compat/*.h')])},
           'executable_sha256': digest(cli), 'compile_commands': commands,
           'link_commands': links, 'profiles': records,
           'pc': 'headless build and replay', 'target_build': 'not performed for this ticket',
           'physical': 'not performed', 'numerical_acceptance': 'not established'}
+if args.continuous:
+    report['exposure_policy'] = 'ostc4-continuous-air-gf30-70-v1'
+    report['generated_planner_sha256'] = digest(build / 'corrected/buehlmann-contained.c')
+    report['prediction_isolation'] = 'byte-identical JSONL across none/repeated/interleaved on all three profiles'
+    report['numerical_acceptance'] = 'not established by this recorder; requires separate independent reference evidence'
 (output / 'reproduction.json').write_text(json.dumps(report, indent=2) + '\n')
 print(output)
