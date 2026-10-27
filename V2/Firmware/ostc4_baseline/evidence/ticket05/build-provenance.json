@@ -1,0 +1,186 @@
+{
+  "upstream": {
+    "revision": "7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
+    "tag": "1.7.7-beta-20261003-7198d20",
+    "source": "https://github.com/mikeller/ostc4",
+    "provenance": "experimental fork beta; manufacturer stable identity unverified",
+    "correction_set": "none",
+    "audit_bundle_sha256": "ef211bb667e20e7401be0354c8621d8783f985a72bf7d45880e6d318d0c665b2",
+    "snapshot_archive_sha256": "1246153d41973d6dec4035f49439b550db66747fc62cfa6b5c541f5265e8f481",
+    "files": {
+      "Common/Src/decom.c": "f7c95aa71598f05905f6a2737eb8ca3a4346b4563d5404f66f3c167e9a71c6cd",
+      "Discovery/Src/buehlmann.c": "a977c190d1b3cc2c820a38d849cd8bc9c0b445759e92a5101f4aa747ff484dc7",
+      "Discovery/Inc/buehlmann.h": "99f64423f708181fab47cc7c47a09e6cf1dbf60cc053e1e0b3c6f78280533636",
+      "Discovery/Inc/firmwareEraseProgram.h": "4151cf2affd6c469d9539d5b60fb3248e2f2d42e6f9378f6aa31a9490f20fd2d",
+      "Common/Inc/decom.h": "e5b26f940ae860e4b881a02b44752685b12e2367c46fa43f83fb353f824eb570",
+      "Common/Inc/data_central.h": "931e386253d3f80c5af83174cef94bcb28d87cf15d1e880458627be0142b6dab",
+      "Common/Inc/settings.h": "ff9d0e1fa812193480e197d3ca2e1e4767a6ffcf1aa814fed6a621789aa8993d",
+      "Common/Inc/FirmwareData.h": "bac757962b81ae4269999fba368d3ce48e09aa975af89946c741315c7e7ab938",
+      "Common/Inc/global_constants.h": "0a3bb502fb36b611cafba61d72996a45bd1394ae7447c25bd24b236f6b962989",
+      "Common/Inc/configuration.h": "d8ed91dc5b0841c109dc33ed64b7f9d9472807c395ca5d6f21f3cc64c29d02d7",
+      "Common/Inc/calc_crush.h": "e28c2b4456c5f5943fd7674d09b76e2eb3cb0cfc093dc46705acfbfa5d4c9d5d"
+    }
+  },
+  "source_sha256": {
+    "CMakeLists.txt": "af91cf9a9a8814dd0b80115584c8e6bec5cddb9e29fa067317b2b23569e40bc6",
+    "compat/stm32f4xx_hal.h": "104f419949563500aa63cd3e9ad44751d2b2d33a47bc0e174776bc24fd65a4d3",
+    "compat/stm32f4xx_hal_rtc.h": "b0d13217f3cfc853ee509c8d55f4a6748ab766eccfa60ede21c77d3431a1d4c9",
+    "corrections/apply.py": "50d760e48a18847bd3f05ab3223436f23985bc3a3087b9869b253cabffe495cb",
+    "corrections/contain_planner.py": "e364a1ce2e3df71887a106643bb9680f8dba2c97233dd43f363c5d5ed2b84307",
+    "corrections/schreiner-original.txt": "ffa5df7c754df2da21f4383943b87f8ec17f25b297f575a4e6946ef34b07b9d3",
+    "corrections/schreiner-stable.c.txt": "bf19cad477245895cf995d0169754b541a11391eb76516c95ff8ad8bf209a168",
+    "corrections/tissue-corrections.json": "80df0ba5fc23544959e1d6801c99dfb85b259b8b46c7e7e32ae5a15f08329583",
+    "include/ostc4_baseline.h": "d530b09fbd59bbdc42dd3ae8d06f000c3620e922af8170f389b896138696cafe",
+    "include/ostc4_exposure.h": "18eeae25a7f2eb397aaa141c2dcd6cc730828b336fad9f6b7cc1206412ea9591",
+    "src/ostc4_baseline.c": "c8a2192a2e9eff05d2b89da179976ebee4e0c84b5bcf7daef20f898b1ee811d6",
+    "src/ostc4_scratch.h": "0a3e75523b4c5d66070903440e0eb391c18f12b52d0ac747d095c4c15af97cab",
+    "src/replay.c": "eecaf04a31f3cc81bf7d92bcd32957b33187438444ae42384fa980849e8da146"
+  },
+  "generated_sha256": {
+    "corrected/decom.c": "55159152a51a1d844570f966f206b27af73196934dd132c1b599c8cc11d28654",
+    "corrected/buehlmann-contained.c": "e7f4c3729ab18846a6ddd4c00dd9f0d8f6f440ff684d39d0d6c3f4ad2c7faf9b"
+  },
+  "compile_commands": [
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build",
+      "command": "/usr/lib64/ccache/cc  -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -std=c11 -O2 -fno-fast-math -ffp-contract=off -ffunction-sections -fdata-sections -o CMakeFiles/ostc4_upstream.dir/upstream/Common/Src/decom.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Src/decom.c",
+      "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Src/decom.c",
+      "output": "CMakeFiles/ostc4_upstream.dir/upstream/Common/Src/decom.c.o"
+    },
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build",
+      "command": "/usr/lib64/ccache/cc  -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -std=c11 -O2 -fno-fast-math -ffp-contract=off -ffunction-sections -fdata-sections -o CMakeFiles/ostc4_upstream.dir/upstream/Discovery/Src/buehlmann.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Src/buehlmann.c",
+      "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Src/buehlmann.c",
+      "output": "CMakeFiles/ostc4_upstream.dir/upstream/Discovery/Src/buehlmann.c.o"
+    },
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build",
+      "command": "/usr/lib64/ccache/cc  -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off -o CMakeFiles/ostc4_baseline.dir/src/ostc4_baseline.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+      "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+      "output": "CMakeFiles/ostc4_baseline.dir/src/ostc4_baseline.c.o"
+    },
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build",
+      "command": "/usr/lib64/ccache/cc  -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off -o CMakeFiles/ostc4_replay.dir/src/replay.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/replay.c",
+      "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/replay.c",
+      "output": "CMakeFiles/ostc4_replay.dir/src/replay.c.o"
+    },
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build",
+      "command": "/usr/lib64/ccache/cc  -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -std=c11 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/test_ostc4_contract.dir/tests/test_contract.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_contract.c",
+      "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_contract.c",
+      "output": "CMakeFiles/test_ostc4_contract.dir/tests/test_contract.c.o"
+    },
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build",
+      "command": "/usr/lib64/ccache/cc  -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -std=c11 -O2 -fno-fast-math -ffp-contract=off -ffunction-sections -fdata-sections -o CMakeFiles/ostc4_upstream_corrected.dir/corrected/decom.c.o -c \"/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build/corrected/decom.c\"",
+      "file": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build/corrected/decom.c",
+      "output": "CMakeFiles/ostc4_upstream_corrected.dir/corrected/decom.c.o"
+    },
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build",
+      "command": "/usr/lib64/ccache/cc  -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -std=c11 -O2 -fno-fast-math -ffp-contract=off -ffunction-sections -fdata-sections -o CMakeFiles/ostc4_upstream_corrected.dir/upstream/Discovery/Src/buehlmann.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Src/buehlmann.c",
+      "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Src/buehlmann.c",
+      "output": "CMakeFiles/ostc4_upstream_corrected.dir/upstream/Discovery/Src/buehlmann.c.o"
+    },
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build",
+      "command": "/usr/lib64/ccache/cc -DOSTC4_TISSUE_CORRECTIONS=1 -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off -o CMakeFiles/ostc4_corrected.dir/src/ostc4_baseline.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+      "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+      "output": "CMakeFiles/ostc4_corrected.dir/src/ostc4_baseline.c.o"
+    },
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build",
+      "command": "/usr/lib64/ccache/cc -DOSTC4_TISSUE_CORRECTIONS=1 -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off -o CMakeFiles/ostc4_replay_corrected.dir/src/replay.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/replay.c",
+      "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/replay.c",
+      "output": "CMakeFiles/ostc4_replay_corrected.dir/src/replay.c.o"
+    },
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build",
+      "command": "/usr/lib64/ccache/cc -DOSTC4_TISSUE_CORRECTIONS=1 -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -std=c11 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/test_ostc4_corrected_contract.dir/tests/test_contract.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_contract.c",
+      "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_contract.c",
+      "output": "CMakeFiles/test_ostc4_corrected_contract.dir/tests/test_contract.c.o"
+    },
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build",
+      "command": "/usr/lib64/ccache/cc  -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -std=c11 -O2 -fno-fast-math -ffp-contract=off -ffunction-sections -fdata-sections -o CMakeFiles/ostc4_upstream_contained.dir/corrected/decom.c.o -c \"/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build/corrected/decom.c\"",
+      "file": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build/corrected/decom.c",
+      "output": "CMakeFiles/ostc4_upstream_contained.dir/corrected/decom.c.o"
+    },
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build",
+      "command": "/usr/lib64/ccache/cc  -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -std=c11 -O2 -fno-fast-math -ffp-contract=off -ffunction-sections -fdata-sections -o CMakeFiles/ostc4_upstream_contained.dir/corrected/buehlmann-contained.c.o -c \"/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build/corrected/buehlmann-contained.c\"",
+      "file": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build/corrected/buehlmann-contained.c",
+      "output": "CMakeFiles/ostc4_upstream_contained.dir/corrected/buehlmann-contained.c.o"
+    },
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build",
+      "command": "/usr/lib64/ccache/cc -DOSTC4_CONTINUOUS_EXPOSURE=1 -DOSTC4_TISSUE_CORRECTIONS=1 -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off -o CMakeFiles/ostc4_exposure.dir/src/ostc4_baseline.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+      "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+      "output": "CMakeFiles/ostc4_exposure.dir/src/ostc4_baseline.c.o"
+    },
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build",
+      "command": "/usr/lib64/ccache/cc -DOSTC4_TISSUE_CORRECTIONS=1 -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -std=c11 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/test_ostc4_exposure.dir/tests/test_exposure.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_exposure.c",
+      "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_exposure.c",
+      "output": "CMakeFiles/test_ostc4_exposure.dir/tests/test_exposure.c.o"
+    },
+    {
+      "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build",
+      "command": "/usr/lib64/ccache/cc -DOSTC4_CONTINUOUS_EXPOSURE=1 -DOSTC4_TISSUE_CORRECTIONS=1 -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off -o CMakeFiles/ostc4_continuity_replay.dir/src/replay.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/replay.c",
+      "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/replay.c",
+      "output": "CMakeFiles/ostc4_continuity_replay.dir/src/replay.c.o"
+    }
+  ],
+  "link_commands": {
+    "CMakeFiles/ostc4_upstream.dir/link.txt": "/usr/bin/ar qc libostc4_upstream.a CMakeFiles/ostc4_upstream.dir/upstream/Common/Src/decom.c.o CMakeFiles/ostc4_upstream.dir/upstream/Discovery/Src/buehlmann.c.o\n/usr/bin/ranlib libostc4_upstream.a\n",
+    "CMakeFiles/ostc4_baseline.dir/link.txt": "/usr/bin/ar qc libostc4_baseline.a CMakeFiles/ostc4_baseline.dir/src/ostc4_baseline.c.o\n/usr/bin/ranlib libostc4_baseline.a\n",
+    "CMakeFiles/ostc4_replay.dir/link.txt": "/usr/lib64/ccache/cc -Wl,--gc-sections -Wl,--dependency-file=CMakeFiles/ostc4_replay.dir/link.d CMakeFiles/ostc4_replay.dir/src/replay.c.o -o ostc4_replay  libostc4_baseline.a -lm libostc4_upstream.a\n",
+    "CMakeFiles/test_ostc4_contract.dir/link.txt": "/usr/lib64/ccache/cc -Wl,--gc-sections -Wl,--dependency-file=CMakeFiles/test_ostc4_contract.dir/link.d CMakeFiles/test_ostc4_contract.dir/tests/test_contract.c.o -o test_ostc4_contract  libostc4_baseline.a libostc4_upstream.a -lm\n",
+    "CMakeFiles/ostc4_upstream_corrected.dir/link.txt": "/usr/bin/ar qc libostc4_upstream_corrected.a CMakeFiles/ostc4_upstream_corrected.dir/corrected/decom.c.o CMakeFiles/ostc4_upstream_corrected.dir/upstream/Discovery/Src/buehlmann.c.o\n/usr/bin/ranlib libostc4_upstream_corrected.a\n",
+    "CMakeFiles/ostc4_corrected.dir/link.txt": "/usr/bin/ar qc libostc4_corrected.a CMakeFiles/ostc4_corrected.dir/src/ostc4_baseline.c.o\n/usr/bin/ranlib libostc4_corrected.a\n",
+    "CMakeFiles/ostc4_replay_corrected.dir/link.txt": "/usr/lib64/ccache/cc -Wl,--gc-sections -Wl,--dependency-file=CMakeFiles/ostc4_replay_corrected.dir/link.d CMakeFiles/ostc4_replay_corrected.dir/src/replay.c.o -o ostc4_replay_corrected  libostc4_corrected.a -lm libostc4_upstream_corrected.a\n",
+    "CMakeFiles/test_ostc4_corrected_contract.dir/link.txt": "/usr/lib64/ccache/cc -Wl,--gc-sections -Wl,--dependency-file=CMakeFiles/test_ostc4_corrected_contract.dir/link.d CMakeFiles/test_ostc4_corrected_contract.dir/tests/test_contract.c.o -o test_ostc4_corrected_contract  libostc4_corrected.a libostc4_upstream_corrected.a -lm\n",
+    "CMakeFiles/ostc4_upstream_contained.dir/link.txt": "/usr/bin/ar qc libostc4_upstream_contained.a CMakeFiles/ostc4_upstream_contained.dir/corrected/decom.c.o \"CMakeFiles/ostc4_upstream_contained.dir/corrected/buehlmann-contained.c.o\"\n/usr/bin/ranlib libostc4_upstream_contained.a\n",
+    "CMakeFiles/ostc4_exposure.dir/link.txt": "/usr/bin/ar qc libostc4_exposure.a CMakeFiles/ostc4_exposure.dir/src/ostc4_baseline.c.o\n/usr/bin/ranlib libostc4_exposure.a\n",
+    "CMakeFiles/test_ostc4_exposure.dir/link.txt": "/usr/lib64/ccache/cc -Wl,--gc-sections -Wl,--dependency-file=CMakeFiles/test_ostc4_exposure.dir/link.d CMakeFiles/test_ostc4_exposure.dir/tests/test_exposure.c.o -o test_ostc4_exposure  libostc4_exposure.a libostc4_upstream_contained.a -lm\n",
+    "CMakeFiles/ostc4_continuity_replay.dir/link.txt": "/usr/lib64/ccache/cc -Wl,--gc-sections -Wl,--dependency-file=CMakeFiles/ostc4_continuity_replay.dir/link.d CMakeFiles/ostc4_continuity_replay.dir/src/replay.c.o -o ostc4_continuity_replay  libostc4_exposure.a -lm libostc4_upstream_contained.a\n"
+  },
+  "reference_files_sha256": {
+    "tissue_reference.py": "842186e884ddd3fdba8fd7aff76322f688706de6b5b31ce7ec1da4ed4b77208a",
+    "audit_tissue_tables.py": "72d582cf632226b3c67052ab2caa67a921aa0024ce1ebd4c384e4ba8be8423bc",
+    "verify_tissue_replay.py": "0d14f55effa366e0660529eec8c1a9e39f99ddd8dc9a7f5fceb64eda507bbb64",
+    "test_tissue_verification.py": "0647710862a6c6dc662d7b028d6508cb8a12e08e158609a956851f8f105bd711",
+    "reference-provenance.json": "d4ae614d8b041eb68cc21781b44d4a4c0d1475264c8774fe0a5a9e1675a01c8c",
+    "test_continuity_reference.py": "ea30f5c7863efbdba11696d3008c4ccaca46e86711b9451f1dac7b76cb292dc3",
+    "repetitive.csv": "a68bac024b2da441a90151b57aa71b6553eeb3b6b0a652feaab1da46d9083778",
+    "continuity-provenance.json": "2b600b10c6ec8b975276a32b4bf4c753112aaa26896f7462f475efd397036068",
+    "schedule_reference.py": "e788ce657245a832cd1dc29a7d54e8ce00fc4b2e71f9efabb828fa5663c9866d",
+    "test_schedule_reference.py": "599dd130bf6766cb5650fa64448bfe1b376671348c03f74cb202fecd415a6e42",
+    "compare_schedule.py": "d4acde036ecaa98ec4417c89120088d30642ff835d024a9f03fd35d1f761dd0e",
+    "test_comparison.py": "5ad49d6e07879ca3b61d2f3b12beb273a000d806e0fef1c3bee456f1d8bbf720",
+    "comparison-policy.json": "f904d331c3cb1e22df07e54272db558f0bdff6d6ecec7897b977f1ad5f4aea85",
+    "schedule-provenance.json": "ff2842ec043836848603e28414146015962b629aebb97c50f275dad1b59ac22f",
+    "generate_profiles.py": "b4c8db552698f9a918b490a2a61e6feb3ddd213f2d78d183a052037958b02d0f",
+    "generate_complete_profile.py": "58a5faf18212b9e4368afc5b583e3a7549743f5a0186e07a69efdcbd621bc3c0",
+    "additional-profile-provenance.json": "47e8d5cacd0e7cfc1502466ca45ca16f9d14383444620584856c074772156c5b",
+    "record_schedule_evidence.py": "2f5ad2494c98251277094eed04f95590b5c0b9a31252cd5646f5189de9440d87"
+  },
+  "comparison_report_sha256": "9b57955082b064f1734bb3ecfbfc90fe1c7fd06dd8483b572c0b9c9c7c6e5d84",
+  "accepted": false,
+  "output_sha256": {
+    "demo-30m-35min-fixed-holds-production.jsonl": "246ee857b8aa3201f951d8277a5250a757d94771f42fb904ddf65896db488315",
+    "demo-30m-35min-fixed-holds-reference.jsonl": "d518f36e9fecb78a5bac0a28380c75ef1c3fa412c63bd6b6c241145ec9e264a9",
+    "full-stop-progression-production.jsonl": "08bb18971799c7c79531fa6f8f2237f6246f96aae1b43fe670120ad15231f3f6",
+    "full-stop-progression-reference.jsonl": "62171a3027b285c8fddebc6619eef5ed44f5167be9db50d1108bd04d5c6b7cde",
+    "onset-20m-production.jsonl": "2e3ef0d54655978b7b9a31ecf99767199efdcc4f5d8ec3b020e4a3ca9d30ea58",
+    "onset-20m-reference.jsonl": "5790353e6e129a0639b41a52c995eaa4699c0b4aef93138be1e8bc1aceb0f7cd",
+    "repetitive-production.jsonl": "8b11ad949f0c6c27743d31fa0883af4ba36880d7ddce7a9cbbb18ddbba6a67a3",
+    "repetitive-reference.jsonl": "53ad72923b5b37e90a50f344a3dae4679475f6f3951639f6619d8d3cac7c025c",
+    "shallow-boundaries-production.jsonl": "3ba9f00a90512370647ed9dd6ad5109482e80ac8bebaf7828b94b1c299bcd07b",
+    "shallow-boundaries-reference.jsonl": "c20d8bf3eb9db8805cac13288e0f88d262ba65f3872f86878c4d2fb8d2401a7f",
+    "violation-30m-production.jsonl": "b58b703a1d2270c69d81d1558aa17ad9823d11e1f30caf3780c98c24d3ccc087",
+    "violation-30m-reference.jsonl": "df0320cbced860f0c7228e5bf9cbdda4f444d970367e9992ed92e1c22818f6a3"
+  },
+  "evidence_level": "synthetic PC only; no target compilation or physical execution"
+}

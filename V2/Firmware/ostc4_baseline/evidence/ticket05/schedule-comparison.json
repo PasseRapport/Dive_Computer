@@ -1,0 +1,375 @@
+{
+  "accepted": false,
+  "scope": "synthetic PC evidence; no target or physical execution",
+  "policy_sha256": "f904d331c3cb1e22df07e54272db558f0bdff6d6ecec7897b977f1ad5f4aea85",
+  "executable_sha256": "76e3bb3e9d406127008c66bfd839192d492560f4834f88f000db854261a48bb9",
+  "reference_sha256": "e788ce657245a832cd1dc29a7d54e8ce00fc4b2e71f9efabb828fa5663c9866d",
+  "tissue_reference_sha256": "842186e884ddd3fdba8fd7aff76322f688706de6b5b31ce7ec1da4ed4b77208a",
+  "profiles": [
+    {
+      "profile": "demo-30m-35min-fixed-holds.csv",
+      "profile_sha256": "fc825d371946fd13d54c49c8d4602f7f30cc46310e8f58b68f2dcf24e8f01167",
+      "observations": 131,
+      "production_metadata": {
+        "type": "metadata",
+        "exposure_policy": "ostc4-continuous-air-gf30-70-v1",
+        "revision": "7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
+        "policy": "ostc4-beta-7198d20-tissue-corrected-air-gf30-70-v1",
+        "correction_set": "cached-10s-and-stable-schreiner-v1",
+        "provenance": "experimental-fork-beta",
+        "synthetic": true,
+        "initialization": "upstream-surface-equilibrium",
+        "surface_pressure_bar": 1.01324999,
+        "initial_timestamp_seconds": 0,
+        "compiler": "16.2.1 20260819 (Red Hat 16.2.1-2)",
+        "float_eval_method": 0,
+        "float_mantissa_bits": 24,
+        "double_mantissa_bits": 53,
+        "rounding": "nearest",
+        "required_math_flags": "-O2 -fno-fast-math -ffp-contract=off",
+        "nitrogen_fraction_exposure": 0.79,
+        "nitrogen_fraction_reset": 0.7902,
+        "water_vapour_bar": 0.0493,
+        "gf": [
+          30,
+          70
+        ],
+        "ascent_m_per_min": 9,
+        "bar_per_meter": 0.1,
+        "stop_gauge_bar": [
+          0.3,
+          0.6
+        ],
+        "stop_increment_bar": 0.3,
+        "no_deco_tts_semantics": "upstream-zero-not-transit-time"
+      },
+      "accepted": false,
+      "discrepancies": [
+        {
+          "timestamp_seconds": 2310,
+          "field": "tts_seconds",
+          "actual": 2621,
+          "expected": 2620,
+          "tolerance": 0
+        }
+      ],
+      "max_tissue_error_bar": 9.637626261493892e-07,
+      "coverage": {
+        "deco_observations": 109,
+        "surface_observations": 12,
+        "ndl_limited_observations": 0,
+        "ceiling_violations": 22,
+        "final_underwater_tts_seconds": 900
+      }
+    },
+    {
+      "profile": "full-stop-progression.csv",
+      "profile_sha256": "ebb620ce25fd27ed7a1e211e56bb78cfb8a1ac2d2b6b31daa385a5e26076ff49",
+      "observations": 253,
+      "production_metadata": {
+        "type": "metadata",
+        "exposure_policy": "ostc4-continuous-air-gf30-70-v1",
+        "revision": "7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
+        "policy": "ostc4-beta-7198d20-tissue-corrected-air-gf30-70-v1",
+        "correction_set": "cached-10s-and-stable-schreiner-v1",
+        "provenance": "experimental-fork-beta",
+        "synthetic": true,
+        "initialization": "upstream-surface-equilibrium",
+        "surface_pressure_bar": 1.01324999,
+        "initial_timestamp_seconds": 0,
+        "compiler": "16.2.1 20260819 (Red Hat 16.2.1-2)",
+        "float_eval_method": 0,
+        "float_mantissa_bits": 24,
+        "double_mantissa_bits": 53,
+        "rounding": "nearest",
+        "required_math_flags": "-O2 -fno-fast-math -ffp-contract=off",
+        "nitrogen_fraction_exposure": 0.79,
+        "nitrogen_fraction_reset": 0.7902,
+        "water_vapour_bar": 0.0493,
+        "gf": [
+          30,
+          70
+        ],
+        "ascent_m_per_min": 9,
+        "bar_per_meter": 0.1,
+        "stop_gauge_bar": [
+          0.3,
+          0.6
+        ],
+        "stop_increment_bar": 0.3,
+        "no_deco_tts_semantics": "upstream-zero-not-transit-time"
+      },
+      "accepted": false,
+      "discrepancies": [
+        {
+          "timestamp_seconds": 2310,
+          "field": "tts_seconds",
+          "actual": 2621,
+          "expected": 2620,
+          "tolerance": 0
+        }
+      ],
+      "max_tissue_error_bar": 1.1079246158285372e-06,
+      "coverage": {
+        "deco_observations": 177,
+        "surface_observations": 12,
+        "ndl_limited_observations": 43,
+        "ceiling_violations": 0,
+        "final_underwater_tts_seconds": 0
+      }
+    },
+    {
+      "profile": "onset-20m.csv",
+      "profile_sha256": "e2c2e29d1116c4e6f4dc588b144d1b84d7097847ffdc0b997e965111534176c2",
+      "observations": 140,
+      "production_metadata": {
+        "type": "metadata",
+        "exposure_policy": "ostc4-continuous-air-gf30-70-v1",
+        "revision": "7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
+        "policy": "ostc4-beta-7198d20-tissue-corrected-air-gf30-70-v1",
+        "correction_set": "cached-10s-and-stable-schreiner-v1",
+        "provenance": "experimental-fork-beta",
+        "synthetic": true,
+        "initialization": "upstream-surface-equilibrium",
+        "surface_pressure_bar": 1.01324999,
+        "initial_timestamp_seconds": 0,
+        "compiler": "16.2.1 20260819 (Red Hat 16.2.1-2)",
+        "float_eval_method": 0,
+        "float_mantissa_bits": 24,
+        "double_mantissa_bits": 53,
+        "rounding": "nearest",
+        "required_math_flags": "-O2 -fno-fast-math -ffp-contract=off",
+        "nitrogen_fraction_exposure": 0.79,
+        "nitrogen_fraction_reset": 0.7902,
+        "water_vapour_bar": 0.0493,
+        "gf": [
+          30,
+          70
+        ],
+        "ascent_m_per_min": 9,
+        "bar_per_meter": 0.1,
+        "stop_gauge_bar": [
+          0.3,
+          0.6
+        ],
+        "stop_increment_bar": 0.3,
+        "no_deco_tts_semantics": "upstream-zero-not-transit-time"
+      },
+      "accepted": true,
+      "discrepancies": [],
+      "max_tissue_error_bar": 1.2062475991392319e-06,
+      "coverage": {
+        "deco_observations": 90,
+        "surface_observations": 12,
+        "ndl_limited_observations": 0,
+        "ceiling_violations": 12,
+        "final_underwater_tts_seconds": 1920
+      }
+    },
+    {
+      "profile": "repetitive.csv",
+      "profile_sha256": "397c7c6244d22a04fffe30f01ecbc6bcd5e128df5235ed53c20d9c011ffa5c39",
+      "observations": 240,
+      "production_metadata": {
+        "type": "metadata",
+        "exposure_policy": "ostc4-continuous-air-gf30-70-v1",
+        "revision": "7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
+        "policy": "ostc4-beta-7198d20-tissue-corrected-air-gf30-70-v1",
+        "correction_set": "cached-10s-and-stable-schreiner-v1",
+        "provenance": "experimental-fork-beta",
+        "synthetic": true,
+        "initialization": "upstream-surface-equilibrium",
+        "surface_pressure_bar": 1.01324999,
+        "initial_timestamp_seconds": 0,
+        "compiler": "16.2.1 20260819 (Red Hat 16.2.1-2)",
+        "float_eval_method": 0,
+        "float_mantissa_bits": 24,
+        "double_mantissa_bits": 53,
+        "rounding": "nearest",
+        "required_math_flags": "-O2 -fno-fast-math -ffp-contract=off",
+        "nitrogen_fraction_exposure": 0.79,
+        "nitrogen_fraction_reset": 0.7902,
+        "water_vapour_bar": 0.0493,
+        "gf": [
+          30,
+          70
+        ],
+        "ascent_m_per_min": 9,
+        "bar_per_meter": 0.1,
+        "stop_gauge_bar": [
+          0.3,
+          0.6
+        ],
+        "stop_increment_bar": 0.3,
+        "no_deco_tts_semantics": "upstream-zero-not-transit-time"
+      },
+      "accepted": false,
+      "discrepancies": [
+        {
+          "timestamp_seconds": 2310,
+          "field": "tts_seconds",
+          "actual": 2621,
+          "expected": 2620,
+          "tolerance": 0
+        }
+      ],
+      "max_tissue_error_bar": 1.2893255678658733e-06,
+      "coverage": {
+        "deco_observations": 152,
+        "surface_observations": 73,
+        "ndl_limited_observations": 1,
+        "ceiling_violations": 41,
+        "final_underwater_tts_seconds": 950
+      }
+    },
+    {
+      "profile": "shallow-boundaries.csv",
+      "profile_sha256": "7a7b5a4a8a26d3ceece8f3de5e3257c83c702114d207a3e7388038bcf5453777",
+      "observations": 33,
+      "production_metadata": {
+        "type": "metadata",
+        "exposure_policy": "ostc4-continuous-air-gf30-70-v1",
+        "revision": "7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
+        "policy": "ostc4-beta-7198d20-tissue-corrected-air-gf30-70-v1",
+        "correction_set": "cached-10s-and-stable-schreiner-v1",
+        "provenance": "experimental-fork-beta",
+        "synthetic": true,
+        "initialization": "upstream-surface-equilibrium",
+        "surface_pressure_bar": 1.01324999,
+        "initial_timestamp_seconds": 0,
+        "compiler": "16.2.1 20260819 (Red Hat 16.2.1-2)",
+        "float_eval_method": 0,
+        "float_mantissa_bits": 24,
+        "double_mantissa_bits": 53,
+        "rounding": "nearest",
+        "required_math_flags": "-O2 -fno-fast-math -ffp-contract=off",
+        "nitrogen_fraction_exposure": 0.79,
+        "nitrogen_fraction_reset": 0.7902,
+        "water_vapour_bar": 0.0493,
+        "gf": [
+          30,
+          70
+        ],
+        "ascent_m_per_min": 9,
+        "bar_per_meter": 0.1,
+        "stop_gauge_bar": [
+          0.3,
+          0.6
+        ],
+        "stop_increment_bar": 0.3,
+        "no_deco_tts_semantics": "upstream-zero-not-transit-time"
+      },
+      "accepted": true,
+      "discrepancies": [],
+      "max_tissue_error_bar": 2.944796620996115e-07,
+      "coverage": {
+        "deco_observations": 0,
+        "surface_observations": 8,
+        "ndl_limited_observations": 23,
+        "ceiling_violations": 0,
+        "final_underwater_tts_seconds": 0
+      }
+    },
+    {
+      "profile": "violation-30m.csv",
+      "profile_sha256": "142be3d6f5b38382ac27701354ed9621e3f13e949ce9cf638a20f8d500d4d43f",
+      "observations": 92,
+      "production_metadata": {
+        "type": "metadata",
+        "exposure_policy": "ostc4-continuous-air-gf30-70-v1",
+        "revision": "7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
+        "policy": "ostc4-beta-7198d20-tissue-corrected-air-gf30-70-v1",
+        "correction_set": "cached-10s-and-stable-schreiner-v1",
+        "provenance": "experimental-fork-beta",
+        "synthetic": true,
+        "initialization": "upstream-surface-equilibrium",
+        "surface_pressure_bar": 1.01324999,
+        "initial_timestamp_seconds": 0,
+        "compiler": "16.2.1 20260819 (Red Hat 16.2.1-2)",
+        "float_eval_method": 0,
+        "float_mantissa_bits": 24,
+        "double_mantissa_bits": 53,
+        "rounding": "nearest",
+        "required_math_flags": "-O2 -fno-fast-math -ffp-contract=off",
+        "nitrogen_fraction_exposure": 0.79,
+        "nitrogen_fraction_reset": 0.7902,
+        "water_vapour_bar": 0.0493,
+        "gf": [
+          30,
+          70
+        ],
+        "ascent_m_per_min": 9,
+        "bar_per_meter": 0.1,
+        "stop_gauge_bar": [
+          0.3,
+          0.6
+        ],
+        "stop_increment_bar": 0.3,
+        "no_deco_tts_semantics": "upstream-zero-not-transit-time"
+      },
+      "accepted": false,
+      "discrepancies": [
+        {
+          "timestamp_seconds": 2310,
+          "field": "tts_seconds",
+          "actual": 2621,
+          "expected": 2620,
+          "tolerance": 0
+        }
+      ],
+      "max_tissue_error_bar": 1.1256832661565852e-06,
+      "coverage": {
+        "deco_observations": 70,
+        "surface_observations": 12,
+        "ndl_limited_observations": 0,
+        "ceiling_violations": 12,
+        "final_underwater_tts_seconds": 2450
+      }
+    }
+  ],
+  "no_deco_tts": "Raw upstream zero explicitly qualified; reference normalized_tts_seconds adds travel-only estimate. Optional safety stops excluded.",
+  "target_build": "not run",
+  "physical_execution": "not run",
+  "reference_provenance": {
+    "frozen_before_comparison_utc": "2026-10-27T23:55:03.747769+00:00",
+    "independent_author": "reference subagent; separate from comparison harness and production authors",
+    "method": "independently authored Python binary64 analytical integrals and GF pressure inequality; mathematical scheduling policy audited from pinned source; no OSTC4 numerical calls or imports",
+    "source_disclosure": "Schedule author inspected pinned source to extract scheduling policy. Tissue coefficient/integral author did not inspect production before freeze; see reference-provenance.json.",
+    "prior_tissue_provenance": "reference-provenance.json",
+    "source_revision": "7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
+    "frozen_sha256": {
+      "comparison-policy.json": "f904d331c3cb1e22df07e54272db558f0bdff6d6ecec7897b977f1ad5f4aea85",
+      "schedule_reference.py": "e788ce657245a832cd1dc29a7d54e8ce00fc4b2e71f9efabb828fa5663c9866d",
+      "test_schedule_reference.py": "599dd130bf6766cb5650fa64448bfe1b376671348c03f74cb202fecd415a6e42",
+      "tissue_reference.py": "842186e884ddd3fdba8fd7aff76322f688706de6b5b31ce7ec1da4ed4b77208a",
+      "generate_profiles.py": "b4c8db552698f9a918b490a2a61e6feb3ddd213f2d78d183a052037958b02d0f",
+      "generate_complete_profile.py": "58a5faf18212b9e4368afc5b583e3a7549743f5a0186e07a69efdcbd621bc3c0",
+      "additional-profile-provenance.json": "47e8d5cacd0e7cfc1502466ca45ca16f9d14383444620584856c074772156c5b"
+    },
+    "reference_sources": [
+      {
+        "id": "buhlmann-table26",
+        "url": "https://www.nigelhewitt.co.uk/stuff/aab.jpg",
+        "file": "aab.jpg",
+        "description": "Photograph of Tauchmedizin Table 26: 17 rows including alternatives 1 (4 min) and 1b (5 min); all nitrogen half-times and A/B/C a and b. Read visually, no OSTC source used.",
+        "sha256": "9291a566b0979321257e0593e8284c241dd3d87871a1456b356a9fd7f105b88d"
+      },
+      {
+        "id": "baker-gfdeco",
+        "url": "https://wrobell.dcmod.org/decotengu/_downloads/95e3b867a5cc362d6a756aadc9b7ecf3/gfdeco.f",
+        "file": "gfdeco.f",
+        "description": "Original Erik C. Baker authored GFDECO Fortran, lines117-132 half-times, 712-755 Schreiner/Haldane, 2047-2076 B coefficients (a in msw, divided by10). Header explicitly says optional compartment1b.",
+        "sha256": "5387bef0845efb1c204b4455f104ac351be0536bc09a2ed3a6781fb6babd3c73"
+      }
+    ],
+    "reference_precision": "binary64 analytical integration; exact rational timing on declared decimal pressures; all output comparisons keep original tolerances",
+    "superseded": "v1 inferred integer ascent-rate type incorrectly; preserved with original failed comparison. v3 removes a separately proven reference ceil artifact at nominal3m/20s."
+  },
+  "host_runtime": {
+    "platform": "Linux-7.2.9-200.fc44.x86_64-x86_64-with-glibc2.43",
+    "libc": [
+      "glibc",
+      "2.43"
+    ]
+  }
+}

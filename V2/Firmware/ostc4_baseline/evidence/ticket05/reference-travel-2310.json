@@ -1,0 +1,51 @@
+{
+  "tts": 2620,
+  "travel": 110,
+  "unique_legs": [
+    {
+      "start": 2.66325,
+      "target": 2.329916,
+      "seconds": 23
+    },
+    {
+      "start": 2.329916,
+      "target": 1.9965819999999999,
+      "seconds": 23
+    },
+    {
+      "start": 1.9965819999999999,
+      "target": 1.6632479999999998,
+      "seconds": 23
+    },
+    {
+      "start": 2.66325,
+      "target": 2.51325,
+      "seconds": 10
+    },
+    {
+      "start": 2.51325,
+      "target": 2.21325,
+      "seconds": 20
+    },
+    {
+      "start": 2.21325,
+      "target": 1.91325,
+      "seconds": 20
+    },
+    {
+      "start": 1.91325,
+      "target": 1.6132499999999999,
+      "seconds": 20
+    },
+    {
+      "start": 1.6132499999999999,
+      "target": 1.31325,
+      "seconds": 20
+    },
+    {
+      "start": 1.31325,
+      "target": 1.01325,
+      "seconds": 20
+    }
+  ]
+}

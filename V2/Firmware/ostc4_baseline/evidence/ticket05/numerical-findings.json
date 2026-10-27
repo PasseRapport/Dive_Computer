@@ -1,0 +1,70 @@
+{
+  "scope": "diagnostic evidence, separate from independent oracle and unchanged numerical tolerances",
+  "policy_transcription_correction": {
+    "field": "SDiveSettings.ascentRate_meterperminute",
+    "source": "upstream/Common/Inc/data_central.h:379",
+    "type": "float",
+    "formula": "600 / ascentRate_meterperminute",
+    "nominal_seconds_per_bar": 66.66666666666667,
+    "incorrect_v1_seconds_per_bar": 66,
+    "concrete_ndl_case": {
+      "profile": "repetitive",
+      "timestamp_seconds": 5450,
+      "v1_ndl_seconds": 1260,
+      "production_ndl_seconds": 1200,
+      "corrected_nominal_reference_ndl_seconds": 1200,
+      "production_leg_seconds": [
+        67,
+        23
+      ],
+      "analytical_projected_ceiling_at_1200_bar": 1.0132628512856006,
+      "production_projected_ceiling_at_1200_bar": 1.01326310635
+    }
+  },
+  "binary64_oracle_timing_correction": {
+    "reason": "nominal decimal .3bar * 600/9 is exactly20seconds; binary64 pressure subtraction can yield20.000000000000004 and incorrect ceil21",
+    "solution": "exact Fraction timing of declared nine-decimal input pressure and finite decimal policy legs; tissue integrals stay binary64",
+    "fitted_tolerance": false
+  },
+  "remaining_production_discrepancy": {
+    "timestamp_seconds": 2310,
+    "profiles": [
+      "demo-30m-35min-fixed-holds",
+      "full-stop-progression",
+      "repetitive",
+      "violation-30m"
+    ],
+    "production_tts_seconds": 2621,
+    "reference_tts_seconds": 2620,
+    "mandatory_stop_seconds_each": [
+      1490,
+      600,
+      310,
+      110
+    ],
+    "mandatory_stop_sum_seconds": 2510,
+    "production_travel_seconds": 111,
+    "reference_travel_seconds": 110,
+    "nominal_leg_bar": [
+      2.66325,
+      2.51325
+    ],
+    "nominal_leg_seconds": 10,
+    "production_binary32_leg_bar": [
+      2.66324996948,
+      2.51324987411
+    ],
+    "production_raw_travel_seconds": 10.000005722,
+    "production_ceiled_travel_seconds": 11,
+    "outcome": "discrepancy retained under exact primary comparison"
+  },
+  "reference_scope": "six declared synthetic profiles below scheduling cap limits; upper-limit behavior is not independently accepted; no target build or physical evidence",
+  "artifacts": {
+    "reference/v1/schedule_reference.py": "597dc94d559c0428796771605022d00892d497767681273ee7b564200ef18b06",
+    "reference/v2/schedule_reference.py": "ba29f24409e59b86561ceaa0944c3c6a20c36d6b1124fd139e62a7ffce892956",
+    "reference/schedule_reference.py": "e788ce657245a832cd1dc29a7d54e8ce00fc4b2e71f9efabb828fa5663c9866d",
+    "diagnostics/demo-trace-2310.txt": "f7cdd6d6a0e60ad3049692655612f61486fe017753edc87efcb4949d41b1ff16",
+    "diagnostics/reference-travel-2310.json": "ae8265b5702af64852ab0894405102c1f24d0f435d1ae9b6a2047aa69a319661",
+    "diagnostics/repetitive-trace.txt": "7e96df88f2e83331ac9d0a1ba764efd01a7c5ec366f1ce12f92dc97b5c7ff321"
+  }
+}

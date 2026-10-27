@@ -1,0 +1,192 @@
+Start testing: Oct 28 00:59 CET
+----------------------------------------------------------
+1/11 Testing: upstream_source_identity
+1/11 Test: upstream_source_identity
+Command: "/usr/bin/python3.14" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_source_identity.py" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline"
+Directory: /tmp/ostc4-ticket05-spec-review
+"upstream_source_identity" start time: Oct 28 00:59 CET
+Output:
+----------------------------------------------------------
+all 11 selected upstream files retain their exact audited bytes
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"upstream_source_identity" end time: Oct 28 00:59 CET
+"upstream_source_identity" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/11 Testing: synthetic_replay_contracts
+2/11 Test: synthetic_replay_contracts
+Command: "/usr/bin/python3.14" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_replay.py" "/tmp/ostc4-ticket05-spec-review/ostc4_replay" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline"
+Directory: /tmp/ostc4-ticket05-spec-review
+"synthetic_replay_contracts" start time: Oct 28 00:59 CET
+Output:
+----------------------------------------------------------
+deterministic synthetic replay and malformed-profile contracts pass
+<end of output>
+Test time =   0.10 sec
+----------------------------------------------------------
+Test Passed.
+"synthetic_replay_contracts" end time: Oct 28 00:59 CET
+"synthetic_replay_contracts" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/11 Testing: public_pressure_time_contract
+3/11 Test: public_pressure_time_contract
+Command: "/tmp/ostc4-ticket05-spec-review/test_ostc4_contract"
+Directory: /tmp/ostc4-ticket05-spec-review
+"public_pressure_time_contract" start time: Oct 28 00:59 CET
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"public_pressure_time_contract" end time: Oct 28 00:59 CET
+"public_pressure_time_contract" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/11 Testing: corrected_public_pressure_time_contract
+4/11 Test: corrected_public_pressure_time_contract
+Command: "/tmp/ostc4-ticket05-spec-review/test_ostc4_corrected_contract"
+Directory: /tmp/ostc4-ticket05-spec-review
+"corrected_public_pressure_time_contract" start time: Oct 28 00:59 CET
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"corrected_public_pressure_time_contract" end time: Oct 28 00:59 CET
+"corrected_public_pressure_time_contract" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/11 Testing: corrected_synthetic_replay_contracts
+5/11 Test: corrected_synthetic_replay_contracts
+Command: "/usr/bin/python3.14" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_replay.py" "/tmp/ostc4-ticket05-spec-review/ostc4_replay_corrected" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline"
+Directory: /tmp/ostc4-ticket05-spec-review
+"corrected_synthetic_replay_contracts" start time: Oct 28 00:59 CET
+Output:
+----------------------------------------------------------
+deterministic synthetic replay and malformed-profile contracts pass
+<end of output>
+Test time =   0.10 sec
+----------------------------------------------------------
+Test Passed.
+"corrected_synthetic_replay_contracts" end time: Oct 28 00:59 CET
+"corrected_synthetic_replay_contracts" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/11 Testing: independently_verified_tissues
+6/11 Test: independently_verified_tissues
+Command: "/usr/bin/python3.14" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/reference/test_tissue_verification.py" "/tmp/ostc4-ticket05-spec-review/ostc4_replay" "/tmp/ostc4-ticket05-spec-review/ostc4_replay_corrected" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Src/decom.c" "/tmp/ostc4-ticket05-spec-review/corrected/decom.c"
+Directory: /tmp/ostc4-ticket05-spec-review
+"independently_verified_tissues" start time: Oct 28 00:59 CET
+Output:
+----------------------------------------------------------
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.552s
+
+OK
+<end of output>
+Test time =   0.68 sec
+----------------------------------------------------------
+Test Passed.
+"independently_verified_tissues" end time: Oct 28 00:59 CET
+"independently_verified_tissues" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/11 Testing: continuous_exposure_contract
+7/11 Test: continuous_exposure_contract
+Command: "/tmp/ostc4-ticket05-spec-review/test_ostc4_exposure"
+Directory: /tmp/ostc4-ticket05-spec-review
+"continuous_exposure_contract" start time: Oct 28 00:59 CET
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"continuous_exposure_contract" end time: Oct 28 00:59 CET
+"continuous_exposure_contract" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/11 Testing: independent_repetitive_exposure
+8/11 Test: independent_repetitive_exposure
+Command: "/usr/bin/python3.14" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/reference/test_continuity_reference.py" "/tmp/ostc4-ticket05-spec-review/ostc4_continuity_replay"
+Directory: /tmp/ostc4-ticket05-spec-review
+"independent_repetitive_exposure" start time: Oct 28 00:59 CET
+Output:
+----------------------------------------------------------
+{
+  "pass": true,
+  "tolerance_bar": 0.0005,
+  "max_absolute_error_bar": 3.2053389542596733e-07
+}
+<end of output>
+Test time =   0.12 sec
+----------------------------------------------------------
+Test Passed.
+"independent_repetitive_exposure" end time: Oct 28 00:59 CET
+"independent_repetitive_exposure" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/11 Testing: continuity_replay_faults
+9/11 Test: continuity_replay_faults
+Command: "/usr/bin/python3.14" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_continuity_replay.py" "/tmp/ostc4-ticket05-spec-review/ostc4_continuity_replay"
+Directory: /tmp/ostc4-ticket05-spec-review
+"continuity_replay_faults" start time: Oct 28 00:59 CET
+Output:
+----------------------------------------------------------
+continuity replay faults and explicit availability pass
+<end of output>
+Test time =   0.11 sec
+----------------------------------------------------------
+Test Passed.
+"continuity_replay_faults" end time: Oct 28 00:59 CET
+"continuity_replay_faults" time elapsed: 00:00:00
+----------------------------------------------------------
+
+10/11 Testing: independent_schedule_analytical_checks
+10/11 Test: independent_schedule_analytical_checks
+Command: "/usr/bin/python3.14" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/reference/test_schedule_reference.py"
+Directory: /tmp/ostc4-ticket05-spec-review
+"independent_schedule_analytical_checks" start time: Oct 28 00:59 CET
+Output:
+----------------------------------------------------------
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 0.040s
+
+OK
+<end of output>
+Test time =   0.16 sec
+----------------------------------------------------------
+Test Passed.
+"independent_schedule_analytical_checks" end time: Oct 28 00:59 CET
+"independent_schedule_analytical_checks" time elapsed: 00:00:00
+----------------------------------------------------------
+
+11/11 Testing: independent_schedule_comparator_rejects_mutations
+11/11 Test: independent_schedule_comparator_rejects_mutations
+Command: "/usr/bin/python3.14" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/reference/test_comparison.py"
+Directory: /tmp/ostc4-ticket05-spec-review
+"independent_schedule_comparator_rejects_mutations" start time: Oct 28 00:59 CET
+Output:
+----------------------------------------------------------
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+OK
+<end of output>
+Test time =   0.13 sec
+----------------------------------------------------------
+Test Passed.
+"independent_schedule_comparator_rejects_mutations" end time: Oct 28 00:59 CET
+"independent_schedule_comparator_rejects_mutations" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 28 00:59 CET

@@ -1,0 +1,192 @@
+Start testing: Oct 28 00:56 CET
+----------------------------------------------------------
+1/11 Testing: upstream_source_identity
+1/11 Test: upstream_source_identity
+Command: "/usr/bin/python3.14" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_source_identity.py" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline"
+Directory: /home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build
+"upstream_source_identity" start time: Oct 28 00:56 CET
+Output:
+----------------------------------------------------------
+all 11 selected upstream files retain their exact audited bytes
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"upstream_source_identity" end time: Oct 28 00:56 CET
+"upstream_source_identity" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/11 Testing: synthetic_replay_contracts
+2/11 Test: synthetic_replay_contracts
+Command: "/usr/bin/python3.14" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_replay.py" "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build/ostc4_replay" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline"
+Directory: /home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build
+"synthetic_replay_contracts" start time: Oct 28 00:56 CET
+Output:
+----------------------------------------------------------
+deterministic synthetic replay and malformed-profile contracts pass
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"synthetic_replay_contracts" end time: Oct 28 00:56 CET
+"synthetic_replay_contracts" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/11 Testing: public_pressure_time_contract
+3/11 Test: public_pressure_time_contract
+Command: "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build/test_ostc4_contract"
+Directory: /home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build
+"public_pressure_time_contract" start time: Oct 28 00:56 CET
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"public_pressure_time_contract" end time: Oct 28 00:56 CET
+"public_pressure_time_contract" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/11 Testing: corrected_public_pressure_time_contract
+4/11 Test: corrected_public_pressure_time_contract
+Command: "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build/test_ostc4_corrected_contract"
+Directory: /home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build
+"corrected_public_pressure_time_contract" start time: Oct 28 00:56 CET
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"corrected_public_pressure_time_contract" end time: Oct 28 00:56 CET
+"corrected_public_pressure_time_contract" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/11 Testing: corrected_synthetic_replay_contracts
+5/11 Test: corrected_synthetic_replay_contracts
+Command: "/usr/bin/python3.14" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_replay.py" "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build/ostc4_replay_corrected" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline"
+Directory: /home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build
+"corrected_synthetic_replay_contracts" start time: Oct 28 00:56 CET
+Output:
+----------------------------------------------------------
+deterministic synthetic replay and malformed-profile contracts pass
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Passed.
+"corrected_synthetic_replay_contracts" end time: Oct 28 00:56 CET
+"corrected_synthetic_replay_contracts" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/11 Testing: independently_verified_tissues
+6/11 Test: independently_verified_tissues
+Command: "/usr/bin/python3.14" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/reference/test_tissue_verification.py" "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build/ostc4_replay" "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build/ostc4_replay_corrected" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Src/decom.c" "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build/corrected/decom.c"
+Directory: /home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build
+"independently_verified_tissues" start time: Oct 28 00:56 CET
+Output:
+----------------------------------------------------------
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.239s
+
+OK
+<end of output>
+Test time =   0.29 sec
+----------------------------------------------------------
+Test Passed.
+"independently_verified_tissues" end time: Oct 28 00:56 CET
+"independently_verified_tissues" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/11 Testing: continuous_exposure_contract
+7/11 Test: continuous_exposure_contract
+Command: "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build/test_ostc4_exposure"
+Directory: /home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build
+"continuous_exposure_contract" start time: Oct 28 00:56 CET
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"continuous_exposure_contract" end time: Oct 28 00:56 CET
+"continuous_exposure_contract" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/11 Testing: independent_repetitive_exposure
+8/11 Test: independent_repetitive_exposure
+Command: "/usr/bin/python3.14" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/reference/test_continuity_reference.py" "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build/ostc4_continuity_replay"
+Directory: /home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build
+"independent_repetitive_exposure" start time: Oct 28 00:56 CET
+Output:
+----------------------------------------------------------
+{
+  "pass": true,
+  "tolerance_bar": 0.0005,
+  "max_absolute_error_bar": 3.2053389542596733e-07
+}
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"independent_repetitive_exposure" end time: Oct 28 00:56 CET
+"independent_repetitive_exposure" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/11 Testing: continuity_replay_faults
+9/11 Test: continuity_replay_faults
+Command: "/usr/bin/python3.14" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_continuity_replay.py" "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build/ostc4_continuity_replay"
+Directory: /home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build
+"continuity_replay_faults" start time: Oct 28 00:56 CET
+Output:
+----------------------------------------------------------
+continuity replay faults and explicit availability pass
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Passed.
+"continuity_replay_faults" end time: Oct 28 00:56 CET
+"continuity_replay_faults" time elapsed: 00:00:00
+----------------------------------------------------------
+
+10/11 Testing: independent_schedule_analytical_checks
+10/11 Test: independent_schedule_analytical_checks
+Command: "/usr/bin/python3.14" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/reference/test_schedule_reference.py"
+Directory: /home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build
+"independent_schedule_analytical_checks" start time: Oct 28 00:56 CET
+Output:
+----------------------------------------------------------
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 0.013s
+
+OK
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"independent_schedule_analytical_checks" end time: Oct 28 00:56 CET
+"independent_schedule_analytical_checks" time elapsed: 00:00:00
+----------------------------------------------------------
+
+11/11 Testing: independent_schedule_comparator_rejects_mutations
+11/11 Test: independent_schedule_comparator_rejects_mutations
+Command: "/usr/bin/python3.14" "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/reference/test_comparison.py"
+Directory: /home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket05/build
+"independent_schedule_comparator_rejects_mutations" start time: Oct 28 00:56 CET
+Output:
+----------------------------------------------------------
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.000s
+
+OK
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"independent_schedule_comparator_rejects_mutations" end time: Oct 28 00:56 CET
+"independent_schedule_comparator_rejects_mutations" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 28 00:56 CET

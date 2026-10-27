@@ -1,0 +1,30 @@
+{
+  "frozen_before_comparison_utc": "2026-10-27T23:51:21.241626+00:00",
+  "independent_author": "reference subagent; separate from comparison harness and production authors",
+  "method": "independently authored Python binary64 analytical integrals and GF pressure inequality; mathematical scheduling policy audited from pinned source; no OSTC4 numerical calls or imports",
+  "source_disclosure": "Schedule author inspected pinned source to extract scheduling policy. Tissue coefficient/integral author did not inspect production before freeze; see reference-provenance.json.",
+  "prior_tissue_provenance": "reference-provenance.json",
+  "source_revision": "7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
+  "frozen_sha256": {
+    "comparison-policy.json": "fab5bd573ba5ce324ee0e8928d892bf5876c3c23f5854b4f4fd68fe1518ea8e0",
+    "schedule_reference.py": "597dc94d559c0428796771605022d00892d497767681273ee7b564200ef18b06",
+    "tissue_reference.py": "842186e884ddd3fdba8fd7aff76322f688706de6b5b31ce7ec1da4ed4b77208a",
+    "generate_profiles.py": "b4c8db552698f9a918b490a2a61e6feb3ddd213f2d78d183a052037958b02d0f"
+  },
+  "reference_sources": [
+    {
+      "id": "buhlmann-table26",
+      "url": "https://www.nigelhewitt.co.uk/stuff/aab.jpg",
+      "file": "aab.jpg",
+      "description": "Photograph of Tauchmedizin Table 26: 17 rows including alternatives 1 (4 min) and 1b (5 min); all nitrogen half-times and A/B/C a and b. Read visually, no OSTC source used.",
+      "sha256": "9291a566b0979321257e0593e8284c241dd3d87871a1456b356a9fd7f105b88d"
+    },
+    {
+      "id": "baker-gfdeco",
+      "url": "https://wrobell.dcmod.org/decotengu/_downloads/95e3b867a5cc362d6a756aadc9b7ecf3/gfdeco.f",
+      "file": "gfdeco.f",
+      "description": "Original Erik C. Baker authored GFDECO Fortran, lines117-132 half-times, 712-755 Schreiner/Haldane, 2047-2076 B coefficients (a in msw, divided by10). Header explicitly says optional compartment1b.",
+      "sha256": "5387bef0845efb1c204b4455f104ac351be0536bc09a2ed3a6781fb6babd3c73"
+    }
+  ]
+}

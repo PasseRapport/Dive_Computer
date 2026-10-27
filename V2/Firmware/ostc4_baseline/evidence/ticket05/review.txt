@@ -1,0 +1,18 @@
+Review base: b3cdf323403c100d4c3f7d10448f9fd177872e47 (completed ticket04).
+Reviewed implementation snapshot:703cf3c. Final amendment adds only this review
+record and independent review host-test evidence; numerical sources unchanged.
+Two independent Sol6.1 review axes, read-only, unrelated work excluded.
+
+Standards:0 findings. No documented-standard breaches or actionable baseline
+smells. Domain/evidence rules and source/reference hashes verified.
+
+Spec and critical numerical review:0 actionable findings. Independent analytical
+reference, disclosed policy inspection, exact-decimal timing repair, six fixed
+profiles, explicit availability/TTS and rejection outcome meet ticket05.
+Clean independent rebuild in /tmp/ostc4-ticket05-spec-review:11/11 CTest pass.
+Strict comparator exits1 for exactly one TTS+1s discrepancy in four profiles
+sharing the2310s prefix; two profiles pass entirely. All other comparisons pass.
+No numerical tolerance widened. Upper stop/TTS caps not independently accepted.
+
+Review acceptance is not numerical acceptance. Numerical outcome remains
+REJECTED under exact TTS comparison. No target or physical evidence claimed.

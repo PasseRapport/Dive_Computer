@@ -1,0 +1,70 @@
+{
+  "identity": "ostc4-independent-schedule-comparison-v3",
+  "declared_before_first_comparison": true,
+  "production_variant": "ostc4-continuous-air-gf30-70-v1",
+  "scope": "synthetic PC evidence; no target or physical execution",
+  "reference_authorship": "separately authored binary64 mathematical reference; no production calculations invoked",
+  "initial_conditions": {
+    "surface_bar": 1.01325,
+    "nitrogen_fraction_reset": 0.7902,
+    "helium_bar": 0,
+    "anchors": 0,
+    "exposure_history": "explicit fresh synthetic initialization per CSV; continuity within CSV"
+  },
+  "coefficients": "independently transcribed ZHL-16C with 5-minute compartment 1b, frozen tissue_reference.py and reference-provenance.json",
+  "inspired_pressure": "0.79 * (absolute_bar - 0.0493)",
+  "gf": [
+    30,
+    70
+  ],
+  "ascent": {
+    "configured_m_per_minute": 9,
+    "actual_seconds_per_bar": 66.66666666666667,
+    "reason": "ascentRate_meterperminute is float (data_central.h:379); arithmetic600/9.0 is floating, rounded to binary32 by production",
+    "segment_seconds": "ceil(pressure_difference_bar * (600/9)); <=0.0001bar has zero duration; <0.05bar snaps to surface",
+    "approach_steps_bar": [
+      1,
+      0.333334
+    ]
+  },
+  "stops": {
+    "grid_gauge_bar": 0.3,
+    "last_stop_gauge_bar": 0.3,
+    "quantum_seconds": 10,
+    "slots": 50,
+    "cap_seconds": 59940,
+    "optional_safety_stop": "none; fixture holds do not define mandatory expected stops",
+    "violation_behavior": "When actual diver is above projected first stop, upstream can relocate projected pressure deeper with zero elapsed travel; matching this diagnostic behavior is not safe ascent approval."
+  },
+  "anchors": "settings maximum predicted first-stop ambient pressure persists across accepted samples including surface intervals; gf-low depth is selected from persistent maximum if settings anchor >= ambient-0.15bar, otherwise current first stop; no reset at surfacing",
+  "ndl": "GF high ascent feasibility, coarse 600s increments to 14400s; first violating 60s increment at <=7200s; previous coarse bucket above7200s except 14400s cap",
+  "ceiling": "GF scratch left by schedule, normally GF high after final surface ascent; zero when upstream TTS zero; public binary-search lower endpoint has <0.01bar resolution and bracket [surface,1+max_depth_m/10]",
+  "tts": "mandatory stop sum plus per-stage rounded travel; upstream zero on no-deco explicitly qualified; independent travel-only normalization reported separately and never written to upstream results",
+  "availability": "initially unavailable except tissues; schedules unavailable before60 transition/underwater seconds, at surface, or NDL=TTS=0; NDL>=14400 limited; TTS or stop>=59940 limited; invalid actual exposure latches invalid via public contract tests",
+  "comparisons": {
+    "tissues_abs_bar": 0.0005,
+    "analytical_ceiling_abs_m": 0.105,
+    "anchor_abs_bar": 0.0001,
+    "ndl_seconds": 0,
+    "stop_seconds_each": 0,
+    "tts_seconds": 0,
+    "availability": "exact",
+    "quantized_values": "Exact primary comparisons: a different NDL bucket or stop quantum is a discrepancy, not automatically accepted. Precision/threshold effects must be investigated and published without widening tolerances.",
+    "ceiling_justification": "0.10m maximum binary-search bracket width plus0.005m binary32/tissue roundoff allowance; compare to independent closed-form ceiling using declared GF, not another binary search"
+  },
+  "coverage": [
+    "shallow no-deco and NDL cap",
+    "59/60/61-second availability",
+    "decompression onset",
+    "ceiling progression",
+    "fixed mandatory-stop progression",
+    "stop violation",
+    "surface desaturation",
+    "repetitive dives",
+    "30m with120s descent and2100s bottom;160s ascent to6m,240s hold,20s to3m,900s hold,20s to surface",
+    "additional full-stop progression: fixed12m/9m/6m/3m long input holds, not expected mandatory stops"
+  ],
+  "outcome_rule": "All primary comparisons must pass for numerical acceptance. Known discrepancies remain visible failures. Passing comparison harness tests alone is not numerical acceptance.",
+  "policy_correction": "v1 incorrectly assumed integer ascent-rate division. Superseded evidence and frozen reference retained in evidence/ticket05/superseded-v1. Corrected from declared field type before v2 comparison; numerical tolerances unchanged. v3 also removes a demonstrated reference binary64 ceil artifact at nominal3m legs. This is reference arithmetic repair, with an exact20s analytical self-check. Output tolerances unchanged.",
+  "reference_precision": "binary64 tissue/ceiling math; exact rational travel from nine-decimal pressure inputs and decimal route legs to avoid spurious ceil of20.000000000000004 instead of nominal20s for3m"
+}

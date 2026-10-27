@@ -1,0 +1,9 @@
+{
+  "declared_before_comparison_utc": "2026-10-27T23:52:55.698779+00:00",
+  "reason": "Add a fixed exposure progressing through full mandatory clearance; original short fixed-hold demo intentionally makes no claim that all obligations were fulfilled.",
+  "tolerance_changes": "none",
+  "files_sha256": {
+    "generate_complete_profile.py": "58a5faf18212b9e4368afc5b583e3a7549743f5a0186e07a69efdcbd621bc3c0",
+    "profiles/full-stop-progression.csv": "ebb620ce25fd27ed7a1e211e56bb78cfb8a1ac2d2b6b31daa385a5e26076ff49"
+  }
+}

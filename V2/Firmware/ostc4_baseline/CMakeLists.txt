@@ -114,3 +114,19 @@ if(BUILD_TESTING)
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_continuity_replay.py
         $<TARGET_FILE:ostc4_continuity_replay>)
 endif()
+
+# Reference self-checks exercise the mathematical oracle and rejection harness.
+# Strict numerical acceptance is a separate explicit gate: a known discrepancy
+# must stay visible as a nonzero result, never an expected-failure green test.
+if(BUILD_TESTING)
+    add_test(NAME independent_schedule_analytical_checks COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/reference/test_schedule_reference.py)
+    add_test(NAME independent_schedule_comparator_rejects_mutations COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/reference/test_comparison.py)
+endif()
+add_custom_target(independent_schedule_acceptance
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/reference/compare_schedule.py
+        $<TARGET_FILE:ostc4_continuity_replay>
+    DEPENDS ostc4_continuity_replay
+    COMMENT "Strict independent schedule acceptance; nonzero means numerical rejection"
+    VERBATIM)
