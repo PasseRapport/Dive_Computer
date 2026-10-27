@@ -60,22 +60,21 @@ deco_tissues_result deco_tissues_init_fresh(deco_tissues_state *state,
     return DECO_TISSUES_OK;
 }
 
-deco_tissues_result deco_tissues_integrate(deco_tissues_state *state,
+static deco_tissues_result integrate_minutes(deco_tissues_state *state,
                                           double start_bar_abs,
                                           double end_bar_abs,
-                                          uint64_t duration_ms)
+                                          double minutes)
 {
     double candidate[DECO_TISSUE_COUNT];
-    double minutes, inspired_start, inspired_end;
+    double inspired_start, inspired_end;
     size_t i;
     if (state == NULL || !deco_valid_pressure(start_bar_abs) ||
-        !deco_valid_pressure(end_bar_abs) || duration_ms == 0) {
+        !deco_valid_pressure(end_bar_abs)) {
         return DECO_TISSUES_ARGUMENT_ERROR;
     }
     if (!deco_valid_state(state)) {
         return DECO_TISSUES_STATE_ERROR;
     }
-    minutes = (double)duration_ms / 60000.0;
     inspired_start = constants.nitrogen_fraction *
                      (start_bar_abs - constants.water_vapour_bar);
     inspired_end = constants.nitrogen_fraction *
@@ -120,4 +119,25 @@ deco_tissues_result deco_tissues_integrate(deco_tissues_state *state,
     }
     memcpy(state->nitrogen_bar, candidate, sizeof(candidate));
     return DECO_TISSUES_OK;
+}
+
+deco_tissues_result deco_tissues_integrate(deco_tissues_state *state,
+                                          double start_bar_abs,
+                                          double end_bar_abs,
+                                          uint64_t duration_ms)
+{
+    if (duration_ms == 0) return DECO_TISSUES_ARGUMENT_ERROR;
+    return integrate_minutes(state, start_bar_abs, end_bar_abs,
+                             (double)duration_ms / 60000.0);
+}
+
+deco_tissues_result deco_tissues_predict_seconds(deco_tissues_state *state,
+                                                double start_bar_abs,
+                                                double end_bar_abs,
+                                                double duration_seconds)
+{
+    if (!isfinite(duration_seconds) || duration_seconds <= 0.0)
+        return DECO_TISSUES_ARGUMENT_ERROR;
+    return integrate_minutes(state, start_bar_abs, end_bar_abs,
+                             duration_seconds / 60.0);
 }

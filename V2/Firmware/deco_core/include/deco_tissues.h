@@ -60,6 +60,15 @@ deco_tissues_result deco_tissues_integrate(deco_tissues_state *state,
                                           double end_bar_abs,
                                           uint64_t duration_ms);
 
+/* Hypothetical linear segment, positive finite binary64 seconds, converted
+ * directly to minutes. Same validation and atomic rejection as measured API.
+ * Extremely small positive durations may produce a numerical error on underflow.
+ * Mutates only the supplied prediction state; callers must copy live exposure. */
+deco_tissues_result deco_tissues_predict_seconds(deco_tissues_state *state,
+                                                double start_bar_abs,
+                                                double end_bar_abs,
+                                                double duration_seconds);
+
 #ifdef __cplusplus
 }
 #endif

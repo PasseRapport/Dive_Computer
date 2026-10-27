@@ -4,7 +4,7 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
-add_library(deco_tissues STATIC src/deco_tissues.c src/deco_ceiling.c)
+add_library(deco_tissues STATIC src/deco_tissues.c src/deco_ceiling.c src/deco_transit.c)
 set_target_properties(deco_tissues PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_include_directories(deco_tissues PUBLIC include)
 target_link_libraries(deco_tissues PUBLIC m)
@@ -15,12 +15,21 @@ endif()
 
 include(CTest)
 if(BUILD_TESTING)
+    add_executable(test_deco_transit tests/test_deco_transit.c)
+    target_link_libraries(test_deco_transit PRIVATE deco_tissues)
+    add_test(NAME transit_contracts COMMAND test_deco_transit)
+    add_test(NAME transit_cli_contracts
+        COMMAND ${CMAKE_COMMAND} -DCLI=$<TARGET_FILE:transit_cli>
+            -P ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_transit_cli.cmake)
+    add_executable(transit_cli tests/transit_cli.c)
+    target_link_libraries(transit_cli PRIVATE deco_tissues)
+
     add_executable(test_deco_ceiling tests/test_deco_ceiling.c)
     target_link_libraries(test_deco_ceiling PRIVATE deco_tissues)
     add_executable(ceiling_cli tests/ceiling_cli.c)
     target_link_libraries(ceiling_cli PRIVATE deco_tissues)
     if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
-        foreach(target test_deco_ceiling ceiling_cli)
+        foreach(target test_deco_ceiling ceiling_cli test_deco_transit transit_cli)
             target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic
                 -Werror -fno-fast-math -ffp-contract=off)
         endforeach()
@@ -42,6 +51,10 @@ if(BUILD_TESTING)
         COMMAND ${CMAKE_COMMAND} -DCLI=$<TARGET_FILE:tissue_segments_cli>
             -P ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_cli_duration.cmake)
     if(UNIX AND NOT APPLE AND CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+        add_executable(test_deco_transit_failure tests/test_deco_transit_failure.c)
+        target_link_libraries(test_deco_transit_failure PRIVATE deco_tissues)
+        target_link_options(test_deco_transit_failure PRIVATE -Wl,--wrap=exp -Wl,--wrap=expm1)
+        add_test(NAME transit_atomic_numerical_failure COMMAND test_deco_transit_failure)
         add_executable(test_deco_numerical_failure tests/test_deco_numerical_failure.c)
         target_link_libraries(test_deco_numerical_failure PRIVATE deco_tissues)
         target_link_options(test_deco_numerical_failure PRIVATE
