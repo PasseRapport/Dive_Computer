@@ -3,6 +3,7 @@
 #include <stdatomic.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include "sim_host.h"
 #include "sim_layout.h"
@@ -258,3 +259,50 @@ int sim_host_frame_visible(void)
 }
 
 int sim_host_take_redraw(void) {return atomic_exchange(&redraw_requested,false);}
+
+#ifdef DIVE_PC_BENCH
+#include "pc_bench.h"
+#include <stdio.h>
+int sim_host_bench_check_enabled(void) { return getenv("DIVE_SIM_BENCH_CHECK")!=NULL; }
+int sim_host_bench_fresh(void)
+{
+    const char *path=getenv("DIVE_SIM_BENCH_PROFILE");
+    if(!path)return pc_bench_fresh(1.01325f,1025,pc_bench_two_dives,8);
+    FILE *file=fopen(path,"r");
+    if(!file){fprintf(stderr,"Cannot open bench profile: %s\n",path);return -1;}
+    ostc4_sample profile[PC_BENCH_PROFILE]; size_t count=0; char row[256];
+    if(!fgets(row,sizeof(row),file)||
+        (row[strcspn(row,"\r\n")]=0, strcmp(row,"timestamp_seconds,absolute_pressure_bar"))) {
+        fclose(file);fprintf(stderr,"Expected timestamp_seconds,absolute_pressure_bar CSV header\n");return -1;
+    }
+    while(fgets(row,sizeof(row),file)) {
+        unsigned long long seconds;float pressure;char extra;
+        if(count==PC_BENCH_PROFILE||row[0]<'0'||row[0]>'9'||
+            sscanf(row,"%llu,%f %c",&seconds,&pressure,&extra)!=2||seconds>UINT32_MAX) {
+            fclose(file);fprintf(stderr,"Invalid bench CSV row\n");return -1;
+        }
+        profile[count++]=(ostc4_sample){(uint32_t)seconds,pressure};
+    }
+    int result=ferror(file)?-1:pc_bench_fresh(count?profile[0].absolute_pressure_bar:0,1025,profile,count);
+    fclose(file);
+    if(result)fprintf(stderr,"Invalid bench pressure/time profile\n");
+    return result;
+}
+#endif
+
+#ifdef DIVE_PC_BENCH
+int sim_host_bench_capture(unsigned milestone)
+{
+    const char *base=getenv("DIVE_SIM_CAPTURE");
+    if(!base)return 0;
+    char path[4096];
+    if(snprintf(path,sizeof(path),"%s-%u.bmp",base,milestone)>=(int)sizeof(path))return -1;
+    if(sim_host_capture(path))return -1;
+    snprintf(path,sizeof(path),"%s-%u.json",base,milestone);
+    FILE *out=fopen(path,"w");if(!out)return -1;
+    const struct bench_view *v=pc_bench_read();
+    fprintf(out,"{\"seconds\":%u,\"duration\":%u,\"depth_m\":%.9g,\"tissues\":[",v->seconds,v->duration,(double)v->depth_m);
+    for(int i=0;i<16;++i)fprintf(out,"%s%.9g",i?",":"",(double)v->result.nitrogen_bar[i]);
+    fprintf(out,"]}\n");return fclose(out);
+}
+#endif

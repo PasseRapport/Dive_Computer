@@ -10,6 +10,9 @@ from pathlib import Path
 import subprocess
 
 parser = argparse.ArgumentParser()
+parser.add_argument("--bench", action="store_true", help="Calculated experimental OSTC4 diagnostics and depth graph")
+parser.add_argument("--bench-profile", help="Replay CSV: timestamp_seconds,absolute_pressure_bar (implies --bench)")
+parser.add_argument("--bench-check", action="store_true", help="Headless bench interaction and visible two-dive replay check")
 parser.add_argument("--build-only", action="store_true")
 parser.add_argument("--smoke", action="store_true", help="Run headless for two seconds")
 parser.add_argument("--check-controls", action="store_true", help="Check wheel and tap controls headlessly")
@@ -20,18 +23,35 @@ parser.add_argument("--water-check", action="store_true")
 parser.add_argument("--dive-check", action="store_true")
 parser.add_argument("--scuba-check", action="store_true", help="Exercise the scuba UI with accelerated scenarios")
 args = parser.parse_args()
+args.bench = args.bench or bool(args.bench_profile) or args.bench_check
+if args.bench and (args.gallery or args.scuba_check or args.scale_check or args.check_controls or args.water_check or args.dive_check):
+    parser.error("Bench checks use --bench-check; legacy gallery/control checks run without --bench")
 if args.scuba_check and not args.gallery:
     parser.error("--scuba-check requires --gallery DIRECTORY")
 root = Path(__file__).resolve().parent
 # Zephyr's build scripts do not support spaces in application/build paths.
 # Keep editable sources in the user's folder and build a fresh source copy.
-tag = hashlib.sha256(str(root).encode()).hexdigest()[:10]
+tag = hashlib.sha256((str(root) + ("-bench" if args.bench else "")).encode()).hexdigest()[:10]
 workspace = Path(tempfile.gettempdir()) / ("dive-watch-lvgl-" + tag)
 source = workspace / "app"
 source.mkdir(parents=True, exist_ok=True)
 for name in ("CMakeLists.txt", "prj.conf", "app.overlay"):
     shutil.copy2(root / name, source / name)
 shutil.copytree(root / "src", source / "src", dirs_exist_ok=True)
+bench_options = ["-DDIVE_BENCH=OFF"]
+if args.bench:
+    core = workspace / "ostc4_baseline"
+    shutil.copytree(root.parent / "ostc4_baseline", core, dirs_exist_ok=True)
+    core_build = workspace / "ostc4-build"
+    core_env = os.environ.copy()
+    core_env["CCACHE_DISABLE"] = "1"
+    subprocess.run(["cmake", "-S", str(core), "-B", str(core_build), "-DBUILD_TESTING=OFF"], env=core_env, check=True)
+    subprocess.run(["cmake", "--build", str(core_build), "--target", "ostc4_exposure", "-j4"], env=core_env, check=True)
+    overlay = source / "app.overlay"
+    overlay.write_text(overlay.read_text().replace("<620>","<1200>").replace("<420>","<800>"))
+    with (source / "prj.conf").open("a") as config:
+        config.write("\nCONFIG_CBPRINTF_FP_SUPPORT=y\n")
+    bench_options = ["-DDIVE_BENCH=ON", "-DDIVE_OSTC4_LIBDIR=" + str(core_build)]
 sdk = Path(os.environ.get("DIVE_NCS_ROOT", str(Path.home() / "ncs/v3.4.1")))
 toolchain = Path(os.environ.get("DIVE_TOOLCHAIN_ROOT", str(Path.home() / "ncs/toolchains/8285d8ad56")))
 env = os.environ.copy()
@@ -52,10 +72,16 @@ env["XDG_CACHE_HOME"] = str(workspace / ".cache")
 subprocess.run([
     str(toolchain / "usr/local/bin/west"), "build", "--no-sysbuild", "-b", "native_sim/native/64",
     "-d", str(workspace / "build"), str(source), "--",
-    "-DBUILD_VERSION=local", "-DUSER_CACHE_DIR=" + str(workspace / ".cache/zephyr"),
+    *bench_options, "-DBUILD_VERSION=local", "-DUSER_CACHE_DIR=" + str(workspace / ".cache/zephyr"),
 ], cwd=sdk, env=env, check=True)
 if not args.build_only:
     command = [str(workspace / "build/zephyr/zephyr.exe")]
+    if args.bench_profile:
+        env["DIVE_SIM_BENCH_PROFILE"] = str(Path(args.bench_profile).resolve())
+    if args.bench_check:
+        env["DIVE_SIM_BENCH_CHECK"] = "1"
+        env["SDL_VIDEODRIVER"] = "dummy"
+        command += ["--stop_at=90", "--no-rt"]
     if args.scale_check:
         env["DIVE_SIM_SCALE_CHECK"] = "1"
     if args.scuba_check:

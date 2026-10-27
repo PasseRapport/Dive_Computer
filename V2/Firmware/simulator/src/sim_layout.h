@@ -1,7 +1,12 @@
 #pragma once
 
+#ifdef DIVE_PC_BENCH
+#define SIM_WIDTH 1200
+#define SIM_HEIGHT 800
+#else
 #define SIM_WIDTH 620
 #define SIM_HEIGHT 420
+#endif
 #define SIM_PANEL_X 372
 #define SIM_CONTROL_WIDTH 224
 #define SIM_CROWN_Y 72

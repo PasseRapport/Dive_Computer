@@ -30,3 +30,9 @@ int sim_host_zoom_matches(unsigned zoom);
 int sim_host_take_redraw(void);
 /* Native regression test: detect a fully black simulator surface. */
 int sim_host_frame_visible(void);
+
+#ifdef DIVE_PC_BENCH
+int sim_host_bench_fresh(void);
+int sim_host_bench_capture(unsigned milestone);
+int sim_host_bench_check_enabled(void);
+#endif

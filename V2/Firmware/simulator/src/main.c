@@ -10,6 +10,9 @@
 #include "sim_dive.h"
 #include "scuba_checks.h"
 #include "appearance_checks.h"
+#ifdef DIVE_PC_BENCH
+#include "pc_bench_ui.h"
+#endif
 
 int main(void)
 {
@@ -26,6 +29,10 @@ int main(void)
     };
     watch_ui_create(sim_controls_create());
     sim_host_init();
+#ifdef DIVE_PC_BENCH
+    if (sim_host_bench_fresh()!=0) return 1;
+    pc_bench_ui_create();
+#endif
     unsigned hour,minute,day,month,weekday,second;
     sim_host_get_clock(&hour, &minute);
     data.clock_hour = hour;
@@ -63,6 +70,10 @@ int main(void)
             }
         }
         sim_controls_poll();
+#ifdef DIVE_PC_BENCH
+        pc_bench_ui_poll();
+        pc_bench_checks_poll();
+#endif
         if (sim_host_check_enabled() && !check_done && k_uptime_get() >= 1100) {
             /* +1 then -1 should cancel; finish at +1 to check both directions. */
             sim_host_push_wheel(SIM_PANEL_X + 30, SIM_CROWN_Y + 30, 1);

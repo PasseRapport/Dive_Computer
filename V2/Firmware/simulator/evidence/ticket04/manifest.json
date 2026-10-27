@@ -1,0 +1,125 @@
+{
+  "date": "2026-10-28",
+  "evidence_level": "synthetic PC integration only",
+  "base_commit": "d8089e410599000679119d77b31f127356b3f254",
+  "upstream_revision": "7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
+  "correction_set": "cached-10s-and-stable-schreiner-v1",
+  "policy": "ostc4-continuous-air-gf30-70-v1",
+  "compiler": "gcc (GCC) 16.2.1 20260819 (Red Hat 16.2.1-2)",
+  "numerical_flags": [
+    "-O2",
+    "-fno-fast-math",
+    "-ffp-contract=off"
+  ],
+  "input_sequence": "absolute-pressure keyframes interpolated on a fixed one-second grid, exact endpoints",
+  "equivalence_policy": "byte-identical full observations at x1/x10/x60 within the same build",
+  "initial_conditions": {
+    "synthetic": "fresh upstream surface-equilibrium convention",
+    "surface_bar": 1.01325,
+    "water_density_kg_m3": 1025,
+    "gf": [
+      30,
+      70
+    ],
+    "ascent_m_min": 9
+  },
+  "pressure_profile": [
+    [
+      0,
+      1.01325
+    ],
+    [
+      120,
+      4.01325
+    ],
+    [
+      1920,
+      4.01325
+    ],
+    [
+      2100,
+      1.01325
+    ],
+    [
+      3600,
+      1.01325
+    ],
+    [
+      3720,
+      3.01325
+    ],
+    [
+      4920,
+      3.01325
+    ],
+    [
+      5040,
+      1.01325
+    ]
+  ],
+  "tests": {
+    "ctest_passed": 10,
+    "legacy_model_tests_passed": 4,
+    "native_bench": "pass",
+    "legacy_controls": "pass",
+    "pixel_checks": "four replay positions, plateau continuity, gap marker, brief manual excursion"
+  },
+  "reference_provenance": "Inherited independently authored analytical tissue tests pass; new control pressure expectation independently worked from hydrostatics. No new independent full-schedule reference.",
+  "review": {
+    "standards": "no remaining findings",
+    "spec": "no remaining findings",
+    "reviewers": "two read-only Sol 6.1 agents",
+    "resolved": [
+      "named actions",
+      "retained graph extrema",
+      "within-bucket plateau continuity"
+    ]
+  },
+  "source_sha256": {
+    "CMakeLists.txt": "886f7194e2ed89e50ae90e8ff061bbd3332acd418de1a8890e3fb55e475e664a",
+    "README.md": "8d69c578c37be248bf963d5078cf3c3dd5901582446491a7c2fed7eff8318ff1",
+    "launch.py": "75aa65e6d6e0a0bb9e3ff7a120c5945136c651ad9b6f4f987ab64bb35f29160b",
+    "src/main.c": "d009c2d0945b3bf6e39985beb40683ff73f4ac6850102838fd3570002d76b754",
+    "src/sim_host.c": "d42107fb08bdac4d582825f9f095d34571db5fd18683ee5add213fbed5520178",
+    "src/sim_host.h": "ac6baba92a163f88947f7349fb78964220da7d9bf47d3c4ed3dd5546eee14dd3",
+    "src/sim_layout.h": "260d613a2931da21879b404d16165286561b5a7a202db8581f299bcd6f7b8cb5",
+    "src/pc_bench.c": "f1ae1a8529719a73ce740fcdc93402874efa99b3301a476c3f1191b3b9f6c6b3",
+    "src/pc_bench.h": "78d520f16932dcfbdd724db767e5b62c62f3b19affe18ed4f4d9459ab523e472",
+    "src/pc_bench_ui.c": "663d973da8a04d30ade4cc1e25f0956133c02b04b2483572f2b89996e3ab27a0",
+    "src/pc_bench_ui.h": "079c549160a2d269bc8f634077bf23ddec8bd3b1b9dfcb6e33e8f109310510c1",
+    "src/pc_bench_checks.c": "dbe10f87802ceaf87cffcb13697a29fec1b1f9a23b7a08597ee35366f6c33311",
+    "tests/bench/CMakeLists.txt": "e65c26ffa58d958d9d33126728c438b2429b01c086f29b1fc9ee6279ec19e1e3",
+    "tests/bench/test_pc_bench.c": "ca50ee57067b9efd6a41cd217a5ef5b69a6ad498af1f925f71a9052e313d8dff",
+    "tests/check_bench_render.py": "b7036da0ab8bb48e7cba7fbf68342f1ed9980802f3bd5d369ba4d5abfe55db46"
+  },
+  "build_sha256": {
+    "/tmp/pc-bench-final/test_pc_bench": "1125c724d83116f39f80919ed4d0cfba910a2602a49f4c76d4bd526da003209f",
+    "/tmp/dive-watch-lvgl-6326eb157c/build/zephyr/zephyr.exe": "d02aed173d4c2ffedb1f961daa9eadea97e66d182d08a4864ab9ee9c3500d3ed",
+    "/tmp/dive-watch-lvgl-6326eb157c/ostc4-build/libostc4_exposure.a": "2c686bd955a5044a08014e861f61235c65007709c7cd78e202c23ec5ae4b19a5",
+    "/tmp/dive-watch-lvgl-6326eb157c/ostc4-build/libostc4_upstream_contained.a": "256306251fbe7babae2e24bc3221f815dfa6afe75ec1d008513192e304afd97a"
+  },
+  "artifact_sha256": {
+    "bench-0.json": "9b0b1031d4d58a82ade1d5d9c52192ad8096768938aa3e7fb6bf49fad55f230b",
+    "bench-0.png": "fc902f18ddc2172a71aeb3840ea2da0dc26d5c85cc8980c9af18918dcb095970",
+    "bench-1.json": "9a41322475aa28542e861dca017aed8a9a72fb0ffbccd8292e8f5d7e27555c8d",
+    "bench-1.png": "4ccdb1837df6a67acf2cc6c8dbbfd3c606b9e1a128a58e5f07921569290f29b6",
+    "bench-2.json": "c60f65e72a0f0093ab35d64f61ba5103ac8321a8c948289a03e2e11f3180c651",
+    "bench-2.png": "4c1ad26571826a4c54afa421a19eab259aa083ef7da8150f895931d1b967b2e8",
+    "bench-3.json": "c6f4e1bfac2970f1657886e6b632fdb37a3b82a51cc6f98a50c8b8806ddbcacd",
+    "bench-3.png": "d2e06e8169c34f047c01e614f2fc8de35babfe6f83a165d4cae56809a8fca562",
+    "bench-4.json": "abc63f1eff2937f3f9a97efb4f2d2c43894e511fda21723e0d8f22375181be38",
+    "bench-4.png": "1107a410d37965bc6e0aad706a603e8f1eee87346eff59a35cedc9c1f65be56e",
+    "bench-5.json": "5db1f6f31c9ca26705b527da1f425b3d6a053d703b51f04a44a026971b5753d4",
+    "bench-5.png": "0d3f12f3eefe98752b84fa1e1ab48222ffc55244baff308f225b53fac0d472ac",
+    "headless-suite.log": "c427bace0a54592d88c5415d3353670c01b79577ba74ebc254748df1610ff385",
+    "legacy-controls.log": "f7eec6a455ea3721c3406ac72c506bdd47c29d56b1bfd8fb454b4c01600206dc",
+    "native-bench.log": "ea81b4fbe7dfcf94f7f9ea3bd20f3f904f4f2b8ed3ce969cd00205cb2ac9c168"
+  },
+  "limits": [
+    "PC evidence only",
+    "no independent full-schedule acceptance",
+    "no Nordic target build",
+    "no physical timing/stack/memory results",
+    "no operational diving readiness"
+  ]
+}

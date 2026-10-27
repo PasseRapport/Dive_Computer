@@ -186,3 +186,95 @@ grow leftwards, leaving room for seconds inside the round display. Ceiling label
 are enlarged. The alert reads **DECOMPRESSION**; acknowledgement uses a tap without an on-screen hint.
 
 The scuba preparation screen recaps air, water type, battery, start depth and both alarm thresholds (OFF when disabled). Dive Settings opens a dedicated Fresh/Marine selector with the same water icons and animated capsule as freediving; tap confirms and Back cancels.
+
+
+## Experimental calculated PC bench (OSTC4 ticket 04)
+
+```sh
+python3 V2/Firmware/simulator/launch.py --bench
+```
+
+This expands the existing native simulator to 1200 x 800, adding calculated
+OSTC4 diagnostics alongside the watch and a synchronized depth graph below it.
+The virtual watch and its original controls remain an isolated **scripted demo**.
+Use the lower **bench** row for calculated exposure. Crown/menu/scenario actions
+on the watch do not initialize or change calculated tissues.
+
+The default synthetic replay is the accepted two-dive example: absolute pressure
+1.01325 bar at 0 s, 4.01325 at 120 and 1920 s, 1.01325 at 2100 and 3600 s,
+3.01325 at 3720 and 4920 s, and surface again at 5040 s. Only **FRESH replay**
+(or process startup) initializes equilibrium tissues. Surfacing, holding depth,
+pausing, speed changes, manual takeover and normal menus preserve exposure.
+At replay completion the clock stops; **Hold**, a depth/rate button or **Surface**
+continues manual exposure from the retained state.
+
+Replay interpolates absolute pressure on a fixed one-second input grid, including
+original keyframes exactly. Play at x1, x10 or x60 using the same grid and planner
+calls: the declared comparison policy is byte-identical full observations within
+the same build. This grid differs from the sparse endpoint grid of ticket 03;
+its intermediate planner/GF-anchor calls can change schedules. Grid equivalence
+is not claimed across those two different input sequences. Pause discards elapsed
+host time and preserves the fractional simulation-second remainder. Bench commands
+apply at the last completed second; manual changes discard that remainder.
+
+Manual depth uses `absolute_bar = surface_bar + density * 9.80665 * depth_m / 100000`,
+with surface pressure shown explicitly and water density 1025 kg/m3 by default.
+No display rounding feeds calculations. Depth commands hold or change depth;
+rate buttons change signed m/min, positive downward. Inputs are limited to 60 m,
+60 m/min and the engine's +6 bar envelope. Initial surface pressure is limited
+to 0.8..1.2 bar. The standalone controller also accepts densities 990..1040 kg/m3.
+The planner's ceiling/stop depths retain the upstream **10 m/bar convention**,
+shown separately from the hydrostatic graph. GF30/70, ascent 9 m/min and last
+stop/increments of 3 m are fixed test settings. TTS=0 in upstream NDL mode
+**excludes ascent travel**, and is explicitly qualified in the diagnostics.
+Unavailable, limited and invalid result flags are shown, including for every
+nitrogen tissue. Mandatory stops can be scrolled if the full list exceeds its box.
+These displays are experimental; full independent schedule acceptance is ticket05.
+
+Import a deterministic synthetic pressure profile:
+
+```sh
+python3 V2/Firmware/simulator/launch.py --bench-profile /absolute/path/profile.csv
+```
+
+CSV header: `timestamp_seconds,absolute_pressure_bar`. Start at second zero and
+surface pressure. Use strictly increasing integer seconds, finite absolute bar,
+2..1024 rows, ending before 21601 s. The first pressure supplies surface pressure;
+water density remains 1025 kg/m3. Segments assert complete, linearly changing
+exposure. A separation over 3600 s denotes missing exposure: its graph segment is
+marked red, no line is interpolated through it, and reaching it latches INVALID
+until explicit fresh initialization. **Mark gap** explicitly reports unknown exposure of any duration, latches all
+results invalid and marks the current graph position red. This CSV format cannot
+encode shorter unknown intervals. Use only complete synthetic profiles with this
+importer, or stop and mark a gap when exposure becomes unknown. Invalid CSV is rejected explicitly.
+
+Graph x is elapsed seconds; y is metres increasing downward from 0 to 60. Cyan
+is recorded actual exposure; dashed grey is the known replay future, not a
+calculated prediction; yellow is the exposure-clock position. Manual takeover
+removes the unused replay future and extends actual history. No speculative
+projection is added. History capacity is 21601 points; exhaustion latches invalid
+rather than discarding exposure. This host allocation is not a firmware budget.
+
+Headless integration and numerical regression checks (no LVGL/Zephyr required):
+
+```sh
+cmake -S V2/Firmware/simulator/tests/bench -B /tmp/pc-bench -DCMAKE_C_COMPILER=/usr/bin/gcc
+cmake --build /tmp/pc-bench -j4
+ctest --test-dir /tmp/pc-bench --output-on-failure
+```
+
+Native SDL interaction/render checks, with four paused milestone captures:
+
+```sh
+python3 V2/Firmware/simulator/launch.py --bench-check --capture /tmp/bench-visible
+python3 V2/Firmware/simulator/tests/check_bench_render.py /tmp/bench-visible
+```
+
+Pillow is needed for the pixel checker. `--bench-check` uses native simulated
+time without real-time throttling and the same exposure clock. Existing galleries
+and legacy interaction checks run separately without `--bench`. The launcher
+builds only the contained corrected exposure variant into this bench; comparison
+baseline/corrected executables remain headless tools, with no runtime selector.
+The source/correction/policy identities are in `../ostc4_baseline` and its prior
+evidence bundles. PC success does not establish a Nordic target build, physical
+memory/timing/stack fitness or readiness for operational dive guidance.

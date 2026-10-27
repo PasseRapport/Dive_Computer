@@ -10,3 +10,21 @@ target_sources(native_simulator INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/sim_ho
 # NCS 3.4.1 lists the GIF decoder but omits LVGL 9.5's moved GIF widget.
 # Include that widget locally rather than modifying the installed SDK.
 target_sources(app PRIVATE ${ZEPHYR_LVGL_MODULE_DIR}/src/widgets/gif/lv_gif.c)
+
+# The calculated PC path runs in native_sim's host runner, using the same
+# portable archive as the headless tests. No OSTC globals enter Zephyr/LVGL.
+if(DIVE_BENCH)
+    if(NOT EXISTS "${DIVE_OSTC4_LIBDIR}/libostc4_exposure.a")
+        message(FATAL_ERROR "Build the OSTC4 exposure archive through launch.py --bench")
+    endif()
+    target_compile_definitions(app PRIVATE DIVE_PC_BENCH=1 OSTC4_TISSUE_CORRECTIONS=1)
+    target_include_directories(app PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../ostc4_baseline/include")
+    target_sources(app PRIVATE src/pc_bench_ui.c src/pc_bench_checks.c)
+    target_sources(native_simulator INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/src/pc_bench.c")
+    target_compile_options(native_simulator INTERFACE -DDIVE_PC_BENCH=1 -DOSTC4_TISSUE_CORRECTIONS=1
+        "-I${CMAKE_CURRENT_SOURCE_DIR}/../ostc4_baseline/include")
+    set_property(TARGET native_simulator APPEND PROPERTY RUNNER_LINK_LIBRARIES
+        "${DIVE_OSTC4_LIBDIR}/libostc4_exposure.a"
+        "${DIVE_OSTC4_LIBDIR}/libostc4_upstream_contained.a")
+    target_link_options(native_simulator INTERFACE -lm)
+endif()
