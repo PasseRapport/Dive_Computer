@@ -1,0 +1,43 @@
+{
+  "identity": "cached-10s-and-stable-schreiner-v1",
+  "derivation": "1-exp(-ln(2)*10/(60*half_time_minutes)); values independently authored before production patch",
+  "reference": "tests/reference/reference-provenance.json",
+  "scope": "four 10-second literals and stable binary32 Schreiner evaluation; units unchanged",
+  "changes": [
+    {
+      "gas": "N2",
+      "compartment_one_based": 5,
+      "seconds": 10,
+      "original": "4.69545762670800E-003f",
+      "corrected": "4.26954576267076E-003f"
+    },
+    {
+      "gas": "N2",
+      "compartment_one_based": 14,
+      "seconds": 10,
+      "original": "2.61728759809380E-004f",
+      "corrected": "2.96172875980945E-004f"
+    },
+    {
+      "gas": "He",
+      "compartment_one_based": 5,
+      "seconds": 10,
+      "original": "1.25106927410620E-002f",
+      "corrected": "1.12510692741062E-002f"
+    },
+    {
+      "gas": "He",
+      "compartment_one_based": 14,
+      "seconds": 10,
+      "original": "7.33352120986130E-004f",
+      "corrected": "7.83335212098617E-004f"
+    }
+  ],
+  "schreiner": {
+    "original_file": "schreiner-original.txt",
+    "corrected_file": "schreiner-stable.c.txt",
+    "original_sha256": "ffa5df7c754df2da21f4383943b87f8ec17f25b297f575a4e6946ef34b07b9d3",
+    "corrected_sha256": "bf19cad477245895cf995d0169754b541a11391eb76516c95ff8ad8bf209a168",
+    "reason": "avoid cancellation of rate/k terms for slow compartments; expm1f and small-x ramp series; units and binary32 precision retained"
+  }
+}

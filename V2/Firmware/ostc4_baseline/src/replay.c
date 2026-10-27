@@ -83,7 +83,7 @@ int main(int argc, char **argv)
             status = ostc4_initialize(&initial);
             if (status == OSTC4_OK)
                 printf("{\"type\":\"metadata\",\"revision\":\"%s\",\"policy\":\"%s\","
-                       "\"correction_set\":\"none\",\"provenance\":\"experimental-fork-beta\","
+                       "\"correction_set\":\"%s\",\"provenance\":\"experimental-fork-beta\","
                        "\"synthetic\":true,\"initialization\":\"upstream-surface-equilibrium\","
                        "\"surface_pressure_bar\":%.9g,\"initial_timestamp_seconds\":%" PRIu32 ","
                        "\"compiler\":\"%s\",\"float_eval_method\":%d,\"float_mantissa_bits\":%d,"
@@ -93,7 +93,7 @@ int main(int argc, char **argv)
                        "\"water_vapour_bar\":0.0493,\"gf\":[30,70],\"ascent_m_per_min\":9,"
                        "\"bar_per_meter\":0.1,\"stop_gauge_bar\":[0.3,0.6],\"stop_increment_bar\":0.3,"
                        "\"no_deco_tts_semantics\":\"upstream-zero-not-transit-time\"}\n",
-                       OSTC4_REVISION, OSTC4_POLICY, (double)initial.surface_pressure_bar,
+                       OSTC4_REVISION, OSTC4_POLICY, OSTC4_CORRECTION_SET, (double)initial.surface_pressure_bar,
                        initial.timestamp_seconds, __VERSION__, FLT_EVAL_METHOD, FLT_MANT_DIG, DBL_MANT_DIG);
         } else status = ostc4_advance(&sample);
         if (status != OSTC4_OK) {

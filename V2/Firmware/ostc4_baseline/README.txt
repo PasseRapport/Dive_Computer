@@ -15,7 +15,7 @@ From the repository root:
 
 Build dependencies: C11 compiler (tested GCC on Linux), CMake, libm and an
 ELF linker supporting function/data sections and --gc-sections. Python 3
-standard library is used only for tests and evidence recording. No network
+standard library generates the corrected source copy and runs tests/evidence recording. No network
 fetch is required. Upstream headers contain a zero-length array extension;
 the original bytes are retained, so this build currently needs GCC/Clang.
 The public header has no platform dependency. Test assertions remain active
@@ -101,3 +101,39 @@ Evidence levels:
   Physical execution, timing, stack and real-dive fitness: not established.
 The earlier audit's isolated Nordic feasibility evidence is not this ticket's
 full-watch validation. Existing BMAD engine/story 1.6 and simulator remain intact.
+
+Ticket 02: independently verified tissue variant
+===============================================
+The baseline executable and all pinned upstream bytes remain unchanged.
+The same build also produces ostc4_replay_corrected and libostc4_corrected,
+using the same public header/API and separate process-global scenario.
+Do not link both libraries into one executable; these are test comparison
+builds, not a runtime selector.
+
+corrections/tissue-corrections.json identifies four erroneous ten-second
+cached factors (N2/He, compartments 5/14) and a separate stable binary32
+Schreiner evaluation. The latter corrects cancellation at slow compartments;
+the selected upstream already has correct per-minute rate conversion.
+Original and replacement function text and hashes are recorded explicitly.
+The build generates a modified copy outside upstream/, rejecting an altered
+source hash or a mismatched patch. No coefficient, fraction, rounding policy,
+planner or precision-type change is made; expm1f and a small-x polynomial
+replace the unstable evaluation in the corrected copy only.
+
+Corrected identity: ostc4-beta-7198d20-tissue-corrected-air-gf30-70-v1.
+Correction set: cached-10s-and-stable-schreiner-v1.
+Policy: corrected-policy.json. Reference: tests/reference/.
+The independent reference author froze the analytical formulas/constants and
+absolute tolerances before source-table/replay comparison. Primary-source
+provenance and file hashes are in tests/reference/reference-provenance.json.
+The actual source is ZH-L16C with five-minute compartment 1b, not the suspended
+four-minute independent-engine identity. All 352 cached factors (including
+zero-state He arithmetic reachable at air) are audited, not just the defects.
+
+Run the corrected replay on the same CSV fixtures. Record its build evidence:
+  python3 V2/Firmware/ostc4_baseline/record_evidence.py \
+    /tmp/ostc4-baseline-build /tmp/ostc4-corrected-observations --corrected
+The analytical harness reports all tissue errors and baseline/corrected NDL,
+TTS, ceiling and stop differences for complete synthetic replays. These schedule
+differences are observations, not independently accepted decompression schedules.
+PC numerical checks do not constitute target-build or physical-board evidence.

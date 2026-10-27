@@ -6,7 +6,13 @@
 #define OSTC4_TISSUES 16
 #define OSTC4_STOPS 50
 #define OSTC4_REVISION "7198d203520f3a3cdccf1ccc0bf8af6475ee4819"
+#ifdef OSTC4_TISSUE_CORRECTIONS
+#define OSTC4_POLICY "ostc4-beta-7198d20-tissue-corrected-air-gf30-70-v1"
+#define OSTC4_CORRECTION_SET "cached-10s-and-stable-schreiner-v1"
+#else
 #define OSTC4_POLICY "ostc4-beta-7198d20-unchanged-air-gf30-70-v1"
+#define OSTC4_CORRECTION_SET "none"
+#endif
 
 typedef enum {
     OSTC4_UNAVAILABLE, OSTC4_AVAILABLE, OSTC4_LIMITED, OSTC4_INVALID
@@ -42,7 +48,7 @@ typedef struct {
  * Initialize explicitly at surface equilibrium (upstream reset convention).
  * Surface 0.8..1.2 bar. Samples: surface..surface+6 bar, integral seconds,
  * strictly increasing, <=3600 s apart. Linear pressure between samples;
- * identical endpoints use the unchanged cached constant-pressure path.
+ * identical endpoints use the selected build's cached constant-pressure path.
  * Each accepted sample runs the upstream planner once; anchor changes persist.
  * Rejected inputs leave the previous state intact. Read never runs predictions.
  */

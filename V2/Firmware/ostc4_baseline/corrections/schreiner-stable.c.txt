@@ -1,0 +1,43 @@
+/* Numerical correction: stable binary32 integration; rate remains per minute.
+ * Retain the original zero-inspired-pressure clipping and residual decay.
+ * This is an accuracy correction, not a new pressure/time policy.
+ */
+float decom_schreiner_equation(
+    float initial_inspired_gas_pressure,
+    float rate_change_insp_gas_pressure,
+    float interval_time_minutes,
+    float gas_time_constant,
+    float initial_gas_pressure)
+{
+    float time = interval_time_minutes;
+    float time_rest = 0.0f;
+
+    if (rate_change_insp_gas_pressure < 0.0f)
+    {
+        float time_null_pressure = -initial_inspired_gas_pressure / rate_change_insp_gas_pressure;
+        if (time > time_null_pressure)
+        {
+            time_rest = time - time_null_pressure;
+            time = time_null_pressure;
+        }
+    }
+
+    float x = gas_time_constant * time;
+    float uptake = -expm1f(-x);
+    /* 1 - (1-exp(-x))/x loses significance near zero. The series
+     * remainder at x <= .1 is bounded by x^6/5040 (<2e-10).
+     */
+    float ramp;
+    if (x <= 0.1f)
+        ramp = x * (0.5f + x * (-1.0f/6.0f + x * (1.0f/24.0f
+             + x * (-1.0f/120.0f + x/720.0f))));
+    else
+        ramp = 1.0f - uptake / x;
+    float result = initial_gas_pressure
+                 + (initial_inspired_gas_pressure - initial_gas_pressure) * uptake
+                 + rate_change_insp_gas_pressure * time * ramp;
+
+    if (time_rest > 0.0f)
+        result *= expf(-gas_time_constant * time_rest);
+    return result;
+}

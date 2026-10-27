@@ -30,3 +30,44 @@ if(BUILD_TESTING)
     target_compile_options(test_ostc4_contract PRIVATE -Wall -Wextra -Wpedantic -Werror)
     add_test(NAME public_pressure_time_contract COMMAND test_ostc4_contract)
 endif()
+
+# Build-time comparison variant; the pinned upstream tree remains byte-identical.
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+set(corrected_decom "${CMAKE_CURRENT_BINARY_DIR}/corrected/decom.c")
+add_custom_command(OUTPUT "${corrected_decom}"
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/corrections/apply.py
+        ${CMAKE_CURRENT_SOURCE_DIR} "${corrected_decom}"
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/corrections/apply.py
+        ${CMAKE_CURRENT_SOURCE_DIR}/corrections/tissue-corrections.json
+        ${CMAKE_CURRENT_SOURCE_DIR}/corrections/schreiner-original.txt
+        ${CMAKE_CURRENT_SOURCE_DIR}/corrections/schreiner-stable.c.txt
+        ${CMAKE_CURRENT_SOURCE_DIR}/upstream/Common/Src/decom.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/upstream-manifest.json
+    VERBATIM)
+add_library(ostc4_upstream_corrected STATIC "${corrected_decom}" upstream/Discovery/Src/buehlmann.c)
+target_include_directories(ostc4_upstream_corrected SYSTEM PUBLIC compat upstream/Common/Inc upstream/Discovery/Inc)
+target_compile_options(ostc4_upstream_corrected PRIVATE -O2 -fno-fast-math -ffp-contract=off -ffunction-sections -fdata-sections)
+add_library(ostc4_corrected STATIC src/ostc4_baseline.c)
+target_compile_definitions(ostc4_corrected PUBLIC OSTC4_TISSUE_CORRECTIONS=1)
+target_include_directories(ostc4_corrected PUBLIC include)
+target_link_libraries(ostc4_corrected PRIVATE ostc4_upstream_corrected m)
+target_link_options(ostc4_corrected INTERFACE -Wl,--gc-sections)
+target_compile_options(ostc4_corrected PRIVATE -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off)
+add_executable(ostc4_replay_corrected src/replay.c)
+target_link_libraries(ostc4_replay_corrected PRIVATE ostc4_corrected m)
+target_compile_options(ostc4_replay_corrected PRIVATE -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off)
+if(BUILD_TESTING)
+    add_executable(test_ostc4_corrected_contract tests/test_contract.c)
+    target_link_libraries(test_ostc4_corrected_contract PRIVATE ostc4_corrected)
+    target_compile_options(test_ostc4_corrected_contract PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    add_test(NAME corrected_public_pressure_time_contract COMMAND test_ostc4_corrected_contract)
+    add_test(NAME corrected_synthetic_replay_contracts COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_replay.py $<TARGET_FILE:ostc4_replay_corrected> ${CMAKE_CURRENT_SOURCE_DIR})
+endif()
+
+if(BUILD_TESTING)
+    add_test(NAME independently_verified_tissues COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/reference/test_tissue_verification.py
+        $<TARGET_FILE:ostc4_replay> $<TARGET_FILE:ostc4_replay_corrected>
+        ${CMAKE_CURRENT_SOURCE_DIR}/upstream/Common/Src/decom.c "${corrected_decom}")
+endif()

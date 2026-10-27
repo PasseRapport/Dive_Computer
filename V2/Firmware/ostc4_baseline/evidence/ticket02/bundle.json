@@ -1,0 +1,49 @@
+{
+  "revision": "7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
+  "base_commit": "00c6687968ba66bc5ba7996db957beb956b4223d",
+  "variants": {
+    "original": {
+      "correction_set": "none",
+      "numerical_policy": "ostc4-beta-7198d20-unchanged-air-gf30-70-v1"
+    },
+    "corrected": {
+      "correction_set": "cached-10s-and-stable-schreiner-v1",
+      "numerical_policy": "ostc4-beta-7198d20-tissue-corrected-air-gf30-70-v1"
+    }
+  },
+  "artifacts_sha256": {
+    "corrected/decompression.jsonl": "fe2478a456085e5bdd973cb91082dbe9416a1f2bc1228538979b83cd248bca87",
+    "corrected/reproduction.json": "41fc2156d7c1991fe346b8cad2094aa332d7a5d68b5ec0a1af869c61c5abff29",
+    "corrected/shallow.jsonl": "e11aef9d059fd143180397d8cccd85b6552f4f0596d366b5f779e35b97974e2e",
+    "four-factor-only-summary.json": "c8ca5497f55488b4593e14cd953b0a8ee1ae1b4425371a45912d28224b80d0b9",
+    "original/decompression.jsonl": "e5d07a6713b467c1dfd71f67b9ce3bb0d66649a277e40d4d45f23bd2e7d048ff",
+    "original/reproduction.json": "17cd441b6cec08a07bf7b2fcd96878ade0dfb490d4b7043e17bbd109536045b5",
+    "original/shallow.jsonl": "0aa1f33ca06a4c29a756d51c1f97703e93bbc628ed2e205fff730e2a2f0c3ecc",
+    "reference-notes.txt": "47f3372f9269c6e1a20246ec5b61b9cfde4de6f4b32893d52694ef0c1f76b61c",
+    "tissue-verification.json": "d606d18c40bc90e9dafc2d915ec1293d575be2b69516d40da1f0b62ebcdeb37c"
+  },
+  "reference_tools_sha256": {
+    "tests/reference/audit_tissue_tables.py": "72d582cf632226b3c67052ab2caa67a921aa0024ce1ebd4c384e4ba8be8423bc",
+    "tests/reference/reference-provenance.json": "d4ae614d8b041eb68cc21781b44d4a4c0d1475264c8774fe0a5a9e1675a01c8c",
+    "tests/reference/test_tissue_verification.py": "0647710862a6c6dc662d7b028d6508cb8a12e08e158609a956851f8f105bd711",
+    "tests/reference/tissue_reference.py": "842186e884ddd3fdba8fd7aff76322f688706de6b5b31ce7ec1da4ed4b77208a",
+    "tests/reference/verify_tissue_replay.py": "0d14f55effa366e0660529eec8c1a9e39f99ddd8dc9a7f5fceb64eda507bbb64"
+  },
+  "checks": {
+    "ostc4_ctest": "6/6 passed, includes 8 independently authored unittest methods",
+    "preserved_engine_ctest": "11/11 passed",
+    "preexisting_local_work_hashes": "unchanged",
+    "baseline_fixture_jsonl": "byte-identical to ticket01",
+    "source_audit": "448 comparisons per variant; four original cache failures, zero corrected",
+    "analytical_profiles": 95,
+    "observations_per_variant": 1392,
+    "cadence_common_timestamps": 106
+  },
+  "review": {
+    "Standards": "No documented-standard breaches. One optional duplicated CMake target-configuration smell; retained explicit baseline/variant targets for reviewability.",
+    "Spec": "No actionable findings."
+  },
+  "target_build": "not performed",
+  "physical": "not performed",
+  "independent_schedule_acceptance": "not established, ticket05"
+}

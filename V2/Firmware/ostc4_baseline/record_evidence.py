@@ -10,6 +10,7 @@ import subprocess
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('build', type=pathlib.Path)
 parser.add_argument('output', type=pathlib.Path)
+parser.add_argument('--corrected', action='store_true', help='record the separately built tissue-correction variant')
 args = parser.parse_args()
 root = pathlib.Path(__file__).resolve().parent
 build, output = args.build.resolve(), args.output.resolve()
@@ -23,15 +24,17 @@ for line in (build / 'CMakeCache.txt').read_text().splitlines():
         cache[key.split(':', 1)[0]] = value
 if pathlib.Path(cache['CMAKE_HOME_DIRECTORY']).resolve() != root:
     raise SystemExit('build directory is configured for another source tree')
-subprocess.run(['cmake', '--build', str(build), '--target', 'ostc4_replay',
+target = 'ostc4_replay_corrected' if args.corrected else 'ostc4_replay'
+subprocess.run(['cmake', '--build', str(build), '--target', target,
                 '--clean-first'], check=True)
-cli = build / 'ostc4_replay'
+cli = build / target
 digest = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
 manifest = json.loads((root / 'upstream-manifest.json').read_text())
 for name, expected in manifest['files'].items():
     if digest(root / 'upstream' / name) != expected:
         raise SystemExit('changed upstream file: ' + name)
-policy = json.loads((root / 'policy.json').read_text())
+policy = json.loads((root / ('corrected-policy.json' if args.corrected else 'policy.json')).read_text())
+correction_set = policy.get('correction_set', 'none')
 records = []
 for name in ('shallow', 'decompression'):
     profile = root / 'fixtures' / (name + '.csv')
@@ -44,7 +47,7 @@ for name in ('shallow', 'decompression'):
     metadata = json.loads(replay.splitlines()[0])
     if (metadata['revision'] != manifest['revision'] or
             metadata['policy'] != policy['identity'] or
-            metadata['correction_set'] != manifest['correction_set']):
+            metadata['correction_set'] != correction_set):
         raise SystemExit('compiled source/policy identity mismatch')
     (output / (name + '.jsonl')).write_bytes(replay)
     records.append({'profile': profile.name, 'input_sha256': digest(profile),
@@ -57,9 +60,11 @@ if not links:
     if cache['CMAKE_GENERATOR'] not in ('Ninja', 'Ninja Multi-Config'):
         raise SystemExit('cannot capture linker commands for this CMake generator')
     links['ninja_commands'] = subprocess.check_output(
-        [cache['CMAKE_MAKE_PROGRAM'], '-C', str(build), '-t', 'commands', 'ostc4_replay'], text=True)
-report = {'kind' : 'synthetic baseline observations, not independent expected schedules',
-          'source': manifest, 'policy': policy,
+        [cache['CMAKE_MAKE_PROGRAM'], '-C', str(build), '-t', 'commands', target], text=True)
+report = {'kind' : 'synthetic variant observations, not independent expected schedules',
+          'source': manifest, 'policy': policy, 'correction_set': correction_set,
+          'correction_files_sha256': {str(p.relative_to(root)): digest(p) for p in sorted((root / 'corrections').glob('*')) if p.is_file()} if args.corrected else {},
+          'generated_source_sha256': digest(build / 'corrected/decom.c') if args.corrected else None,
           'host_math_runtime': {'platform': platform.platform(), 'libc': platform.libc_ver()},
           'adapter_files_sha256': {str(p.relative_to(root)): digest(p) for p in
               sorted([*root.glob('src/*.c'), *root.glob('include/*.h'), *root.glob('compat/*.h')])},
