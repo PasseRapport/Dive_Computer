@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "model": "ZH_L16C_GF",
+  "gas": "N2",
+  "policy_id": "zhl16c-n2-4min-table25-v1",
+  "units": {
+    "half_life": "min",
+    "a": "bar",
+    "b": "dimensionless"
+  },
+  "notice": "Factual coefficient transcription only; coefficient provenance gate, not mathematical, physiological or real-dive validation.",
+  "rows": [
+    {
+      "compartment": 1,
+      "half_life": "4.0",
+      "b": "0.5050",
+      "a": "1.2599"
+    },
+    {
+      "compartment": 2,
+      "half_life": "8.0",
+      "b": "0.6514",
+      "a": "1.0000"
+    },
+    {
+      "compartment": 3,
+      "half_life": "12.5",
+      "b": "0.7222",
+      "a": "0.8618"
+    },
+    {
+      "compartment": 4,
+      "half_life": "18.5",
+      "b": "0.7825",
+      "a": "0.7562"
+    },
+    {
+      "compartment": 5,
+      "half_life": "27.0",
+      "b": "0.8126",
+      "a": "0.6200"
+    },
+    {
+      "compartment": 6,
+      "half_life": "38.3",
+      "b": "0.8434",
+      "a": "0.5043"
+    },
+    {
+      "compartment": 7,
+      "half_life": "54.3",
+      "b": "0.8693",
+      "a": "0.4410"
+    },
+    {
+      "compartment": 8,
+      "half_life": "77.0",
+      "b": "0.8910",
+      "a": "0.4000"
+    },
+    {
+      "compartment": 9,
+      "half_life": "109.0",
+      "b": "0.9092",
+      "a": "0.3750"
+    },
+    {
+      "compartment": 10,
+      "half_life": "146.0",
+      "b": "0.9222",
+      "a": "0.3500"
+    },
+    {
+      "compartment": 11,
+      "half_life": "187.0",
+      "b": "0.9319",
+      "a": "0.3295"
+    },
+    {
+      "compartment": 12,
+      "half_life": "239.0",
+      "b": "0.9403",
+      "a": "0.3065"
+    },
+    {
+      "compartment": 13,
+      "half_life": "305.0",
+      "b": "0.9477",
+      "a": "0.2835"
+    },
+    {
+      "compartment": 14,
+      "half_life": "390.0",
+      "b": "0.9544",
+      "a": "0.2610"
+    },
+    {
+      "compartment": 15,
+      "half_life": "498.0",
+      "b": "0.9602",
+      "a": "0.2480"
+    },
+    {
+      "compartment": 16,
+      "half_life": "635.0",
+      "b": "0.9653",
+      "a": "0.2327"
+    }
+  ],
+  "source": {
+    "url": "https://www.cmas.org/images/2025/08/09/appendix-i.webp",
+    "sha256": "5f0cdc1e26bdcc6a79077ae71c050ba5751984c00f0184d22cce8eb138f5b116",
+    "bibliography": "Bühlmann A. A., Völlm E. B., Nussberger P., Tauchmedizin, Springer-Verlag, 2002",
+    "page": 158,
+    "table": 25,
+    "columns": {
+      "half_life": "t1/2 N2 [min]",
+      "a": "ZH-L16C Computer a",
+      "b": "common ZH-L16 b"
+    },
+    "row_selection": "1, 2–16; alternative row 1b excluded",
+    "review": "Visually transcribed from the supplied scan independently of DecoTengu source; external provenance review recorded separately.",
+    "lineage": "Printed coefficients corroborate the pinned values; intermediate lineage from print to OSTC/DecoTengu is unknown."
+  }
+}
