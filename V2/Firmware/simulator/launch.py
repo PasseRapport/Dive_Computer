@@ -15,6 +15,7 @@ parser.add_argument("--smoke", action="store_true", help="Run headless for two s
 parser.add_argument("--check-controls", action="store_true", help="Check wheel and tap controls headlessly")
 parser.add_argument("--capture", help="Save a BMP screenshot during --check-controls")
 parser.add_argument("--gallery", help="Check all V1 pages and save screenshots to this directory")
+parser.add_argument("--scale-check", action="store_true", help="Check repeated Scale clicks, rendered frames and input responsiveness")
 parser.add_argument("--water-check", action="store_true")
 parser.add_argument("--dive-check", action="store_true")
 parser.add_argument("--scuba-check", action="store_true", help="Exercise the scuba UI with accelerated scenarios")
@@ -55,11 +56,16 @@ subprocess.run([
 ], cwd=sdk, env=env, check=True)
 if not args.build_only:
     command = [str(workspace / "build/zephyr/zephyr.exe")]
+    if args.scale_check:
+        env["DIVE_SIM_SCALE_CHECK"] = "1"
     if args.scuba_check:
         env["DIVE_SIM_SCUBA_CHECK"] = "1"
     if args.dive_check:
         env["DIVE_SIM_DIVE_CHECK"] = "1"
-    if args.water_check:
+    if args.scale_check:
+        env["SDL_VIDEODRIVER"] = "dummy"
+        command += ["--stop_at=13"]
+    elif args.water_check:
         env["DIVE_SIM_WATER_CHECK"] = "1"
         env["SDL_VIDEODRIVER"] = "dummy"
         command += ["--stop_at=3"]
@@ -69,7 +75,7 @@ if not args.build_only:
         env["SDL_VIDEODRIVER"] = "dummy"
         env["DIVE_SIM_GALLERY"] = str(gallery)
         if not args.water_check:
-            command += ["--stop_at=34" if args.scuba_check else "--stop_at=23" if args.dive_check else "--stop_at=58"]
+            command += ["--stop_at=44" if args.scuba_check else "--stop_at=23" if args.dive_check else "--stop_at=58"]
     elif args.smoke or args.check_controls:
         env["SDL_VIDEODRIVER"] = "dummy"
         command += ["--stop_at=2"]

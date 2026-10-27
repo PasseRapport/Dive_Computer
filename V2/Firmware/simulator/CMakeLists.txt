@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20.0)
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 project(dive_watch_lvgl)
-target_sources(app PRIVATE src/main.c src/scuba_model.c src/scuba_ui.c src/scuba_checks.c src/compass_ui.c src/sim_dive.c src/watch_ui.c src/sim_controls.c src/sim_checks.c src/v1_ui_layout.c src/selection.c
+target_sources(app PRIVATE src/light_editor.c src/compass_ring.c src/appearance_checks.c src/battery_icon.c src/main.c src/scuba_model.c src/scuba_dashboard.c src/scuba_presentation.c src/scuba_ui.c src/scuba_checks.c src/compass_ui.c src/sim_dive.c src/watch_ui.c src/sim_controls.c src/sim_checks.c src/v1_ui_layout.c src/selection.c
     src/assets/montserrat_60.c src/assets/montserrat_84.c src/assets/project_logo.c
     src/assets/icon_drop.c src/assets/icon_wave.c src/assets/icon_sun.c src/assets/turn_fish.c
     src/assets/icon_tank.c src/assets/icon_apnea.c src/assets/icon_scuba.c

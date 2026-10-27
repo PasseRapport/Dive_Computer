@@ -31,27 +31,28 @@ def white_points(image, box):
             if min(image.getpixel(((22+x)*zoom,(32+y)*zoom))) > 180]
 
 full_points = white_points(frame('00-project-logo'), (30,20,290,280))
-shrinking = white_points(frame('00-logo-shrinking'), (30,20,290,280))
+# The persistent battery above the time is outside the shrinking logo ROI.
+shrinking = white_points(frame('00-logo-shrinking'), (30,110,290,225))
 full_width = max(x for x,y in full_points)-min(x for x,y in full_points)
 moving_width = max(x for x,y in shrinking)-min(x for x,y in shrinking)
 assert 60 < moving_width < full_width*0.85, 'Logo is not shrinking during startup'
-assert 170 < (min(y for x,y in shrinking)+max(y for x,y in shrinking))/2 < 230, 'Logo is not moving down toward its dock'
-clock_frames = ['00-logo-docked','00-clock'] + ([] if boot_only else ['56-watch-digital'])
+assert 70 < (min(y for x,y in shrinking)+max(y for x,y in shrinking))/2 < 190, 'Logo is not moving down toward its dock'
+clock_frames=['00-logo-docked','00-clock']+([] if boot_only else ['56-watch-digital'])
 for name in clock_frames:
-    points = white_points(frame(name), (110,200,210,278))
-    assert len(points) > 350, f'{name}: permanent digital logo is missing'
-    left,right = min(x for x,y in points),max(x for x,y in points)
-    top,bottom = min(y for x,y in points),max(y for x,y in points)
-    assert 44 <= right-left <= 62 and 46 <= bottom-top <= 66, 'Digital logo is not at its small permanent size'
-    assert 225 <= (top+bottom)/2 <= 245, 'Digital logo is not below the time'
+    points=white_points(frame(name),(130,45,190,101))
+    assert len(points)>180,f'{name}: permanent digital logo missing'
+    assert 60<=(min(y for x,y in points)+max(y for x,y in points))/2<=85,'Digital logo not below date'
+    assert len(white_points(frame(name),(120,202,200,225)))>70,'Digital date missing'
+    assert len(white_points(frame(name),(141,237,179,255)))>35,'Digital battery missing'
 if boot_only:
-    print('BOOT CHECK PASS: two-second startup with shrink and lower permanent logo')
+    print('BOOT CHECK PASS: two-second startup, shrinking logo, date and battery')
     sys.exit(0)
-analog = frame('55-watch-analog')
-assert len(white_points(analog, (135,172,185,225))) > 450, 'Analog logo is missing below the centre'
-assert len(white_points(analog, (135,125,185,165))) < 400, 'Analog logo still overlaps the hand hub'
-time_points = white_points(frame('56-watch-digital'), (30,105,290,195))
-assert 142 <= (min(y for x,y in time_points)+max(y for x,y in time_points))/2 <= 158, 'Digital time is not vertically centred'
+analog=frame('55-watch-analog')
+assert len(white_points(analog,(130,62,190,118)))>180,'Analog logo missing above centre'
+assert len(white_points(analog,(199,140,267,160)))>70,'Analog date missing below centre'
+assert len(white_points(analog,(141,217,179,235)))>35,'Analog battery missing'
+time_points=white_points(frame('56-watch-digital'),(30,105,290,195))
+assert 142<=(min(y for x,y in time_points)+max(y for x,y in time_points))/2<=158,'Digital time not centred'
 
 def white_near(image,x,y):
     zoom = image.width // 620
@@ -65,11 +66,11 @@ for i in range(12):
     assert white_near(analog,x,y), f'Analog face missing hour mark {i}'
     if i not in (3,9):
         assert not white_near(digital,x,y), 'Digital face is covered by analog marks'
-for angle,radius in [(77,65),(210,95)]:
+for angle,radius in [(77,30),(210,45)]:
     angle = math.radians(angle)
     assert white_near(analog,160+radius*math.sin(angle),150-radius*math.cos(angle)), 'Analog hands do not show 14:35'
 # RGB565 image-edge antialiasing can round by one colour step on a partial redraw.
 difference = ImageChops.difference(analog.crop((44,64,684,664)), frame('57-watch-analog-retained').crop((44,64,684,664)))
 pixels = list(difference.get_flattened_data())
 assert max(max(pixel) for pixel in pixels) <= 9 and sum(max(pixel)>0 for pixel in pixels) < 100, 'Selected clock face was not retained'
-print('WATCH FACE CHECK PASS: two-second startup, centred digital time and lower logos, hour marks and correct hands')
+print('WATCH FACE CHECK PASS: two-second startup, centred digital time, date/battery and relocated logos, hour marks and correct hands')

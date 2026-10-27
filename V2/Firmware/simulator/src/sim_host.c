@@ -8,6 +8,8 @@
 #include "sim_layout.h"
 
 static atomic_int wheel_milli_steps, orientation_milli_steps;
+static unsigned requested_zoom;
+static atomic_bool redraw_requested;
 
 void sim_host_get_clock(unsigned *hour, unsigned *minute)
 {
@@ -27,6 +29,16 @@ void sim_host_get_clock(unsigned *hour, unsigned *minute)
 static int watch_events(void *unused, SDL_Event *event)
 {
     (void)unused;
+    /* A late resize/expose can clear SDL's software window surface after
+     * LVGL finished the invalidation from the Scale button. Event watches may
+     * run outside the UI thread, so only signal here; redraw in the main loop. */
+    if (event->type == SDL_WINDOWEVENT &&
+        (event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED ||
+         event->window.event == SDL_WINDOWEVENT_EXPOSED ||
+         event->window.event == SDL_WINDOWEVENT_RESTORED ||
+         event->window.event == SDL_WINDOWEVENT_SHOWN)) {
+        atomic_store(&redraw_requested, true);
+    }
     if (event->type != SDL_MOUSEWHEEL) {
         return 1;
     }
@@ -109,7 +121,8 @@ unsigned sim_host_get_zoom(void)
         return 2;
     }
     SDL_GetWindowSize(window, &width, &height);
-    return (unsigned)(width / SIM_WIDTH);
+    if(!requested_zoom)requested_zoom=width>=SIM_WIDTH*3/2?2:1;
+    return requested_zoom;
 }
 
 int sim_host_set_zoom(unsigned zoom)
@@ -118,7 +131,10 @@ int sim_host_set_zoom(unsigned zoom)
     if (!window || (zoom != 1 && zoom != 2)) {
         return -1;
     }
-    SDL_SetWindowSize(window, SIM_WIDTH * zoom, SIM_HEIGHT * zoom);
+    requested_zoom=zoom;
+    SDL_SetWindowSize(window,SIM_WIDTH*zoom,SIM_HEIGHT*zoom);
+    SDL_RaiseWindow(window);
+    atomic_store(&redraw_requested, true);
     /* Resolution and LVGL coordinates stay fixed; SDL scales the whole window. */
     return 0;
 }
@@ -207,3 +223,38 @@ int sim_host_take_orientation(void)
 }
 
 int sim_host_scuba_check_enabled(void) {return getenv("DIVE_SIM_SCUBA_CHECK") != NULL;}
+
+void sim_host_get_date(unsigned *day,unsigned *month,unsigned *weekday,unsigned *second)
+{
+    if(getenv("DIVE_SIM_GALLERY")) {*day=26;*month=10;*weekday=1;*second=0;return;}
+    time_t now=time(NULL);struct tm local;localtime_r(&now,&local);
+    *day=local.tm_mday;*month=local.tm_mon+1;*weekday=local.tm_wday;*second=local.tm_sec;
+}
+int sim_host_scale_check_enabled(void) {return getenv("DIVE_SIM_SCALE_CHECK")!=NULL;}
+int sim_host_appearance_check_enabled(void) {return getenv("DIVE_SIM_APPEARANCE_CHECK")!=NULL;}
+int sim_host_zoom_matches(unsigned zoom)
+{
+    SDL_Window *window=find_window();int width,height;
+    if(!window)return 0;
+    SDL_GetWindowSize(window,&width,&height);
+    return width==SIM_WIDTH*zoom&&height==SIM_HEIGHT*zoom;
+}
+
+/* Test readback checks the whole simulator, including the control panel. */
+int sim_host_frame_visible(void)
+{
+    SDL_Window *window=find_window();SDL_Renderer *renderer=window?SDL_GetRenderer(window):NULL;
+    int w,h;if(!renderer||SDL_GetRendererOutputSize(renderer,&w,&h))return 0;
+    SDL_Surface *frame=SDL_CreateRGBSurfaceWithFormat(0,w,h,32,SDL_PIXELFORMAT_ARGB8888);
+    if(!frame)return 0;
+    int colored=0;
+    if(!SDL_RenderReadPixels(renderer,NULL,frame->format->format,frame->pixels,frame->pitch)) {
+        for(int y=0;y<h;y+=4)for(int x=0;x<w;x+=4) {
+            Uint32 p=((Uint32 *)((char *)frame->pixels+y*frame->pitch))[x];
+            if((p&0x00ffffff)>0x00303030)colored++;
+        }
+    }
+    SDL_FreeSurface(frame);return colored>100;
+}
+
+int sim_host_take_redraw(void) {return atomic_exchange(&redraw_requested,false);}

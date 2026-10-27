@@ -79,7 +79,7 @@ lv_obj_t *selection_place_row(lv_obj_t *label, const lv_image_dsc_t *source, int
 
 void selection_row_color(lv_obj_t *label, lv_obj_t *icon, bool selected)
 {
-    lv_color_t color = selected ? lv_color_white() : lv_color_hex(0x555555);
+    lv_color_t color=selected?lv_color_white():lv_color_hex(0x888888);
     lv_obj_set_style_text_color(label, color, 0);
     if (icon) lv_obj_set_style_image_recolor(icon, color, 0);
 }

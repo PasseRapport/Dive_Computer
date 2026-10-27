@@ -10,7 +10,7 @@ enum watch_page { WATCH_MAIN, WATCH_STATS, WATCH_WATER, WATCH_DIVE_MODE, WATCH_B
                   WATCH_PAGE_COUNT };
 enum watch_view { WATCH_CLOCK, WATCH_MODE_MENU, WATCH_DIVE_VIEW, WATCH_COMPASS_VIEW,
                   WATCH_OPTION_VIEW, WATCH_OPTION_DETAIL, WATCH_DIVE_SELECT, WATCH_BACKLIGHT_VIEW, WATCH_BOOT, WATCH_FACE_SELECT, WATCH_TOOL_LEAVE, WATCH_SLEEP_TRANSITION, WATCH_SCUBA_VIEW };
-enum watch_mode { WATCH_DIVING, WATCH_COMPASS, WATCH_WATCH, WATCH_OPTION, WATCH_MODE_COUNT };
+enum watch_mode { WATCH_WATCH, WATCH_DIVING, WATCH_COMPASS, WATCH_OPTION, WATCH_MODE_COUNT };
 enum watch_dive_mode { DIVE_SCUBA, DIVE_FREE };
 void watch_ui_create(lv_obj_t *parent);
 void watch_ui_update(const struct watch_data *data);
@@ -47,3 +47,6 @@ enum watch_pulse watch_ui_pulse(void);
 int watch_ui_haptics_option(void);
 
 void watch_ui_set_brightness(uint8_t value);
+
+void watch_ui_set_backlight_mode(enum watch_backlight_mode mode);
+void watch_ui_set_sensitivity(uint16_t value);

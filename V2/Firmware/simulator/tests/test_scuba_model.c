@@ -8,6 +8,11 @@ static void start(struct scuba_model *s)
 {scuba_model_init(s);scuba_model_arm(s,0);update(s,1000,20);assert(s->active);}
 int main(void)
 {
+    struct scuba_model custom;
+    scuba_model_init(&custom);custom.start_depth_dm=35;scuba_model_arm(&custom,0);
+    update(&custom,1000,34);assert(!custom.active);
+    scuba_model_scenario(&custom,SCUBA_MANUAL,1000);assert(custom.start_depth_dm==35);
+    update(&custom,2000,35);assert(custom.active);
     struct scuba_model s;
     scuba_model_init(&s);scuba_model_arm(&s,0);
     update(&s,1000,19);assert(!s.active);
@@ -18,6 +23,7 @@ int main(void)
     update(&s,15000,0);update(&s,313999,0);assert(s.active);
     update(&s,314000,0);assert(!s.active&&s.summary.valid&&s.summary.max_dm==100);
     assert(s.summary.duration_s==11&&s.summary.missed_stop);
+    uint32_t surface=s.surface_ms;update(&s,314500,0);assert(s.surface_ms==surface+500);
     update(&s,315000,20);assert(s.active&&s.peak_dm==20);
     s.depth_alarm_dm=30;s.time_alarm_s=2;
     update(&s,317000,40);assert((s.alerts&(SCUBA_DEPTH|SCUBA_TIME))==(SCUBA_DEPTH|SCUBA_TIME));
@@ -53,5 +59,8 @@ int main(void)
     update(&s,3000,60);assert(!(s.alerts&SCUBA_CEILING)&&s.stop_ms==1000);
     update(&s,122000,60);assert(s.deco_stage==1&&scuba_model_ceiling(&s)==30);
     update(&s,212000,30);assert(s.deco_done&&!scuba_model_ceiling(&s));
+    start(&s);update(&s,2000,600);assert(s.alerts&SCUBA_OXYGEN);
+    scuba_model_acknowledge(&s);update(&s,3000,600);assert(!(s.notifications&SCUBA_OXYGEN));
+    update(&s,4000,100);assert(!(s.alerts&SCUBA_OXYGEN));
     puts("SCUBA MODEL PASS: 2 m start, surface threshold/delay, redive, summaries, alarms/acknowledgement, ascent, stop pauses, staged deco and time acceleration");
 }

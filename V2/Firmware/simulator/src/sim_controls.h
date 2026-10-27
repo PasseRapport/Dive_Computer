@@ -11,3 +11,7 @@ uint16_t sim_controls_depth_dm(void);
 uint16_t sim_controls_heading_degrees(void);
 
 void sim_controls_set_depth_dm(uint16_t value);
+
+int sim_controls_depth_rate(void);
+
+uint32_t sim_controls_depth_mm(void);

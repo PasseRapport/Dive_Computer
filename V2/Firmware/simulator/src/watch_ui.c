@@ -4,6 +4,8 @@
 #include "native_fonts.h"
 #include "compass_ui.h"
 #include "scuba_ui.h"
+#include "battery_icon.h"
+#include "light_editor.h"
 #include <zephyr/kernel.h>
 
 LV_IMAGE_DECLARE(icon_scuba);
@@ -16,7 +18,7 @@ static lv_obj_t *pages[WATCH_PAGE_COUNT];
 static enum watch_page current_page;
 static enum watch_view current_view;
 static enum watch_view leave_origin;
-static enum watch_mode selected_mode = WATCH_DIVING;
+static enum watch_mode selected_mode = WATCH_WATCH;
 static enum watch_dive_mode dive_mode = DIVE_SCUBA;
 static bool salt_water, sleeping, bluetooth, bluetooth_dfu;
 static uint8_t brightness = 3;
@@ -38,11 +40,11 @@ static lv_obj_t *mode_cursor, *mode_labels[WATCH_MODE_COUNT], *mode_icons[WATCH_
 static lv_obj_t *option_cursor, *option_labels[OPTION_COUNT];
 static lv_obj_t *backlight_cursor, *backlight_labels[3];
 static lv_obj_t *face_view, *face_cursor, *face_labels[2], *analog_view;
-static lv_obj_t *hour_hand, *minute_hand, *logo_image, *digital_logo, *analog_logo;
-static lv_point_precise_t hour_points[2], minute_points[2], tick_points[12][2];
+static lv_obj_t *hour_hand,*minute_hand,*hour_inner,*minute_inner,
+    *digital_date,*analog_date,*digital_battery,*analog_battery,*free_battery, *logo_image, *digital_logo, *analog_logo;
+static lv_point_precise_t hour_points[2],minute_points[2],hour_hollow[2],minute_hollow[2],tick_points[12][2];
 static enum watch_clock_style clock_style = CLOCK_DIGITAL;
 static lv_obj_t *bluetooth_cursor, *bluetooth_labels[2];
-static lv_obj_t *sensitivity_label, *sensitivity_bar;
 static const enum watch_page free_pages[] = {WATCH_MAIN, WATCH_STATS, WATCH_WATER, WATCH_LEAVE};
 static const enum watch_page scuba_pages[] = {WATCH_SCUBA, WATCH_LEAVE};
 
@@ -96,15 +98,20 @@ static lv_obj_t *clock_line(lv_obj_t *parent, lv_point_precise_t *points, int wi
     return line;
 }
 
-static void update_clock_hands(unsigned hour, unsigned minute)
+static void update_clock_hands(unsigned hour,unsigned minute,unsigned second)
 {
-    hour_points[0] = minute_points[0] = (lv_point_precise_t){160, 150};
-    hour_points[1] = clock_point((hour % 12)*30 + minute/2, 73);
-    minute_points[1] = clock_point(minute*6, 105);
-    lv_line_set_points(hour_hand, hour_points, 2);
-    lv_line_set_points(minute_hand, minute_points, 2);
+    static unsigned previous=UINT32_MAX;
+    unsigned now=hour*3600+minute*60+second;
+    if(now==previous)return;
+    previous=now;
+    int h=(hour%12)*30+minute/2,m=minute*6+second/10;
+    hour_points[0]=clock_point(h,12);hour_points[1]=clock_point(h,85);
+    minute_points[0]=clock_point(m,12);minute_points[1]=clock_point(m,112);
+    hour_hollow[0]=clock_point(h,48);hour_hollow[1]=clock_point(h,82);
+    minute_hollow[0]=clock_point(m,67);minute_hollow[1]=clock_point(m,109);
+    lv_line_set_points(hour_hand,hour_points,2);lv_line_set_points(minute_hand,minute_points,2);
+    lv_line_set_points(hour_inner,hour_hollow,2);lv_line_set_points(minute_inner,minute_hollow,2);
 }
-
 static lv_obj_t *clock_logo(lv_obj_t *parent, int scale, int center_y)
 {
     lv_obj_t *image = lv_image_create(parent);
@@ -122,17 +129,15 @@ static void build_analog_clock(lv_obj_t *parent)
         tick_points[i][1] = clock_point(i*30, 133);
         clock_line(analog_view, tick_points[i], i % 3 == 0 ? 4 : 2);
     }
-    analog_logo = clock_logo(analog_view, 58, 198);
-    hour_hand = clock_line(analog_view, hour_points, 6);
-    minute_hand = clock_line(analog_view, minute_points, 4);
-    lv_obj_t *hub = lv_obj_create(analog_view);
-    lv_obj_remove_style_all(hub);
-    lv_obj_set_size(hub, 10, 10);
-    lv_obj_set_style_radius(hub, LV_RADIUS_CIRCLE, 0);
-    lv_obj_set_style_bg_color(hub, lv_color_white(), 0);
-    lv_obj_set_style_bg_opa(hub, LV_OPA_COVER, 0);
-    lv_obj_center(hub);
-    update_clock_hands(0, 0);
+    analog_logo=clock_logo(analog_view,60,90);
+    analog_date=text(analog_view,"",&lv_font_montserrat_14,141);
+    lv_obj_set_style_text_align(analog_date,LV_TEXT_ALIGN_CENTER,0);
+    analog_battery=battery_icon_create(analog_view,142,218);
+    hour_hand=clock_line(analog_view,hour_points,9);
+    hour_inner=clock_line(analog_view,hour_hollow,5);lv_obj_set_style_line_color(hour_inner,lv_color_black(),0);
+    minute_hand=clock_line(analog_view,minute_points,8);
+    minute_inner=clock_line(analog_view,minute_hollow,4);lv_obj_set_style_line_color(minute_inner,lv_color_black(),0);
+    update_clock_hands(0,0,0);
 }
 
 static void refresh_clock_style(void)
@@ -140,12 +145,14 @@ static void refresh_clock_style(void)
     lv_obj_set_style_opa(clock_label, LV_OPA_COVER, 0);
     if (clock_style == CLOCK_ANALOG) {
         lv_obj_add_flag(clock_label, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_add_flag(digital_logo, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(digital_logo,LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(digital_date,LV_OBJ_FLAG_HIDDEN);lv_obj_add_flag(digital_battery,LV_OBJ_FLAG_HIDDEN);
         lv_obj_remove_flag(analog_logo, LV_OBJ_FLAG_HIDDEN);
         lv_obj_remove_flag(analog_view, LV_OBJ_FLAG_HIDDEN);
     } else {
         lv_obj_remove_flag(clock_label, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_remove_flag(digital_logo, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_remove_flag(digital_logo,LV_OBJ_FLAG_HIDDEN);
+        lv_obj_remove_flag(digital_date,LV_OBJ_FLAG_HIDDEN);lv_obj_remove_flag(digital_battery,LV_OBJ_FLAG_HIDDEN);
         lv_obj_add_flag(analog_view, LV_OBJ_FLAG_HIDDEN);
     }
 }
@@ -176,8 +183,8 @@ static void refresh_options(bool animate)
 static void refresh_backlight(bool animate)
 {
     const char *names[] = {"ON", "OFF", "AUTO"};
-    lv_label_set_text(backlight_labels[1], names[backlight_mode]);
-    lv_obj_align(backlight_labels[1], LV_ALIGN_TOP_MID, 0, 153);
+    lv_label_set_text(backlight_labels[0], names[backlight_mode]);
+    lv_obj_align(backlight_labels[0], LV_ALIGN_TOP_MID, 0, 105);
     fit_rows(backlight_cursor, backlight_labels, 3, selected_backlight, animate);
 }
 
@@ -200,13 +207,15 @@ static void refresh_bluetooth(bool animate)
 
 static void refresh_sensitivity(void)
 {
-    lv_label_set_text_fmt(sensitivity_label, "%u%%", sensitivity);
-    lv_obj_align(sensitivity_label, LV_ALIGN_TOP_MID, 0, 50);
-    lv_bar_set_value(sensitivity_bar, sensitivity, LV_ANIM_OFF);
+    if(pages[WATCH_SENSITIVITY])light_editor_set_value(pages[WATCH_SENSITIVITY],sensitivity);
 }
 
 static void refresh_recovery_visibility(void)
 {
+    if(free_battery) {
+        bool show=current_view==WATCH_DIVE_VIEW&&current_page==WATCH_MAIN&&dive_mode==DIVE_FREE&&!sleeping;
+        if(show)lv_obj_remove_flag(free_battery,LV_OBJ_FLAG_HIDDEN);else lv_obj_add_flag(free_battery,LV_OBJ_FLAG_HIDDEN);
+    }
     bool visible = recovery_active && current_view == WATCH_DIVE_VIEW &&
                    current_page == WATCH_MAIN && dive_mode == DIVE_FREE && !sleeping;
     if (visible) {
@@ -272,8 +281,8 @@ static void logo_shrink(void *object, int32_t progress)
     lv_obj_add_flag(analog_logo, LV_OBJ_FLAG_HIDDEN);
     /* Reveal the digits once the shrinking logo has cleared their area. */
     lv_obj_set_style_opa(clock_label, LV_CLAMP(0, (progress - 850)*255/150, 255), 0);
-    int scale = clock_style == CLOCK_ANALOG ? 58 : 66;
-    int center_y = clock_style == CLOCK_ANALOG ? 198 : 236;
+    int scale = 60;
+    int center_y = clock_style == CLOCK_ANALOG ? 90 : 73;
     lv_image_set_scale(object, 256 + (scale - 256)*progress/1000);
     lv_obj_set_y(object, 150 + (center_y - 150)*progress/1000 - project_logo.header.h/2);
 }
@@ -308,6 +317,8 @@ static lv_obj_t *ring(int width, int maximum)
     lv_obj_set_style_arc_color(arc, lv_color_hex(0x333333), LV_PART_MAIN);
     lv_obj_set_style_arc_color(arc, lv_color_white(), LV_PART_INDICATOR);
     lv_obj_remove_style(arc, NULL, LV_PART_KNOB);
+    lv_obj_set_style_bg_opa(arc,LV_OPA_TRANSP,LV_PART_KNOB);lv_obj_set_style_border_width(arc,0,LV_PART_KNOB);lv_obj_set_style_shadow_width(arc,0,LV_PART_KNOB);
+    lv_obj_set_style_arc_rounded(arc,false,LV_PART_MAIN);lv_obj_set_style_arc_rounded(arc,true,LV_PART_INDICATOR);
     lv_obj_remove_flag(arc, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_flag(arc, LV_OBJ_FLAG_HIDDEN);
     return arc;
@@ -329,6 +340,7 @@ static void show_page(enum watch_page next, int direction, bool animate)
         lv_obj_set_x(out, V1_PAGE_HOME_X);
         ui_slide_pages(out, in, direction);
     } else lv_obj_set_x(in, next == WATCH_DIVE_MODE ? 20 : V1_PAGE_HOME_X);
+    if(next==WATCH_BRIGHTNESS||next==WATCH_SENSITIVITY)lv_obj_set_pos(in,0,0);
     current_page = next;
     refresh_confirmation();
     refresh_recovery_visibility();
@@ -338,7 +350,7 @@ static void build_menu(lv_obj_t *view, const char *title, const char *const name
                        lv_obj_t **labels, lv_obj_t **pill, int count)
 {
     lv_obj_t *heading = text(view, title, &lv_font_montserrat_24, count == 5 ? 32 : 48);
-    lv_obj_set_style_text_color(heading, lv_color_hex(0x888888), 0);
+    lv_obj_set_style_text_color(heading, lv_color_white(), 0);
     *pill = cursor(view);
     for (int i = 0; i < count; i++)
         labels[i] = text(view, names[i], count == 5 ? &lv_font_montserrat_22 : &lv_font_montserrat_24,
@@ -355,10 +367,9 @@ void watch_ui_create(lv_obj_t *parent)
     pages[WATCH_STATS] = stats_screen;
     pages[WATCH_WATER] = water_screen;
     pages[WATCH_DIVE_MODE] = ui_create_dive_mode_page();
-    pages[WATCH_BRIGHTNESS] = brightness_screen;
-    lv_obj_t *hint = text(brightness_screen, "Tap to confirm", &lv_font_montserrat_14, 151);
-    lv_obj_set_style_text_align(hint, LV_TEXT_ALIGN_CENTER, 0);
-    lv_obj_set_style_text_color(hint, lv_color_hex(0xaaaaaa), 0);
+    lv_obj_add_flag(brightness_screen,LV_OBJ_FLAG_HIDDEN);
+    pages[WATCH_BRIGHTNESS]=light_editor_create(app_screen,"BRIGHTNESS",10);
+    lv_obj_t *hint;
     /* The legacy hidden page owns the periodically refreshed battery label. */
     lv_obj_add_flag(sleep_screen, LV_OBJ_FLAG_HIDDEN);
     sleep_screen = detail_page("SLEEP", "Turn the crown\nto confirm sleep");
@@ -379,29 +390,25 @@ void watch_ui_create(lv_obj_t *parent)
     lv_obj_set_style_text_color(hint, lv_color_hex(0xaaaaaa), 0);
     refresh_haptics(false);
 
-    pages[WATCH_SENSITIVITY] = detail_page("SENSITIVITY", "");
-    sensitivity_label = text(pages[WATCH_SENSITIVITY], "", &lv_font_montserrat_28, 50);
-    sensitivity_bar = lv_bar_create(pages[WATCH_SENSITIVITY]);
-    lv_obj_set_size(sensitivity_bar, 180, 10);
-    lv_obj_align(sensitivity_bar, LV_ALIGN_TOP_MID, 0, 91);
-    lv_bar_set_range(sensitivity_bar, 0, 100);
-    hint = text(pages[WATCH_SENSITIVITY], "Tap to confirm", &lv_font_montserrat_14, 135);
-    lv_obj_set_style_text_align(hint, LV_TEXT_ALIGN_CENTER, 0);
-    lv_obj_set_style_text_color(hint, lv_color_hex(0xaaaaaa), 0);
+    pages[WATCH_SENSITIVITY]=light_editor_create(app_screen,"SENSITIVITY",100);
     refresh_sensitivity();
     confirm_arc = ring(10, 24);
     recovery_arc = ring(8, 1000);
     current_page = WATCH_MAIN;
     ui_refresh_brightness_bar(brightness);
+    if(pages[WATCH_BRIGHTNESS])light_editor_set_value(pages[WATCH_BRIGHTNESS],brightness);
 
     clock_view = make_view(parent);
     clock_label = text(clock_view, "00:00", &watch_montserrat_84, 0);
-    digital_logo = clock_logo(clock_view, 66, 236);
+    digital_logo=clock_logo(clock_view,60,73);
+    digital_date=text(clock_view,"",&lv_font_montserrat_18,202);
+    digital_battery=battery_icon_create(clock_view,142,238);
+    free_battery=battery_icon_create(app_screen,142,35);
     build_analog_clock(clock_view);
     mode_view = make_view(parent);
     mode_cursor = cursor(mode_view);
-    const char *names[] = {"DIVING", "COMPASS", "WATCH", "OPTIONS"};
-    const lv_image_dsc_t *icons[] = {&icon_scuba, &icon_compass, &icon_watch, &icon_options};
+    const char *names[] = {"WATCH", "DIVING", "COMPASS", "OPTIONS"};
+    const lv_image_dsc_t *icons[] = {&icon_watch, &icon_scuba, &icon_compass, &icon_options};
     for (int i = 0; i < WATCH_MODE_COUNT; i++) {
         mode_labels[i] = text(mode_view, names[i], &lv_font_montserrat_28, 0);
         mode_icons[i] = selection_place_row(mode_labels[i], icons[i], 58 + 58*i);
@@ -414,7 +421,7 @@ void watch_ui_create(lv_obj_t *parent)
     build_menu(option_view, "OPTIONS", options, option_labels, &option_cursor, OPTION_COUNT);
     refresh_options(false);
     backlight_view = make_view(parent);
-    const char *light_options[] = {"BRIGHTNESS", "AUTO", "SENSITIVITY"};
+    const char *light_options[] = {"AUTO", "BRIGHTNESS", "SENSITIVITY"};
     build_menu(backlight_view, "BACKLIGHT", light_options, backlight_labels, &backlight_cursor, 3);
     refresh_backlight(false);
     face_view = make_view(parent);
@@ -595,8 +602,9 @@ void watch_ui_input(enum watch_input input, int steps)
             if (current_page == WATCH_BRIGHTNESS) {
                 brightness = LV_CLAMP(0, (int64_t)brightness + steps, 10);
                 ui_refresh_brightness_bar(brightness);
+    if(pages[WATCH_BRIGHTNESS])light_editor_set_value(pages[WATCH_BRIGHTNESS],brightness);
             } else if (current_page == WATCH_SENSITIVITY) {
-                sensitivity = LV_CLAMP(0, (int64_t)sensitivity + steps, 100);
+                sensitivity = LV_CLAMP(0, (int64_t)sensitivity + (int64_t)steps*10, 100);
                 refresh_sensitivity();
 
             } else if (current_page == WATCH_BLUETOOTH) {
@@ -661,7 +669,7 @@ void watch_ui_input(enum watch_input input, int steps)
             ui_refresh_water_selection(salt_water);
         } else if (current_view == WATCH_OPTION_VIEW) {
             if (selected_option == OPTION_BACKLIGHT) {
-                refresh_backlight(false);
+                selected_backlight=0;refresh_backlight(false);
                 set_view(WATCH_BACKLIGHT_VIEW);
             } else if (selected_option == OPTION_WATCH) {
                 selected_face = clock_style;
@@ -676,12 +684,12 @@ void watch_ui_input(enum watch_input input, int steps)
                           selected_option == OPTION_HAPTICS ? WATCH_HAPTICS : WATCH_BLUETOOTH, 1, false);
             }
         } else if (current_view == WATCH_BACKLIGHT_VIEW) {
-            if (selected_backlight == 1) {
+            if (selected_backlight == 0) {
                 backlight_mode = (backlight_mode + 1) % 3;
                 refresh_backlight(true);
             } else {
                 set_view(WATCH_OPTION_DETAIL);
-                show_page(selected_backlight == 0 ? WATCH_BRIGHTNESS : WATCH_SENSITIVITY, 1, false);
+                show_page(selected_backlight == 1 ? WATCH_BRIGHTNESS : WATCH_SENSITIVITY, 1, false);
             }
         } else if (current_view == WATCH_OPTION_DETAIL) {
             if (current_page == WATCH_BRIGHTNESS || current_page == WATCH_SENSITIVITY) {
@@ -708,7 +716,14 @@ void watch_ui_update(const struct watch_data *data)
     lv_obj_set_style_transform_pivot_x(clock_label, lv_obj_get_width(clock_label) / 2, 0);
     lv_obj_set_style_transform_pivot_y(clock_label, lv_obj_get_height(clock_label) / 2, 0);
     lv_obj_align(clock_label, LV_ALIGN_CENTER, 0, 0);
-    update_clock_hands(data->clock_hour, data->clock_minute);
+    update_clock_hands(data->clock_hour,data->clock_minute,data->clock_second);
+    static const char *const days[]={"SUN","MON","TUE","WED","THU","FRI","SAT"};
+    const char *day=days[data->clock_weekday%7];
+    lv_label_set_text_fmt(digital_date,"%s %02u",day,data->clock_day);lv_obj_align(digital_date,LV_ALIGN_TOP_MID,0,202);
+    lv_label_set_text_fmt(analog_date,"%s %02u",day,data->clock_day);lv_obj_update_layout(analog_date);
+    lv_obj_set_align(analog_date,LV_ALIGN_TOP_LEFT);lv_obj_set_pos(analog_date,233-lv_obj_get_width(analog_date)/2,141);
+    battery_icon_update(digital_battery,data->battery_percent);battery_icon_update(analog_battery,data->battery_percent);
+    battery_icon_update(free_battery,data->battery_percent);
     compass_ui_update(data->heading_degrees);
     ui_refresh_dive_time(data->elapsed_s);
     ui_refresh_depth(data->depth_dm / 10.0f);
@@ -730,7 +745,8 @@ void watch_ui_update(const struct watch_data *data)
 enum watch_page watch_ui_page(void) { return current_view==WATCH_SCUBA_VIEW ? (scuba_ui_screen()==SCUBA_LEAVE?WATCH_LEAVE:WATCH_SCUBA) : current_page; }
 bool watch_ui_is_sleeping(void) { return sleeping; }
 bool watch_ui_salt_water(void) { return salt_water; }
-void watch_ui_set_brightness(uint8_t value) { brightness=LV_MIN(value,10);ui_refresh_brightness_bar(brightness); }
+void watch_ui_set_brightness(uint8_t value) { brightness=LV_MIN(value,10);ui_refresh_brightness_bar(brightness);
+    if(pages[WATCH_BRIGHTNESS])light_editor_set_value(pages[WATCH_BRIGHTNESS],brightness); }
 uint8_t watch_ui_brightness(void) { return brightness; }
 enum watch_view watch_ui_view(void) { return current_view; }
 enum watch_mode watch_ui_mode(void) { return selected_mode; }
@@ -763,4 +779,15 @@ const char *watch_ui_page_name(void)
     if (current_view == WATCH_FACE_SELECT) return "WATCH";
     static const char *const names[] = {"MAIN", "STATS", "WATER TYPE", "MODE", "BRIGHTNESS", "SLEEP", "SCUBADIVING", "BLUETOOTH", "LEAVE", "SENSITIVITY", "HAPTICS"};
     return names[current_page];
+}
+
+void watch_ui_set_backlight_mode(enum watch_backlight_mode mode)
+{
+    if(mode<=BACKLIGHT_AUTO)backlight_mode=mode;
+    refresh_backlight(false);
+}
+void watch_ui_set_sensitivity(uint16_t value)
+{
+    sensitivity=LV_MIN((value+5)/10,10)*10;
+    refresh_sensitivity();
 }

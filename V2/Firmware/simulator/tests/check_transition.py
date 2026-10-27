@@ -24,7 +24,7 @@ assert visible_pixels, 'No transition screenshots were captured'
 for direction, count in visible_pixels.items():
     assert count > 10, f'{direction} slide is still clipped by the obsolete 128 x 96 canvas'
 print('TRANSITION CHECK PASS: moving UI reaches the circular display edges')
-for name, dimensions in [('12-zoom-x1.bmp', (620, 420)), ('13-zoom-x2.bmp', (1240, 840))]:
+for name, dimensions in [('12-zoom-x2.bmp', (1240, 840)), ('13-zoom-x1.bmp', (620, 420))]:
     path = directory / name
     if path.exists():
         assert Image.open(path).size == dimensions, f'Wrong pixel dimensions for {name}'

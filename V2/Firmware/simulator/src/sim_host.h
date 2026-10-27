@@ -20,3 +20,13 @@ int sim_host_dive_check_enabled(void);
 int sim_host_take_orientation(void);
 
 int sim_host_scuba_check_enabled(void);
+
+void sim_host_get_date(unsigned *day,unsigned *month,unsigned *weekday,unsigned *second);
+int sim_host_scale_check_enabled(void);
+int sim_host_appearance_check_enabled(void);
+int sim_host_zoom_matches(unsigned zoom);
+
+/* Consume window redraw requests on the UI thread, never in the SDL watcher. */
+int sim_host_take_redraw(void);
+/* Native regression test: detect a fully black simulator surface. */
+int sim_host_frame_visible(void);

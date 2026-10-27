@@ -4,15 +4,19 @@
 #include "watch_ui.h"
 #include "scuba_ui.h"
 #include <zephyr/sys/printk.h>
+#include <zephyr/kernel.h>
 
 static lv_obj_t *last_event;
 static lv_obj_t *counts_label;
-static lv_obj_t *zoom_label;
+static lv_obj_t *zoom_label,*scuba_zoom_label;
 static unsigned single_taps, double_taps;
 static int total_steps;
 static uint16_t depth_dm, heading_degrees;
 static lv_obj_t *orientation_label;
 static lv_obj_t *depth_label;
+static int depth_rate;
+static int64_t rate_fraction;
+static uint64_t rate_last_ms;
 static lv_obj_t *scuba_panel, *scenario_label, *speed_label, *battery_label, *haptic_label;
 static bool positive_wheel_seen, negative_wheel_seen;
 
@@ -51,31 +55,27 @@ static void double_tap(lv_event_t *event)
 
 void sim_controls_set_depth_dm(uint16_t value)
 {
-    depth_dm=LV_MIN(value,1000);
+    depth_dm=LV_MIN(value,1000);depth_rate=0;rate_fraction=0;
     lv_label_set_text_fmt(depth_label,"Wheel: rotate | Depth: %u.%u m",depth_dm/10,depth_dm%10);
 }
 
-static void change_depth(lv_event_t *event)
+static void rate_changed(lv_event_t *event)
 {
-    intptr_t direction = (intptr_t)lv_event_get_user_data(event);
     if(watch_ui_view()==WATCH_SCUBA_VIEW) {depth_dm=scuba_ui_model()->depth_dm;scuba_ui_manual();}
-    int next = direction == 0 ? 0 : (int)depth_dm + direction * 10;
-    depth_dm = LV_CLAMP(0, next, 1000);
-    lv_label_set_text_fmt(depth_label, "Wheel: rotate | Depth: %u.%u m", depth_dm / 10, depth_dm % 10);
+    int delta=(int)(intptr_t)lv_event_get_user_data(event);
+    depth_rate=LV_CLAMP(-60,depth_rate+delta,60);
+    rate_last_ms=k_uptime_get();
 }
-
-uint16_t sim_controls_depth_dm(void) { return depth_dm; }
-
-static void depth_button(lv_obj_t *parent, const char *text, int x, intptr_t direction)
+static void surface(lv_event_t *event)
 {
-    lv_obj_t *button = lv_button_create(parent);
-    lv_obj_set_pos(button, x, SIM_DEPTH_Y);
-    lv_obj_set_size(button, SIM_DEPTH_BUTTON_WIDTH, SIM_DEPTH_BUTTON_HEIGHT);
-    lv_obj_add_event_cb(button, change_depth, LV_EVENT_CLICKED, (void *)direction);
-    if (direction) lv_obj_add_event_cb(button, change_depth, LV_EVENT_LONG_PRESSED_REPEAT, (void *)direction);
-    lv_obj_t *label = lv_label_create(button);
-    lv_label_set_text(label, text);
-    lv_obj_center(label);
+    (void)event;sim_controls_set_depth_dm(0);
+    if(watch_ui_view()==WATCH_SCUBA_VIEW)scuba_ui_manual();
+}
+uint16_t sim_controls_depth_dm(void) { return depth_dm; }
+int sim_controls_depth_rate(void) { return depth_rate; }
+uint32_t sim_controls_depth_mm(void)
+{
+    return LV_CLAMP(0,(int64_t)depth_dm*100+rate_fraction/60,100000);
 }
 
 static void change_zoom(lv_event_t *event)
@@ -84,6 +84,8 @@ static void change_zoom(lv_event_t *event)
     unsigned zoom = sim_host_get_zoom() == 2 ? 1 : 2;
     if (sim_host_set_zoom(zoom) == 0) {
         lv_label_set_text_fmt(zoom_label, "Scale: x%u (click)", zoom);
+        lv_label_set_text_fmt(scuba_zoom_label,"Scale: x%u",zoom);
+        lv_obj_center(scuba_zoom_label);
         lv_obj_invalidate(lv_screen_active());
     }
 }
@@ -203,9 +205,17 @@ lv_obj_t *sim_controls_create(void)
     orientation_label = label_at(orientation, "ORIENTATION: 000°", 7, 1);
     depth_label = label_at(orientation, "Wheel: rotate | Depth: 0.0 m", 7, 19);
     lv_obj_set_style_text_font(depth_label, &lv_font_montserrat_12, 0);
-    depth_button(screen, "Descend", SIM_DEPTH_DOWN_X, 1);
-    depth_button(screen, "Ascend", SIM_DEPTH_UP_X, -1);
-    depth_button(screen, "Surface", SIM_SURFACE_X, 0);
+    const char *rate_names[]={"Ascend -1","Descend +1"};
+    for(int i=0;i<2;i++) {
+        lv_obj_t *button=lv_button_create(screen);
+        lv_obj_set_pos(button,24+i*120,380);lv_obj_set_size(button,110,30);
+        lv_obj_set_style_radius(button,10,0);
+        lv_obj_add_event_cb(button,rate_changed,LV_EVENT_CLICKED,(void *)(intptr_t)(i?1:-1));
+        lv_obj_t *label=lv_label_create(button);lv_label_set_text(label,rate_names[i]);lv_obj_center(label);
+    }
+    lv_obj_t *reset=lv_button_create(screen);lv_obj_set_pos(reset,270,380);lv_obj_set_size(reset,72,30);
+    lv_obj_add_event_cb(reset,surface,LV_EVENT_CLICKED,NULL);
+    lv_obj_t *reset_text=lv_label_create(reset);lv_label_set_text(reset_text,"Surface");lv_obj_center(reset_text);
     zoom_label = panel_button(screen, "", SIM_ZOOM_Y, change_zoom);
     lv_label_set_text_fmt(zoom_label, "Scale: x%u (click)", sim_host_get_zoom());
     label_at(screen, "x1: 1 screen pixel per pixel", SIM_PANEL_X, 402);
@@ -220,7 +230,7 @@ lv_obj_t *sim_controls_create(void)
     lv_obj_set_style_text_font(haptic_label,&lv_font_montserrat_12,0);
     lv_obj_t *scale=lv_button_create(scuba_panel);lv_obj_set_pos(scale,124,104);lv_obj_set_size(scale,100,30);
     lv_obj_add_event_cb(scale,change_zoom,LV_EVENT_CLICKED,NULL);
-    lv_obj_t *scale_text=lv_label_create(scale);lv_label_set_text(scale_text,"Scale x1/x2");lv_obj_set_style_text_font(scale_text,&lv_font_montserrat_12,0);lv_obj_center(scale_text);
+    scuba_zoom_label=lv_label_create(scale);lv_label_set_text_fmt(scuba_zoom_label,"Scale: x%u",sim_host_get_zoom());lv_obj_set_style_text_font(scuba_zoom_label,&lv_font_montserrat_12,0);lv_obj_center(scuba_zoom_label);
     lv_obj_add_flag(scuba_panel,LV_OBJ_FLAG_HIDDEN);
     return watch;
 }
@@ -230,6 +240,14 @@ uint16_t sim_controls_heading_degrees(void) { return heading_degrees; }
 void sim_controls_poll(void)
 {
     bool scuba=watch_ui_view()==WATCH_SCUBA_VIEW;
+    uint64_t now=k_uptime_get(),dt=rate_last_ms?now-rate_last_ms:0;rate_last_ms=now;
+    if(depth_rate) {
+        rate_fraction+=(int64_t)depth_rate*dt*(scuba?scuba_ui_model()->speed:1);
+        int delta=rate_fraction/6000;rate_fraction%=6000;
+        depth_dm=LV_CLAMP(0,(int)depth_dm+delta,1000);
+        if((!depth_dm&&depth_rate<0)||(depth_dm==1000&&depth_rate>0))rate_fraction=0;
+    }
+    lv_label_set_text_fmt(depth_label,"Depth: %u.%u m | Rate: %+d m/min",depth_dm/10,depth_dm%10,depth_rate);
     if(scuba) {
         const struct scuba_model *s=scuba_ui_model();
         lv_obj_remove_flag(scuba_panel,LV_OBJ_FLAG_HIDDEN);
@@ -238,7 +256,7 @@ void sim_controls_poll(void)
         lv_label_set_text_fmt(battery_label,"Battery: %u%%",s->battery);lv_obj_center(battery_label);
         lv_label_set_text(haptic_label,scuba_ui_haptic_active()?"VIBRATION":"DEMO VALUES");
         lv_obj_set_style_text_color(haptic_label,lv_color_hex(scuba_ui_haptic_active()?0xffaa66:0xaaaaaa),0);
-        lv_label_set_text_fmt(depth_label,"Wheel: rotate | Depth: %u.%u m",s->depth_dm/10,s->depth_dm%10);
+        lv_label_set_text_fmt(depth_label,"Depth: %u.%u m | Rate: %+d m/min",s->depth_dm/10,s->depth_dm%10,depth_rate);
     } else lv_obj_add_flag(scuba_panel,LV_OBJ_FLAG_HIDDEN);
 
     int rotation = -sim_host_take_orientation();

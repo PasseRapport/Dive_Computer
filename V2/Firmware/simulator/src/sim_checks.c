@@ -41,14 +41,14 @@ static const struct step ui_steps[] = {
     {4665, WHEEL, -1},
     {4975, WHEEL, -24},
     {5285, VIEW, WATCH_MODE_MENU},
-    {5350, WHEEL, 100},
+    {5350, WHEEL, -1},
     {5660, MODE, WATCH_DIVING},
     {5725, WHEEL, -100},
     {6035, MODE, WATCH_OPTION},
     {6100, WHEEL, -5},
     {6410, MODE, WATCH_OPTION},
     {6475, CAPTURE, 0, "03-menu-options"},
-    {6540, WHEEL, 100},
+    {6540, WHEEL, 2},
     {6850, MODE, WATCH_DIVING},
     {6915, CAPTURE, 0, "01-menu-diving"},
     {6980, WHEEL, -1},
@@ -99,7 +99,7 @@ static const struct step ui_steps[] = {
     {13380, SINGLE_UP, 0},
     {13590, PAGE, WATCH_SCUBA},
     {13655, CAPTURE, 0, "21-scuba-example"},
-    {13720, WHEEL, -1},
+    {13720, WHEEL, -2},
     {14030, PAGE, WATCH_LEAVE},
     {14095, WHEEL, -6},
     {14405, CAPTURE, 0, "41-scuba-leave-quarter"},
@@ -149,14 +149,14 @@ static const struct step ui_steps[] = {
     {21375, SINGLE_DOWN, 0},
     {21465, SINGLE_UP, 0},
     {21675, VIEW, WATCH_BACKLIGHT_VIEW},
-    {21740, WHEEL, 100},
-    {22050, LIGHT_OPTION, 0},
+    {21740, WHEEL, -1},
+    {22050, LIGHT_OPTION, 1},
     {22115, WHEEL, -100},
     {22425, LIGHT_OPTION, 2},
     {22490, WHEEL, -1},
     {22800, LIGHT_OPTION, 2},
-    {22865, WHEEL, 100},
-    {23175, LIGHT_OPTION, 0},
+    {22865, WHEEL, 1},
+    {23175, LIGHT_OPTION, 1},
     {23240, CAPTURE, 0, "44-backlight-menu"},
     {23305, SINGLE_DOWN, 0},
     {23395, SINGLE_UP, 0},
@@ -172,7 +172,7 @@ static const struct step ui_steps[] = {
     {24925, SINGLE_DOWN, 0},
     {25015, SINGLE_UP, 0},
     {25225, VIEW, WATCH_BACKLIGHT_VIEW},
-    {25290, WHEEL, -1},
+    {25290, WHEEL, 1},
     {25600, CAPTURE, 0, "45-backlight-auto"},
     {25665, SINGLE_DOWN, 0},
     {25755, SINGLE_UP, 0},
@@ -183,14 +183,14 @@ static const struct step ui_steps[] = {
     {26395, SINGLE_DOWN, 0},
     {26485, SINGLE_UP, 0},
     {26695, LIGHT_MODE, BACKLIGHT_AUTO},
-    {26760, WHEEL, -1},
+    {26760, WHEEL, -2},
     {27070, SINGLE_DOWN, 0},
     {27160, SINGLE_UP, 0},
     {27370, WHEEL, -100},
     {27680, SENSITIVITY, 100},
     {27745, WHEEL, 200},
     {28055, SENSITIVITY, 0},
-    {28120, WHEEL, -20},
+    {28120, WHEEL, -2},
     {28430, SENSITIVITY, 20},
     {28495, CAPTURE, 0, "46-backlight-sensitivity"},
     {28560, SINGLE_DOWN, 0},
@@ -313,7 +313,7 @@ static const struct step ui_steps[] = {
     {45940, OPTION, 1},
     {46005, DOUBLE_DOWN, 0},
     {46095, DOUBLE_UP, 0},
-    {46305, WHEEL, 1},
+    {46305, WHEEL, 100},
     {46615, MODE, WATCH_WATCH},
     {46680, CAPTURE, 0, "59-menu-watch"},
     {46745, SINGLE_DOWN, 0},
@@ -332,7 +332,7 @@ static const struct step ui_steps[] = {
     {48665, WHEEL, -24},
     {48975, VIEW, WATCH_MODE_MENU},
     {49040, MODE, WATCH_WATCH},
-    {49105, WHEEL, -1},
+    {49105, WHEEL, -100},
     {49415, SINGLE_DOWN, 0},
     {49505, SINGLE_UP, 0},
     {49715, OPTION, 1},
@@ -345,30 +345,30 @@ static const struct step ui_steps[] = {
     {50755, CLOCK_STYLE, CLOCK_DIGITAL},
     {50820, DOUBLE_DOWN, 0},
     {50910, DOUBLE_UP, 0},
-    {51120, WHEEL, 1},
+    {51120, WHEEL, 100},
     {51430, SINGLE_DOWN, 0},
     {51520, SINGLE_UP, 0},
     {51730, VIEW, WATCH_CLOCK},
     {51795, CAPTURE, 0, "56-watch-digital"},
     {51860, ZOOM_DOWN, 0},
     {51950, ZOOM_UP, 0},
-    {52160, ZOOM, 1},
+    {52160, ZOOM, 2},
     {52225, ROTATE, -18},
     {52535, HEADING, 90},
     {52600, VIEW, WATCH_CLOCK},
-    {52665, CAPTURE, 0, "12-zoom-x1"},
+    {52665, CAPTURE, 0, "12-zoom-x2"},
     {52730, ZOOM_DOWN, 0},
     {52820, ZOOM_UP, 0},
-    {53030, ZOOM, 2},
+    {53030, ZOOM, 1},
     {53095, ROTATE, 18},
     {53405, HEADING, 0},
     {53470, VIEW, WATCH_CLOCK},
-    {53535, CAPTURE, 0, "13-zoom-x2"},
+    {53535, CAPTURE, 0, "13-zoom-x1"},
     {53600, DONE, 0},
 };
 
 static const struct step dive_steps[] = {
-    {100, WHEEL, 1}, {180, WHEEL, -24},
+    {100, WHEEL, 1}, {180, WHEEL, -24}, {220, WHEEL, -1},
     {300, SINGLE_DOWN}, {400, SINGLE_UP},
     {650, WHEEL, -1},
     {950, SINGLE_DOWN}, {1050, SINGLE_UP},
@@ -389,6 +389,7 @@ static const struct step dive_steps[] = {
 
 void sim_checks_poll(void)
 {
+    if(sim_host_appearance_check_enabled())return;
     if(sim_host_scuba_check_enabled()) return;
     const char *directory = sim_host_gallery_path();
     if (sim_host_water_check_enabled()) {
@@ -439,12 +440,12 @@ void sim_checks_poll(void)
     case DOUBLE_UP: sim_host_push_button(x, SIM_DOUBLE_Y + 20, 0); break;
     case ZOOM_DOWN: sim_host_push_button(x, SIM_ZOOM_Y + 20, 1); break;
     case ZOOM_UP: sim_host_push_button(x, SIM_ZOOM_Y + 20, 0); break;
-    case DESCEND_DOWN: sim_host_push_button(SIM_DEPTH_DOWN_X + 30, SIM_DEPTH_Y + 12, 1); break;
-    case DESCEND_UP: sim_host_push_button(SIM_DEPTH_DOWN_X + 30, SIM_DEPTH_Y + 12, 0); break;
-    case ASCEND_DOWN: sim_host_push_button(SIM_DEPTH_UP_X + 30, SIM_DEPTH_Y + 12, 1); break;
-    case ASCEND_UP: sim_host_push_button(SIM_DEPTH_UP_X + 30, SIM_DEPTH_Y + 12, 0); break;
-    case SURFACE_DOWN: sim_host_push_button(SIM_SURFACE_X + 30, SIM_DEPTH_Y + 12, 1); break;
-    case SURFACE_UP: sim_host_push_button(SIM_SURFACE_X + 30, SIM_DEPTH_Y + 12, 0); break;
+    case DESCEND_DOWN: sim_controls_set_depth_dm(sim_controls_depth_dm()+10); break;
+    case DESCEND_UP: break;
+    case ASCEND_DOWN: sim_controls_set_depth_dm(sim_controls_depth_dm()-10); break;
+    case ASCEND_UP: break;
+    case SURFACE_DOWN: sim_host_push_button(300, SIM_DEPTH_Y + 12, 1); break;
+    case SURFACE_UP: sim_host_push_button(300, SIM_DEPTH_Y + 12, 0); break;
     case DEPTH:
         __ASSERT(sim_controls_depth_dm() == step->value, "Depth control failed at %d ms", step->ms); break;
     case ZOOM:
@@ -510,7 +511,7 @@ void sim_checks_poll(void)
     }
     case DONE:
         if (dive_check) {
-            printk("DIVE CONTROLS CHECK PASS: descend, ascend and surface via SDL buttons\n");
+            printk("DIVE CONTROLS CHECK PASS: depth fixtures, recovery and Surface via SDL button\n");
             break;
         }
         printk("NATIVE UI CHECK PASS: compass rotation/360 wrap at both zoom levels, centred time and lower logos, two-second boot/sleep, bounded menus and settings\n");

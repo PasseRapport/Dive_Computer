@@ -2,6 +2,7 @@
  * Do not scale whole pages: that interpolates text and makes it blurry. */
 #include "v1_ui_layout.h"
 #include "selection.h"
+#include "battery_icon.h"
 #include "native_fonts.h"
 #include <stdio.h>
 
@@ -70,7 +71,7 @@ lv_obj_t *ui_create_dive_mode_page(void)
     lv_obj_t *title = lv_label_create(page);
     lv_label_set_text(title, "MODE");
     lv_obj_set_style_text_font(title, &lv_font_montserrat_22, 0);
-    lv_obj_set_style_text_color(title, lv_color_hex(0x888888), 0);
+    lv_obj_set_style_text_color(title, lv_color_white(), 0);
     lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 0);
 
     dive_mode_cursor = lv_obj_create(page);
@@ -144,7 +145,7 @@ void v1_ui_build(lv_obj_t *parent) {
     lv_obj_t * label_time_title = lv_label_create(main_screen);
     lv_label_set_text(label_time_title, "TIME");
     lv_obj_set_style_text_font(label_time_title, &lv_font_montserrat_22, 0);       
-    lv_obj_set_style_text_color(label_time_title, lv_color_hex(0xAAAAAA), 0);      
+    lv_obj_set_style_text_color(label_time_title, lv_color_white(), 0);
     lv_obj_align(label_time_title, LV_ALIGN_TOP_LEFT, 28, 2); 
 
     label_time_val = lv_label_create(main_screen);
@@ -156,7 +157,7 @@ void v1_ui_build(lv_obj_t *parent) {
     lv_obj_t * label_temp_title = lv_label_create(main_screen);
     lv_label_set_text(label_temp_title, "TEMP");
     lv_obj_set_style_text_font(label_temp_title, &lv_font_montserrat_22, 0);       
-    lv_obj_set_style_text_color(label_temp_title, lv_color_hex(0xAAAAAA), 0);      
+    lv_obj_set_style_text_color(label_temp_title, lv_color_white(), 0);
     lv_obj_align(label_temp_title, LV_ALIGN_TOP_RIGHT, -18, 2);
 
     label_temp_val = lv_label_create(main_screen);
@@ -168,7 +169,7 @@ void v1_ui_build(lv_obj_t *parent) {
     lv_obj_t * label_depth_title = lv_label_create(main_screen);
     lv_label_set_text(label_depth_title, "DEPTH");
     lv_obj_set_style_text_font(label_depth_title, &lv_font_montserrat_22, 0);      
-    lv_obj_set_style_text_color(label_depth_title, lv_color_hex(0xAAAAAA), 0);     
+    lv_obj_set_style_text_color(label_depth_title, lv_color_white(), 0);
     lv_obj_align(label_depth_title, LV_ALIGN_TOP_LEFT, 21, 84);
 
     label_depth_val = lv_label_create(main_screen);
@@ -185,7 +186,7 @@ void v1_ui_build(lv_obj_t *parent) {
     lv_obj_t * label_max_title = lv_label_create(main_screen);
     lv_label_set_text(label_max_title, "LAST");
     lv_obj_set_style_text_font(label_max_title, &lv_font_montserrat_22, 0);        
-    lv_obj_set_style_text_color(label_max_title, lv_color_hex(0x999999), 0);       
+    lv_obj_set_style_text_color(label_max_title, lv_color_white(), 0);
     lv_obj_align(label_max_title, LV_ALIGN_BOTTOM_RIGHT, -9, -28);
 
     label_max_val = lv_label_create(main_screen);
@@ -209,7 +210,7 @@ void v1_ui_build(lv_obj_t *parent) {
     lv_obj_t * label_water_title = lv_label_create(water_screen);
     lv_label_set_text(label_water_title, "WATER TYPE");
     lv_obj_set_style_text_font(label_water_title, &lv_font_montserrat_22, 0); 
-    lv_obj_set_style_text_color(label_water_title, lv_color_hex(0x888888), 0);
+    lv_obj_set_style_text_color(label_water_title, lv_color_white(), 0);
     lv_obj_align(label_water_title, LV_ALIGN_TOP_MID, 0, 0); // Placé tout en haut
 
     // 1. LE CURSEUR GLISSANT (Créé en premier pour être en arrière-plan)
@@ -260,7 +261,7 @@ void v1_ui_build(lv_obj_t *parent) {
     lv_obj_t * label_stat_divetime_title = lv_label_create(stats_screen);
     lv_label_set_text(label_stat_divetime_title, "MAX TIME");
     lv_obj_set_style_text_font(label_stat_divetime_title, &lv_font_montserrat_18, 0);
-    lv_obj_set_style_text_color(label_stat_divetime_title, lv_color_hex(0xAAAAAA), 0);
+    lv_obj_set_style_text_color(label_stat_divetime_title, lv_color_white(), 0);
     lv_obj_align(label_stat_divetime_title, LV_ALIGN_TOP_LEFT, 0, 0);
 
     label_stat_divetime_val = lv_label_create(stats_screen);
@@ -273,7 +274,7 @@ void v1_ui_build(lv_obj_t *parent) {
     lv_obj_t * label_stat_max_title = lv_label_create(stats_screen);
     lv_label_set_text(label_stat_max_title, "MAX DEPTH");
     lv_obj_set_style_text_font(label_stat_max_title, &lv_font_montserrat_18, 0);
-    lv_obj_set_style_text_color(label_stat_max_title, lv_color_hex(0xAAAAAA), 0);
+    lv_obj_set_style_text_color(label_stat_max_title, lv_color_white(), 0);
     lv_obj_align(label_stat_max_title, LV_ALIGN_TOP_RIGHT, 0, 0); 
 
     // 1. On crée le "m" d'abord
@@ -294,7 +295,7 @@ void v1_ui_build(lv_obj_t *parent) {
     lv_obj_t * label_stat_run_title = lv_label_create(stats_screen);
     lv_label_set_text(label_stat_run_title, "RUN TIME");
     lv_obj_set_style_text_font(label_stat_run_title, &lv_font_montserrat_22, 0);
-    lv_obj_set_style_text_color(label_stat_run_title, lv_color_hex(0xAAAAAA), 0);
+    lv_obj_set_style_text_color(label_stat_run_title, lv_color_white(), 0);
     lv_obj_align(label_stat_run_title, LV_ALIGN_TOP_LEFT, 0, 96); 
 
     run_h_val = lv_label_create(stats_screen);
@@ -325,7 +326,7 @@ void v1_ui_build(lv_obj_t *parent) {
     lv_obj_t * label_stat_dives_title = lv_label_create(stats_screen);
     lv_label_set_text(label_stat_dives_title, "DIVES");
     lv_obj_set_style_text_font(label_stat_dives_title, &lv_font_montserrat_22, 0);
-    lv_obj_set_style_text_color(label_stat_dives_title, lv_color_hex(0xAAAAAA), 0);
+    lv_obj_set_style_text_color(label_stat_dives_title, lv_color_white(), 0);
     lv_obj_align(label_stat_dives_title, LV_ALIGN_TOP_RIGHT, -9, 96);
 
     label_stat_dives_val = lv_label_create(stats_screen);
@@ -419,12 +420,8 @@ void v1_ui_build(lv_obj_t *parent) {
 }
 
 void ui_refresh_battery(uint8_t percentage) {
-    lv_label_set_text_fmt(label_battery_val, "BAT: %d%%", percentage);
-    if (percentage <= 20) {
-        lv_obj_set_style_text_color(label_battery_val, lv_color_hex(0xFF0000), 0); // Red
-    } else {
-        lv_obj_set_style_text_color(label_battery_val, lv_color_hex(0x00FF00), 0); // Green
-    }
+    lv_label_set_text_fmt(label_battery_val,"BAT: %u%%",percentage);
+    lv_obj_set_style_text_color(label_battery_val,lv_color_hex(battery_icon_color(percentage)),0);
 }
 
 // =========================================================================
@@ -447,7 +444,7 @@ void ui_refresh_brightness_bar(uint8_t level) {
 void ui_refresh_water_selection(bool is_salt) {
     // 1. Couleurs simples (sans inversion)
     lv_color_t color_active = lv_color_white();           // Blanc pur quand sélectionné
-    lv_color_t color_inactive = lv_color_hex(0x555555);   // Gris foncé quand non sélectionné
+    lv_color_t color_inactive = lv_color_hex(0x888888);   // Gris foncé quand non sélectionné
 
     selection_fit(cursor_box, is_salt ? label_salt : label_clear,
                   is_salt ? img_salt : img_clear, true);
