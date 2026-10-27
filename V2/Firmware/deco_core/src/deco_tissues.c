@@ -1,4 +1,5 @@
 #include "deco_tissues.h"
+#include "deco_validation.h"
 
 #include <float.h>
 #include <math.h>
@@ -34,18 +35,13 @@ const deco_tissues_constants *deco_tissues_get_constants(void)
     return &constants;
 }
 
-static int valid_pressure(double pressure)
-{
-    return isfinite(pressure) && pressure >= constants.water_vapour_bar;
-}
-
 deco_tissues_result deco_tissues_init_fresh(deco_tissues_state *state,
                                            double surface_bar_abs)
 {
     deco_tissues_state candidate;
     size_t i;
     double inspired;
-    if (state == NULL || !valid_pressure(surface_bar_abs)) {
+    if (state == NULL || !deco_valid_pressure(surface_bar_abs)) {
         return DECO_TISSUES_ARGUMENT_ERROR;
     }
     inspired = constants.nitrogen_fraction *
@@ -64,15 +60,6 @@ deco_tissues_result deco_tissues_init_fresh(deco_tissues_state *state,
     return DECO_TISSUES_OK;
 }
 
-static int matching_identity(const deco_tissues_state *state)
-{
-    /* Bounded comparisons also reject unterminated caller-owned fields. */
-    return strncmp(state->policy_id, constants.policy_id,
-                   sizeof(state->policy_id)) == 0 &&
-           strncmp(state->coefficient_sha256, constants.coefficient_sha256,
-                   sizeof(state->coefficient_sha256)) == 0;
-}
-
 deco_tissues_result deco_tissues_integrate(deco_tissues_state *state,
                                           double start_bar_abs,
                                           double end_bar_abs,
@@ -81,17 +68,12 @@ deco_tissues_result deco_tissues_integrate(deco_tissues_state *state,
     double candidate[DECO_TISSUE_COUNT];
     double minutes, inspired_start, inspired_end;
     size_t i;
-    if (state == NULL || !valid_pressure(start_bar_abs) ||
-        !valid_pressure(end_bar_abs) || duration_ms == 0) {
+    if (state == NULL || !deco_valid_pressure(start_bar_abs) ||
+        !deco_valid_pressure(end_bar_abs) || duration_ms == 0) {
         return DECO_TISSUES_ARGUMENT_ERROR;
     }
-    if (!matching_identity(state)) {
+    if (!deco_valid_state(state)) {
         return DECO_TISSUES_STATE_ERROR;
-    }
-    for (i = 0; i < DECO_TISSUE_COUNT; ++i) {
-        if (!isfinite(state->nitrogen_bar[i]) || state->nitrogen_bar[i] < 0.0) {
-            return DECO_TISSUES_STATE_ERROR;
-        }
     }
     minutes = (double)duration_ms / 60000.0;
     inspired_start = constants.nitrogen_fraction *
