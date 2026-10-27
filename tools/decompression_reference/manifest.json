@@ -1,0 +1,5 @@
+{
+  "dependency": {"name": "decotengu", "version": "0.14.1", "archive": "decotengu-0.14.1.tar.gz", "url": "https://files.pythonhosted.org/packages/b2/ca/8ceb72cbf9082152f14496da0f5f7508353258c944aa1b8bc50a96621e9f/decotengu-0.14.1.tar.gz", "sha256": "1c59b41c0f753e1d769542d2f8228907c779171f1f668dc5c4001db873ac6f0b", "license": "GPL-3.0-or-later", "license_file": "COPYING"},
+  "policy": {"model": "ZH_L16C_GF", "start_p_n2": 0.79, "start_p_he_bar": 0.0, "surface_pressure_bar": 1.01325, "water_vapour_pressure_bar": 0.0627, "gf_low": 0.30, "gf_high": 0.70, "first_n2_half_life_min": 4.0, "depth_m": 30.0, "density_kg_m3": 1025.0, "gravity_m_s2": 9.80665, "duration_min": 35.0, "gas_percent": {"o2": 21, "n2": 79, "he": 0}},
+  "evidence_scope": "dependency-smoke-only; not coefficient verification, planner acceptance or real-dive validation"
+}

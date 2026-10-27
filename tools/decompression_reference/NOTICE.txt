@@ -1,0 +1,12 @@
+Independent host reference: DecoTengu 0.14.1, copyright its upstream authors.
+Source URL and SHA-256 are pinned in manifest.json.
+The dependency is GPL-3.0-or-later. The original source headers and COPYING
+are retained unchanged inside the downloaded archive and temporary extracted
+source tree. Distribute that complete archive, including COPYING, if distributing
+the reference dependency. Do not copy or link the reference into firmware.
+This runner executes an isolated dependency smoke, not a verified dive planner.
+Requires Python 3.12+ (tarfile data extraction filter); no third-party Python
+packages are required by the runner. Run runner.py --help for commands.
+Acquisition: runner.py fetch --archive .cache/decotengu-0.14.1.tar.gz
+Offline: runner.py smoke --archive .cache/decotengu-0.14.1.tar.gz
+Paths above are relative to your current working directory.
