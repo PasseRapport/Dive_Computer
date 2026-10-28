@@ -1,0 +1,95 @@
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/dive-watch-lvgl-dadfc5712e/ostc4-build
+[ 12%] Generating corrected/decom.c
+[ 12%] Built target ostc4_corrected_source
+[ 25%] Generating corrected/buehlmann-contained.c
+[ 37%] Building C object CMakeFiles/ostc4_upstream_contained.dir/corrected/decom.c.o
+[ 50%] Building C object CMakeFiles/ostc4_upstream_contained.dir/corrected/buehlmann-contained.c.o
+[ 62%] Linking C static library libostc4_upstream_contained.a
+[ 75%] Built target ostc4_upstream_contained
+[ 87%] Building C object CMakeFiles/ostc4_exposure.dir/src/ostc4_baseline.c.o
+[100%] Linking C static library libostc4_exposure.a
+[100%] Built target ostc4_exposure
+-- west build: generating a build system
+Loading Zephyr default modules (Zephyr base (cached)).
+-- Application: /tmp/dive-watch-lvgl-dadfc5712e/app
+-- CMake version: 4.2.1
+-- Cache files will be written to: /tmp/dive-watch-lvgl-dadfc5712e/.cache/zephyr
+-- Zephyr version: 4.4.2 (/home/Bilal/ncs/v3.4.1/zephyr), build: local
+-- Found west (found suitable version "1.5.0", minimum required is "0.14.0")
+-- Board: native_sim, qualifiers: native/64
+-- Found host-tools: zephyr 1.0.1 (/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk)
+-- Found toolchain: host (gcc/ld)
+-- Found BOARD.dts: /home/Bilal/ncs/v3.4.1/zephyr/boards/native/native_sim/native_sim_64.dts
+-- Found devicetree overlay: /tmp/dive-watch-lvgl-dadfc5712e/app/app.overlay
+-- Generated zephyr.dts: /tmp/dive-watch-lvgl-dadfc5712e/build/zephyr/zephyr.dts
+-- Generated pickled edt: /tmp/dive-watch-lvgl-dadfc5712e/build/zephyr/edt.pickle
+-- Generated devicetree_generated.h: /tmp/dive-watch-lvgl-dadfc5712e/build/zephyr/include/generated/zephyr/devicetree_generated.h
+Parsing /home/Bilal/ncs/v3.4.1/zephyr/Kconfig
+Loaded configuration '/tmp/dive-watch-lvgl-dadfc5712e/build/zephyr/.config'
+No change to configuration in '/tmp/dive-watch-lvgl-dadfc5712e/build/zephyr/.config'
+No change to Kconfig header in '/tmp/dive-watch-lvgl-dadfc5712e/build/zephyr/include/generated/zephyr/autoconf.h'
+CMake Warning at /home/Bilal/ncs/v3.4.1/nrf/cmake/device_support.cmake:34 (message):
+  SoC native is not supported by this release.
+Call Stack (most recent call first):
+  /home/Bilal/ncs/v3.4.1/nrf/CMakeLists.txt:27 (include)
+
+
+-- Using ccache: /home/Bilal/ncs/toolchains/8285d8ad56/bin/ccache
+-- Found gen_kobject_list: /home/Bilal/ncs/v3.4.1/zephyr/scripts/build/gen_kobject_list.py
+CMake Warning at /home/Bilal/ncs/v3.4.1/zephyr/CMakeLists.txt:2358 (message):
+  __ASSERT() statements are globally ENABLED
+
+
+-- Configuring done (13.7s)
+-- Generating done (0.4s)
+-- Build files have been written to: /tmp/dive-watch-lvgl-dadfc5712e/build
+-- west build: building application
+[1/138] Generating misc/generated/syscalls.json, misc/generated/struct_tags.json
+[2/39] Building C object CMakeFiles/app.dir/src/sim_dive.c.obj
+[3/39] Building C object CMakeFiles/app.dir/src/scuba_presentation.c.obj
+[4/39] Building C object CMakeFiles/app.dir/src/assets/montserrat_60.c.obj
+[5/39] Building C object CMakeFiles/app.dir/src/compass_ring.c.obj
+[6/39] Building C object CMakeFiles/app.dir/src/assets/project_logo.c.obj
+[7/39] Building C object CMakeFiles/app.dir/src/battery_icon.c.obj
+[8/39] Building C object CMakeFiles/app.dir/src/selection.c.obj
+[9/39] Building C object CMakeFiles/app.dir/src/light_editor.c.obj
+[10/39] Building C object CMakeFiles/app.dir/src/scuba_model.c.obj
+[11/39] Building C object CMakeFiles/app.dir/src/compass_ui.c.obj
+[12/39] Building C object CMakeFiles/app.dir/src/sim_checks.c.obj
+[13/39] Building C object CMakeFiles/app.dir/src/assets/montserrat_84.c.obj
+[14/39] Building C object CMakeFiles/app.dir/src/assets/icon_drop.c.obj
+[15/39] Building C object CMakeFiles/app.dir/src/scuba_checks.c.obj
+[16/39] Building C object CMakeFiles/app.dir/src/v1_ui_layout.c.obj
+[17/39] Building C object CMakeFiles/app.dir/src/main.c.obj
+[18/39] Building C object CMakeFiles/app.dir/src/assets/icon_wave.c.obj
+[19/39] Building C object CMakeFiles/app.dir/src/sim_controls.c.obj
+[20/39] Building C object CMakeFiles/app.dir/src/assets/icon_apnea.c.obj
+[21/39] Building C object CMakeFiles/app.dir/src/assets/icon_sun.c.obj
+[22/39] Building C object CMakeFiles/app.dir/src/assets/icon_options.c.obj
+[23/39] Generating linker_zephyr_pre0.cmd
+[24/39] Building C object CMakeFiles/app.dir/src/assets/icon_tank.c.obj
+[25/39] Building C object CMakeFiles/app.dir/src/assets/icon_compass.c.obj
+[26/39] Building C object CMakeFiles/app.dir/src/scuba_dashboard.c.obj
+[27/39] Building C object CMakeFiles/app.dir/src/assets/icon_scuba.c.obj
+[28/39] Building C object CMakeFiles/app.dir/src/appearance_checks.c.obj
+[29/39] Building C object CMakeFiles/app.dir/src/scuba_calculated.c.obj
+[30/39] Building C object CMakeFiles/app.dir/src/assets/turn_fish.c.obj
+[31/39] Building C object CMakeFiles/app.dir/src/assets/icon_watch.c.obj
+[32/39] Building C object CMakeFiles/app.dir/src/pc_bench_ui.c.obj
+[33/39] Building C object CMakeFiles/app.dir/src/scuba_ui.c.obj
+[34/39] Building C object CMakeFiles/app.dir/src/watch_ui.c.obj
+[35/39] Building C object CMakeFiles/app.dir/src/pc_bench_checks.c.obj
+[36/39] Linking C static library app/libapp.a
+[37/39] Linking C executable zephyr/zephyr.elf; Logical command for additional byproducts on target: zephyr_pre0
+Generating files from /tmp/dive-watch-lvgl-dadfc5712e/build/zephyr/zephyr.elf for board: native_sim/native/64
+[38/39] Building native simulator runner, and linking final executable
+[39/39] Running utility command for native_runner_executable
+WARNING: Using a test - not safe - entropy source
+*** Booting nRF Connect SDK v3.4.1-b20f8619ba9a ***
+*** Using Zephyr OS v4.4.2-33fa6a7aac6a ***
+LVGL UI ready: 320x300, RGB565, simulated data
+DISK CHECKPOINT UI PASS: visible Save disk/Load disk; default unknown clock invalid; explicit saved-time assertion; recovered40/85 locked with next20/90 preference; surface completion unlock
+
+Stopped at 10.010s

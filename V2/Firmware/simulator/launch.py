@@ -12,6 +12,7 @@ import subprocess
 parser = argparse.ArgumentParser()
 parser.add_argument("--bench", action="store_true", help="Calculated experimental OSTC4 diagnostics and depth graph")
 parser.add_argument("--bench-profile", help="Replay CSV: timestamp_seconds,absolute_pressure_bar (implies --bench)")
+parser.add_argument("--checkpoint-check", action="store_true", help="Disk checkpoint controls, explicit clock assertion and recovered lock captures")
 parser.add_argument("--gf-check", action="store_true", help="Atomic GF preparation editor and recorded-dive lock captures")
 parser.add_argument("--restart-check", action="store_true", help="Synthetic checkpoint recovery and fault captures")
 parser.add_argument("--calculated-check", action="store_true", help="Calculated watch and automatic diver captures")
@@ -26,7 +27,7 @@ parser.add_argument("--water-check", action="store_true")
 parser.add_argument("--dive-check", action="store_true")
 parser.add_argument("--scuba-check", action="store_true", help="Exercise the scuba UI with accelerated scenarios")
 args = parser.parse_args()
-args.bench = args.bench or bool(args.bench_profile) or args.bench_check or args.calculated_check or args.restart_check or args.gf_check
+args.bench = args.bench or bool(args.bench_profile) or args.bench_check or args.calculated_check or args.restart_check or args.gf_check or args.checkpoint_check
 if args.bench and (args.gallery or args.scuba_check or args.scale_check or args.check_controls or args.water_check or args.dive_check):
     parser.error("Bench checks use --bench-check; legacy gallery/control checks run without --bench")
 if args.scuba_check and not args.gallery:
@@ -38,13 +39,28 @@ tag = hashlib.sha256((str(root) + ("-bench" if args.bench else "")).encode()).he
 workspace = Path(tempfile.gettempdir()) / ("dive-watch-lvgl-" + tag)
 source = workspace / "app"
 source.mkdir(parents=True, exist_ok=True)
+source_copy_stamp = workspace / ".content-aware-source-copy-v1"
+refresh_source_timestamps = not source_copy_stamp.exists()
+
+def copy_changed_source(src, dst):
+    """Preserve incremental builds without importing stale checkout timestamps.
+
+    A newly checked-out header can be older than a host runner object. copy2
+    would retain that old time and make would silently reuse an incompatible ABI.
+    Changed contents get a fresh destination timestamp; equal files stay untouched.
+    """
+    src, dst = Path(src), Path(dst)
+    if refresh_source_timestamps or not dst.exists() or src.read_bytes() != dst.read_bytes():
+        shutil.copy(src, dst)
+    return str(dst)
+
 for name in ("CMakeLists.txt", "prj.conf", "app.overlay"):
-    shutil.copy2(root / name, source / name)
-shutil.copytree(root / "src", source / "src", dirs_exist_ok=True)
+    copy_changed_source(root / name, source / name)
+shutil.copytree(root / "src", source / "src", dirs_exist_ok=True, copy_function=copy_changed_source)
 bench_options = ["-DDIVE_BENCH=OFF"]
 if args.bench:
     core = workspace / "ostc4_baseline"
-    shutil.copytree(root.parent / "ostc4_baseline", core, dirs_exist_ok=True)
+    shutil.copytree(root.parent / "ostc4_baseline", core, dirs_exist_ok=True, copy_function=copy_changed_source)
     core_build = workspace / "ostc4-build"
     core_env = os.environ.copy()
     core_env["CCACHE_DISABLE"] = "1"
@@ -55,6 +71,7 @@ if args.bench:
     with (source / "prj.conf").open("a") as config:
         config.write("\nCONFIG_CBPRINTF_FP_SUPPORT=y\n")
     bench_options = ["-DDIVE_BENCH=ON", "-DDIVE_OSTC4_LIBDIR=" + str(core_build)]
+source_copy_stamp.touch()
 sdk = Path(os.environ.get("DIVE_NCS_ROOT", str(Path.home() / "ncs/v3.4.1")))
 toolchain = Path(os.environ.get("DIVE_TOOLCHAIN_ROOT", str(Path.home() / "ncs/toolchains/8285d8ad56")))
 env = os.environ.copy()
@@ -82,15 +99,15 @@ if not args.build_only:
     # Every automated run starts from isolated storage, even when the caller has
     # a normal preference directory configured in their environment.
     storage_fixture = None
-    if args.bench and (args.bench_check or args.calculated_check or args.restart_check or args.gf_check or args.smoke):
+    if args.bench and (args.bench_check or args.calculated_check or args.restart_check or args.gf_check or args.checkpoint_check or args.smoke):
         storage_fixture = tempfile.TemporaryDirectory(prefix="dive-watch-state-")
         env["DIVE_WATCH_STATE_DIR"] = storage_fixture.name
     if args.bench_profile:
         env["DIVE_SIM_BENCH_PROFILE"] = str(Path(args.bench_profile).resolve())
-    if args.bench_check or args.calculated_check or args.restart_check or args.gf_check:
-        env["DIVE_SIM_BENCH_CHECK"] = "gf" if args.gf_check else "restart" if args.restart_check else "calculated" if args.calculated_check else "1"
+    if args.bench_check or args.calculated_check or args.restart_check or args.gf_check or args.checkpoint_check:
+        env["DIVE_SIM_BENCH_CHECK"] = "checkpoint" if args.checkpoint_check else "gf" if args.gf_check else "restart" if args.restart_check else "calculated" if args.calculated_check else "1"
         env["SDL_VIDEODRIVER"] = "dummy"
-        command += ["--stop_at=10" if args.gf_check else "--stop_at=20" if args.calculated_check else "--stop_at=15" if args.restart_check else "--stop_at=90", "--no-rt"]
+        command += ["--stop_at=10" if args.checkpoint_check or args.gf_check else "--stop_at=20" if args.calculated_check else "--stop_at=15" if args.restart_check else "--stop_at=90", "--no-rt"]
     if args.scale_check:
         env["DIVE_SIM_SCALE_CHECK"] = "1"
     if args.scuba_check:

@@ -1,0 +1,96 @@
+Test project /tmp/dive15-build
+      Start  1: pc_bench_controls_time_graph
+ 1/24 Test  #1: pc_bench_controls_time_graph ........................   Passed    1.68 sec
+      Start  2: calculated_watch_mapping_session_alerts
+ 2/24 Test  #2: calculated_watch_mapping_session_alerts .............   Passed    0.00 sec
+      Start  3: restart_watch_diagnostics
+ 3/24 Test  #3: restart_watch_diagnostics ...........................   Passed    0.96 sec
+      Start  4: configurable_gf_public_behavior
+ 4/24 Test  #4: configurable_gf_public_behavior .....................   Passed    0.03 sec
+      Start  5: configurable_gf_independent_acceptance
+ 5/24 Test  #5: configurable_gf_independent_acceptance ..............***Failed    1.95 sec
+{
+  "identity": "configurable-gf-production-comparison-v1",
+  "cases": 12,
+  "one_second_cases": 5,
+  "one_second_events": 455,
+  "large_endpoint_events": 9,
+  "endpoint_max_error_m": 4.9992940347465264e-06,
+  "endpoint_tolerance_m": 0.006,
+  "events": 114,
+  "tts_differences": [
+    {
+      "case": "large-extreme-(1, 1)[2]",
+      "field": "tts_seconds",
+      "actual": 170448,
+      "expected": 170472,
+      "difference": -24
+    },
+    {
+      "case": "large-extreme-(1, 100)[2]",
+      "field": "tts_seconds",
+      "actual": 21388,
+      "expected": 21402,
+      "difference": -14
+    },
+    {
+      "case": "large-extreme-(100, 100)[2]",
+      "field": "tts_seconds",
+      "actual": 16274,
+      "expected": 16272,
+      "difference": 2
+    }
+  ],
+  "failures": [
+    "large-extreme-(1, 1)[2]: stop_seconds: actual=[59940, 59940, 22230, 10370, 5970, 3670, 2450, 1620, 1150, 920, 580, 520, 320, 280, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] expected=[59940, 59940, 22240, 10380, 5960, 3680, 2450, 1630, 1140, 930, 570, 530, 320, 280, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]",
+    "large-extreme-(1, 1)[2]: tts_seconds: actual=170448 expected=170472 bound=3",
+    "large-extreme-(1, 100)[2]: stop_seconds: actual=[8980, 4290, 2410, 1540, 1140, 780, 580, 420, 270, 220, 200, 90, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] expected=[8980, 4300, 2400, 1550, 1140, 790, 570, 420, 270, 220, 210, 90, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]",
+    "large-extreme-(1, 100)[2]: tts_seconds: actual=21388 expected=21402 bound=3"
+  ]
+}
+
+      Start  6: disk_checkpoint_save
+ 6/24 Test  #6: disk_checkpoint_save ................................   Passed    0.01 sec
+      Start  7: disk_checkpoint_fresh_process
+ 7/24 Test  #7: disk_checkpoint_fresh_process .......................   Passed    0.00 sec
+      Start  8: disk_checkpoint_complete_later_exposure
+ 8/24 Test  #8: disk_checkpoint_complete_later_exposure .............   Passed    0.00 sec
+      Start  9: disk_checkpoint_requires_configuration_evidence
+ 9/24 Test  #9: disk_checkpoint_requires_configuration_evidence .....   Passed    0.00 sec
+      Start 10: disk_checkpoint_process_continuity_and_faults
+10/24 Test #10: disk_checkpoint_process_continuity_and_faults .......   Passed    0.14 sec
+      Start 11: durable_preferences_logs_separate_processes
+11/24 Test #11: durable_preferences_logs_separate_processes .........   Passed    0.13 sec
+      Start 12: upstream_source_identity
+12/24 Test #12: upstream_source_identity ............................   Passed    0.06 sec
+      Start 13: synthetic_replay_contracts
+13/24 Test #13: synthetic_replay_contracts ..........................   Passed    0.12 sec
+      Start 14: public_pressure_time_contract
+14/24 Test #14: public_pressure_time_contract .......................   Passed    0.00 sec
+      Start 15: corrected_public_pressure_time_contract
+15/24 Test #15: corrected_public_pressure_time_contract .............   Passed    0.00 sec
+      Start 16: corrected_synthetic_replay_contracts
+16/24 Test #16: corrected_synthetic_replay_contracts ................   Passed    0.16 sec
+      Start 17: independently_verified_tissues
+17/24 Test #17: independently_verified_tissues ......................   Passed    1.09 sec
+      Start 18: continuous_exposure_contract
+18/24 Test #18: continuous_exposure_contract ........................   Passed    0.03 sec
+      Start 19: independent_repetitive_exposure
+19/24 Test #19: independent_repetitive_exposure .....................   Passed    0.18 sec
+      Start 20: continuity_replay_faults
+20/24 Test #20: continuity_replay_faults ............................   Passed    0.13 sec
+      Start 21: independent_schedule_analytical_checks
+21/24 Test #21: independent_schedule_analytical_checks ..............   Passed    0.26 sec
+      Start 22: independent_schedule_comparator_rejects_mutations
+22/24 Test #22: independent_schedule_comparator_rejects_mutations ...   Passed    0.22 sec
+      Start 23: checkpoint_restart_continuity
+23/24 Test #23: checkpoint_restart_continuity .......................   Passed    0.01 sec
+      Start 24: checkpoint_fresh_process
+24/24 Test #24: checkpoint_fresh_process ............................   Passed    0.11 sec
+
+96% tests passed, 1 tests failed out of 24
+
+Total Test time (real) =   7.32 sec
+
+The following tests FAILED:
+	  5 - configurable_gf_independent_acceptance (Failed)
