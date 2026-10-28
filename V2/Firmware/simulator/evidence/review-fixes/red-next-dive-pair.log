@@ -1,0 +1,2 @@
+5: pc_bench_read()->active_gf.low==20 && pc_bench_read()->result.gf_pair.low==20
+preferred=20/90 active=40/85 core=40/85

@@ -385,19 +385,36 @@ alone cannot prove those configuration events. Unknown clock, gaps, stale data,
 corruption, incompatible policy/schema and invalid settings invalidate guidance;
 accepted diagnostic numbers, pair/lock and prior files remain available.
 
-The 364-byte DWCP schema-1 PC envelope contains a fixed 64-byte header, the exact
+The 364-byte DWCP schema-2 PC envelope contains a fixed 64-byte header, the exact
 296-byte portable EXC1 schema-2 checkpoint, and little-endian CRC-32 of the full
 preceding envelope. Header fields are magic[0:4], schema u32@4, size u32@8,
 density binary32@12, preferred Low/High u8@16/17, recording armed/active u8@18/19,
 start threshold u32@20, start/completion/dive/surface seconds u32@24/28/32/36,
-started/completed counts u32@40/44, and zero reserved bytes48..63. The core
+started/completed counts u32@40/44, a session identity u64@48, and zero reserved
+bytes56..63. The core
 checkpoint owns numerical policy, tissues, exposure time, applied GF/lock and
 persistent planner anchors; its representation is not duplicated in the envelope.
 CRC detects accidental corruption, not authenticity. Restore verifies policy,
 integrity, lifecycle/lock consistency and continuity before exposing valid results.
 A recovered active pair overrides next-dive preferences until normal completion;
 brief surface returns retain the lock. Recovered history starts at the checkpoint:
-no earlier trace, surface interval or controller state is fabricated.
+no earlier trace, surface interval or controller state is fabricated. Complete later
+exposure is replayed through the same recording controller before every calculation
+as uninterrupted sampling. This includes automatic completion, the selected pair
+for the next recorded dive, and the new recording lock. Memory restart follows the
+same ordering and keeps preferred and active pairs separate.
+
+Fresh creates a random PC session identity, independent of simulation/wall-clock
+exposure. Each recording has a stable identity derived from that session and its
+start ordinal. This survives memory/disk recovery. Recovered completion logs are
+reconciled by that identity plus exact completion metadata, so repeated recovery
+(including separate processes) does not duplicate records. Two fresh synthetic
+sessions with identical timestamps, profiles and pairs remain distinct. Existing
+DWCP schema-1 PC envelopes lack this provenance: loading them reports recording
+identity UNKNOWN/unknown configuration, keeps the source file unchanged and
+withholds guidance. Their absence of identity never becomes invented provenance.
+The separately recognized original fixed-policy EXC1 legacy format remains the
+explicit migration path described below.
 
 A recognized original 293-byte fixed-30/70 EXC1 schema-1 file with the exact pinned
 numerical-policy fingerprint and CRC is explicitly migrated in memory to30/70.
@@ -466,3 +483,15 @@ endpoints pass the independently declared 0.006 m bound, but extreme 1/1 and 1/1
 stop slots and total TTS disagree with the independent reference. This rejection
 remains visible in CTest and blocks overall configurable-GF numerical acceptance;
 no schedule or endpoint tolerance has been widened.
+
+
+Completed-dive log schema 2 is a text line:
+`DIVE_WATCH_LOG 2 file_id recording_id started_seconds completed_seconds dive_seconds low high automatic policy`.
+The numeric file ID remains the durable file/index identifier; the recording ID
+identifies the recovered recording across repeat loads. Existing schema-1 lines
+remain readable with recording identity unavailable (zero in the inspection API),
+and their original bytes are never rewritten or assigned invented metadata.
+A schema-2 recovery does not silently deduplicate against an identity-free old log.
+The `recovery_pair_lifecycle_log_integration` host check covers memory/disk recovery,
+second-dive pair selection, exact uninterrupted results, replayed completion logs,
+separate-process idempotence, identical fresh sessions and immutable schema-1 logs.
