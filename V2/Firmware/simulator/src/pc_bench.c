@@ -1,5 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "pc_bench.h"
+#include "pc_bench_checkpoint_file.h"
 #include <math.h>
 #include <string.h>
 
@@ -115,7 +116,7 @@ void pc_bench_gf_edit_cancel(void)
 static void sync_gf_lock(void)
 {
     view.gf_locked=view.recording.active;
-    if(view.gf_locked)view.active_gf=view.preferred_gf;
+    /* Recovered active pair remains independent of next-dive preference. */
     ostc4_exposure_set_gf_lock(view.gf_locked);
 }
 int pc_bench_checkpoint(void)
@@ -306,6 +307,10 @@ static int accept_sample(const ostc4_sample *sample)
         if(i==elapsed)pressure=sample->absolute_pressure_bar;
         recording_sample(view.seconds+i,pressure);
     }
+    if(view.recording.dives_started!=previous_recording.dives_started) {
+        view.active_gf=view.preferred_gf;
+        ostc4_exposure_set_gf_pair(view.active_gf.low,view.active_gf.high);
+    }
     sync_gf_lock(); /* before the calculation which accepts a dive-start input */
     if(ostc4_exposure_advance(sample)!=OSTC4_OK) {
         view.recording=previous_recording;view.gf_locked=previous_lock;
@@ -404,4 +409,81 @@ void pc_bench_plot(struct bench_point point, uint32_t duration, float max_depth,
 {
     *x=duration ? (float)point.seconds/duration : 0;
     *y=max_depth>0 ? point.depth_m/max_depth : 0;
+}
+
+void pc_bench_checkpoint_notice(const char *message)
+{
+    view.recovery=message;notify_observer();
+}
+int pc_bench_checkpoint_export(struct pc_bench_checkpoint_state *state)
+{
+    if(!state || !view.history_count || view.error ||
+       ostc4_exposure_checkpoint(state->core,sizeof(state->core))!=OSTC4_OK)return -1;
+    state->recording=view.recording;state->preferred=view.preferred_gf;
+    state->density=view.density_kg_m3;return 0;
+}
+ostc4_restart_status pc_bench_checkpoint_reject(ostc4_restart_status status)
+{
+    if(ostc4_exposure_missing()!=OSTC4_OK)ostc4_exposure_restore(NULL,0,NULL);
+    ostc4_exposure_read(&view.result);
+    view.error=view.recovery=ostc4_restart_status_name(status);
+    view.gap=true;view.paused=true;view.replay=view.automatic=false;
+    view.gf_editing=false;pending_ms=0;
+    view.data_gap=(struct exposure_gap){true,false,false,0,0};
+    if(view.history_count)history[view.history_count-1].gap=true;
+    notify_observer();return status;
+}
+ostc4_restart_status pc_bench_checkpoint_import(const struct pc_bench_checkpoint_state *state,
+    const ostc4_recovery *evidence,bool legacy_ambiguous)
+{
+    unsigned char prior[OSTC4_CHECKPOINT_BYTES];
+    bool prior_valid=ostc4_exposure_checkpoint(prior,sizeof(prior))==OSTC4_OK;
+    ostc4_restart_status status=ostc4_exposure_restore(state->core,sizeof(state->core),evidence);
+    if(status!=OSTC4_RESTORED) {
+        /* Preserve prior accepted diagnostic values while latching INVALID. */
+        if(prior_valid) {
+            ostc4_recovery old={true,view.seconds,0,NULL,0};
+            ostc4_exposure_restore(prior,sizeof(prior),&old);
+        }
+        return pc_bench_checkpoint_reject(status);
+    }
+    ostc4_gf_pair preferred=view.history_count?view.preferred_gf:state->preferred;
+    uint32_t generation=view.generation+1;
+    memset(&view,0,sizeof(view));view.generation=generation;
+    view.history=history;view.profile=graph;view.exposure=actual_samples;
+    view.gf_policy=OSTC4_CONFIGURABLE_GF_POLICY;view.preferred_gf=preferred;
+    view.density_kg_m3=state->density;view.speed=1;view.paused=true;
+    view.recording=state->recording;view.active_gf=(ostc4_gf_pair){state->core[289],state->core[290]};
+    /* Seed the graph at the checkpoint; no pre-checkpoint trace is invented. */
+    unsigned char const *b=state->core;
+    uint32_t seconds=(uint32_t)b[16]|(uint32_t)b[17]<<8|(uint32_t)b[18]<<16|(uint32_t)b[19]<<24;
+    uint32_t bits=(uint32_t)b[24]|(uint32_t)b[25]<<8|(uint32_t)b[26]<<16|(uint32_t)b[27]<<24;
+    memcpy(&view.surface_bar,&bits,4);
+    bits=(uint32_t)b[28]|(uint32_t)b[29]<<8|(uint32_t)b[30]<<16|(uint32_t)b[31]<<24;
+    float pressure;memcpy(&pressure,&bits,4);
+    actual_samples[0]=(ostc4_sample){seconds,pressure};
+    history[0]=(struct bench_point){seconds,pressure_to_depth(pressure),false};view.history_count=1;
+    for(size_t n=0;evidence && n<evidence->count;++n) {
+        const ostc4_sample sample=evidence->history[n];
+        uint32_t elapsed=sample.timestamp_seconds-seconds;
+        for(uint32_t i=1;i<=elapsed;++i) {
+            float p=pressure+(sample.absolute_pressure_bar-pressure)*((float)i/elapsed);
+            if(i==elapsed)p=sample.absolute_pressure_bar;
+            recording_sample(seconds+i,p);
+        }
+        seconds=sample.timestamp_seconds;pressure=sample.absolute_pressure_bar;
+        actual_samples[view.history_count]=sample;
+        history[view.history_count++]=(struct bench_point){seconds,pressure_to_depth(pressure),false};
+    }
+    view.seconds=view.elapsed_seconds=view.duration=seconds;
+    view.depth_m=pressure_to_depth(pressure);view.gf_locked=legacy_ambiguous || view.recording.active;
+    ostc4_exposure_set_gf_lock(view.gf_locked);ostc4_exposure_read(&view.result);
+    view.draft_gf=view.preferred_gf;checkpoint_saved=false;pending_ms=0;next_sample=1;
+    if(legacy_ambiguous) {
+        pc_bench_checkpoint_reject(OSTC4_RESTART_CONFIGURATION_UNKNOWN);
+        view.recovery="Legacy fixed 30/70 migrated; recording lifecycle UNKNOWN; original file retained";
+        view.error=view.recovery;notify_observer();return OSTC4_RESTART_CONFIGURATION_UNKNOWN;
+    }
+    view.recovery="Recovered disk checkpoint: complete exposure and recording lifecycle";
+    notify_observer();return OSTC4_RESTORED;
 }

@@ -356,6 +356,64 @@ python3 V2/Firmware/simulator/tests/check_gf_render.py /tmp/gf-demo
 Checkpoint v2 carries the pair and lock; in-memory recovery also captures the
 recording controller. A later settings/manual recording command makes an older
 pressure-only recovery point ineligible, preserving its bytes and reporting the
-reason. Save again after configuration changes. Old fixed-policy v1 data is
-explicitly incompatible at this stage; disk preferences/logs/checkpoint migration
-are subsequent tickets. This is PC/synthetic evidence only.
+reason. Save again after configuration changes. The portable core still explicitly rejects old fixed-policy v1 data; the PC disk
+adapter below recognizes its pinned policy and exposes its lifecycle ambiguity.
+This is PC/synthetic evidence only.
+
+
+### Disk checkpoint recovery (synthetic PC only)
+
+The lower bench row has separate **Save disk** and **Load disk** controls beside
+the original memory/fault controls. Files use `DIVE_WATCH_STATE_DIR/recovery.checkpoint`;
+normal interactive startup configures the same state directory as preferences/logs.
+Nothing resumes automatically. Saving does not change tissues, active pair or lock.
+Writes use a same-directory private temporary file, flush/fsync, then atomic rename;
+failed writes preserve the previous file and live exposure. This is a PC filesystem
+contract, not a claim about power-loss persistence or hardware flash/RTC behavior.
+
+The disk clock initially reads **Clock UNKNOWN**. Loading in that state reports
+unknown restart time and INVALID guidance. Clicking the clock selector explicitly
+asserts **saved time; elapsed = 0**: this means the caller has established the exact
+saved simulation-clock instant and zero intervening exposure/configuration changes.
+It is a deliberate synthetic test assertion, never an elapsed-wall-time inference.
+Load consumes and clears that assertion. Real later-time recovery must instead
+supply complete evidence through `pc_bench_checkpoint_file_load(path, evidence,
+configuration_unchanged)`: known monotonic restart time, age limit, every accepted
+linear pressure/time segment since save, and an explicit assertion that no GF,
+manual recording or start-threshold configuration events occurred. Pressure history
+alone cannot prove those configuration events. Unknown clock, gaps, stale data,
+corruption, incompatible policy/schema and invalid settings invalidate guidance;
+accepted diagnostic numbers, pair/lock and prior files remain available.
+
+The 364-byte DWCP schema-1 PC envelope contains a fixed 64-byte header, the exact
+296-byte portable EXC1 schema-2 checkpoint, and little-endian CRC-32 of the full
+preceding envelope. Header fields are magic[0:4], schema u32@4, size u32@8,
+density binary32@12, preferred Low/High u8@16/17, recording armed/active u8@18/19,
+start threshold u32@20, start/completion/dive/surface seconds u32@24/28/32/36,
+started/completed counts u32@40/44, and zero reserved bytes48..63. The core
+checkpoint owns numerical policy, tissues, exposure time, applied GF/lock and
+persistent planner anchors; its representation is not duplicated in the envelope.
+CRC detects accidental corruption, not authenticity. Restore verifies policy,
+integrity, lifecycle/lock consistency and continuity before exposing valid results.
+A recovered active pair overrides next-dive preferences until normal completion;
+brief surface returns retain the lock. Recovered history starts at the checkpoint:
+no earlier trace, surface interval or controller state is fabricated.
+
+A recognized original 293-byte fixed-30/70 EXC1 schema-1 file with the exact pinned
+numerical-policy fingerprint and CRC is explicitly migrated in memory to30/70.
+Its bytes/provenance remain untouched. It lacks recording lifecycle evidence, so
+recovery reports **Legacy ... recording lifecycle UNKNOWN**, keeps GF locked and
+guidance INVALID, and cannot be saved as a valid new checkpoint. An unrecognized
+policy is incompatible. Fresh remains a separate explicit synthetic action.
+
+```sh
+python3 V2/Firmware/simulator/launch.py --checkpoint-check --capture /tmp/disk-checkpoint
+```
+
+The host tests use separate OS processes for saved-instant and complete later
+exposure recovery, compare every public tissue/anchor/NDL/TTS/stop/validity and
+recording result exactly against uninterrupted matched-cadence control, and cover
+preferred-pair independence, brief surface/manual/automatic completion, immutable
+legacy migration, unknown configuration/clock/exposure, corruption and write
+failures. Exact continuation equality establishes serialization consistency only;
+existing independently authored numerical acceptance remains a separate gate.

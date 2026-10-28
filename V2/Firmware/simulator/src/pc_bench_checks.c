@@ -1,11 +1,13 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "pc_bench.h"
+#include "pc_bench_checkpoint_file.h"
 #include "pc_bench_ui.h"
 #include "sim_host.h"
 #include "sim_controls.h"
 #include "scuba_ui.h"
 #include <lvgl.h>
 #include <zephyr/kernel.h>
+#include <string.h>
 
 /* Public bench inputs plus real watch menu commands share one recording. */
 static void recording_checks(void)
@@ -299,8 +301,54 @@ static void gf_checks(void)
 
 /* Native rendering check, driven by real SDL button events. Numerical checks
  * remain in tests/bench with no LVGL or Zephyr dependency. */
+/* Real SDL clicks exercise explicit disk controls and their clock assertion. */
+static void checkpoint_file_checks(void)
+{
+    static unsigned stage;static uint64_t after;
+    uint64_t now=k_uptime_get();if(now<500 || (after && now<after))return;
+    after=now+200;
+    const struct bench_view *v=pc_bench_read();
+    switch(stage++) {
+    case 0:
+        __ASSERT(pc_bench_fresh(1,1000,NULL,0)==0,"disk fresh failed");
+        __ASSERT(pc_bench_set_gf_pair(40,85)==0,"disk pair failed");
+        __ASSERT(pc_bench_accept_sample(&(ostc4_sample){60,4})==0,"disk descent failed");
+        __ASSERT(pc_bench_accept_sample(&(ostc4_sample){1260,4})==0,"disk hold failed");
+        pc_bench_pause(true);sim_host_push_button(694,780,1);break;
+    case 1:sim_host_push_button(694,780,0);break;
+    case 2:
+        __ASSERT(v->recovery && strstr(v->recovery,"Disk checkpoint saved"),"disk save button failed");
+        sim_host_push_button(834,780,1);break;
+    case 3:sim_host_push_button(834,780,0);break;
+    case 4:
+        __ASSERT(v->gap && v->result.tissues==OSTC4_INVALID &&
+            strstr(v->recovery,"Unknown restart time"),"disk load invented restart clock");
+        lv_refr_now(NULL);__ASSERT(sim_host_bench_capture(0)==0,"disk fault capture failed");break;
+    case 5:
+        __ASSERT(pc_bench_fresh(1,1000,NULL,0)==0,"disk preferred fresh failed");
+        __ASSERT(pc_bench_set_gf_pair(20,90)==0,"disk preferred pair failed");
+        pc_bench_pause(true);sim_host_push_button(1040,780,1);break;
+    case 6:sim_host_push_button(1040,780,0);break;
+    case 7:lv_refr_now(NULL);__ASSERT(sim_host_bench_capture(1)==0,"assertion capture failed");
+        sim_host_push_button(834,780,1);break;
+    case 8:sim_host_push_button(834,780,0);break;
+    case 9:
+        __ASSERT(v->gf_locked && v->active_gf.low==40 && v->preferred_gf.low==20 &&
+            v->seconds==1260 && !v->error,"disk recovered lock/pair failed");
+        lv_refr_now(NULL);__ASSERT(sim_host_bench_capture(2)==0,"disk locked capture failed");break;
+    case 10:
+        __ASSERT(pc_bench_accept_sample(&(ostc4_sample){1440,1})==0,"disk surface failed");
+        __ASSERT(v->gf_locked,"brief surface unlocked recovered dive");
+        __ASSERT(pc_bench_recording_finish()==0,"disk finish failed");
+        __ASSERT(!v->gf_locked && pc_bench_set_gf_pair(20,90)==0,"disk later unlock failed");break;
+    case 11:
+        lv_refr_now(NULL);__ASSERT(sim_host_bench_capture(3)==0,"disk unlocked capture failed");
+        printk("DISK CHECKPOINT UI PASS: visible Save disk/Load disk; default unknown clock invalid; explicit saved-time assertion; recovered40/85 locked with next20/90 preference; surface completion unlock\n");break;
+    }
+}
 void pc_bench_checks_poll(void)
 {
+    if(sim_host_bench_check_enabled()==5){checkpoint_file_checks();return;}
     if(sim_host_bench_check_enabled()==4){gf_checks();return;}
     if(sim_host_bench_check_enabled()==3){restart_checks();return;}
     if(sim_host_bench_check_enabled()==2){calculated_checks();return;}
