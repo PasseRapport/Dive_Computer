@@ -35,9 +35,13 @@ if '--baseline' in sys.argv:
 for name in ('apnea-01-fresh','apnea-04-descent','apnea-05-hold','apnea-06-ascent',
              'apnea-08-surface','apnea-12-long-recovery','apnea-17-long-x1','apnea-20-long-x2','apnea-25-reentry'):
     geometry(name)
-# Surface right-hand timer and caption are absent throughout recovery.
+# Surface shows the frozen last-apnea duration throughout recovery.
 for name in ('apnea-08-surface','apnea-09-red','apnea-10-green','apnea-11-expired','apnea-12-long-recovery'):
-    assert pixels(name,(175,125,272,202),white)==0, f'{name}: surface timer still visible'
+    assert pixels(name,(175,125,272,202),white)>100, f'{name}: last-apnea duration missing'
+    image,z=frame(name)
+    crop=image.crop((197*z,157*z,294*z,234*z))
+    ref,rz=frame('apnea-08-surface')
+    assert crop.tobytes()==ref.crop((197*rz,157*rz,294*rz,234*rz)).tobytes(), f'{name}: last duration changed during recovery'
 
 def ring(name):
     image,z=frame(name);red=green=0
@@ -59,4 +63,4 @@ for name in ('apnea-04-descent','apnea-06-ascent','apnea-17-long-x1','apnea-20-l
 for name in ('apnea-17-long-x1','apnea-20-long-x2'):
     assert pixels(name,(146,154,150,191),white)==0, f'{name}: left block crosses gutter'
     assert pixels(name,(171,154,173,191),white)==0, f'{name}: timer crosses gutter'
-print('APNEA RENDER PASS: shared rails/battery, five scuba dashes and hidden surface timer, recovery ring lifecycle, decimal anchor, long values at x1/x2')
+print('APNEA RENDER PASS: shared rails/battery, five scuba dashes and frozen last-apnea duration, recovery ring lifecycle, decimal anchor, long values at x1/x2')

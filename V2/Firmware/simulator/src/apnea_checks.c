@@ -119,8 +119,9 @@ void apnea_checks_observe(const struct watch_data *data)
     case 46:expect("--");expect("0");expect("0:00:02");capture("stats-08-reentry");printk("APNEA STATISTICS PASS: initial placeholders, active records, recovery continuity, shorter second apnea, new live depth/time records, long timers, x1/x2 and re-entry\n");break;
     case 22:__ASSERT(watch_ui_view()==WATCH_MODE_MENU,"Leave control changed");break;
     }
+    if(step>=8&&step<=12){expect("LAST APNEA");expect("1:00");}
     if((step>=8&&step<=12)||step==1||step==25) {
-        __ASSERT(!visible_text(lv_screen_active(),"RECOVERY")&&!visible_text(lv_screen_active(),"APNEA TIME"),"Surface timer visible");
+        __ASSERT(!visible_text(lv_screen_active(),"RECOVERY"),"Recovery timer caption visible");
     }
     step++;
 }

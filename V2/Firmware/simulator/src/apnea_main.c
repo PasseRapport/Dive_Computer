@@ -60,16 +60,11 @@ void apnea_main_update(lv_obj_t *view,const struct watch_data *data)
     else snprintf(text,sizeof(text),"--");
     lv_obj_set_style_text_font(m->left,peak>=1000?&lv_font_montserrat_28:&lv_font_montserrat_34,0);
     centred(m->left,text,101,157);
-    centred(m->time_title,"APNEA TIME",219,127);
+    centred(m->time_title,data->apnea_active?"APNEA TIME":"LAST APNEA",219,127);
     uint32_t seconds=data->elapsed_s;
-    if(data->apnea_active) {
-        lv_obj_remove_flag(m->time_title,LV_OBJ_FLAG_HIDDEN);
-        lv_obj_remove_flag(m->time,LV_OBJ_FLAG_HIDDEN);
-    } else {
-        lv_obj_add_flag(m->time_title,LV_OBJ_FLAG_HIDDEN);
-        lv_obj_add_flag(m->time,LV_OBJ_FLAG_HIDDEN);
-    }
-    snprintf(text,sizeof(text),"%u:%02u",seconds/60,seconds%60);
+    if(data->apnea_active||data->show_recovery)
+        snprintf(text,sizeof(text),"%u:%02u",seconds/60,seconds%60);
+    else snprintf(text,sizeof(text),"--");
     lv_obj_set_style_text_font(m->time,seconds>=6000?&lv_font_montserrat_22:&lv_font_montserrat_34,0);
     centred(m->time,text,219,157);
     enum apnea_bottom_field field=apnea_settings_bottom_field();

@@ -8,14 +8,15 @@ value in place of the previous longest-apnea value. Statistics retains its recor
 
 Five fixed grey dashes have the exact inactive scuba coordinates, dimensions and
 colour. The central white stroke and direction chevrons are removed.
-Surface Main hides both the centre-right timer and caption. Recovery ring timing,
-colours and visibility rules remain unchanged.
+Surface Main shows LAST APNEA and the frozen duration of the last completed
+apnea, or -- before the first one. Elapsed recovery time is not displayed.
+Recovery ring timing, colours and visibility rules remain unchanged.
 
 PASS: native build; strict-warning portable model test (two apneas, live total,
 long surface exclusion, fractional-second accumulation and reset).
 PASS: public-control Main/Statistics and Settings journeys at x1/x2.
-PASS: Main, Statistics and Settings image assertions (five dashes, blank surface
-timer area, recovery ring lifecycle, aligned depths, fitted selections).
+PASS: Main, Statistics and Settings image assertions (five dashes, frozen last-apnea
+duration throughout recovery, recovery ring lifecycle, aligned depths, fitted selections).
 PASS: all ten water/field combinations in 20 separate UI processes; malformed
 preferences, failed-write preservation, cancellation, immersion lock and isolation.
 PASS: restart image checks for all ten choices and Main/Statistics/Main continuity.

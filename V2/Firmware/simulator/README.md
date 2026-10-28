@@ -57,7 +57,8 @@ and haptics are previews; they do not drive physical hardware.
 blocks, cyan separators, selected bottom field and battery header. During an apnea,
 read its maximum depth and duration; at the surface, read the last apnea's maximum
 depth. Five grey centre dashes match the inactive scuba indicator exactly.
-The apnea timer is hidden in surface mode; recovery is shown only by the
+The right block shows the frozen duration of the last apnea in surface mode
+(or -- before the first apnea); recovery is shown only by the
 twice-duration ring, which turns green at its target and hides ten
 seconds later. Entering freediving starts a fresh session, including surface time;
 leaving ends it without resetting scuba exposure or watch preferences. Session
