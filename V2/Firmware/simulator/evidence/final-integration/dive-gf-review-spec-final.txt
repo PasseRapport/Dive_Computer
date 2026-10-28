@@ -1,0 +1,11 @@
+Spec delta review: 0 unresolved actionable findings at 8215527b770c7b0f09f94e0fa9d149dd6d22c818, compared with a83b5b26f246479979d756c42e9d9572585848c9.
+
+All three prior findings are resolved:
+
+- Recovery now applies each segment through controller-before-calculation processing. A second recorded dive takes preferred 20/90, matching uninterrupted processing, after recovery of the original 40/85 dive. This satisfies SPEC.md:125 and :131.
+- In-memory restart restores active GF from the numerical observation while preserving the preferred pair independently. My original public-API probe now observes active/actual 40/85 with preferred 20/90, and completion logs 40/85. This satisfies SPEC.md:126 and :133.
+- Recovery-generated completion now creates its durable log. My probe observes completed=1 and log delta=1. Session/recording identity plus exact metadata makes repeated recovery idempotent; separate fresh sessions remain distinct. This satisfies ticket 14:15 and SPEC.md:130.
+
+I inspected the changed controller, checkpoint migration, storage reconciliation and schema readers. Schema-1 historical logs remain readable and unchanged; identity-free old PC checkpoints explicitly withhold valid continuation, and genuine fixed-30/70 legacy handling remains conservative. No additional missing/partial requirement, incorrect implemented behavior or scope creep found in this delta.
+
+Validation: recompiled and reran /tmp/spec-review-probe.c against the current controller sources. Independently configured and built /tmp/dive-gf-spec-final-bench, then passed all three relevant integration tests: recovery_pair_lifecycle_log_integration, disk_checkpoint_process_continuity_and_faults, and durable_preferences_logs_separate_processes. The old /tmp/dive-gf-merger-bench binaries were stale and were not used as final verification evidence. This review establishes PC behavior only; native rendering remains the root reviewer's separate check. No repository files edited.

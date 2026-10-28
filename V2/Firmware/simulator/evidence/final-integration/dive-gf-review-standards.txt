@@ -1,0 +1,8 @@
+Standards review: baseline 37d36f68686a732f03f736fe39528bed623fcc31 → a83b5b26f246479979d756c42e9d9572585848c9; exact three-dot diff and commit list verified.
+
+[P1] Preserve the recovered active GF pair during in-memory restart — V2/Firmware/simulator/src/pc_bench.c:171–172.
+`view.preferred_gf=view.active_gf=checkpoint_preferred;` conflates two deliberately separate domain concepts. Reproduction through public APIs: save a locked 40/85 disk checkpoint; establish preference 20/90; load that disk checkpoint; save an in-memory checkpoint; perform Known restart. Before restart, controller/core active pair is40/85 and preference20/90. Afterwards controller active becomes20/90 while core remains40/85; completing the dive writes an immutable log declaring20/90. Save/restore active independently or obtain it from the restored core observation. Confirmed with /tmp/review_gf_restart.c against the final integration libraries.
+
+Documented-contract breach: canonical GLOSSARY.md:27–31 distinguishes next-dive preference from the active pair retained through recovery; SPEC.md:168 requires recovery to retain the active pair, and SPEC.md:173 requires new logs to identify their frozen pair. This is an observable correctness issue, not a style heuristic.
+
+No additional actionable smell-baseline findings. Reviewed all twelve mandatory heuristics; skipped tooling-enforced matters. No CONTRIBUTING.md, CODING_STANDARDS.md, .clang-format or .editorconfig found in the repository/canonical spec tree. Domain ADR directory is absent, which domain.md explicitly permits. No production files changed.

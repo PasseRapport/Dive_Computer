@@ -1,0 +1,9 @@
+Standards delta review: a83b5b26f246479979d756c42e9d9572585848c9 → 8215527b770c7b0f09f94e0fa9d149dd6d22c818, using git diff a83b5b26f246479979d756c42e9d9572585848c9...HEAD.
+
+0 unresolved findings.
+
+The prior P1 at pc_bench.c:172 is resolved. Memory recovery now restores preferred independently, reads the active pair from the restored calculation observation, and replays retained exposure through the shared controller-before-calculation path. Independently rebuilt the original public-seam reproduction against current sources: disk recovery and subsequent memory recovery both retain active/core40/85 with preference20/90, and the completed log correctly records40/85.
+
+Also inspected the new session/recording identities, immutable schema-2 log reconciliation, preserved schema-1 logs, PC checkpoint schema-2 validation and explicit rejection of provenance-free schema-1 PC checkpoints. No new actionable correctness issue, documented-standard violation or smell-baseline finding identified. The shared replay path removes previously duplicated lifecycle processing; the added recording identity directly supports required durable recovery provenance and idempotence rather than speculative abstraction.
+
+Independent focused verification: rebuilt test_recovery_lifecycle with current source and strict warning options, then ran check_recovery_lifecycle.py successfully. This covers two-dive interrupted/uninterrupted equivalence, memory/disk replay, separate-process idempotence, exact pair logs, distinct identical fresh sessions and unchanged schema-1 logs. Synthetic PC evidence only; no target or physical validation inferred. No production edits.
