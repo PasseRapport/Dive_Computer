@@ -95,7 +95,7 @@ static void restart_checks(void)
     static unsigned stage;
     static uint64_t after;
     uint64_t now=k_uptime_get();
-    if(now<500 || now<after || stage>=14)return;
+    if(now<500 || now<after || stage>=16)return;
     unsigned scenario=stage/2;
     const struct bench_view *v=pc_bench_read();
     if(stage%2==0) {
@@ -115,12 +115,17 @@ static void restart_checks(void)
                     v->result.tts_seconds==control.tts_seconds && v->result.tts==OSTC4_AVAILABLE,"recovery changed exposure");
             } else __ASSERT(scuba_ui_model()->calculated_state==SCUBA_CALCULATED_INVALID,"restart concealed invalidity");
         }
+        if(scenario==7) {
+            pc_bench_poll(2220000);pc_bench_sensor_loss();pc_bench_poll(125000);
+            __ASSERT(v->data_gap.time_known && v->data_gap.duration_seconds==125 &&
+                v->elapsed_seconds==2345 && v->seconds==2220,"sensor-loss timing wrong");
+        }
         pc_bench_pause(true);after=now+300;
     } else {
         struct watch_data data={.temperature_c=18,.battery_percent=87};
         watch_ui_update(&data);lv_refr_now(NULL);
         __ASSERT(sim_host_bench_capture(scenario)==0,"restart capture failed");
-        if(scenario==6)printk("RESTART WATCH PASS: complete recovery, missing exposure, unknown time, corrupt, incompatible, stale, explicit fresh fixture\n");
+        if(scenario==7)printk("RESTART WATCH PASS: complete recovery, missing exposure, unknown time, corrupt, incompatible, stale, explicit fresh fixture\n");
         after=now+300;
     }
     ++stage;

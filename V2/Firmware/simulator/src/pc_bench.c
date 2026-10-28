@@ -91,6 +91,13 @@ ostc4_restart_status pc_bench_restart(enum pc_restart_mode mode)
     }
     ostc4_restart_status status=ostc4_exposure_restore(checkpoint_saved?bytes:NULL,
         checkpoint_saved?sizeof(bytes):0,&recovery);
+    if(status==OSTC4_RESTORED)view.data_gap=(struct exposure_gap){0};
+    else if(mode==PC_RESTART_CLOCK)view.data_gap=(struct exposure_gap){true,false,false,0,0};
+    else if(!view.data_gap.present && mode==PC_RESTART_GAP) {
+        bool known=mode==PC_RESTART_GAP && checkpoint_saved;
+        uint32_t start=known?actual_samples[checkpoint_history-1].timestamp_seconds:0;
+        view.data_gap=(struct exposure_gap){true,known,false,start,known?view.seconds-start:0};
+    }
     view.recovery=ostc4_restart_status_name(status);
     view.paused=true;view.replay=false;view.automatic=false;view.ended=false;
     view.rate_m_min=0;pending_ms=0;view.duration=view.seconds;
@@ -147,32 +154,55 @@ static float automatic_depth(void)
     view.rate_m_min=(next-view.depth_m)*60;
     return next;
 }
-static void missing(const char *reason)
+static void missing(const char *reason,bool known_start)
 {
     ostc4_exposure_missing();
     ostc4_exposure_read(&view.result);
-    view.gap=true; view.error=reason; view.rate_m_min=0;
+    view.gap=true; view.error=reason; view.rate_m_min=0;view.automatic=false;view.ended=false;
+    if(!view.data_gap.present)
+        view.data_gap=(struct exposure_gap){true,known_start,true,view.seconds,0};
     history[view.history_count-1].gap=true;
     notify_observer();
 }
 void pc_bench_mark_missing(void)
 {
     if(!view.history_count)return;
-    missing("Unknown exposure reported: fresh fixture required");
+    view.data_gap=(struct exposure_gap){true,false,true,view.seconds,0};
+    missing("Unknown exposure reported: fresh fixture required",false);
+}
+void pc_bench_sensor_loss(void)
+{
+    if(!view.history_count || view.error)return;
+    pending_ms=0;
+    missing("Sensor signal lost: exposure unknown",true);
 }
 void pc_bench_poll(uint32_t elapsed_ms)
 {
-    if (!view.speed||view.paused||view.ended||view.error) return;
+    if (!view.speed||view.paused||view.ended) return;
+    if(view.error) {
+        if(!view.data_gap.ongoing)return;
+        pending_ms+=(uint64_t)elapsed_ms*view.speed;
+        uint64_t seconds=pending_ms/1000;
+        pending_ms%=1000;
+        if(seconds>UINT32_MAX-view.elapsed_seconds)seconds=UINT32_MAX-view.elapsed_seconds;
+        if(seconds) {
+            view.elapsed_seconds+=(uint32_t)seconds;
+            if(view.data_gap.time_known)
+                view.data_gap.duration_seconds=view.elapsed_seconds-view.data_gap.start_seconds;
+            notify_observer();
+        }
+        return;
+    }
     pending_ms+=(uint64_t)elapsed_ms*view.speed;
     while (pending_ms>=1000) {
         pending_ms-=1000;
-        if (view.history_count==PC_BENCH_HISTORY) { missing("History full: fresh fixture required"); break; }
+        if (view.history_count==PC_BENCH_HISTORY) { missing("History full: fresh fixture required",false); break; }
         uint32_t seconds=view.seconds+1;
         float pressure;
         if (view.replay) {
             const ostc4_sample a=samples[next_sample-1], b=samples[next_sample];
             if (b.timestamp_seconds-a.timestamp_seconds>3600) {
-                missing("Missing exposure: replay gap; fresh fixture required"); break;
+                missing("Missing exposure: replay gap; fresh fixture required",false); break;
             }
             pressure=a.absolute_pressure_bar+(b.absolute_pressure_bar-a.absolute_pressure_bar)*
                 ((float)(seconds-a.timestamp_seconds)/(b.timestamp_seconds-a.timestamp_seconds));
@@ -187,9 +217,9 @@ void pc_bench_poll(uint32_t elapsed_ms)
             pressure=depth_to_pressure(view.depth_m);
         }
         if (ostc4_exposure_advance(&(ostc4_sample){seconds,pressure})!=OSTC4_OK) {
-            missing("Exposure rejected: fresh fixture required"); break;
+            missing("Exposure rejected: fresh fixture required",false); break;
         }
-        view.seconds=seconds;
+        view.seconds=seconds;view.elapsed_seconds=seconds;
         ostc4_exposure_read(&view.result);
         actual_samples[view.history_count]=(ostc4_sample){seconds,pressure};
         history[view.history_count++]=(struct bench_point){seconds,view.depth_m,false};

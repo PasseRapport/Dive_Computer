@@ -11,6 +11,7 @@ enum bench_action { BENCH_PAUSE, BENCH_SPEED, BENCH_ASCEND_RATE, BENCH_DESCEND_R
     BENCH_HOLD, BENCH_SURFACE, BENCH_AUTO, BENCH_SHALLOWER, BENCH_DEEPER, BENCH_FRESH, BENCH_GAP, BENCH_SAVE, BENCH_RESTART, BENCH_RESTART_MODE };
 
 static lv_obj_t *summary, *tissues[16], *stops, *graph, *clock_label, *pause_label, *speed_label, *auto_label;
+static lv_obj_t *time_ticks[5];
 static uint64_t last_host_ms, last_paint;
 static lv_obj_t *recovery_label,*restart_mode_label;
 static enum pc_restart_mode restart_mode;
@@ -36,7 +37,7 @@ static void command(lv_event_t *e)
     case BENCH_DEEPER: pc_bench_manual(v->depth_m+1,0); break;
     case BENCH_AUTO: pc_bench_auto(!v->automatic); break;
     case BENCH_FRESH: sim_host_bench_fresh(); break;
-    case BENCH_GAP: pc_bench_mark_missing(); break;
+    case BENCH_GAP: pc_bench_sensor_loss(); break;
     case BENCH_SAVE: pc_bench_checkpoint(); break;
     case BENCH_RESTART: pc_bench_restart(restart_mode); break;
     case BENCH_RESTART_MODE: restart_mode=(restart_mode+1)%6; break;
@@ -65,7 +66,14 @@ static void draw_graph(lv_event_t *e)
 {
     lv_layer_t *layer=lv_event_get_layer(e);lv_area_t a;lv_obj_get_coords(graph,&a);
     const struct bench_view *v=pc_bench_read();
-    uint32_t duration=v->duration?v->duration:60;
+    uint32_t duration=LV_MAX(v->duration,v->elapsed_seconds);
+    if(!duration)duration=60;
+    for(unsigned i=0;i<5;++i) {
+        uint32_t seconds=(uint32_t)((uint64_t)duration*i/4);
+        float x,y;pc_bench_plot((struct bench_point){seconds,0,false},duration,60,&x,&y);
+        float px=a.x1+40+x*(lv_area_get_width(&a)-50);
+        line(layer,(lv_point_precise_t){px,a.y2-22},(lv_point_precise_t){px,a.y2-18},0x8793a7,false);
+    }
     for(int m=0;m<=60;m+=20) {
         line(layer,plot_point((struct bench_point){0,m,0},&a,duration),
             plot_point((struct bench_point){duration,m,0},&a,duration),0x394351,false);
@@ -99,6 +107,7 @@ static void draw_graph(lv_event_t *e)
         previous=last;have_previous=true;
     }
     struct bench_point current=v->history[v->history_count-1];
+    if(v->data_gap.ongoing)current.seconds=v->elapsed_seconds;
     lv_point_precise_t p=plot_point(current,&a,duration);
     line(layer,(lv_point_precise_t){p.x,a.y1+18},(lv_point_precise_t){p.x,a.y2-18},v->gap?0xff746b:0xffd16a,false);
 }
@@ -120,19 +129,24 @@ void pc_bench_ui_create(void)
     button("Save checkpoint",22,764,146,BENCH_SAVE);
     restart_mode_label=button(restart_modes[0],178,764,238,BENCH_RESTART_MODE);
     button("Restart",426,764,138,BENCH_RESTART);
-    label("Depth (m, down) versus elapsed simulation time (seconds, right)",22,446);
+    label("Depth (m, down) versus elapsed time (min:sec, right)",22,446);
     graph=lv_obj_create(lv_screen_active());lv_obj_set_pos(graph,22,466);lv_obj_set_size(graph,1156,224);
     lv_obj_remove_flag(graph,LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_set_style_bg_color(graph,lv_color_hex(0x171e28),0);
     lv_obj_add_event_cb(graph,draw_graph,LV_EVENT_DRAW_MAIN,NULL);
     label("0 m",26,482);label("20",26,542);label("40",26,602);label("60",26,662);
+    for(unsigned i=0;i<5;++i) {
+        time_ticks[i]=label("",0,670);lv_obj_set_width(time_ticks[i],90);
+        lv_obj_set_style_text_font(time_ticks[i],&lv_font_montserrat_12,0);
+        lv_obj_set_style_text_align(time_ticks[i],i==0?LV_TEXT_ALIGN_LEFT:i==4?LV_TEXT_ALIGN_RIGHT:LV_TEXT_ALIGN_CENTER,0);
+    }
     clock_label=label("",22,696);
     pause_label=button("Pause",22,726,102,BENCH_PAUSE);
     speed_label=button("Time x1",134,726,110,BENCH_SPEED);
     button("Rate -1",254,726,108,BENCH_ASCEND_RATE);button("Rate +1",372,726,108,BENCH_DESCEND_RATE);
     button("Hold",490,726,88,BENCH_HOLD);button("Surface",588,726,100,BENCH_SURFACE);
     button("Depth -1",698,726,106,BENCH_SHALLOWER);button("Depth +1",814,726,106,BENCH_DEEPER);
-    button("Mark gap",930,726,110,BENCH_GAP);button("FRESH replay",1050,726,128,BENCH_FRESH);
+    button("Sensor loss",930,726,110,BENCH_GAP);button("FRESH replay",1050,726,128,BENCH_FRESH);
     auto_label=button("Auto ascent",1048,690,130,BENCH_AUTO);
     label("Cyan: actual | Dashed: replay | Yellow: position | Red: gap",578,774);
     last_host_ms=k_uptime_get();
@@ -169,9 +183,24 @@ void pc_bench_ui_poll(void)
     }
     if(!any&&v->result.stops==OSTC4_AVAILABLE)snprintf(buffer+n,sizeof(buffer)-n," none");
     lv_label_set_text(stops,buffer);
-    lv_label_set_text_fmt(clock_label,"Simulation %u / %u s | depth %.3f m | rate %+.0f m/min | sample %u s%s",
-        v->seconds,v->duration,(double)v->depth_m,(double)v->rate_m_min,v->result.timestamp_seconds,
-        v->gap?" | EXPOSURE GAP":"");
+    uint32_t duration=LV_MAX(v->duration,v->elapsed_seconds);
+    if(!duration)duration=60;
+    for(unsigned i=0;i<5;++i) {
+        uint32_t seconds=(uint32_t)((uint64_t)duration*i/4);
+        int x=62+(int)((uint64_t)seconds*1106/duration);
+        lv_obj_set_x(time_ticks[i],i==0?x:i==4?x-90:x-45);
+        lv_label_set_text_fmt(time_ticks[i],"%u:%02u",seconds/60,seconds%60);
+    }
+    char gap[80]="";
+    if(v->data_gap.present) {
+        if(v->data_gap.time_known)snprintf(gap,sizeof(gap)," | %s %u:%02u",
+            v->data_gap.ongoing?"NO DATA":"HISTORY GAP",
+            v->data_gap.duration_seconds/60,v->data_gap.duration_seconds%60);
+        else snprintf(gap,sizeof(gap)," | GAP DURATION UNKNOWN");
+    }
+    lv_label_set_text_fmt(clock_label,"Elapsed %u:%02u | depth %.2f m | last sample %u:%02u%s",
+        v->elapsed_seconds/60,v->elapsed_seconds%60,
+        (double)v->depth_m,v->seconds/60,v->seconds%60,gap);
     lv_label_set_text(recovery_label,v->recovery?v->recovery:"FRESH synthetic fixture; no recovered history");
     lv_label_set_text(restart_mode_label,restart_modes[restart_mode]);
     lv_label_set_text(auto_label,v->automatic?"Auto: ON":"Auto ascent");

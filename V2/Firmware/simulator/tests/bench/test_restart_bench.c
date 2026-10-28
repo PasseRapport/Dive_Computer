@@ -26,6 +26,9 @@ int main(void)
         CHECK(pc_bench_restart(modes[i])==expected[i]);
         const struct bench_view *v=pc_bench_read();
         CHECK(v->gap && v->error && v->result.tissues==OSTC4_INVALID);
+        CHECK(v->data_gap.present==(i<2));
+        if(i==0)CHECK(v->data_gap.time_known && !v->data_gap.ongoing && v->data_gap.duration_seconds==180);
+        if(i==1)CHECK(!v->data_gap.time_known);
         struct scuba_model model;scuba_model_init(&model);
         scuba_calculated_apply(&model,&v->result,v->seconds,v->depth_m,18,87);
         CHECK(model.calculated_state==SCUBA_CALCULATED_INVALID);
@@ -40,6 +43,28 @@ int main(void)
     pc_bench_mark_missing(); /* Unknown duration, even though simulation clock did not advance. */
     CHECK(pc_bench_restart(PC_RESTART_KNOWN)==OSTC4_RESTART_EXPOSURE_UNKNOWN);
     CHECK(pc_bench_read()->result.tissues==OSTC4_INVALID);
+    CHECK(pc_bench_fresh(1.01325f,1025,NULL,0)==0);
+    pc_bench_manual(10,0);pc_bench_poll(60000);
+    ostc4_observation trusted=pc_bench_read()->result;
+    CHECK(pc_bench_checkpoint()==0);
+    pc_bench_sensor_loss();
+    const struct bench_view *v=pc_bench_read();
+    CHECK(v->data_gap.present && v->data_gap.time_known && v->data_gap.ongoing);
+    CHECK(v->data_gap.start_seconds==60 && v->data_gap.duration_seconds==0);
+    pc_bench_poll(125000);
+    CHECK(v->elapsed_seconds==185 && v->seconds==60 && v->data_gap.duration_seconds==125);
+    CHECK(v->result.timestamp_seconds==trusted.timestamp_seconds);
+    CHECK(memcmp(v->result.nitrogen_bar,trusted.nitrogen_bar,sizeof(trusted.nitrogen_bar))==0);
+    CHECK(v->history_count==61 && v->result.tissues==OSTC4_INVALID);
+    pc_bench_sensor_loss(); /* Repeated clicks do not erase outage duration. */
+    CHECK(v->data_gap.duration_seconds==125);
+    pc_bench_pause(true);pc_bench_poll(100000);CHECK(v->elapsed_seconds==185);
+    pc_bench_pause(false);pc_bench_speed(10);pc_bench_poll(1000);
+    CHECK(v->elapsed_seconds==195 && v->data_gap.duration_seconds==135);
+    CHECK(pc_bench_restart(PC_RESTART_CLOCK)==OSTC4_RESTART_TIME_UNKNOWN);
+    CHECK(!v->data_gap.time_known);
+    CHECK(pc_bench_fresh(1.01325f,1025,NULL,0)==0);
+    CHECK(!v->data_gap.present && v->elapsed_seconds==0);
     puts("restart diagnostics and calculated watch validity pass");
     return 0;
 }

@@ -402,6 +402,7 @@ void scuba_ui_calculated(const struct bench_view *v)
         last_active=false;previous_notifications=0;
         show(SCUBA_PREP);
     }
+    model.data_gap=v->data_gap;
     float depth=(v->result.absolute_pressure_bar-v->surface_bar)*10;
     scuba_calculated_apply(&model,&v->result,v->seconds,depth,18,test_battery);
 }

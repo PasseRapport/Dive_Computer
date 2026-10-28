@@ -1,6 +1,7 @@
 #pragma once
 #include <stdbool.h>
 #include <stdint.h>
+#include "exposure_gap.h"
 
 /* Desktop demonstration only. NDL and stops are scripted, not physiological
  * calculations. This module must not supply guidance for a real dive. */
@@ -21,6 +22,7 @@ struct scuba_model {
      * this false. Unavailable/invalid samples retain the last known obligation. */
     bool calculated, calculated_ceiling_violation, calculated_stop_zone;
     enum scuba_calculated_state calculated_state;
+    struct exposure_gap data_gap;
     uint16_t calculated_ceiling_dm, calculated_stop_dm;
     uint32_t calculated_tts_s, calculated_stop_remaining_ms, calculated_stop_total_ms;
     bool armed, active, salt_water, safety_required, deco_started, deco_done;

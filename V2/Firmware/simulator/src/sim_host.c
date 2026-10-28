@@ -321,8 +321,10 @@ int sim_host_bench_capture(unsigned milestone)
         m->calculated_state,m->depth_dm,m->ndl_s,m->calculated_tts_s,m->calculated_stop_dm,
         m->calculated_stop_remaining_ms,m->alerts,m->notifications);
     for(int i=0;i<OSTC4_STOPS;++i)fprintf(out,"%s%u",i?",":"",v->result.stop_seconds[i]);
-    fprintf(out,"],\"recovery\":\"%s\",\"gap\":%s}\n",v->recovery?v->recovery:"Fresh synthetic fixture",
-        v->gap?"true":"false");if(fclose(out))return -1;
+    fprintf(out,"],\"elapsed_seconds\":%u,\"data_gap\":{\"present\":%s,\"time_known\":%s,\"ongoing\":%s,\"seconds\":%u},"
+        "\"recovery\":\"%s\",\"gap\":%s}\n",v->elapsed_seconds,v->data_gap.present?"true":"false",
+        v->data_gap.time_known?"true":"false",v->data_gap.ongoing?"true":"false",v->data_gap.duration_seconds,
+        v->recovery?v->recovery:"Fresh synthetic fixture",v->gap?"true":"false");if(fclose(out))return -1;
     snprintf(path,sizeof(path),"%s-%u.csv",base,milestone);
     out=fopen(path,"w");if(!out)return -1;
     fprintf(out,"timestamp_seconds,absolute_pressure_bar\n");
