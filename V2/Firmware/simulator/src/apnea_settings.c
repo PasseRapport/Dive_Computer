@@ -7,7 +7,7 @@ static lv_obj_t *view,*heading,*pill,*rows[APNEA_BOTTOM_COUNT],*icons[2],*help,*
 static bool salt_water,underwater,engaged;
 static enum apnea_bottom_field bottom;
 static int entry,pending,editor;
-static const char *const fields[]={"TEMPERATURE","SESSION DEPTH","UNDERWATER TIME","CLOCK","APNEAS"};
+static const char *const fields[]={"TEMPERATURE","MAX DEPTH","UNDERWATER TIME","CLOCK","DIVES"};
 static void row_y(void *o,int32_t y){lv_obj_set_y(o,y);}
 static void refresh(bool animate)
 {

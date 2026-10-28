@@ -60,7 +60,7 @@ void apnea_main_update(lv_obj_t *view,const struct watch_data *data)
     else snprintf(text,sizeof(text),"--");
     lv_obj_set_style_text_font(m->left,peak>=1000?&lv_font_montserrat_28:&lv_font_montserrat_34,0);
     centred(m->left,text,101,157);
-    centred(m->time_title,data->apnea_active?"APNEA TIME":"LAST APNEA",219,127);
+    centred(m->time_title,"DIVE TIME",219,127);
     uint32_t seconds=data->elapsed_s;
     if(data->apnea_active||data->show_recovery)
         snprintf(text,sizeof(text),"%u:%02u",seconds/60,seconds%60);
@@ -68,7 +68,7 @@ void apnea_main_update(lv_obj_t *view,const struct watch_data *data)
     lv_obj_set_style_text_font(m->time,seconds>=6000?&lv_font_montserrat_22:&lv_font_montserrat_34,0);
     centred(m->time,text,219,157);
     enum apnea_bottom_field field=apnea_settings_bottom_field();
-    static const char *const captions[]={"TEMPERATURE","SESSION DEPTH","UNDERWATER TIME","CLOCK","APNEAS"};
+    static const char *const captions[]={"TEMPERATURE","MAX DEPTH","UNDERWATER TIME","CLOCK","DIVES"};
     centred(m->bottom_title,captions[field],160,219);
     switch(field) {
     case APNEA_SESSION_DEPTH:
@@ -77,7 +77,7 @@ void apnea_main_update(lv_obj_t *view,const struct watch_data *data)
         break;
     case APNEA_SESSION_TIME:
         seconds=data->total_underwater_s;
-        snprintf(text,sizeof(text),"%u:%02u:%02u",seconds/3600,seconds/60%60,seconds%60);break;
+        snprintf(text,sizeof(text),"%u:%02u",seconds/60,seconds%60);break;
     case APNEA_CLOCK:snprintf(text,sizeof(text),"%02u:%02u",data->clock_hour,data->clock_minute);break;
     case APNEA_DIVE_COUNT:snprintf(text,sizeof(text),"%u",data->total_dives);break;
     default:snprintf(text,sizeof(text),"%d°C",data->temperature_c);break;

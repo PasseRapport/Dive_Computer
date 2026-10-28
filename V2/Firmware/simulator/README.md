@@ -57,7 +57,8 @@ and haptics are previews; they do not drive physical hardware.
 blocks, cyan separators, selected bottom field and battery header. During an apnea,
 read its maximum depth and duration; at the surface, read the last apnea's maximum
 depth. Five grey centre dashes match the inactive scuba indicator exactly.
-The right block shows the frozen duration of the last apnea in surface mode
+DIVE TIME shows the current duration underwater. At the surface,
+the right block shows the frozen duration of the last apnea in surface mode
 (or -- before the first apnea); recovery is shown only by the
 twice-duration ring, which turns green at its target and hides ten
 seconds later. Entering freediving starts a fresh session, including surface time;
@@ -66,9 +67,9 @@ records update during the current apnea. Statistics uses the same geometry with 
 maximum depth, longest apnea, apnea count and elapsed session time (H:MM:SS).
 It has no direction indicator or recovery ring. The page sequence is Main →
 Statistics → Settings → Leave. Settings groups Water Type (Fresh/Marine) and
-Bottom Field (Temperature/Session Depth/Underwater Time/Clock/Apneas).
+Bottom Field (Temperature/Max Depth/Underwater Time/Clock/Dives).
 Underwater Time sums every apnea in the session, including the active one,
-excludes surface pauses and uses H:MM:SS. Clock shows the current HH:MM.
+excludes surface pauses and uses total minutes and seconds (M:SS), without an hour field. Clock shows the current HH:MM.
 Count and underwater time start at zero; session depth starts as a placeholder. Rotation is bounded;
 tap opens or confirms and double tap cancels. Changes are surface-only, including
 confirmation of an editor opened before immersion. The applied choices survive

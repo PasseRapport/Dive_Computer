@@ -18,7 +18,7 @@ static void field_bounds(lv_obj_t *o)
  if(!lv_obj_is_visible(o))return;
  if(lv_obj_check_type(o,&lv_label_class)){
   const char *s=lv_label_get_text(o);
-  if(!strcmp(s,"TEMPERATURE")||!strcmp(s,"SESSION DEPTH")||!strcmp(s,"UNDERWATER TIME")){
+  if(!strcmp(s,"TEMPERATURE")||!strcmp(s,"MAX DEPTH")||!strcmp(s,"UNDERWATER TIME")){
    lv_area_t a;lv_obj_get_coords(o,&a);__ASSERT(a.x1>=0&&a.x2<320,"Bottom field label %s clipped horizontally %d..%d at step%u",s,a.x1,a.x2,step);
   }
  }
@@ -72,19 +72,19 @@ void apnea_settings_checks_observe(const struct watch_data *data)
 {
  switch(step){
  case 1:expect("TEMPERATURE");break;
- case 3:expect("UNDERWATER TIME");expect("0:00:00");break;
- case 5:expect("SESSION DEPTH");expect("--");break;
- case 7:expect("SESSION DEPTH");expect("12.3 m");break;
+ case 3:expect("UNDERWATER TIME");expect("0:00");break;
+ case 5:expect("MAX DEPTH");expect("--");break;
+ case 7:expect("MAX DEPTH");expect("12.3 m");break;
  case 9:expect("12.3");__ASSERT(data->max_dive_s==60,"Live record missing");break;
- case 11:expect("SESSION DEPTH");expect("12.3 m");break;
- case 13:expect("UNDERWATER TIME");expect("0:01:01");break;
+ case 11:expect("MAX DEPTH");expect("12.3 m");break;
+ case 13:expect("UNDERWATER TIME");expect("1:01");break;
  case 15:expect("UNDERWATER TIME");break;
  case 17:__ASSERT(watch_ui_salt_water(),"Marine confirmation failed");break;
  case 22:__ASSERT(watch_ui_salt_water(),"Editor applied after descent");expect("UNDERWATER TIME");break;
- case 24:expect("UNDERWATER TIME");expect("0:02:11");__ASSERT(watch_ui_salt_water(),"Underwater settings modified water");break;
- case 26:expect("0:02:12");break;
+ case 24:expect("UNDERWATER TIME");expect("2:11");__ASSERT(watch_ui_salt_water(),"Underwater settings modified water");break;
+ case 26:expect("2:12");break;
  case 31:expect("UNDERWATER TIME");__ASSERT(data->total_dives==3,"Settings reset count");break;
- case 35:expect("UNDERWATER TIME");expect("0:00:00");__ASSERT(watch_ui_salt_water()&&data->total_dives==0,"Reentry lost preferences or retained session");break;
+ case 35:expect("UNDERWATER TIME");expect("0:00");__ASSERT(watch_ui_salt_water()&&data->total_dives==0,"Reentry lost preferences or retained session");break;
  case 38:{expect("UNDERWATER TIME");char path[512];snprintf(path,sizeof(path),"%s/settings-reentry-x2.bmp",sim_host_gallery_path());lv_refr_now(NULL);__ASSERT(sim_host_capture(path)==0,"Capture");break;}
  }
  lv_obj_update_layout(lv_screen_active());if(step%2)field_bounds(lv_screen_active());

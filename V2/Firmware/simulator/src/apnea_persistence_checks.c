@@ -27,9 +27,9 @@ static void capture(const char *name)
  char path[512];snprintf(path,sizeof(path),"%s/%s.bmp",sim_host_gallery_path(),name);
  lv_refr_now(NULL);__ASSERT(!sim_host_capture(path),"Persistence capture failed");
 }
-static const char *caption(int field){static const char *const names[]={"TEMPERATURE","SESSION DEPTH","UNDERWATER TIME","CLOCK","APNEAS"};return names[field];}
-static void fresh_value(int field,const struct watch_data *data){char value[32];if(field==3){snprintf(value,sizeof(value),"%02u:%02u",data->clock_hour,data->clock_minute);expect(value);}else expect(field==1?"--":field==2?"0:00:00":field==4?"0":"18°C");}
-static void live_value(int field,const struct watch_data *data){char value[32];if(field==3){snprintf(value,sizeof(value),"%02u:%02u",data->clock_hour,data->clock_minute);expect(value);}else expect(field==1?"12.3 m":field==2?"0:01:00":field==4?"1":"18°C");}
+static const char *caption(int field){static const char *const names[]={"TEMPERATURE","MAX DEPTH","UNDERWATER TIME","CLOCK","DIVES"};return names[field];}
+static void fresh_value(int field,const struct watch_data *data){char value[32];if(field==3){snprintf(value,sizeof(value),"%02u:%02u",data->clock_hour,data->clock_minute);expect(value);}else expect(field==1?"--":field==2?"0:00":field==4?"0":"18°C");}
+static void live_value(int field,const struct watch_data *data){char value[32];if(field==3){snprintf(value,sizeof(value),"%02u:%02u",data->clock_hour,data->clock_minute);expect(value);}else expect(field==1?"12.3 m":field==2?"1:00":field==4?"1":"18°C");}
 bool apnea_persistence_checks_inputs(uint64_t *sample_ms)
 {
  int mode=sim_host_apnea_persistence_mode();if(!mode)return false;

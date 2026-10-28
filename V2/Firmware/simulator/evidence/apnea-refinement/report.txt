@@ -1,14 +1,14 @@
 Freediving requested refinement — 2026-10-29
 
 Bottom field: temperature, maximum session depth, cumulative underwater time,
-clock (HH:MM), apnea count. Cumulative time is H:MM:SS, includes the active
+clock (HH:MM), apnea count. Cumulative time is total minutes:seconds (M:SS), includes the active
 apnea, excludes surface pauses, preserves fractional milliseconds between apneas
 and resets with the session. Existing preference ID 2 selects this cumulative
 value in place of the previous longest-apnea value. Statistics retains its record.
 
 Five fixed grey dashes have the exact inactive scuba coordinates, dimensions and
 colour. The central white stroke and direction chevrons are removed.
-Surface Main shows LAST APNEA and the frozen duration of the last completed
+Surface Main shows DIVE TIME and the frozen duration of the last completed
 apnea, or -- before the first one. Elapsed recovery time is not displayed.
 Recovery ring timing, colours and visibility rules remain unchanged.
 
@@ -24,3 +24,6 @@ PASS: restart image checks for all ten choices and Main/Statistics/Main continui
 Evidence is PC/native simulation only. No Nordic build or physical-watch validation.
 Implementation continues in /tmp/dive-interface-apnee, branch codex/interface-apnee.
 No push or merge into main. Original checkout files are untouched.
+
+Label update: DIVE TIME, MAX DEPTH, MAX TIME, DIVES. Total underwater
+time now uses total minutes and seconds (e.g. 3661 s = 61:01), without hours.

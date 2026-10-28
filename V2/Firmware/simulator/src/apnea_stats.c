@@ -22,9 +22,9 @@ lv_obj_t *apnea_stats_create(lv_obj_t *parent)
     lv_obj_set_user_data(view,s);lv_obj_add_event_cb(view,deleted,LV_EVENT_DELETE,s);
     s->depth=label(view,&watch_montserrat_60,"--",160,47);
     s->unit=label(view,&lv_font_montserrat_18,"m",0,0);
-    label(view,&lv_font_montserrat_12,"LONGEST APNEA",101,127);
+    label(view,&lv_font_montserrat_12,"MAX TIME",101,127);
     s->longest=label(view,&lv_font_montserrat_34,"--",101,157);
-    label(view,&lv_font_montserrat_12,"APNEAS",219,127);
+    label(view,&lv_font_montserrat_12,"DIVES",219,127);
     s->count=label(view,&lv_font_montserrat_34,"0",219,157);
     label(view,&lv_font_montserrat_12,"SESSION TIME",160,219);
     s->runtime=label(view,&lv_font_montserrat_34,"0:00:00",160,239);

@@ -108,7 +108,7 @@ void apnea_checks_observe(const struct watch_data *data)
     case 17:expect("100.0");expect("10:00");__ASSERT(data->max_dive_s==600,"Live duration record stale");capture("apnea-17-long-x1");break;
     case 20:expect("100.0");expect("10:01");capture("apnea-20-long-x2");break;
     case 25:expect("--");__ASSERT(data->runtime_s==1&&data->total_dives==0&&data->max_depth_dm==0&&!data->show_recovery,"Re-entry retained session");capture("apnea-25-reentry");printk("APNEA MAIN PASS: thresholds, direction, live records, 119/120/130/661 s recovery, page continuity, two apneas, exit/re-entry and x1/x2 renders\n");break;
-    case 27:expect("LONGEST APNEA");expect("APNEAS");expect("SESSION TIME");expect("--");expect("0");expect("0:00:03");capture("stats-01-fresh");break;
+    case 27:expect("MAX TIME");expect("DIVES");expect("SESSION TIME");expect("--");expect("0");expect("0:00:03");capture("stats-01-fresh");break;
     case 29:expect("20.0");expect("0:10");expect("1");expect("0:00:14");capture("stats-02-live");break;
     case 30:expect("20.0");expect("0:20");expect("0:00:24");capture("stats-03-recovery");break;
     case 31:__ASSERT(data->show_recovery&&data->recovery_s==1,"Statistics reset recovery");break;
@@ -119,7 +119,7 @@ void apnea_checks_observe(const struct watch_data *data)
     case 46:expect("--");expect("0");expect("0:00:02");capture("stats-08-reentry");printk("APNEA STATISTICS PASS: initial placeholders, active records, recovery continuity, shorter second apnea, new live depth/time records, long timers, x1/x2 and re-entry\n");break;
     case 22:__ASSERT(watch_ui_view()==WATCH_MODE_MENU,"Leave control changed");break;
     }
-    if(step>=8&&step<=12){expect("LAST APNEA");expect("1:00");}
+    if(step>=8&&step<=12){expect("DIVE TIME");expect("1:00");}
     if((step>=8&&step<=12)||step==1||step==25) {
         __ASSERT(!visible_text(lv_screen_active(),"RECOVERY"),"Recovery timer caption visible");
     }
