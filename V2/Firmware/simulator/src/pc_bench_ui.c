@@ -17,7 +17,7 @@ static uint64_t last_host_ms, last_paint;
 static lv_obj_t *recovery_label,*restart_mode_label;
 static enum pc_restart_mode restart_mode;
 static bool disk_saved_instant_asserted;
-static lv_obj_t *disk_clock_label;
+static lv_obj_t *disk_clock_label,*storage_label;
 static const char *restart_modes[]={"Next: known history","Next: missing exposure","Next: unknown clock",
     "Next: corrupt data","Next: wrong schema","Next: stale data"};
 static lv_obj_t *label(const char *text,int x,int y)
@@ -140,6 +140,8 @@ void pc_bench_ui_create(void)
     button("Save disk",636,764,126,BENCH_DISK_SAVE);
     button("Load disk",772,764,126,BENCH_DISK_LOAD);
     disk_clock_label=button("Clock UNKNOWN",908,764,270,BENCH_DISK_CLOCK);
+    storage_label=label("",636,432);lv_obj_set_width(storage_label,548);
+    lv_obj_set_style_text_font(storage_label,&lv_font_montserrat_12,0);
     label("Depth (m, down) versus elapsed time (min:sec, right)",22,446);
     graph=lv_obj_create(lv_screen_active());lv_obj_set_pos(graph,22,466);lv_obj_set_size(graph,1156,224);
     lv_obj_remove_flag(graph,LV_OBJ_FLAG_SCROLLABLE);
@@ -214,6 +216,13 @@ void pc_bench_ui_poll(void)
         (double)v->depth_m,v->seconds/60,v->seconds%60,gap,
         v->recording.active?"ACTIVE":v->recording.armed?"READY":"DISARMED",v->recording.dives_started);
     lv_label_set_text(recovery_label,v->recovery?v->recovery:"FRESH synthetic fixture; no recovered history");
+    const struct pc_bench_storage_state *storage=v->storage;
+    if(storage && storage->enabled)
+        lv_label_set_text_fmt(storage_label,"Disk prefs %u/%u | logs %zu | %s%s",
+            storage->saved_preference.low,storage->saved_preference.high,storage->log_count,
+            storage->preference_error?storage->preference_error:"",
+            storage->log_error?storage->log_error:storage->unsaved_logs?" UNSAVED LOGS":"");
+    else lv_label_set_text(storage_label,"PC storage disabled");
     lv_label_set_text(restart_mode_label,restart_modes[restart_mode]);
     lv_label_set_text(disk_clock_label,disk_saved_instant_asserted?
         "Assert saved time; elapsed = 0":"Clock UNKNOWN (click to assert)");

@@ -80,8 +80,12 @@ subprocess.run([
 ], cwd=sdk, env=env, check=True)
 if not args.build_only:
     command = [str(workspace / "build/zephyr/zephyr.exe")]
-    if args.checkpoint_check:
-        env["DIVE_WATCH_STATE_DIR"] = tempfile.mkdtemp(prefix="dive-checkpoint-ui-")
+    # Every automated run starts from isolated storage, even when the caller has
+    # a normal preference directory configured in their environment.
+    storage_fixture = None
+    if args.bench and (args.bench_check or args.calculated_check or args.restart_check or args.gf_check or args.checkpoint_check or args.smoke):
+        storage_fixture = tempfile.TemporaryDirectory(prefix="dive-watch-state-")
+        env["DIVE_WATCH_STATE_DIR"] = storage_fixture.name
     if args.bench_profile:
         env["DIVE_SIM_BENCH_PROFILE"] = str(Path(args.bench_profile).resolve())
     if args.bench_check or args.calculated_check or args.restart_check or args.gf_check or args.checkpoint_check:
@@ -119,3 +123,6 @@ if not args.build_only:
         subprocess.run(command, cwd=root, env=env, check=True)
     except KeyboardInterrupt:
         pass
+    finally:
+        if storage_fixture is not None:
+            storage_fixture.cleanup()

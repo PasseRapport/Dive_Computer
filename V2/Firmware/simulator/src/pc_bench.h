@@ -4,6 +4,7 @@
 #include "ostc4_exposure.h"
 #include "exposure_gap.h"
 #include "recorded_dive.h"
+#include "pc_bench_storage.h"
 #include <stdbool.h>
 #include <stddef.h>
 #define PC_BENCH_HISTORY 21601
@@ -11,6 +12,7 @@
 struct bench_point { uint32_t seconds; float depth_m; bool gap; };
 struct bench_view {
     ostc4_observation result;
+    const struct pc_bench_storage_state *storage;
     ostc4_gf_pair preferred_gf, active_gf, draft_gf;
     bool gf_locked, gf_editing;
     struct recorded_dive recording;
@@ -31,6 +33,8 @@ struct bench_view {
  * Poll takes elapsed host milliseconds; pause discards them. No wall clock here.
  * Commands take effect at the last completed simulation second.
  */
+int pc_bench_storage_configure(const char *directory);
+int pc_bench_log_read(size_t index,struct pc_bench_log *record);
 int pc_bench_fresh(float surface_bar, float density_kg_m3,
                    const ostc4_sample *profile, size_t count);
 /* PC-only in-memory checkpoint and explicit restart/fault controls. The known

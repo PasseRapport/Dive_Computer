@@ -45,6 +45,16 @@ static float pressure_to_depth(float pressure)
 {
     return (pressure-view.surface_bar)*100000.0f/(view.density_kg_m3*9.80665f);
 }
+int pc_bench_storage_configure(const char *directory)
+{
+    int result=pc_storage_configure(directory);
+    view.storage=pc_storage_read();
+    notify_observer();return result;
+}
+int pc_bench_log_read(size_t index,struct pc_bench_log *record)
+{
+    return pc_storage_log_read(index,record);
+}
 int pc_bench_fresh(float surface, float density, const ostc4_sample *profile, size_t count)
 {
     /* Validate before replacing any live fixture. */
@@ -63,7 +73,10 @@ int pc_bench_fresh(float surface, float density, const ostc4_sample *profile, si
     view.recording=(struct recorded_dive){.armed=true,
         .start_depth_dm=start_depth?start_depth:20};
     view.generation=generation;view.gf_policy=OSTC4_CONFIGURABLE_GF_POLICY;
-    view.preferred_gf=view.active_gf=(ostc4_gf_pair){30,70};
+    view.storage=pc_storage_read();
+    view.preferred_gf=view.active_gf=view.storage->preference_saved?
+        view.storage->saved_preference:(ostc4_gf_pair){30,70};
+    ostc4_exposure_set_gf_pair(view.preferred_gf.low,view.preferred_gf.high);
     view.surface_bar=surface; view.density_kg_m3=density; view.speed=1;
     view.replay=count!=0; view.profile_count=count;
     view.history=history; view.profile=graph; view.exposure=actual_samples; view.history_count=1;
@@ -88,6 +101,7 @@ int pc_bench_set_gf_pair(int low,int high)
     invalidate_checkpoint_configuration();
     view.preferred_gf=view.active_gf=(ostc4_gf_pair){(uint8_t)low,(uint8_t)high};
     ostc4_exposure_read(&view.result);
+    pc_storage_save_preference(view.preferred_gf);
     notify_observer();return 0;
 }
 int pc_bench_gf_edit_begin(void)
@@ -207,6 +221,17 @@ void pc_bench_recording_arm(void)
     invalidate_checkpoint_configuration();view.recording.armed=true;
     notify_observer();
 }
+static void save_completed_log(bool automatic)
+{
+    struct pc_bench_log record={.started_seconds=view.recording.started_seconds,
+        .completed_seconds=view.recording.completed_seconds,
+        .dive_seconds=view.recording.dive_seconds,.active_gf=view.active_gf,
+        .automatic_completion=automatic};
+    /* Numerical identity belongs to the captured pair; later preferences never
+     * replace an existing immutable log. */
+    strncpy(record.policy,view.gf_policy,sizeof(record.policy)-1);
+    pc_storage_append_log(&record);
+}
 int pc_bench_recording_finish(void)
 {
     long depth_mm=lroundf((view.result.absolute_pressure_bar-view.surface_bar)*10000);
@@ -216,6 +241,7 @@ int pc_bench_recording_finish(void)
         view.recording.active=false;
         view.recording.completed_seconds=view.seconds;
         ++view.recording.dives_completed;
+        save_completed_log(false);
     }
     view.recording.armed=false;
     sync_gf_lock();ostc4_exposure_read(&view.result);
@@ -320,6 +346,8 @@ static int accept_sample(const ostc4_sample *sample)
     if(view.recording.dives_started!=previous_recording.dives_started) {
         view.gf_editing=false;view.draft_gf=view.preferred_gf;
     }
+    if(view.recording.dives_completed!=previous_recording.dives_completed)
+        save_completed_log(true);
     view.seconds=sample->timestamp_seconds;view.elapsed_seconds=view.seconds;
     view.depth_m=pressure_to_depth(sample->absolute_pressure_bar);
     ostc4_exposure_read(&view.result);
@@ -450,6 +478,7 @@ ostc4_restart_status pc_bench_checkpoint_import(const struct pc_bench_checkpoint
     ostc4_gf_pair preferred=view.history_count?view.preferred_gf:state->preferred;
     uint32_t generation=view.generation+1;
     memset(&view,0,sizeof(view));view.generation=generation;
+    view.storage=pc_storage_read();
     view.history=history;view.profile=graph;view.exposure=actual_samples;
     view.gf_policy=OSTC4_CONFIGURABLE_GF_POLICY;view.preferred_gf=preferred;
     view.density_kg_m3=state->density;view.speed=1;view.paused=true;

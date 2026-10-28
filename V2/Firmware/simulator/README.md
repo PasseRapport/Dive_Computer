@@ -417,3 +417,32 @@ preferred-pair independence, brief surface/manual/automatic completion, immutabl
 legacy migration, unknown configuration/clock/exposure, corruption and write
 failures. Exact continuation equality establishes serialization consistency only;
 existing independently authored numerical acceptance remains a separate gate.
+
+### Durable PC preferences and completed-dive logs
+
+Normal `--bench` startup loads the preferred pair from
+`$XDG_STATE_HOME/dive-watch-simulator`, falling back to
+`$HOME/.local/state/dive-watch-simulator`. Set `DIVE_WATCH_STATE_DIR` to select an
+isolated state directory. Automated launcher checks always substitute a fresh
+temporary state directory; standalone public bench tests perform no disk I/O
+unless they explicitly call `pc_bench_storage_configure(directory)`.
+
+The PC adapter writes schema-1 `preference.txt` and immutable
+`dive-00000000000000000001.log` records. Each newly completed dive carries its
+accepted simulation start/completion times, frozen active pair, numerical policy
+and manual/automatic completion identity. New preferences do not rewrite logs.
+Unknown historical files remain untouched; unrecognized numbered records are
+reported without inventing their GF provenance. File preparation and flushing
+precede atomic publication; failed writes retain the prior committed files.
+
+`bench_view.storage`, `pc_bench_log_read()` and captured JSON expose loaded/saved
+status, the last saved pair, log metadata, unsaved-log count and explicit errors.
+A committed GF choice remains usable after a disk write failure but is visibly
+unsaved. Loading preferences only configures the PC adapter: explicit fresh
+startup still creates fresh synthetic exposure at time zero and never claims
+recovery. Preferences cannot restore missing exposure or unlock a recorded dive.
+
+The separate-process CTest `durable_preferences_logs_separate_processes` exercises
+first use, reopen, boundary/equal pairs, manual and automatic completion with
+different pairs, unchanged old log bytes, corrupt preferences, legacy records and
+deliberate filesystem write failure. It is PC/synthetic evidence only.
