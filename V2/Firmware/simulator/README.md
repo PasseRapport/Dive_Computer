@@ -241,8 +241,8 @@ Unavailable/invalid calculation states show explicitly with blank calculated
 values and an empty grey ring, retaining last known obligations. Limited results
 keep capped values on the watch (including the existing>99 NDL display),
 without an extra LIMITED label; diagnostics retain the limited state; the automatic diver holds if a required ascent result is limited.
-TTS remains raw upstream output; zero-TTS in NDL mode is labelled travel excluded
-on the watch footer too. The optional180s safety stop remains a separate session
+TTS remains raw upstream output. The watch footer always uses the short TTS
+label; diagnostics qualify zero-TTS in NDL mode as excluding ascent travel. The optional180s safety stop remains a separate session
 policy, is omitted after mandatory deco, and is never included in raw TTS.
 Independent profiles pass ticket05 comparison v4 with the user's±3s TTS margin;
 all raw+1s differences and the rejected exact-TTS bundle remain published.

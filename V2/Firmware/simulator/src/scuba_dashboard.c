@@ -158,8 +158,6 @@ static void footer(struct dashboard *d,const struct scuba_model *m,const struct 
     if(m->calculated && (m->calculated_state==SCUBA_CALCULATED_INVALID||m->calculated_state==SCUBA_CALCULATED_UNAVAILABLE) &&
        (d->field==FIELD_TTS||d->field==FIELD_CEILING||d->field==FIELD_SAFETY_STOP||d->field==FIELD_STOP_COMPLETE))
         snprintf(value,sizeof(value),"--");
-    if(m->calculated && (m->calculated_state==SCUBA_CALCULATED_AVAILABLE||m->calculated_state==SCUBA_CALCULATED_LIMITED) &&
-        d->field==FIELD_TTS && !scuba_model_tts(m))caption="TTS (TRAVEL EXCLUDED)";
     lv_obj_set_style_text_font(d->footer_title,d->field==FIELD_CEILING?&lv_font_montserrat_16:&lv_font_montserrat_12,0);
     if(d->field!=FIELD_CEILING&&(m->notifications&~SCUBA_BATTERY))lv_obj_set_style_text_font(d->footer_value,&lv_font_montserrat_28,0);
     centred(d->footer_title,caption,160,219);centred(d->footer_value,value,160,d->field==FIELD_CEILING?237:(m->notifications&~SCUBA_BATTERY)?235:239);
