@@ -289,10 +289,32 @@ void sim_host_bench_watch(const struct scuba_model *model) {calculated_watch=mod
 #include <stdio.h>
 int sim_host_bench_check_enabled(void) {
     const char *mode=getenv("DIVE_SIM_BENCH_CHECK");
-    return !mode?0:!strcmp(mode,"gf")?4:!strcmp(mode,"restart")?3:!strcmp(mode,"calculated")?2:1;
+    return !mode?0:!strcmp(mode,"checkpoint")?5:!strcmp(mode,"gf")?4:!strcmp(mode,"restart")?3:!strcmp(mode,"calculated")?2:1;
+}
+static void configure_bench_storage(void)
+{
+    static bool configured;
+    if(configured)return;
+    configured=true;
+    const char *directory=getenv("DIVE_WATCH_STATE_DIR");
+    char fallback[4096];
+    if(!directory && (sim_host_bench_check_enabled() || getenv("DIVE_SIM_GALLERY"))) {
+        pc_bench_storage_configure(NULL);return;
+    }
+    if(!directory) {
+        const char *xdg=getenv("XDG_STATE_HOME"),*home=getenv("HOME");
+        int count;
+        if(xdg && *xdg)count=snprintf(fallback,sizeof(fallback),"%s/dive-watch-simulator",xdg);
+        else if(home && *home)count=snprintf(fallback,sizeof(fallback),"%s/.local/state/dive-watch-simulator",home);
+        else {pc_bench_storage_configure("");return;}
+        directory=count<0 || count>=(int)sizeof(fallback)?"":fallback;
+    }
+    if(*directory)(void)setenv("DIVE_WATCH_STATE_DIR",directory,1);
+    (void)pc_bench_storage_configure(directory);
 }
 int sim_host_bench_fresh(void)
 {
+    configure_bench_storage();
     const char *path=getenv("DIVE_SIM_BENCH_PROFILE");
     if(!path)return pc_bench_fresh(1.01325f,1025,pc_bench_two_dives,8);
     FILE *file=fopen(path,"r");
@@ -354,6 +376,23 @@ int sim_host_bench_capture(unsigned milestone)
         v->preferred_gf.low,v->preferred_gf.high,v->active_gf.low,v->active_gf.high,
         v->draft_gf.low,v->draft_gf.high,v->gf_locked?"true":"false",v->gf_editing?"true":"false",
         v->gf_policy,OSTC4_POLICY);
+    const struct pc_bench_storage_state *storage=v->storage;
+    fprintf(out,",\"storage\":{\"enabled\":%s,\"preference_loaded\":%s,\"preference_saved\":%s,"
+        "\"saved_preference\":[%u,%u],\"log_count\":%zu,\"unsaved_logs\":%zu,"
+        "\"preference_error\":\"%s\",\"log_error\":\"%s\",\"logs\":[",
+        storage->enabled?"true":"false",storage->preference_loaded?"true":"false",
+        storage->preference_saved?"true":"false",storage->saved_preference.low,storage->saved_preference.high,
+        storage->log_count,storage->unsaved_logs,storage->preference_error?storage->preference_error:"",
+        storage->log_error?storage->log_error:"");
+    for(size_t i=0;i<storage->log_count;++i) {
+        struct pc_bench_log log;
+        if(pc_bench_log_read(i,&log)) {fclose(out);return -1;}
+        fprintf(out,"%s{\"id\":%llu,\"active_gf\":[%u,%u],\"policy\":\"%s\","
+            "\"started_seconds\":%u,\"completed_seconds\":%u,\"automatic_completion\":%s}",
+            i?",":"",log.id,log.active_gf.low,log.active_gf.high,log.policy,
+            log.started_seconds,log.completed_seconds,log.automatic_completion?"true":"false");
+    }
+    fprintf(out,"]}");
     fprintf(out,",\"elapsed_seconds\":%u,\"data_gap\":{\"present\":%s,\"time_known\":%s,\"ongoing\":%s,\"seconds\":%u},"
         "\"recovery\":\"%s\",\"gap\":%s}\n",v->elapsed_seconds,v->data_gap.present?"true":"false",
         v->data_gap.time_known?"true":"false",v->data_gap.ongoing?"true":"false",v->data_gap.duration_seconds,

@@ -1,0 +1,43 @@
+Test project /tmp/dive-gf14-build
+      Start  1: pc_bench_controls_time_graph
+ 1/19 Test  #1: pc_bench_controls_time_graph ........................   Passed    1.35 sec
+      Start  2: calculated_watch_mapping_session_alerts
+ 2/19 Test  #2: calculated_watch_mapping_session_alerts .............   Passed    0.00 sec
+      Start  3: restart_watch_diagnostics
+ 3/19 Test  #3: restart_watch_diagnostics ...........................   Passed    0.94 sec
+      Start  4: configurable_gf_public_behavior
+ 4/19 Test  #4: configurable_gf_public_behavior .....................   Passed    0.01 sec
+      Start  5: configurable_gf_independent_acceptance
+ 5/19 Test  #5: configurable_gf_independent_acceptance ..............   Passed    0.37 sec
+      Start  6: durable_preferences_logs_separate_processes
+ 6/19 Test  #6: durable_preferences_logs_separate_processes .........   Passed    0.11 sec
+      Start  7: upstream_source_identity
+ 7/19 Test  #7: upstream_source_identity ............................   Passed    0.06 sec
+      Start  8: synthetic_replay_contracts
+ 8/19 Test  #8: synthetic_replay_contracts ..........................   Passed    0.13 sec
+      Start  9: public_pressure_time_contract
+ 9/19 Test  #9: public_pressure_time_contract .......................   Passed    0.00 sec
+      Start 10: corrected_public_pressure_time_contract
+10/19 Test #10: corrected_public_pressure_time_contract .............   Passed    0.00 sec
+      Start 11: corrected_synthetic_replay_contracts
+11/19 Test #11: corrected_synthetic_replay_contracts ................   Passed    0.14 sec
+      Start 12: independently_verified_tissues
+12/19 Test #12: independently_verified_tissues ......................   Passed    0.87 sec
+      Start 13: continuous_exposure_contract
+13/19 Test #13: continuous_exposure_contract ........................   Passed    0.03 sec
+      Start 14: independent_repetitive_exposure
+14/19 Test #14: independent_repetitive_exposure .....................   Passed    0.16 sec
+      Start 15: continuity_replay_faults
+15/19 Test #15: continuity_replay_faults ............................   Passed    0.12 sec
+      Start 16: independent_schedule_analytical_checks
+16/19 Test #16: independent_schedule_analytical_checks ..............   Passed    0.33 sec
+      Start 17: independent_schedule_comparator_rejects_mutations
+17/19 Test #17: independent_schedule_comparator_rejects_mutations ...   Passed    0.24 sec
+      Start 18: checkpoint_restart_continuity
+18/19 Test #18: checkpoint_restart_continuity .......................   Passed    0.01 sec
+      Start 19: checkpoint_fresh_process
+19/19 Test #19: checkpoint_fresh_process ............................   Passed    0.11 sec
+
+100% tests passed, 0 tests failed out of 19
+
+Total Test time (real) =   4.99 sec
