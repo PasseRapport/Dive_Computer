@@ -7,10 +7,13 @@ static void emit(void)
 {
     const struct bench_view *v=pc_bench_read();
     const ostc4_observation *r=&v->result;
-    printf("{\"gf_pair\":[%u,%u],\"gf_locked\":%s,\"timestamp_seconds\":%u,\"dive_seconds\":%u,\"absolute_pressure_bar\":%.9g,\"gf_anchor_ambient_bar\":%.9g,\"gf_low_depth_bar\":%.9g,\"ceiling_meters\":%.9g,\"ndl_seconds\":%d,\"tts_seconds\":%d,\"nitrogen_bar\":[",
+    printf("{\"gf_pair\":[%u,%u],\"gf_locked\":%s,\"timestamp_seconds\":%u,\"dive_seconds\":%u,\"absolute_pressure_bar\":%.9g,\"gf_anchor_ambient_bar\":%.9g,\"gf_low_depth_bar\":%.9g,\"ceiling_meters\":%.9g,\"ndl_seconds\":%d,\"tts_seconds\":%d,",
         r->gf_pair.low,r->gf_pair.high,r->gf_locked?"true":"false",r->timestamp_seconds,
         r->dive_seconds,(double)r->absolute_pressure_bar,(double)r->gf_anchor_ambient_bar,
         (double)r->gf_low_depth_bar,(double)r->ceiling_meters,r->ndl_seconds,r->tts_seconds);
+    printf("\"gf_low_ceiling_meters\":%.9g,\"gf_high_ceiling_meters\":%.9g,", (double)r->gf_low_ceiling_meters,(double)r->gf_high_ceiling_meters);
+    printf("\"endpoint_availability\":[\"%s\",\"%s\"],", ostc4_availability_name(r->gf_low_ceiling),ostc4_availability_name(r->gf_high_ceiling));
+    printf("\"nitrogen_bar\":[");
     for(int i=0;i<OSTC4_TISSUES;++i)printf("%s%.9g",i?",":"",(double)r->nitrogen_bar[i]);
     printf("],\"stop_seconds\":[");
     for(int i=0;i<OSTC4_STOPS;++i)printf("%s%u",i?",":"",r->stop_seconds[i]);

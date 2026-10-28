@@ -1,0 +1,39 @@
+{
+  "identity": "configurable-gf-production-comparison-v1",
+  "cases": 12,
+  "one_second_cases": 5,
+  "one_second_events": 455,
+  "large_endpoint_events": 9,
+  "endpoint_max_error_m": 4.9992940347465264e-06,
+  "endpoint_tolerance_m": 0.006,
+  "events": 114,
+  "tts_differences": [
+    {
+      "case": "large-extreme-(1, 1)[2]",
+      "field": "tts_seconds",
+      "actual": 170448,
+      "expected": 170472,
+      "difference": -24
+    },
+    {
+      "case": "large-extreme-(1, 100)[2]",
+      "field": "tts_seconds",
+      "actual": 21388,
+      "expected": 21402,
+      "difference": -14
+    },
+    {
+      "case": "large-extreme-(100, 100)[2]",
+      "field": "tts_seconds",
+      "actual": 16274,
+      "expected": 16272,
+      "difference": 2
+    }
+  ],
+  "failures": [
+    "large-extreme-(1, 1)[2]: stop_seconds: actual=[59940, 59940, 22230, 10370, 5970, 3670, 2450, 1620, 1150, 920, 580, 520, 320, 280, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] expected=[59940, 59940, 22240, 10380, 5960, 3680, 2450, 1630, 1140, 930, 570, 530, 320, 280, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]",
+    "large-extreme-(1, 1)[2]: tts_seconds: actual=170448 expected=170472 bound=3",
+    "large-extreme-(1, 100)[2]: stop_seconds: actual=[8980, 4290, 2410, 1540, 1140, 780, 580, 420, 270, 220, 200, 90, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] expected=[8980, 4300, 2400, 1550, 1140, 790, 570, 420, 270, 220, 210, 90, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]",
+    "large-extreme-(1, 100)[2]: tts_seconds: actual=21388 expected=21402 bound=3"
+  ]
+}

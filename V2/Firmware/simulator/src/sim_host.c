@@ -354,6 +354,9 @@ int sim_host_bench_capture(unsigned milestone)
         v->preferred_gf.low,v->preferred_gf.high,v->active_gf.low,v->active_gf.high,
         v->draft_gf.low,v->draft_gf.high,v->gf_locked?"true":"false",v->gf_editing?"true":"false",
         v->gf_policy,OSTC4_POLICY);
+    fprintf(out,",\"gf_ceilings\":{\"low_m\":%.9g,\"high_m\":%.9g,\"validity\":[%d,%d]}",
+        (double)v->result.gf_low_ceiling_meters,(double)v->result.gf_high_ceiling_meters,
+        v->result.gf_low_ceiling,v->result.gf_high_ceiling);
     fprintf(out,",\"elapsed_seconds\":%u,\"data_gap\":{\"present\":%s,\"time_known\":%s,\"ongoing\":%s,\"seconds\":%u},"
         "\"recovery\":\"%s\",\"gap\":%s}\n",v->elapsed_seconds,v->data_gap.present?"true":"false",
         v->data_gap.time_known?"true":"false",v->data_gap.ongoing?"true":"false",v->data_gap.duration_seconds,

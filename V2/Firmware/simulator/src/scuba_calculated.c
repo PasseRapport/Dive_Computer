@@ -21,6 +21,10 @@ void scuba_calculated_apply(struct scuba_model *m,const ostc4_observation *r,
         m->calculated_state==SCUBA_CALCULATED_LIMITED);
     m->calculated=true;m->scenario=SCUBA_MANUAL;m->speed=1;
     m->calculated_state=state(r);
+    m->calculated_gf_low_ceiling_m=r->gf_low_ceiling_meters;
+    m->calculated_gf_high_ceiling_m=r->gf_high_ceiling_meters;
+    m->calculated_gf_low_ceiling_valid=r->tissues==OSTC4_AVAILABLE && r->gf_low_ceiling==OSTC4_AVAILABLE;
+    m->calculated_gf_high_ceiling_valid=r->tissues==OSTC4_AVAILABLE && r->gf_high_ceiling==OSTC4_AVAILABLE;
     if(!isfinite(depth)||depth<0||depth>61||!isfinite(r->ceiling_meters)||
         r->ceiling_meters<0||r->ceiling_meters>160||r->ndl_seconds<0||r->tts_seconds<0)
         m->calculated_state=SCUBA_CALCULATED_INVALID;

@@ -6,6 +6,7 @@
 #include "scuba_ui.h"
 #include <lvgl.h>
 #include <zephyr/kernel.h>
+#include <string.h>
 
 /* Public bench inputs plus real watch menu commands share one recording. */
 static void recording_checks(void)
@@ -240,13 +241,39 @@ static void restart_checks(void)
     ++stage;
 }
 
+/* Rendering contract at the public LVGL display boundary: exact text and
+ * actual native glyph bounds, without depending on dashboard object layout. */
+static lv_obj_t *visible_label(lv_obj_t *parent,const char *text)
+{
+    if(!lv_obj_is_visible(parent))return NULL;
+    if(lv_obj_check_type(parent,&lv_label_class) && !strcmp(lv_label_get_text(parent),text))return parent;
+    for(unsigned i=0;i<lv_obj_get_child_count(parent);++i) {
+        lv_obj_t *match=visible_label(lv_obj_get_child(parent,i),text);
+        if(match)return match;
+    }
+    return NULL;
+}
+static void paired_footer_render(const char *expected)
+{
+    lv_obj_t *title=visible_label(lv_screen_active(),"CEIL GF LOW / HIGH");
+    lv_obj_t *value=visible_label(lv_screen_active(),expected);
+    __ASSERT(title && value,"both endpoint labels/rounded values must render together");
+    lv_area_t area;lv_obj_get_coords(value,&area);
+    __ASSERT(area.y1>=250 && area.y2<330,"paired footer left the main watch bottom field");
+    const int x[]={area.x1,area.x2},y[]={area.y1,area.y2};
+    for(unsigned i=0;i<2;++i)for(unsigned j=0;j<2;++j) {
+        int dx=x[i]-182,dy=y[j]-182;
+        __ASSERT(dx*dx+dy*dy<148*148,"endpoint typography clips the native round watch geometry");
+    }
+}
+
 /* Public watch commands demonstrate atomic preparation editing and start lock. */
 static void gf_checks(void)
 {
     static unsigned stage;
     static uint64_t after;
     uint64_t now=k_uptime_get();
-    if(stage>=12 || now<500 || (after && now<after))return;
+    if(stage>=26 || now<500 || (after && now<after))return;
     const struct bench_view *v=pc_bench_read();
     struct watch_data data={.temperature_c=18,.battery_percent=87};
     if(!(stage%2)) {
@@ -286,11 +313,66 @@ static void gf_checks(void)
             scuba_ui_enter((uint64_t)v->seconds*1000);
             __ASSERT(!v->gf_locked && v->preferred_gf.low==40 && scuba_ui_screen()==SCUBA_PREP,
                 "completion did not unlock retained pair");break;
+        case 6:
+            __ASSERT(pc_bench_fresh(1.01325f,1025,NULL,0)==0,"endpoint fresh failed");
+            __ASSERT(pc_bench_set_gf_pair(30,70)==0,"endpoint pair failed");
+            __ASSERT(pc_bench_accept_sample(&(ostc4_sample){60,1.31325f})==0,"endpoint shallow failed");
+            scuba_ui_update(&data,(uint64_t)v->seconds*1000,true);
+            scuba_ui_input(WATCH_CROWN,1);scuba_ui_input(WATCH_SINGLE_TAP,0);
+            scuba_ui_input(WATCH_CROWN,1);scuba_ui_input(WATCH_SINGLE_TAP,0);
+            scuba_ui_input(WATCH_CROWN,-100);scuba_ui_input(WATCH_CROWN,FIELD_GF_CEILINGS);
+            scuba_ui_input(WATCH_SINGLE_TAP,0);scuba_ui_input(WATCH_DOUBLE_TAP,0);
+            __ASSERT(scuba_ui_screen()==SCUBA_MAIN && scuba_ui_field()==FIELD_GF_CEILINGS,
+                "paired endpoint choice missing from existing Bottom field menu");break;
+        case 7:
+            __ASSERT(pc_bench_fresh(1.01325f,1025,NULL,0)==0,"endpoint deep fresh failed");
+            __ASSERT(pc_bench_set_gf_pair(30,70)==0,"endpoint deep pair failed");
+            __ASSERT(pc_bench_accept_sample(&(ostc4_sample){120,4.01325f})==0,"endpoint descent failed");
+            __ASSERT(pc_bench_accept_sample(&(ostc4_sample){2220,4.01325f})==0,"endpoint loading failed");
+            scuba_ui_update(&data,(uint64_t)v->seconds*1000,true);
+            __ASSERT(scuba_ui_field()==FIELD_GF_CEILINGS && scuba_ui_model()->calculated_stop_dm,
+                "mandatory stop hid selected endpoints");break;
+        case 8: {
+            __ASSERT(pc_bench_auto(true)==0,"endpoint auto failed");pc_bench_pause(false);
+            unsigned guard=0;
+            do {pc_bench_poll(1000);} while((!scuba_model_in_stop(scuba_ui_model())||v->rate_m_min!=0) && ++guard<300);
+            __ASSERT(guard<300 && scuba_ui_field()==FIELD_GF_CEILINGS &&
+                scuba_ui_model()->calculated_stop_remaining_ms,"endpoint stop countdown missing");
+            scuba_ui_input(WATCH_SINGLE_TAP,0);break;
+        }
+        case 9:
+            pc_bench_manual(1,0);pc_bench_pause(false);pc_bench_poll(1000);
+            __ASSERT(scuba_ui_model()->notifications&SCUBA_CEILING,"endpoint display suppressed operational alert");break;
+        case 10:
+            scuba_ui_input(WATCH_SINGLE_TAP,0);
+            __ASSERT(!(scuba_ui_model()->notifications&SCUBA_CEILING) &&
+                (scuba_ui_model()->alerts&SCUBA_CEILING),"endpoint acknowledgement changed obligation");break;
+        case 11:
+            pc_bench_mark_missing();
+            __ASSERT(!scuba_ui_model()->calculated_gf_low_ceiling_valid &&
+                !scuba_ui_model()->calculated_gf_high_ceiling_valid,"invalid endpoint fabricated zero");break;
+        case 12:
+            __ASSERT(pc_bench_fresh(1.01325f,1025,NULL,0)==0,"equal endpoint fresh failed");
+            __ASSERT(pc_bench_set_gf_pair(1,1)==0,"equal endpoint pair failed");
+            __ASSERT(pc_bench_accept_sample(&(ostc4_sample){120,7.01325f})==0,"equal endpoint descent failed");
+            __ASSERT(pc_bench_accept_sample(&(ostc4_sample){3720,7.01325f})==0,"equal endpoint loading failed");
+            scuba_ui_update(&data,(uint64_t)v->seconds*1000,true);
+            __ASSERT(v->result.gf_low_ceiling_meters>30 &&
+                v->result.gf_low_ceiling_meters==v->result.gf_high_ceiling_meters &&
+                scuba_ui_field()==FIELD_GF_CEILINGS,"large/equal endpoint display missing");break;
+
         }
         pc_bench_pause(true);after=now+350;
     } else {
         watch_ui_update(&data);lv_refr_now(NULL);
+        /* Values chosen from independent endpoint fixtures/reference, with
+         * decimal expectations written explicitly rather than reformatting C. */
+        if(stage/2==6)paired_footer_render("0.0 / 0.0 m");
+        if(stage/2==7)paired_footer_render("13.4 / 7.2 m");
+        if(stage/2==11)paired_footer_render("-- / -- m");
+        if(stage/2==12)paired_footer_render("44.3 / 44.3 m");
         __ASSERT(sim_host_bench_capture(stage/2)==0,"GF demonstration capture failed");
+        if(stage==25)printk("PAIRED CEILINGS WATCH PASS: simultaneous fixed Low/High, zero, equality, large values, mandatory stop/countdown, operational alerts and acknowledgement, invalidity\n");
         if(stage==11)printk("CONFIGURABLE GF WATCH PASS: draft, atomic commit, preparation pair, first-sample lock, direct rejection, completion unlock\n");
         after=now+150;
     }

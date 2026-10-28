@@ -43,7 +43,10 @@ typedef struct {
     float gf_low_depth_bar;
     int ndl_seconds;
     int tts_seconds;
-    float ceiling_meters;
+    float ceiling_meters; /* Operational interpolation/anchor ceiling. */
+    /* Current fixed-GF endpoints from the same tissues; never guide ascent. */
+    float gf_low_ceiling_meters, gf_high_ceiling_meters;
+    ostc4_availability gf_low_ceiling, gf_high_ceiling;
     unsigned short stop_seconds[OSTC4_STOPS];
     ostc4_availability tissues, ndl, tts, ceiling, stops;
 } ostc4_observation;

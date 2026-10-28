@@ -51,6 +51,36 @@ ostc4_status ostc4_initialize(const ostc4_initial *initial)
     return OSTC4_OK;
 }
 
+/* Air-only analytical fixed-GF endpoints. This consumes no planner scratch:
+ * reads and predictions cannot change the active interpolation anchor. */
+static void endpoint_ceilings(ostc4_observation *r, float surface)
+{
+    r->gf_low_ceiling_meters = r->gf_high_ceiling_meters = 0;
+    r->gf_low_ceiling = r->gf_high_ceiling = r->tissues;
+    if (r->tissues != OSTC4_AVAILABLE) return;
+    if (!isfinite(surface) || surface < 0.8f || surface > 1.2f ||
+        r->gf_pair.low < 1 || r->gf_pair.high > 100 || r->gf_pair.low > r->gf_pair.high) {
+        r->gf_low_ceiling = r->gf_high_ceiling = OSTC4_INVALID;
+        return;
+    }
+    double pressure[2] = {surface, surface};
+    const unsigned factors[2] = {r->gf_pair.low, r->gf_pair.high};
+    for (int i = 0; i < OSTC4_TISSUES; ++i) {
+        if (!isfinite(r->nitrogen_bar[i]) || r->nitrogen_bar[i] < 0 || r->helium_bar[i] != 0) {
+            r->gf_low_ceiling = r->gf_high_ceiling = OSTC4_INVALID;
+            return;
+        }
+        for (unsigned endpoint = 0; endpoint < 2; ++endpoint) {
+            const double gf = factors[endpoint] / 100.0;
+            const double required = (r->nitrogen_bar[i] - gf * buehlmann_N2_a[i]) /
+                (1.0 + gf * (1.0 / buehlmann_N2_b[i] - 1.0));
+            if (required > pressure[endpoint]) pressure[endpoint] = required;
+        }
+    }
+    r->gf_low_ceiling_meters = (float)((pressure[0] - surface) * 10.0);
+    r->gf_high_ceiling_meters = (float)((pressure[1] - surface) * 10.0);
+}
+
 ostc4_status ostc4_read(ostc4_observation *observation)
 {
     if (!observation)
@@ -58,6 +88,7 @@ ostc4_status ostc4_read(ostc4_observation *observation)
     if (!initialized)
         return OSTC4_NOT_INITIALIZED;
     *observation = current;
+    endpoint_ceilings(observation, life.pressure_surface_bar);
     return OSTC4_OK;
 }
 
@@ -105,6 +136,7 @@ static ostc4_status calculate(SLifeData *next, SDiveSettings *next_settings,
             if (observed.stop_seconds[i] >= 59940)
                 observed.stops = OSTC4_LIMITED;
     }
+    endpoint_ceilings(&observed, next->pressure_surface_bar);
     *output = observed;
     return OSTC4_OK;
 }
@@ -233,7 +265,8 @@ ostc4_status ostc4_exposure_predict(const ostc4_sample *future, ostc4_observatio
         return OSTC4_NOT_INITIALIZED;
     if (exposure_incomplete) {
         prediction->tissues = prediction->ndl = prediction->tts =
-            prediction->ceiling = prediction->stops = OSTC4_INVALID;
+            prediction->ceiling = prediction->stops = prediction->gf_low_ceiling =
+            prediction->gf_high_ceiling = OSTC4_INVALID;
         return OSTC4_BAD_INPUT;
     }
     const SLifeData saved_life = life;

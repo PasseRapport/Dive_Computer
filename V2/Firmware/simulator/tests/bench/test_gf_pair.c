@@ -21,6 +21,13 @@ static ostc4_observation matched_control(bool intervene)
         unsigned char before[OSTC4_CHECKPOINT_BYTES],after[OSTC4_CHECKPOINT_BYTES];
         CHECK(ostc4_exposure_checkpoint(before,sizeof(before))==OSTC4_OK);
         ostc4_observation prediction;
+        for (unsigned read=0;read<100;++read) {
+            ostc4_observation endpoints;
+            CHECK(ostc4_exposure_read(&endpoints)==OSTC4_OK);
+            CHECK(endpoints.gf_low_ceiling==OSTC4_AVAILABLE && endpoints.gf_high_ceiling==OSTC4_AVAILABLE);
+            CHECK(endpoints.gf_low_ceiling_meters>=endpoints.gf_high_ceiling_meters);
+            CHECK(!memcmp(&endpoints,&pc_bench_read()->result,sizeof(endpoints)));
+        }
         CHECK(ostc4_exposure_predict(&(ostc4_sample){2400,1.61325f},&prediction)==OSTC4_OK);
         CHECK(ostc4_exposure_predict(&(ostc4_sample){2220,1.01325f},&prediction)==OSTC4_BAD_TIME);
         CHECK(ostc4_exposure_set_gf_pair(20,60)==OSTC4_BAD_INPUT);
@@ -33,9 +40,13 @@ static ostc4_observation matched_control(bool intervene)
 }
 int main(void)
 {
+    CHECK(pc_bench_read()->result.gf_low_ceiling==OSTC4_UNAVAILABLE);
+    CHECK(pc_bench_read()->result.gf_high_ceiling==OSTC4_UNAVAILABLE);
     CHECK(pc_bench_fresh(1.01325f,1025,NULL,0)==0);
     const struct bench_view *v=pc_bench_read();
     CHECK(v->preferred_gf.low==30 && v->preferred_gf.high==70);
+    CHECK(v->result.gf_low_ceiling==OSTC4_AVAILABLE && v->result.gf_high_ceiling==OSTC4_AVAILABLE);
+    CHECK(v->result.gf_low_ceiling_meters==0 && v->result.gf_high_ceiling_meters==0);
     ostc4_observation before=v->result;
     CHECK(pc_bench_set_gf_pair(70,70)==0);
     CHECK(v->preferred_gf.low==70 && v->preferred_gf.high==70);
@@ -119,5 +130,16 @@ int main(void)
     CHECK(!v->gf_editing && v->preferred_gf.low==1 && v->preferred_gf.high==2);
     CHECK(pc_bench_set_gf_pair(1,100)==0);
     CHECK(pc_bench_set_gf_pair(100,100)==0);
+    CHECK(pc_bench_set_gf_pair(1,1)==0);
+    CHECK(pc_bench_accept_sample(&(ostc4_sample){120,7.01325f})==0);
+    CHECK(pc_bench_accept_sample(&(ostc4_sample){3720,7.01325f})==0);
+    CHECK(v->result.gf_low_ceiling_meters>30);
+    CHECK(v->result.gf_low_ceiling_meters==v->result.gf_high_ceiling_meters);
+    before=v->result;
+    CHECK(pc_bench_set_gf_pair(0,100)==-1);
+    CHECK(!memcmp(&before,&v->result,sizeof(before)));
+    pc_bench_mark_missing();
+    CHECK(v->result.gf_low_ceiling==OSTC4_INVALID && v->result.gf_high_ceiling==OSTC4_INVALID);
+    CHECK(v->result.tissues==OSTC4_INVALID);
     puts("atomic GF editing, recording lock, checkpoint, matched-control/prediction isolation pass");
 }

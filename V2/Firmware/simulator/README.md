@@ -359,3 +359,24 @@ pressure-only recovery point ineligible, preserving its bytes and reporting the
 reason. Save again after configuration changes. Old fixed-policy v1 data is
 explicitly incompatible at this stage; disk preferences/logs/checkpoint migration
 are subsequent tickets. This is PC/synthetic evidence only.
+
+
+The Bottom field menu also offers **GF ceilings**. It shows fixed-GF Low / High
+ceilings together as `CEIL GF LOW / HIGH`, with metres and nearest-tenth rounding.
+These are calculated from the same current tissues without running the planner.
+Known tissues retain endpoint availability before schedule availability begins;
+unknown/invalid exposure shows `-- / -- m`. A selected paired field remains
+visible during mandatory stops; stop depth and countdown stay in the main area.
+Operational ceiling violation alerts and the automatic diver keep their existing
+interpolation/anchor policy. The old main-screen CEIL note now identifies the
+mandatory STOP depth explicitly.
+
+`--gf-check` additionally captures seven paired-ceiling scenarios (frames 6–12).
+Check them with `tests/check_gf_ceilings_render.py CAPTURE_PREFIX`; native LVGL
+assertions also check literal rounded text and glyph bounds on the 320×300 watch.
+PC/synthetic endpoint evidence is stored in `evidence/ticket13`. The additional
+60 m / 60 min stress profiles retain a failed full-schedule comparison: fixed-GF
+endpoints pass the independently declared 0.006 m bound, but extreme 1/1 and 1/100
+stop slots and total TTS disagree with the independent reference. This rejection
+remains visible in CTest and blocks overall configurable-GF numerical acceptance;
+no schedule or endpoint tolerance has been widened.
