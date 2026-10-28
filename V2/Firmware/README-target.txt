@@ -94,3 +94,19 @@ The reserved main/IRQ/idle stacks are compile-time choices, not measured safe
 sizes. No target timing, high-water, physical sensor/display/BLE or dive evidence.
 The desktop simulator's 1 MiB LVGL pool alone exceeds all target RAM; this ticket
 does not port that desktop configuration or claim it can fit unchanged.
+
+Revalidation after the simulator GF extension (2026-10-28)
+--------------------------------------------------------
+The shared endpoint-ceiling calculation added after ticket 08 failed the target
+build's -Werror=double-promotion checks. Explicit double casts now document the
+same conversions already required by the C expressions; formulas, source
+precision, warning policy and independent expectations are unchanged.
+
+Rebuilt dc_v2_1/nrf52833 on base e0c963d with this fix: 39,620 B flash out of
+225,280 B (185,660 B remaining), 15,104 B static/reserved RAM out of 131,072 B
+(115,968 B remaining). Main/IRQ/idle allocated stacks remain 8,320/2,176/512 B.
+The firmware host suite passes 14/14, the current PC bench passes 26/26, and
+independent_schedule_acceptance succeeds with the existing comparison policy.
+The evidence/nrf52833 bundle above remains the original ticket08 snapshot;
+these new figures describe the later shared implementation. The configured-image
+and physical-validation limitations above still apply. No target execution.

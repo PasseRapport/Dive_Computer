@@ -72,13 +72,13 @@ static void endpoint_ceilings(ostc4_observation *r, float surface)
         }
         for (unsigned endpoint = 0; endpoint < 2; ++endpoint) {
             const double gf = factors[endpoint] / 100.0;
-            const double required = (r->nitrogen_bar[i] - gf * buehlmann_N2_a[i]) /
-                (1.0 + gf * (1.0 / buehlmann_N2_b[i] - 1.0));
+            const double required = ((double)r->nitrogen_bar[i] - gf * (double)buehlmann_N2_a[i]) /
+                (1.0 + gf * (1.0 / (double)buehlmann_N2_b[i] - 1.0));
             if (required > pressure[endpoint]) pressure[endpoint] = required;
         }
     }
-    r->gf_low_ceiling_meters = (float)((pressure[0] - surface) * 10.0);
-    r->gf_high_ceiling_meters = (float)((pressure[1] - surface) * 10.0);
+    r->gf_low_ceiling_meters = (float)((pressure[0] - (double)surface) * 10.0);
+    r->gf_high_ceiling_meters = (float)((pressure[1] - (double)surface) * 10.0);
 }
 
 ostc4_status ostc4_read(ostc4_observation *observation)
