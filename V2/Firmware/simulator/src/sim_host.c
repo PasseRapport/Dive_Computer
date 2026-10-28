@@ -289,7 +289,7 @@ void sim_host_bench_watch(const struct scuba_model *model) {calculated_watch=mod
 #include <stdio.h>
 int sim_host_bench_check_enabled(void) {
     const char *mode=getenv("DIVE_SIM_BENCH_CHECK");
-    return !mode?0:!strcmp(mode,"restart")?3:!strcmp(mode,"calculated")?2:1;
+    return !mode?0:!strcmp(mode,"gf")?4:!strcmp(mode,"restart")?3:!strcmp(mode,"calculated")?2:1;
 }
 int sim_host_bench_fresh(void)
 {
@@ -350,7 +350,11 @@ int sim_host_bench_capture(unsigned milestone)
         m->calculated_state,m->depth_dm,m->ndl_s,m->calculated_tts_s,m->calculated_stop_dm,
         m->calculated_stop_remaining_ms,m->alerts,m->notifications);
     for(int i=0;i<OSTC4_STOPS;++i)fprintf(out,"%s%u",i?",":"",v->result.stop_seconds[i]);
-    fprintf(out,"],\"elapsed_seconds\":%u,\"data_gap\":{\"present\":%s,\"time_known\":%s,\"ongoing\":%s,\"seconds\":%u},"
+    fprintf(out,"],\"gf\":{\"preferred\":[%u,%u],\"active\":[%u,%u],\"draft\":[%u,%u],\"locked\":%s,\"editing\":%s,\"policy\":\"%s\",\"legacy_comparison_policy\":\"%s\"}",
+        v->preferred_gf.low,v->preferred_gf.high,v->active_gf.low,v->active_gf.high,
+        v->draft_gf.low,v->draft_gf.high,v->gf_locked?"true":"false",v->gf_editing?"true":"false",
+        v->gf_policy,OSTC4_POLICY);
+    fprintf(out,",\"elapsed_seconds\":%u,\"data_gap\":{\"present\":%s,\"time_known\":%s,\"ongoing\":%s,\"seconds\":%u},"
         "\"recovery\":\"%s\",\"gap\":%s}\n",v->elapsed_seconds,v->data_gap.present?"true":"false",
         v->data_gap.time_known?"true":"false",v->data_gap.ongoing?"true":"false",v->data_gap.duration_seconds,
         v->recovery?v->recovery:"Fresh synthetic fixture",v->gap?"true":"false");if(fclose(out))return -1;

@@ -164,11 +164,12 @@ void pc_bench_ui_poll(void)
     result_time(tts,sizeof(tts),v->result.tts_seconds,v->result.tts);
     if(v->result.tts==OSTC4_AVAILABLE && v->result.tts_seconds==0)
         snprintf(tts,sizeof(tts),"0 s (NDL; travel excluded)");
-    lv_label_set_text_fmt(summary,"%s | exposure: %s\nNDL: %s | TTS: %s\nCeiling: %.2f m (%s)\n%.5f bar absolute | surface %.5f bar | water %.0f kg/m3\nGF 30/70; ascent 9 m/min; watch/engine depths: 10 m/bar",
+    lv_label_set_text_fmt(summary,"%s | exposure: %s\nNDL: %s | TTS: %s\nCeiling: %.2f m (%s)\n%.5f bar absolute | surface %.5f bar | water %.0f kg/m3\nPreferred GF %u/%u | Applied %u/%u | %s",
         v->error?v->error:v->ended?"REPLAY COMPLETE":v->paused?"PAUSED":v->replay?"PRESSURE REPLAY":v->automatic?"AUTO ASCENT":"MANUAL",
         ostc4_availability_name(v->result.tissues),ndl,tts,(double)v->result.ceiling_meters,
         ostc4_availability_name(v->result.ceiling),(double)v->result.absolute_pressure_bar,
-        (double)v->surface_bar,(double)v->density_kg_m3);
+        (double)v->surface_bar,(double)v->density_kg_m3,v->preferred_gf.low,v->preferred_gf.high,
+        v->active_gf.low,v->active_gf.high,v->gf_locked?"LOCKED":"UNLOCKED");
     for(int i=0;i<16;++i)lv_label_set_text_fmt(tissues[i],"N2 %02d: %.6f  [%s]",i+1,
         (double)v->result.nitrogen_bar[i],ostc4_availability_name(v->result.tissues));
     char buffer[1024];int n=snprintf(buffer,sizeof(buffer),"Mandatory stops (%s):",ostc4_availability_name(v->result.stops));

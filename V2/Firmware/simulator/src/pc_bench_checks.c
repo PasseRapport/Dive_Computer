@@ -240,10 +240,68 @@ static void restart_checks(void)
     ++stage;
 }
 
+/* Public watch commands demonstrate atomic preparation editing and start lock. */
+static void gf_checks(void)
+{
+    static unsigned stage;
+    static uint64_t after;
+    uint64_t now=k_uptime_get();
+    if(stage>=12 || now<500 || (after && now<after))return;
+    const struct bench_view *v=pc_bench_read();
+    struct watch_data data={.temperature_c=18,.battery_percent=87};
+    if(!(stage%2)) {
+        switch(stage/2) {
+        case 0:
+            __ASSERT(pc_bench_fresh(1.01325f,1025,NULL,0)==0,"GF fresh failed");
+            pc_bench_pause(true);scuba_ui_enter(0);break;
+        case 1:
+            scuba_ui_input(WATCH_SINGLE_TAP,0);
+            scuba_ui_input(WATCH_CROWN,-100);scuba_ui_input(WATCH_CROWN,4);
+            scuba_ui_input(WATCH_SINGLE_TAP,0);
+            __ASSERT(scuba_ui_screen()==SCUBA_GF_EDIT && v->gf_editing,"GF editor did not open");
+            scuba_ui_input(WATCH_CROWN,10);
+            __ASSERT(v->draft_gf.low==40 && v->preferred_gf.low==30,"draft leaked into committed settings");break;
+        case 2:
+            scuba_ui_input(WATCH_SINGLE_TAP,0);scuba_ui_input(WATCH_CROWN,15);
+            scuba_ui_input(WATCH_SINGLE_TAP,0);
+            __ASSERT(v->draft_gf.high==85 && v->preferred_gf.high==70,"high draft leaked");break;
+        case 3:
+            scuba_ui_input(WATCH_SINGLE_TAP,0);scuba_ui_input(WATCH_DOUBLE_TAP,0);
+            __ASSERT(v->preferred_gf.low==40 && v->preferred_gf.high==85 &&
+                !v->gf_editing && scuba_ui_screen()==SCUBA_PREP,"atomic editor commit failed");break;
+        case 4:
+            scuba_ui_input(WATCH_SINGLE_TAP,0);scuba_ui_input(WATCH_CROWN,-100);
+            scuba_ui_input(WATCH_CROWN,4);scuba_ui_input(WATCH_SINGLE_TAP,0);
+            scuba_ui_input(WATCH_CROWN,-5);
+            __ASSERT(pc_bench_accept_sample(&(ostc4_sample){60,1.31325f})==0,"GF start input failed");
+            __ASSERT(v->gf_locked && !v->gf_editing && scuba_ui_screen()==SCUBA_MAIN &&
+                v->active_gf.low==40 && v->active_gf.high==85,"start failed to discard draft/lock committed pair");
+            __ASSERT(pc_bench_set_gf_pair(30,70)==-1 &&
+                ostc4_exposure_set_gf_pair(30,70)==OSTC4_BAD_INPUT,"direct setting bypassed lock");break;
+        case 5:
+            __ASSERT(pc_bench_accept_sample(&(ostc4_sample){90,1.01325f})==0,"surface failed");
+            __ASSERT(v->gf_locked,"brief return unlocked pair");
+            __ASSERT(pc_bench_recording_finish()==0,"manual completion failed");
+            scuba_ui_update(&data,(uint64_t)v->seconds*1000,true);
+            scuba_ui_enter((uint64_t)v->seconds*1000);
+            __ASSERT(!v->gf_locked && v->preferred_gf.low==40 && scuba_ui_screen()==SCUBA_PREP,
+                "completion did not unlock retained pair");break;
+        }
+        pc_bench_pause(true);after=now+350;
+    } else {
+        watch_ui_update(&data);lv_refr_now(NULL);
+        __ASSERT(sim_host_bench_capture(stage/2)==0,"GF demonstration capture failed");
+        if(stage==11)printk("CONFIGURABLE GF WATCH PASS: draft, atomic commit, preparation pair, first-sample lock, direct rejection, completion unlock\n");
+        after=now+150;
+    }
+    ++stage;
+}
+
 /* Native rendering check, driven by real SDL button events. Numerical checks
  * remain in tests/bench with no LVGL or Zephyr dependency. */
 void pc_bench_checks_poll(void)
 {
+    if(sim_host_bench_check_enabled()==4){gf_checks();return;}
     if(sim_host_bench_check_enabled()==3){restart_checks();return;}
     if(sim_host_bench_check_enabled()==2){calculated_checks();return;}
     if(!sim_host_bench_check_enabled())return;

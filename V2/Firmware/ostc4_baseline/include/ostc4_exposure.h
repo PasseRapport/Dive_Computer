@@ -4,6 +4,7 @@
 #include "ostc4_baseline.h"
 #include <stdbool.h>
 #include <stddef.h>
+#define OSTC4_CONFIGURABLE_GF_POLICY "ostc4-continuous-air-configurable-gf-retained-anchor-v2"
 #define OSTC4_EXPOSURE_POLICY "ostc4-continuous-air-gf30-70-v1"
 /* One serialized synthetic exposure. No sensor, clock, UI or recording access.
  * Explicit initialize starts fresh; rejected actual exposure latches INVALID
@@ -19,12 +20,17 @@ ostc4_status ostc4_exposure_advance(const ostc4_sample *sample);
 ostc4_status ostc4_exposure_read(ostc4_observation *observation);
 ostc4_status ostc4_exposure_predict(const ostc4_sample *future, ostc4_observation *prediction);
 ostc4_status ostc4_exposure_missing(void);
-/* Portable checkpoint v1: explicit little-endian integers/IEEE binary32,
+/* Atomic same-instant policy change. Retains tissues, time, max depth and
+ * incoming anchors; normal replanning may grow the anchor. Rejection leaves
+ * the complete state intact. The recording controller owns lock transitions. */
+ostc4_status ostc4_exposure_set_gf_pair(int low, int high);
+ostc4_status ostc4_exposure_set_gf_lock(bool locked);
+/* Portable checkpoint v2 (pair and recording lock): explicit little-endian integers/IEEE binary32,
  * CRC-32, pinned numerical policy; never a dump of upstream C structs.
  * Storage and clock evidence belong to the caller. See CHECKPOINT.txt.
  * Only complete valid exposure can be saved. Failure leaves buffer untouched.
  */
-#define OSTC4_CHECKPOINT_BYTES 293
+#define OSTC4_CHECKPOINT_BYTES 296
 ostc4_status ostc4_exposure_checkpoint(void *buffer, size_t size);
 typedef struct {
     bool time_known;
@@ -37,7 +43,7 @@ typedef enum {
     OSTC4_RESTORED, OSTC4_CHECKPOINT_CORRUPT, OSTC4_CHECKPOINT_INCOMPATIBLE,
     OSTC4_CHECKPOINT_STALE, OSTC4_RESTART_TIME_UNKNOWN,
     OSTC4_RESTART_EXPOSURE_UNKNOWN, OSTC4_CHECKPOINT_INVALID,
-    OSTC4_RESTART_EXPOSURE_REJECTED
+    OSTC4_RESTART_EXPOSURE_REJECTED, OSTC4_RESTART_CONFIGURATION_UNKNOWN
 } ostc4_restart_status;
 /* Always replaces the active scenario. Any failure latches all outputs INVALID,
  * including in a new process. No fresh tissues or surface exposure fallback.

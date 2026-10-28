@@ -1,4 +1,4 @@
-OSTC4 exposure checkpoint v1 — experimental PC continuity evidence
+OSTC4 exposure checkpoint v2 — experimental PC continuity evidence
 ================================================================
 
 Public boundary: ostc4_exposure_checkpoint / ostc4_exposure_restore in
@@ -7,12 +7,12 @@ that supplied pressure segments really cover exposure. This code accesses
 neither files nor RTC/flash. ostc4_exposure_initialize explicitly starts a fresh
 SYNTHETIC fixture; recovery never uses fresh equilibrium as missing exposure.
 
-Format: exactly 293 bytes; unsigned little-endian integers, IEEE binary32 float
+Format: exactly 296 bytes; unsigned little-endian integers, IEEE binary32 float
 bits, no native padding or upstream structs. Offsets (bytes):
   0  magic EXC1 (4)
-  4  schema version 1 (u32)
+  4  schema version 2 (u32)
   8  numerical-policy fingerprint (u32)
- 12  total length 293 (u32)
+ 12  total length 296 (u32)
  16  timestamp seconds (u32)
  20  accumulated dive/transition seconds (u32)
  24  surface pressure bar (f32)
@@ -27,20 +27,24 @@ bits, no native padding or upstream structs. Offsets (bytes):
 180  last TTS seconds (u32)
 184  mandatory stop seconds, 50*u16
 284  tissues, NDL, TTS, ceiling, stops availability (5*u8)
-289  CRC-32/ISO-HDLC of bytes [0,289), polynomial 0xedb88320 reflected,
+289  GF Low percentage (u8), GF High percentage (u8)
+291  recorded-dive GF lock (u8, exactly 0 or 1)
+292  CRC-32/ISO-HDLC of bytes [0,292), polynomial 0xedb88320 reflected,
      init/xorout 0xffffffff (u32); matches Python zlib.crc32.
 
 The policy fingerprint uses the same CRC over the newline-separated revision,
-OSTC4_POLICY, correction set, continuous-exposure policy and literal
-ieee-binary32-binary64-no-fast-math-no-contract-checkpoint-v1, without final NUL.
+OSTC4_POLICY, correction set, configurable-GF retained-anchor policy and literal
+ieee-binary32-binary64-no-fast-math-no-contract-checkpoint-v2, without final NUL.
 These identifiers MUST change whenever numerical/settings semantics change.
 CRC and fingerprint detect accidental corruption/compatibility mismatch; neither
-provides cryptographic authenticity. Schema v1 is new OSTC4-specific work and
-inherits no independent BMAD engine checkpoint layout.
+provides cryptographic authenticity. Schema v2 is the configurable-GF successor to the fixed-30/70 v1 format.
+A recognized valid-CRC 293-byte v1 input is explicitly INCOMPATIBLE here: it
+contains no recording lock evidence. Ticket 15 owns explicit legacy migration;
+this stage never silently restores a default pair or an unlocked recording.
 
-Persistent state audit: initialize reconstructs fixed air/GF/ascent/stop settings,
+Persistent state audit: initialize reconstructs air/ascent/stop settings,
 then recovery replaces all persisted tissue/time/pressure/max-depth/anchor state
-before allowing an exposure calculation. Cached current results/availability
+and the saved GF pair/lock before allowing an exposure calculation. Cached current results/availability
 support immediate read at an unchanged checkpoint timestamp without running a
 planner that could mutate the anchor. They are retained for that reason.
 In pinned buehlmann_calc_deco, surface, pressure, gas id, tissues, GF and CNS
@@ -90,8 +94,7 @@ buffer is not offered as complete proof; Fresh replay is a separate explicit
 synthetic action and discards the saved checkpoint.
 
 Fault controls are PC demonstrations. Corrupt flips a payload bit. Incompatible
-flips version bit 0 and adjusts the CRC using an independently generated zlib
-CRC delta for that fixed message length. Stale applies a zero-age limit; advance
+flips version bit 0 and recomputes the message CRC. Stale applies a zero-age limit; advance
 at least one simulation second after Save to demonstrate it. Save before Restart.
 They neither change the core's numerical policy nor test hardware persistence.
 
@@ -129,3 +132,21 @@ INVALID instead of READY when such a gap exists. Fresh explicitly clears it.
 Graph graduations use min:sec, retain the last accepted cyan trace and move a red
 time marker across missing exposure without extrapolating pressure. These are
 synthetic PC presentation checks, not evidence of a physical sensor/RTC adapter.
+
+Configurable GF and controller recovery (ticket 12)
+--------------------------------------------------
+The portable calculation checkpoint contains the applied GF pair and lock.
+The in-memory PC checkpoint also captures the complete recorded_dive controller
+state and preferred pair. Known-history recovery rebuilds recording lifecycle
+from that saved state and the exact retained input segments, then synchronizes
+the lock before exposing the recovered scenario. Intermediate calculation
+replay is serialized, under the saved pair; no settings mutation is available
+while restore is in progress.
+
+Pressure-only history cannot prove subsequent GF edits or manual controller
+commands. A successful GF edit, manual completion, re-arm or start-threshold
+change after Save marks the retained checkpoint ineligible, reports
+"Checkpoint configuration history changed; save again", and preserves its old
+bytes. Attempting recovery reports Unknown checkpoint configuration history and
+invalidates guidance. Save again to establish a complete new recovery point.
+No file format or on-disk lifecycle migration is supplied by this ticket.

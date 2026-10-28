@@ -1,0 +1,13 @@
+{
+  "frozen_utc": "2026-10-28T12:16:25.293575+00:00",
+  "production_inspected": false,
+  "independence": "Expected values originate only from independently authored binary64 Python reference and fixed-GF inequality. No production binaries or outputs are consulted.",
+  "sha256": {
+    "comparison-policy-gf.json": "dfe67f6bcd70a7fd4bda9df48b2587104f96aabef5a3219583959116beb4a55e",
+    "tissue_reference.py": "842186e884ddd3fdba8fd7aff76322f688706de6b5b31ce7ec1da4ed4b77208a",
+    "schedule_reference.py": "e788ce657245a832cd1dc29a7d54e8ce00fc4b2e71f9efabb828fa5663c9866d",
+    "configurable_reference.py": "c34c137314a8cc1c12ee8b71b71ae4be5205258be7407001a0c3b43bce2e2dc6",
+    "generate_gf_vectors.py": "5090efc530cba595e79a4a41953ba282580459535b4c285f345fd30afdff6759",
+    "gf-vectors.json": "4bdfd620fe0232e4e58414506831398c6fa32499d0cb906c4bb0082fa9f0814c"
+  }
+}

@@ -3,6 +3,7 @@
 #ifndef OSTC4_BASELINE_H
 #define OSTC4_BASELINE_H
 #include <stdint.h>
+#include <stdbool.h>
 #define OSTC4_TISSUES 16
 #define OSTC4_STOPS 50
 #define OSTC4_REVISION "7198d203520f3a3cdccf1ccc0bf8af6475ee4819"
@@ -29,7 +30,10 @@ typedef struct {
     uint32_t timestamp_seconds;
     float absolute_pressure_bar;
 } ostc4_sample;
+typedef struct { uint8_t low, high; } ostc4_gf_pair;
 typedef struct {
+    ostc4_gf_pair gf_pair;
+    bool gf_locked;
     uint32_t timestamp_seconds;
     uint32_t dive_seconds;
     float absolute_pressure_bar;
