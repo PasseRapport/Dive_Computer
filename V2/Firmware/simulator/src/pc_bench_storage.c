@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/random.h>
 #include <unistd.h>
 static struct pc_bench_storage_state state;
 static char directory[4096];
@@ -117,6 +118,18 @@ void pc_storage_save_preference(ostc4_gf_pair pair)
     state.saved_preference=pair;state.preference_saved=true;state.preference_error=NULL;
 }
 
+uint64_t pc_storage_new_session_id(void)
+{
+    uint64_t id=0;unsigned char *p=(unsigned char *)&id;size_t left=sizeof(id);
+    while(left) {
+        ssize_t n=getrandom(p,left,0);
+        if(n<0 && errno==EINTR)continue;
+        if(n<=0) {state.log_error="Recording identity unavailable; logs cannot be saved";return 0;}
+        p+=n;left-=(size_t)n;
+    }
+    if(!id)return pc_storage_new_session_id();
+    return id;
+}
 static int read_log_id(unsigned long long id,struct pc_bench_log *record)
 {
     char name[64],path[4096],extra;unsigned version,low,high,automatic;
@@ -124,14 +137,24 @@ static int read_log_id(unsigned long long id,struct pc_bench_log *record)
     snprintf(name,sizeof(name),"dive-%020llu.log",id);
     if(path_for(path,sizeof(path),name))return -1;
     FILE *file=fopen(path,"r");if(!file)return -1;
-    int fields=fscanf(file,"DIVE_WATCH_LOG %u %llu %u %u %u %u %u %u %191s %c",
+    char row[512]={0};bool failed=!fgets(row,sizeof(row),file) || ferror(file);
+    if(!failed && fgetc(file)!=EOF)failed=true;
+    if(fclose(file))failed=true;
+    unsigned long long recording_id=0;
+    int fields=sscanf(row,"DIVE_WATCH_LOG %u",&version);
+    if(fields!=1)return -1;
+    if(version==1)fields=sscanf(row,"DIVE_WATCH_LOG %u %llu %u %u %u %u %u %u %191s %c",
         &version,&candidate.id,&candidate.started_seconds,&candidate.completed_seconds,
         &candidate.dive_seconds,&low,&high,&automatic,candidate.policy,&extra);
-    bool failed=ferror(file);if(fclose(file))failed=true;
-    if(failed || fields!=9 || version!=1 || candidate.id!=id ||
+    else if(version==2)fields=sscanf(row,"DIVE_WATCH_LOG %u %llu %llu %u %u %u %u %u %u %191s %c",
+        &version,&candidate.id,&recording_id,&candidate.started_seconds,&candidate.completed_seconds,
+        &candidate.dive_seconds,&low,&high,&automatic,candidate.policy,&extra);
+    else return -1;
+    if(failed || fields!=(version==1?9:10) || candidate.id!=id || (version==2 && !recording_id) ||
         !valid_pair(low,high) || automatic>1 ||
         candidate.completed_seconds<candidate.started_seconds ||
         candidate.dive_seconds>candidate.completed_seconds-candidate.started_seconds)return -1;
+    candidate.recording_id=(uint64_t)recording_id;
     candidate.active_gf=(ostc4_gf_pair){(uint8_t)low,(uint8_t)high};
     candidate.automatic_completion=automatic!=0;
     if(record)*record=candidate;
@@ -167,11 +190,11 @@ void pc_storage_append_log(const struct pc_bench_log *record)
     if(!state.enabled)return;
     char content[512],name[64];
     unsigned long long id=next_log_id;
-    int length=snprintf(content,sizeof(content),"DIVE_WATCH_LOG 1 %llu %u %u %u %u %u %u %s\n",
-        id,record->started_seconds,record->completed_seconds,record->dive_seconds,
+    int length=snprintf(content,sizeof(content),"DIVE_WATCH_LOG 2 %llu %llu %u %u %u %u %u %u %s\n",
+        id,(unsigned long long)record->recording_id,record->started_seconds,record->completed_seconds,record->dive_seconds,
         record->active_gf.low,record->active_gf.high,record->automatic_completion?1:0,record->policy);
     snprintf(name,sizeof(name),"dive-%020llu.log",id);
-    if(!id || length<0 || length>=(int)sizeof(content) || atomic_write(name,content,true)) {
+    if(!id || !record->recording_id || length<0 || length>=(int)sizeof(content) || atomic_write(name,content,true)) {
         ++state.unsaved_logs;state.log_error="Completed dive log write failed; log is NOT saved";return;
     }
     scan_logs();
@@ -180,4 +203,18 @@ int pc_storage_log_read(size_t index,struct pc_bench_log *record)
 {
     if(!record || index>=state.log_count)return -1;
     return read_log_id(log_ids[index],record);
+}
+
+void pc_storage_reconcile_log(const struct pc_bench_log *record)
+{
+    if(!state.enabled)return;
+    for(size_t i=0;i<state.log_count;++i) {
+        struct pc_bench_log existing;
+        if(pc_storage_log_read(i,&existing)==0 && existing.recording_id==record->recording_id &&
+           existing.started_seconds==record->started_seconds && existing.completed_seconds==record->completed_seconds &&
+           existing.dive_seconds==record->dive_seconds && existing.active_gf.low==record->active_gf.low &&
+           existing.active_gf.high==record->active_gf.high && existing.automatic_completion==record->automatic_completion &&
+           !strcmp(existing.policy,record->policy))return;
+    }
+    pc_storage_append_log(record);
 }

@@ -22,8 +22,8 @@ with tempfile.TemporaryDirectory(prefix="dive-checkpoint-") as d:
     run("fault", saved, 5, "gap")
     run("fault", saved, 3, "stale")
     run("fault", root / "missing", 1, "normal")
-    mutations = [(70, 1, False, 1), (4, 2, True, 2), (64+8, 0, True, 2),
-                 (64+289, 0, True, 6), (19, 0, True, 6), (16, 0, True, 6)]
+    mutations = [(70, 1, False, 1), (4, 3, True, 2), (64+8, 0, True, 2),
+                 (64+289, 0, True, 6), (19, 0, True, 6), (16, 0, True, 6), (56, 1, True, 2)]
     for index, value, repair, expected in mutations:
         data = bytearray(original)
         data[index] = value
@@ -40,6 +40,20 @@ with tempfile.TemporaryDirectory(prefix="dive-checkpoint-") as d:
     finally:
         root.chmod(0o700)
     assert saved.read_bytes() == original
+    missing_identity=bytearray(original)
+    missing_identity[48:56]=bytes(8)
+    struct.pack_into("<I",missing_identity,len(missing_identity)-4,zlib.crc32(missing_identity[:-4]))
+    path=root/'missing-identity.checkpoint'
+    path.write_bytes(missing_identity)
+    run('fault',path,6,'normal')
+    previous = bytearray(original)
+    struct.pack_into("<I", previous, 4, 1)
+    previous[48:56] = bytes(8)
+    struct.pack_into("<I", previous, len(previous)-4, zlib.crc32(previous[:-4]))
+    old_pc = root / "schema-1.checkpoint"
+    old_pc.write_bytes(previous)
+    run("fault", old_pc, 8, "normal")
+    assert old_pc.read_bytes() == previous
     run("write-failure", root / "absent" / "recovery.checkpoint")
     run("write-failure", root)  # rename cannot replace the existing directory
     assert saved.read_bytes() == original

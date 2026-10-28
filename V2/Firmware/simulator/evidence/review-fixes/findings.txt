@@ -1,0 +1,43 @@
+Final review fixes, baseline a83b5b26f246479979d756c42e9d9572585848c9.
+Confirmed clean ancestry on codex/simulator-gf-review-fixes in isolated /tmp worktree.
+Reviewed both /tmp/dive-gf-review-standards.txt and /tmp/dive-gf-review-spec.txt.
+Three unique defects: memory restart conflated active/preferred pairs; disk replay
+ran calculations before recording transitions; recovery completion omitted logs.
+
+Public TDD evidence: red-active-pair.log before fixing independent active restore;
+red-recovered-completion.log before adding durable reconciled completions;
+red-next-dive-pair.log replays exact reviewed a83b5b public bench source in an
+isolated temporary build, demonstrating preferred20/90 versus active/core40/85 at
+the second dive. Production fix reuses the shared accepted-sample controller path
+for each evidence segment after validating clock/exposure and restoring the seed.
+No calculation arithmetic, numerical policy, tolerance or portable codec changed.
+
+Stable provenance: each explicit fresh synthetic PC session obtains a nonzero
+64bit ID from OS randomness, never from an exposure-clock/surface inference.
+Recording IDs derive from this session and recording ordinal; identity persists
+in the lifecycle through memory/disk recovery. New PC DWCP schema2 retains364bytes,
+with session u64@48 in the existing64byte header and reserved bytes56..63.
+Its numerical payload remains the exact296byte EXC1 schema2 portable checkpoint.
+Identity-free DWCP schema1 remains unchanged on disk and explicitly reports
+UNKNOWN_CONFIGURATION/recording identity UNKNOWN. No invented recovery provenance.
+New text log schema2 stores a stable recording ID separately from the numeric
+filename/index ID. Schema1 logs remain readable, byte-identical and identity-free.
+Every completed recording reconciles exact identity+GF/policy/time/type metadata
+before adding a log. Repeat disk recovery, memory replay, process reopening and
+repeat manual completion cannot duplicate it; identical fresh sessions remain
+separate recordings and logs. Conflicting completion branches preserve earlier
+immutable records rather than silently rewriting them.
+
+New integration test exercises public configure/profile/observe and durable APIs,
+without mocks or private struct-layout expectations. It compares complete public
+observations and recording state bit-for-bit to uninterrupted cadence across
+automatic completion and a second dive using distinct preferred/active pairs;
+it covers memory and disk paths, process reopen and immutable historical bytes.
+Explicitly verifies recovered40/85 log, later20/90 log, two distinct identical
+fresh sessions, readable original schema1 log, missing/invalid session identity
+and oldPCschema1 ambiguity. Existing corruption/write failure tests stay active.
+All26 full host CTests pass, including independent numerical stress/reference,
+portable restart/prediction and storage checks; see ctest-final.log.
+Native validation after the session-ID struct layout change is assigned to parent
+integration. Existing content-aware source copying forces ABI-consistent rebuilds.
+PC/synthetic only. No target/hardware/operational-safety evidence is claimed.

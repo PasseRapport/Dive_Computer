@@ -20,6 +20,7 @@ static bool checkpoint_saved, checkpoint_eligible;
 static struct recorded_dive checkpoint_recording;
 static ostc4_gf_pair checkpoint_preferred;
 static void recording_sample(uint32_t seconds,float pressure);
+static int accept_sample(const ostc4_sample *sample);
 static void invalidate_checkpoint_configuration(void)
 {
     if(checkpoint_saved) {
@@ -71,7 +72,7 @@ int pc_bench_fresh(float surface, float density, const ostc4_sample *profile, si
     uint32_t generation=view.generation+1;
     memset(&view,0,sizeof(view));
     view.recording=(struct recorded_dive){.armed=true,
-        .start_depth_dm=start_depth?start_depth:20};
+        .start_depth_dm=start_depth?start_depth:20,.session_id=pc_storage_new_session_id()};
     view.generation=generation;view.gf_policy=OSTC4_CONFIGURABLE_GF_POLICY;
     view.storage=pc_storage_read();
     view.preferred_gf=view.active_gf=view.storage->preference_saved?
@@ -168,19 +169,14 @@ ostc4_restart_status pc_bench_restart(enum pc_restart_mode mode)
     } else status=ostc4_exposure_restore(checkpoint_saved?bytes:NULL,
         checkpoint_saved?sizeof(bytes):0,&recovery);
     if(status==OSTC4_RESTORED) {
-        view.recording=checkpoint_recording;
-        view.preferred_gf=view.active_gf=checkpoint_preferred;
-        uint32_t previous_seconds=actual_samples[checkpoint_history-1].timestamp_seconds;
-        float previous_pressure=actual_samples[checkpoint_history-1].absolute_pressure_bar;
+        ostc4_recovery seed={true,actual_samples[checkpoint_history-1].timestamp_seconds,0,NULL,0};
+        ostc4_exposure_restore(bytes,sizeof(bytes),&seed);
+        view.recording=checkpoint_recording;view.preferred_gf=checkpoint_preferred;
+        ostc4_exposure_read(&view.result);view.active_gf=view.result.gf_pair;
+        view.seconds=seed.restart_seconds;view.history_count=checkpoint_history;
         for(size_t n=0;n<recovery.count;++n) {
-            const ostc4_sample sample=recovery.history[n];
-            uint32_t elapsed=sample.timestamp_seconds-previous_seconds;
-            for(uint32_t i=1;i<=elapsed;++i) {
-                float pressure=previous_pressure+(sample.absolute_pressure_bar-previous_pressure)*((float)i/elapsed);
-                if(i==elapsed)pressure=sample.absolute_pressure_bar;
-                recording_sample(previous_seconds+i,pressure);
-            }
-            previous_seconds=sample.timestamp_seconds;previous_pressure=sample.absolute_pressure_bar;
+            ostc4_sample sample=recovery.history[n];
+            if(accept_sample(&sample)) {status=OSTC4_RESTART_EXPOSURE_REJECTED;break;}
         }
         sync_gf_lock();
     }
@@ -223,14 +219,18 @@ void pc_bench_recording_arm(void)
 }
 static void save_completed_log(bool automatic)
 {
-    struct pc_bench_log record={.started_seconds=view.recording.started_seconds,
+    /* A saved session identity plus its recording ordinal is stable across
+     * recovery, while identical profiles in new synthetic sessions stay distinct. */
+    uint64_t identity=view.recording.session_id?view.recording.session_id ^ ((uint64_t)view.recording.dives_started*UINT64_C(0x9e3779b97f4a7c15)):0;
+    if(!identity && view.recording.session_id)identity=view.recording.session_id;
+    struct pc_bench_log record={.recording_id=identity,.started_seconds=view.recording.started_seconds,
         .completed_seconds=view.recording.completed_seconds,
         .dive_seconds=view.recording.dive_seconds,.active_gf=view.active_gf,
         .automatic_completion=automatic};
     /* Numerical identity belongs to the captured pair; later preferences never
      * replace an existing immutable log. */
     strncpy(record.policy,view.gf_policy,sizeof(record.policy)-1);
-    pc_storage_append_log(&record);
+    pc_storage_reconcile_log(&record);
 }
 int pc_bench_recording_finish(void)
 {
@@ -446,7 +446,7 @@ void pc_bench_checkpoint_notice(const char *message)
 }
 int pc_bench_checkpoint_export(struct pc_bench_checkpoint_state *state)
 {
-    if(!state || !view.history_count || view.error ||
+    if(!state || !view.history_count || view.error || !view.recording.session_id ||
        ostc4_exposure_checkpoint(state->core,sizeof(state->core))!=OSTC4_OK)return -1;
     state->recording=view.recording;state->preferred=view.preferred_gf;
     state->density=view.density_kg_m3;return 0;
@@ -501,18 +501,18 @@ ostc4_restart_status pc_bench_checkpoint_import(const struct pc_bench_checkpoint
     float pressure;memcpy(&pressure,&bits,4);
     actual_samples[0]=(ostc4_sample){seconds,pressure};
     history[0]=(struct bench_point){seconds,pressure_to_depth(pressure),false};view.history_count=1;
+    /* The validation above checks the whole evidence contract without emitting
+     * logs. Rewind to the checkpoint and process each exact segment through the
+     * same controller-before-calculation path as uninterrupted exposure. */
+    ostc4_recovery seed={true,seconds,0,NULL,0};
+    ostc4_exposure_restore(state->core,sizeof(state->core),&seed);
+    view.seconds=view.elapsed_seconds=seconds;ostc4_exposure_read(&view.result);
     for(size_t n=0;evidence && n<evidence->count;++n) {
-        const ostc4_sample sample=evidence->history[n];
-        uint32_t elapsed=sample.timestamp_seconds-seconds;
-        for(uint32_t i=1;i<=elapsed;++i) {
-            float p=pressure+(sample.absolute_pressure_bar-pressure)*((float)i/elapsed);
-            if(i==elapsed)p=sample.absolute_pressure_bar;
-            recording_sample(seconds+i,p);
+        if(accept_sample(&evidence->history[n])) {
+            return pc_bench_checkpoint_reject(OSTC4_RESTART_EXPOSURE_REJECTED);
         }
-        seconds=sample.timestamp_seconds;pressure=sample.absolute_pressure_bar;
-        actual_samples[view.history_count]=sample;
-        history[view.history_count++]=(struct bench_point){seconds,pressure_to_depth(pressure),false};
     }
+    seconds=view.seconds;pressure=view.result.absolute_pressure_bar;
     view.seconds=view.elapsed_seconds=view.duration=seconds;
     view.depth_m=pressure_to_depth(pressure);view.gf_locked=legacy_ambiguous || view.recording.active;
     ostc4_exposure_set_gf_lock(view.gf_locked);ostc4_exposure_read(&view.result);

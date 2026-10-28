@@ -7,6 +7,7 @@
  * Seconds use accepted simulation samples, never the host clock. */
 struct recorded_dive {
     bool armed, active;
+    uint64_t session_id; /* PC synthetic exposure identity; independent of exposure clock. */
     uint16_t start_depth_dm;
     uint32_t started_seconds, completed_seconds, dive_seconds, surface_seconds;
     uint32_t dives_started, dives_completed;

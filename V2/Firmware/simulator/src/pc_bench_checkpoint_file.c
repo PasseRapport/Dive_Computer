@@ -41,7 +41,7 @@ int pc_bench_checkpoint_file_save(const char *path)
     if(!path || !*path || pc_bench_checkpoint_export(&state)) {
         pc_bench_checkpoint_notice("Disk checkpoint save failed: path or valid exposure unavailable");return -1;
     }
-    unsigned char b[FILE_BYTES]={0};memcpy(b,"DWCP",4);put(b+4,1);put(b+8,sizeof(b));
+    unsigned char b[FILE_BYTES]={0};memcpy(b,"DWCP",4);put(b+4,2);put(b+8,sizeof(b));
     uint32_t bits;memcpy(&bits,&state.density,4);put(b+12,bits);
     b[16]=state.preferred.low;b[17]=state.preferred.high;
     b[18]=state.recording.armed;b[19]=state.recording.active;
@@ -49,6 +49,7 @@ int pc_bench_checkpoint_file_save(const char *path)
     put(b+28,state.recording.completed_seconds);put(b+32,state.recording.dive_seconds);
     put(b+36,state.recording.surface_seconds);put(b+40,state.recording.dives_started);
     put(b+44,state.recording.dives_completed);
+    put(b+48,(uint32_t)state.recording.session_id);put(b+52,(uint32_t)(state.recording.session_id>>32));
     memcpy(b+HEADER,state.core,sizeof(state.core));put(b+sizeof(b)-4,crc(b,sizeof(b)-4));
     char temporary[4096];int n=snprintf(temporary,sizeof(temporary),"%s.tmp.XXXXXX",path);
     if(n<0 || (size_t)n>=sizeof(temporary))goto failed;
@@ -92,14 +93,24 @@ static ostc4_restart_status load(const char *path,const ostc4_recovery *evidence
         s.preferred=(ostc4_gf_pair){30,70};s.density=1025;legacy=true;
     } else {
         if(n!=FILE_BYTES || crc(b,n-4)!=u32(b+n-4))return pc_bench_checkpoint_reject(OSTC4_CHECKPOINT_CORRUPT);
-        if(memcmp(b,"DWCP",4) || u32(b+4)!=1 || u32(b+8)!=FILE_BYTES)
+        if(memcmp(b,"DWCP",4) || (u32(b+4)!=1 && u32(b+4)!=2) || u32(b+8)!=FILE_BYTES)
             return pc_bench_checkpoint_reject(OSTC4_CHECKPOINT_INCOMPATIBLE);
-        for(size_t i=48;i<HEADER;++i)if(b[i])return pc_bench_checkpoint_reject(OSTC4_CHECKPOINT_INCOMPATIBLE);
+        for(size_t i=u32(b+4)==1?48:56;i<HEADER;++i)if(b[i])return pc_bench_checkpoint_reject(OSTC4_CHECKPOINT_INCOMPATIBLE);
         uint32_t bits=u32(b+12);memcpy(&s.density,&bits,4);
         s.preferred=(ostc4_gf_pair){b[16],b[17]};
         if(b[18]>1 || b[19]>1 || u32(b+20)>UINT16_MAX)return pc_bench_checkpoint_reject(OSTC4_CHECKPOINT_INVALID);
-        s.recording=(struct recorded_dive){b[18]!=0,b[19]!=0,(uint16_t)u32(b+20),
-            u32(b+24),u32(b+28),u32(b+32),u32(b+36),u32(b+40),u32(b+44)};
+        s.recording=(struct recorded_dive){.armed=b[18]!=0,.active=b[19]!=0,
+            .start_depth_dm=(uint16_t)u32(b+20),.started_seconds=u32(b+24),.completed_seconds=u32(b+28),
+            .dive_seconds=u32(b+32),.surface_seconds=u32(b+36),.dives_started=u32(b+40),.dives_completed=u32(b+44),
+            .session_id=(uint64_t)u32(b+48)|(uint64_t)u32(b+52)<<32};
+        if(u32(b+4)==1) {
+            /* No durable recording identity existed; keep the original source
+             * and report ambiguity instead of inventing log provenance. */
+            ostc4_restart_status status=pc_bench_checkpoint_reject(OSTC4_RESTART_CONFIGURATION_UNKNOWN);
+            pc_bench_checkpoint_notice("PC schema-1 checkpoint recording identity UNKNOWN; original file retained");
+            return status;
+        }
+        if(!s.recording.session_id)return pc_bench_checkpoint_reject(OSTC4_CHECKPOINT_INVALID);
         memcpy(s.core,b+HEADER,sizeof(s.core));
         if(!lifecycle_valid(&s))return pc_bench_checkpoint_reject(OSTC4_CHECKPOINT_INVALID);
     }

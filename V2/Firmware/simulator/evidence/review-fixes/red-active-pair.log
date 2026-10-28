@@ -1,0 +1,20 @@
+Test project /tmp/dive-review-build
+    Start 13: recovery_pair_lifecycle_log_integration
+1/1 Test #13: recovery_pair_lifecycle_log_integration ...***Failed    0.23 sec
+line 18: pc_bench_read()->active_gf.low==40 && pc_bench_read()->active_gf.high==85
+Traceback (most recent call last):
+  File "/tmp/dive-gf-review-fixes/V2/Firmware/simulator/tests/bench/check_recovery_lifecycle.py", line 8, in <module>
+    subprocess.run([sys.argv[1],str(root/'state'),str(root/'locked.checkpoint')],check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/tmp/dive-review-build/test_recovery_lifecycle', '/tmp/dive-recovery-lifecycle-xgalu23y/state', '/tmp/dive-recovery-lifecycle-xgalu23y/locked.checkpoint']' returned non-zero exit status 1.
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   0.23 sec
+
+The following tests FAILED:
+	 13 - recovery_pair_lifecycle_log_integration (Failed)

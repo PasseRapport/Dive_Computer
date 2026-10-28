@@ -59,3 +59,10 @@ add_test(NAME durable_preferences_logs_separate_processes COMMAND ${Python3_EXEC
 
 add_test(NAME independent_exact_stop_grid_travel COMMAND ${Python3_EXECUTABLE}
     ${CMAKE_CURRENT_SOURCE_DIR}/test_nominal_stop_travel.py $<TARGET_FILE:gf_bench_replay>)
+
+add_executable(test_recovery_lifecycle test_recovery_lifecycle.c ../../src/pc_bench.c ../../src/pc_bench_checkpoint_file.c ../../src/pc_bench_storage.c)
+target_include_directories(test_recovery_lifecycle PRIVATE ../../src)
+target_link_libraries(test_recovery_lifecycle PRIVATE ostc4_exposure m)
+target_compile_options(test_recovery_lifecycle PRIVATE -Wall -Wextra -Wpedantic -Werror)
+add_test(NAME recovery_pair_lifecycle_log_integration COMMAND ${Python3_EXECUTABLE}
+    ${CMAKE_CURRENT_SOURCE_DIR}/check_recovery_lifecycle.py $<TARGET_FILE:test_recovery_lifecycle>)
