@@ -26,6 +26,9 @@ struct scuba_model {
     uint16_t calculated_ceiling_dm, calculated_stop_dm;
     uint32_t calculated_tts_s, calculated_stop_remaining_ms, calculated_stop_total_ms;
     uint32_t calculated_stop_raw_ms;
+    /* The calculated watch follows controller recording transitions. Scripted
+     * demos continue to establish their own lifecycle from depth/time. */
+    bool recording_external, recorded_active;
     bool armed, active, salt_water, safety_required, deco_started, deco_done;
     uint16_t depth_dm, peak_dm, start_depth_dm, depth_alarm_dm;
     uint32_t time_alarm_s, ndl_s, ndl_budget_s, surface_ms, stop_ms, fast_ascent_ms;
