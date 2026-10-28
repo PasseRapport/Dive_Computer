@@ -1,0 +1,39 @@
+[  9%] Generating corrected/decom.c
+[  9%] Built target ostc4_corrected_source
+[ 18%] Generating corrected/buehlmann-contained.c
+[ 27%] Building C object ostc4/CMakeFiles/ostc4_upstream_contained.dir/corrected/buehlmann-contained.c.o
+[ 36%] Building C object ostc4/CMakeFiles/ostc4_upstream_contained.dir/corrected/decom.c.o
+[ 45%] Linking C static library libostc4_upstream_contained.a
+[ 54%] Built target ostc4_upstream_contained
+[ 63%] Building C object ostc4/CMakeFiles/ostc4_exposure.dir/src/ostc4_baseline.c.o
+[ 72%] Linking C static library libostc4_exposure.a
+[ 72%] Built target ostc4_exposure
+[ 81%] Building C object CMakeFiles/test_storage_bench.dir/tmp/dive-gf-ticket14/V2/Firmware/simulator/src/pc_bench.c.o
+[ 90%] Building C object CMakeFiles/test_storage_bench.dir/test_storage_bench.c.o
+/tmp/dive-gf-ticket14/V2/Firmware/simulator/tests/bench/test_storage_bench.c: In function ‘main’:
+/tmp/dive-gf-ticket14/V2/Firmware/simulator/tests/bench/test_storage_bench.c:10:11: error: implicit declaration of function ‘pc_bench_storage_configure’ [-Wimplicit-function-declaration]
+   10 |     CHECK(pc_bench_storage_configure(argv[1])==0);
+      |           ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/tmp/dive-gf-ticket14/V2/Firmware/simulator/tests/bench/test_storage_bench.c:6:28: note: in definition of macro ‘CHECK’
+    6 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/dive-gf-ticket14/V2/Firmware/simulator/tests/bench/test_storage_bench.c:19:16: error: ‘const struct bench_view’ has no member named ‘storage’
+   19 |         CHECK(v->storage->preference_saved);
+      |                ^~
+/tmp/dive-gf-ticket14/V2/Firmware/simulator/tests/bench/test_storage_bench.c:6:28: note: in definition of macro ‘CHECK’
+    6 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/dive-gf-ticket14/V2/Firmware/simulator/tests/bench/test_storage_bench.c:22:10: error: ‘const struct bench_view’ has no member named ‘storage’
+   22 |         v->storage->preference_loaded,v->storage->preference_saved,v->storage->log_count,
+      |          ^~
+/tmp/dive-gf-ticket14/V2/Firmware/simulator/tests/bench/test_storage_bench.c:22:40: error: ‘const struct bench_view’ has no member named ‘storage’
+   22 |         v->storage->preference_loaded,v->storage->preference_saved,v->storage->log_count,
+      |                                        ^~
+/tmp/dive-gf-ticket14/V2/Firmware/simulator/tests/bench/test_storage_bench.c:22:69: error: ‘const struct bench_view’ has no member named ‘storage’
+   22 |         v->storage->preference_loaded,v->storage->preference_saved,v->storage->log_count,
+      |                                                                     ^~
+gmake[3]: *** [CMakeFiles/test_storage_bench.dir/build.make:79: CMakeFiles/test_storage_bench.dir/test_storage_bench.c.o] Error 1
+gmake[3]: *** Waiting for unfinished jobs....
+gmake[2]: *** [CMakeFiles/Makefile2:356: CMakeFiles/test_storage_bench.dir/all] Error 2
+gmake[1]: *** [CMakeFiles/Makefile2:363: CMakeFiles/test_storage_bench.dir/rule] Error 2
+gmake: *** [Makefile:199: test_storage_bench] Error 2

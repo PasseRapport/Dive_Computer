@@ -20,7 +20,7 @@ if(DIVE_BENCH)
     target_compile_definitions(app PRIVATE DIVE_PC_BENCH=1 OSTC4_TISSUE_CORRECTIONS=1)
     target_include_directories(app PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../ostc4_baseline/include")
     target_sources(app PRIVATE src/pc_bench_ui.c src/pc_bench_checks.c src/scuba_calculated.c)
-    target_sources(native_simulator INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/src/pc_bench.c")
+    target_sources(native_simulator INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/src/pc_bench.c" "${CMAKE_CURRENT_SOURCE_DIR}/src/pc_bench_storage.c")
     target_compile_options(native_simulator INTERFACE -DDIVE_PC_BENCH=1 -DOSTC4_TISSUE_CORRECTIONS=1
         "-I${CMAKE_CURRENT_SOURCE_DIR}/../ostc4_baseline/include")
     set_property(TARGET native_simulator APPEND PROPERTY RUNNER_LINK_LIBRARIES
