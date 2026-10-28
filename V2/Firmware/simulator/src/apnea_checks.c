@@ -28,7 +28,7 @@ bool apnea_checks_inputs(uint64_t *sample_ms)
 {
     if(!sim_host_apnea_check_enabled())return false;
     *sample_ms=clock_ms;
-    if(step>=26||k_uptime_get()<500+(uint64_t)step*450)return false;
+    if(step>=47||k_uptime_get()<500+(uint64_t)step*450)return false;
     switch(step) {
     case 0:
         watch_ui_input(WATCH_CROWN,1);watch_ui_input(WATCH_CROWN,24);
@@ -59,6 +59,27 @@ bool apnea_checks_inputs(uint64_t *sample_ms)
     case 23:clock_ms=1600000;watch_ui_input(WATCH_SINGLE_TAP,0);break;
     case 24:clock_ms=1700000;watch_ui_input(WATCH_SINGLE_TAP,0);break;
     case 25:clock_ms=1701000;break;
+    case 26:clock_ms=1702000;sim_host_set_zoom(1);watch_ui_input(WATCH_CROWN,1);break;
+    case 27:clock_ms=1703000;break;
+    case 28:clock_ms=1704000;sim_controls_set_depth_dm(123);break;
+    case 29:clock_ms=1714000;sim_controls_set_depth_dm(200);break;
+    case 30:clock_ms=1724000;sim_controls_set_depth_dm(0);break;
+    case 31:clock_ms=1725000;watch_ui_input(WATCH_CROWN,-1);break;
+    case 32:expect("LAST DEPTH");expect("20.0");expect("0:01");capture("stats-main-return");clock_ms=1726000;sim_controls_set_depth_dm(50);watch_ui_input(WATCH_CROWN,1);break;
+    case 33:clock_ms=1727000;break;
+    case 34:clock_ms=1730000;sim_controls_set_depth_dm(0);break;
+    case 35:clock_ms=1731000;sim_controls_set_depth_dm(1000);break;
+    case 36:clock_ms=1791000;break;
+    case 37:sim_host_push_button(SIM_PANEL_X+30,SIM_ZOOM_Y+20,1);break;
+    case 38:sim_host_push_button(SIM_PANEL_X+30,SIM_ZOOM_Y+20,0);break;
+    case 39:clock_ms=7791000;break;
+    case 40:clock_ms=101731000;break;
+    case 41:watch_ui_input(WATCH_CROWN,2);break;
+    case 42:clock_ms=101732000;watch_ui_input(WATCH_CROWN,24);sim_controls_set_depth_dm(0);break;
+    case 43:clock_ms=101740000;watch_ui_input(WATCH_SINGLE_TAP,0);break;
+    case 44:clock_ms=101750000;watch_ui_input(WATCH_SINGLE_TAP,0);break;
+    case 45:clock_ms=101751000;watch_ui_input(WATCH_CROWN,1);break;
+    case 46:clock_ms=101752000;break;
     case 22:
         watch_ui_input(WATCH_CROWN,24);clock_ms=1500000;
         sim_controls_set_depth_dm(0);
@@ -87,6 +108,15 @@ void apnea_checks_observe(const struct watch_data *data)
     case 17:expect("100.0");expect("10:00");__ASSERT(data->max_dive_s==600,"Live duration record stale");capture("apnea-17-long-x1");break;
     case 20:expect("100.0");expect("10:01");capture("apnea-20-long-x2");break;
     case 25:expect("--");__ASSERT(data->runtime_s==1&&data->total_dives==0&&data->max_depth_dm==0&&!data->show_recovery,"Re-entry retained session");capture("apnea-25-reentry");printk("APNEA MAIN PASS: thresholds, direction, live records, 119/120/130/661 s recovery, page continuity, two apneas, exit/re-entry and x1/x2 renders\n");break;
+    case 27:expect("LONGEST APNEA");expect("APNEAS");expect("SESSION TIME");expect("--");expect("0");expect("0:00:03");capture("stats-01-fresh");break;
+    case 29:expect("20.0");expect("0:10");expect("1");expect("0:00:14");capture("stats-02-live");break;
+    case 30:expect("20.0");expect("0:20");expect("0:00:24");capture("stats-03-recovery");break;
+    case 31:__ASSERT(data->show_recovery&&data->recovery_s==1,"Statistics reset recovery");break;
+    case 33:expect("20.0");expect("0:20");expect("2");expect("0:00:27");capture("stats-04-second-shorter");break;
+    case 36:__ASSERT(sim_host_get_zoom()==1,"Statistics x1 fixture wrong");expect("100.0");expect("1:00");expect("3");expect("0:01:31");capture("stats-05-live-record-x1");break;
+    case 39:__ASSERT(sim_host_get_zoom()==2,"Statistics x2 fixture wrong");expect("100.0");expect("101:00");expect("1:41:31");capture("stats-06-live-record-x2");break;
+    case 40:expect("1666:40");expect("27:47:11");capture("stats-07-long-session");break;
+    case 46:expect("--");expect("0");expect("0:00:02");capture("stats-08-reentry");printk("APNEA STATISTICS PASS: initial placeholders, active records, recovery continuity, shorter second apnea, new live depth/time records, long timers, x1/x2 and re-entry\n");break;
     case 22:__ASSERT(watch_ui_view()==WATCH_MODE_MENU,"Leave control changed");break;
     }
     step++;

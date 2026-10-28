@@ -27,10 +27,8 @@ lv_obj_t *ui_create_dive_mode_page(void);
 void ui_refresh_dive_mode(bool freediving);
 
 // --- Fonctions d'accès pour modifier l'affichage (Setters) ---
-void ui_refresh_runtime_display(uint32_t h, uint32_t m);
 void ui_refresh_brightness_bar(uint8_t level);
 void ui_refresh_water_selection(bool is_salt);
-void ui_refresh_stats(uint32_t max_time_s, float max_depth, uint32_t total_dives);
 void ui_slide_pages(lv_obj_t * page_out, lv_obj_t * page_in, int direction);
 void ui_refresh_battery(uint8_t percentage);
 

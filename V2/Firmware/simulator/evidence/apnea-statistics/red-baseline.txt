@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/dive-apnee-02/V2/Firmware/simulator/tests/check_apnea_stats.py", line 20, in <module>
+    assert len(points(old,orange,(100,118,220,119)))>110,'Statistics lacks common orange separator'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Statistics lacks common orange separator

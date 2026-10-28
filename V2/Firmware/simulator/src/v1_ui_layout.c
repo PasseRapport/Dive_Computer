@@ -3,6 +3,7 @@
  * Do not scale whole pages: that interpolates text and makes it blurry. */
 #include "v1_ui_layout.h"
 #include "apnea_main.h"
+#include "apnea_stats.h"
 #include "selection.h"
 #include "battery_icon.h"
 #include "native_fonts.h"
@@ -35,14 +36,6 @@ static lv_obj_t * label_salt;
 static lv_obj_t * cursor_box;
 static lv_obj_t * img_clear;
 static lv_obj_t * img_salt;
-static lv_obj_t * run_h_val;
-static lv_obj_t * run_h_unit;
-static lv_obj_t * run_m_val;
-static lv_obj_t * run_m_unit;
-static lv_obj_t * label_stat_divetime_val;
-static lv_obj_t * label_stat_max_val;
-static lv_obj_t * label_stat_max_unit;
-static lv_obj_t * label_stat_dives_val;
 static lv_obj_t * label_battery_val;
 
 // --- Fonction utilitaire pour formater en page (128x96) ---
@@ -184,87 +177,7 @@ void v1_ui_build(lv_obj_t *parent) {
     lv_obj_align(label_salt, LV_ALIGN_TOP_LEFT, 79, 117);
 
 
-   // ---------------------------------------- CREATE STATS SCREEN ------------------------------------
-    stats_screen = lv_obj_create(app_screen);
-    format_as_page(stats_screen);
-
-    // --- QUADRANT 1: MAX TIME (En haut à gauche) ---
-    lv_obj_t * label_stat_divetime_title = lv_label_create(stats_screen);
-    lv_label_set_text(label_stat_divetime_title, "MAX TIME");
-    lv_obj_set_style_text_font(label_stat_divetime_title, &lv_font_montserrat_18, 0);
-    lv_obj_set_style_text_color(label_stat_divetime_title, lv_color_white(), 0);
-    lv_obj_align(label_stat_divetime_title, LV_ALIGN_TOP_LEFT, 0, 0);
-
-    label_stat_divetime_val = lv_label_create(stats_screen);
-    lv_label_set_text(label_stat_divetime_val, "0:00");
-    lv_obj_set_style_text_font(label_stat_divetime_val, &lv_font_montserrat_42, 0);
-    lv_obj_set_style_text_color(label_stat_divetime_val, lv_color_white(), 0);
-    lv_obj_align_to(label_stat_divetime_val, label_stat_divetime_title, LV_ALIGN_OUT_BOTTOM_MID, 0, -4);
-
-    // --- QUADRANT 2: MAX DEPTH (En haut à droite) ---
-    lv_obj_t * label_stat_max_title = lv_label_create(stats_screen);
-    lv_label_set_text(label_stat_max_title, "MAX DEPTH");
-    lv_obj_set_style_text_font(label_stat_max_title, &lv_font_montserrat_18, 0);
-    lv_obj_set_style_text_color(label_stat_max_title, lv_color_white(), 0);
-    lv_obj_align(label_stat_max_title, LV_ALIGN_TOP_RIGHT, 0, 0); 
-
-    // 1. On crée le "m" d'abord
-    label_stat_max_unit = lv_label_create(stats_screen);
-    lv_label_set_text(label_stat_max_unit, "m");
-    lv_obj_set_style_text_font(label_stat_max_unit, &lv_font_montserrat_24, 0);
-    lv_obj_set_style_text_color(label_stat_max_unit, lv_color_white(), 0);
-    lv_obj_align_to(label_stat_max_unit, label_stat_max_title, LV_ALIGN_OUT_BOTTOM_RIGHT, 0, 12);
-
-    // 2. On crée la valeur
-    label_stat_max_val = lv_label_create(stats_screen);
-    lv_label_set_text(label_stat_max_val, "0.0");
-    lv_obj_set_style_text_font(label_stat_max_val, &lv_font_montserrat_42, 0);
-    lv_obj_set_style_text_color(label_stat_max_val, lv_color_white(), 0);
-    lv_obj_align_to(label_stat_max_val, label_stat_max_unit, LV_ALIGN_OUT_LEFT_BOTTOM, -4, 4);
-
-    // --- QUADRANT 3: RUN TIME (Désormais en bas à gauche) ---
-    lv_obj_t * label_stat_run_title = lv_label_create(stats_screen);
-    lv_label_set_text(label_stat_run_title, "RUN TIME");
-    lv_obj_set_style_text_font(label_stat_run_title, &lv_font_montserrat_22, 0);
-    lv_obj_set_style_text_color(label_stat_run_title, lv_color_white(), 0);
-    lv_obj_align(label_stat_run_title, LV_ALIGN_TOP_LEFT, 0, 96); 
-
-    run_h_val = lv_label_create(stats_screen);
-    lv_label_set_text(run_h_val, "0");
-    lv_obj_set_style_text_font(run_h_val, &lv_font_montserrat_42, 0); 
-    lv_obj_set_style_text_color(run_h_val, lv_color_white(), 0);
-    lv_obj_align_to(run_h_val, label_stat_run_title, LV_ALIGN_OUT_BOTTOM_MID, -40, -4); 
-
-    run_h_unit = lv_label_create(stats_screen);
-    lv_label_set_text(run_h_unit, "h");
-    lv_obj_set_style_text_font(run_h_unit, &lv_font_montserrat_22, 0);
-    lv_obj_set_style_text_color(run_h_unit, lv_color_white(), 0);
-    lv_obj_align_to(run_h_unit, run_h_val, LV_ALIGN_OUT_RIGHT_BOTTOM, 2, -4);
-
-    run_m_val = lv_label_create(stats_screen);
-    lv_label_set_text(run_m_val, "00");
-    lv_obj_set_style_text_font(run_m_val, &lv_font_montserrat_42, 0);
-    lv_obj_set_style_text_color(run_m_val, lv_color_white(), 0);
-    lv_obj_align_to(run_m_val, run_h_unit, LV_ALIGN_OUT_RIGHT_BOTTOM, 4, 4);
-
-    run_m_unit = lv_label_create(stats_screen);
-    lv_label_set_text(run_m_unit, "min");
-    lv_obj_set_style_text_font(run_m_unit, &lv_font_montserrat_22, 0);
-    lv_obj_set_style_text_color(run_m_unit, lv_color_white(), 0);
-    lv_obj_align_to(run_m_unit, run_m_val, LV_ALIGN_OUT_RIGHT_BOTTOM, 2, -4);
-
-    // --- QUADRANT 4: DIVES  ---
-    lv_obj_t * label_stat_dives_title = lv_label_create(stats_screen);
-    lv_label_set_text(label_stat_dives_title, "DIVES");
-    lv_obj_set_style_text_font(label_stat_dives_title, &lv_font_montserrat_22, 0);
-    lv_obj_set_style_text_color(label_stat_dives_title, lv_color_white(), 0);
-    lv_obj_align(label_stat_dives_title, LV_ALIGN_TOP_RIGHT, -9, 96);
-
-    label_stat_dives_val = lv_label_create(stats_screen);
-    lv_label_set_text(label_stat_dives_val, "0");
-    lv_obj_set_style_text_font(label_stat_dives_val, &lv_font_montserrat_42, 0);
-    lv_obj_set_style_text_color(label_stat_dives_val, lv_color_white(), 0);
-    lv_obj_align_to(label_stat_dives_val, label_stat_dives_title, LV_ALIGN_OUT_BOTTOM_MID, 0, -4);
+    stats_screen=apnea_stats_create(app_screen);
 
     // ---------------------------------------- CREATE BRIGHTNESS SCREEN ------------------------------------
     brightness_screen = lv_obj_create(app_screen);
@@ -359,13 +272,6 @@ void ui_refresh_battery(uint8_t percentage) {
 // === FONCTIONS D'ACCÈS POUR LE CONTRÔLEUR (Setters) ======================
 // =========================================================================
 
-void ui_refresh_runtime_display(uint32_t h, uint32_t m) {
-    lv_label_set_text_fmt(run_h_val, "%lu", (unsigned long)h);
-    lv_label_set_text_fmt(run_m_val, "%02lu", (unsigned long)m);
-    lv_obj_align_to(run_h_unit, run_h_val, LV_ALIGN_OUT_RIGHT_BOTTOM, 2, -4);
-    lv_obj_align_to(run_m_val, run_h_unit, LV_ALIGN_OUT_RIGHT_BOTTOM, 4, 4);
-    lv_obj_align_to(run_m_unit, run_m_val, LV_ALIGN_OUT_RIGHT_BOTTOM, 2, -4);
-}
 
 void ui_refresh_brightness_bar(uint8_t level) {
     if(level > 10) level = 10;
@@ -402,22 +308,6 @@ void ui_refresh_water_selection(bool is_salt) {
         lv_obj_set_style_img_recolor(img_salt, color_inactive, 0);
         lv_obj_set_style_img_recolor_opa(img_salt, 255, 0);
     }
-}
-
-void ui_refresh_stats(uint32_t max_time_s, float max_depth, uint32_t total_dives) {
-    char buf[16];
-    
-    uint32_t m = max_time_s / 60;
-    uint32_t s = max_time_s % 60;
-    if(total_dives)lv_label_set_text_fmt(label_stat_divetime_val, "%lu:%02lu", (unsigned long)m, (unsigned long)s);
-    else lv_label_set_text(label_stat_divetime_val,"--");
-    
-    if(total_dives)snprintf(buf, sizeof(buf), "%.1f", (double)max_depth);
-    else snprintf(buf,sizeof(buf),"--");
-    lv_label_set_text(label_stat_max_val, buf);
-    lv_obj_align_to(label_stat_max_val, label_stat_max_unit, LV_ALIGN_OUT_LEFT_BOTTOM, -4, 4);
-
-    lv_label_set_text_fmt(label_stat_dives_val, "%lu", (unsigned long)total_dives);
 }
 
 // =========================================================================

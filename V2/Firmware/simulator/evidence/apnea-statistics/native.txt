@@ -1,0 +1,51 @@
+-- west build: generating a build system
+Loading Zephyr default modules (Zephyr base (cached)).
+-- Application: /tmp/dive-watch-lvgl-3235fb68da/app
+-- CMake version: 4.2.1
+-- Cache files will be written to: /tmp/dive-watch-lvgl-3235fb68da/.cache/zephyr
+-- Zephyr version: 4.4.2 (/home/Bilal/ncs/v3.4.1/zephyr), build: local
+-- Found west (found suitable version "1.5.0", minimum required is "0.14.0")
+-- Board: native_sim, qualifiers: native/64
+-- Found host-tools: zephyr 1.0.1 (/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk)
+-- Found toolchain: host (gcc/ld)
+-- Found BOARD.dts: /home/Bilal/ncs/v3.4.1/zephyr/boards/native/native_sim/native_sim_64.dts
+-- Found devicetree overlay: /tmp/dive-watch-lvgl-3235fb68da/app/app.overlay
+-- Generated zephyr.dts: /tmp/dive-watch-lvgl-3235fb68da/build/zephyr/zephyr.dts
+-- Generated pickled edt: /tmp/dive-watch-lvgl-3235fb68da/build/zephyr/edt.pickle
+-- Generated devicetree_generated.h: /tmp/dive-watch-lvgl-3235fb68da/build/zephyr/include/generated/zephyr/devicetree_generated.h
+Parsing /home/Bilal/ncs/v3.4.1/zephyr/Kconfig
+Loaded configuration '/tmp/dive-watch-lvgl-3235fb68da/build/zephyr/.config'
+No change to configuration in '/tmp/dive-watch-lvgl-3235fb68da/build/zephyr/.config'
+No change to Kconfig header in '/tmp/dive-watch-lvgl-3235fb68da/build/zephyr/include/generated/zephyr/autoconf.h'
+CMake Warning at /home/Bilal/ncs/v3.4.1/nrf/cmake/device_support.cmake:34 (message):
+  SoC native is not supported by this release.
+Call Stack (most recent call first):
+  /home/Bilal/ncs/v3.4.1/nrf/CMakeLists.txt:27 (include)
+
+
+-- Using ccache: /home/Bilal/ncs/toolchains/8285d8ad56/bin/ccache
+-- Found gen_kobject_list: /home/Bilal/ncs/v3.4.1/zephyr/scripts/build/gen_kobject_list.py
+CMake Warning at /home/Bilal/ncs/v3.4.1/zephyr/CMakeLists.txt:2358 (message):
+  __ASSERT() statements are globally ENABLED
+
+
+-- Configuring done (13.3s)
+-- Generating done (0.4s)
+-- Build files have been written to: /tmp/dive-watch-lvgl-3235fb68da/build
+-- west build: building application
+[1/113] Generating misc/generated/syscalls.json, misc/generated/struct_tags.json
+[2/7] Generating linker_zephyr_pre0.cmd
+[3/7] Building C object CMakeFiles/app.dir/src/apnea_checks.c.obj
+[4/7] Linking C static library app/libapp.a
+[5/7] Linking C executable zephyr/zephyr.elf; Logical command for additional byproducts on target: zephyr_pre0
+Generating files from /tmp/dive-watch-lvgl-3235fb68da/build/zephyr/zephyr.elf for board: native_sim/native/64
+[6/7] Building native simulator runner, and linking final executable
+[7/7] Running utility command for native_runner_executable
+WARNING: Using a test - not safe - entropy source
+*** Booting nRF Connect SDK v3.4.1-b20f8619ba9a ***
+*** Using Zephyr OS v4.4.2-33fa6a7aac6a ***
+LVGL UI ready: 320x300, RGB565, simulated data
+APNEA MAIN PASS: thresholds, direction, live records, 119/120/130/661 s recovery, page continuity, two apneas, exit/re-entry and x1/x2 renders
+APNEA STATISTICS PASS: initial placeholders, active records, recovery continuity, shorter second apnea, new live depth/time records, long timers, x1/x2 and re-entry
+
+Stopped at 24.010s
