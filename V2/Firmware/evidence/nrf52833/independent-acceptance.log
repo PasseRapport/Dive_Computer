@@ -1,0 +1,41 @@
+[  9%] Built target ostc4_corrected_source
+[ 54%] Built target ostc4_upstream_contained
+[ 72%] Built target ostc4_exposure
+[ 90%] Built target ostc4_continuity_replay
+[100%] Strict independent schedule acceptance; nonzero means numerical rejection
+{
+  "accepted": true,
+  "profiles": [
+    {
+      "profile": "demo-30m-35min-fixed-holds.csv",
+      "accepted": true,
+      "discrepancies": 0
+    },
+    {
+      "profile": "full-stop-progression.csv",
+      "accepted": true,
+      "discrepancies": 0
+    },
+    {
+      "profile": "onset-20m.csv",
+      "accepted": true,
+      "discrepancies": 0
+    },
+    {
+      "profile": "repetitive.csv",
+      "accepted": true,
+      "discrepancies": 0
+    },
+    {
+      "profile": "shallow-boundaries.csv",
+      "accepted": true,
+      "discrepancies": 0
+    },
+    {
+      "profile": "violation-30m.csv",
+      "accepted": true,
+      "discrepancies": 0
+    }
+  ]
+}
+[100%] Built target independent_schedule_acceptance

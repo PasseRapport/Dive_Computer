@@ -4,4 +4,6 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 
 project(Firmware)
 
-target_sources(app PRIVATE src/main.c)
+include(${CMAKE_CURRENT_SOURCE_DIR}/ostc4_baseline/exposure.cmake)
+target_sources(app PRIVATE src/main.c src/firmware_exposure.c)
+target_link_libraries(app PRIVATE ostc4_exposure)

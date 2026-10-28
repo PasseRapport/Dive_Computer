@@ -32,19 +32,7 @@ if(BUILD_TESTING)
 endif()
 
 # Build-time comparison variant; the pinned upstream tree remains byte-identical.
-find_package(Python3 REQUIRED COMPONENTS Interpreter)
-set(corrected_decom "${CMAKE_CURRENT_BINARY_DIR}/corrected/decom.c")
-add_custom_command(OUTPUT "${corrected_decom}"
-    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/corrections/apply.py
-        ${CMAKE_CURRENT_SOURCE_DIR} "${corrected_decom}"
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/corrections/apply.py
-        ${CMAKE_CURRENT_SOURCE_DIR}/corrections/tissue-corrections.json
-        ${CMAKE_CURRENT_SOURCE_DIR}/corrections/schreiner-original.txt
-        ${CMAKE_CURRENT_SOURCE_DIR}/corrections/schreiner-stable.c.txt
-        ${CMAKE_CURRENT_SOURCE_DIR}/upstream/Common/Src/decom.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/upstream-manifest.json
-    VERBATIM)
-add_custom_target(ostc4_corrected_source DEPENDS "${corrected_decom}")
+include(${CMAKE_CURRENT_SOURCE_DIR}/exposure.cmake)
 add_library(ostc4_upstream_corrected STATIC "${corrected_decom}" upstream/Discovery/Src/buehlmann.c)
 add_dependencies(ostc4_upstream_corrected ostc4_corrected_source)
 target_include_directories(ostc4_upstream_corrected SYSTEM PUBLIC compat upstream/Common/Inc upstream/Discovery/Inc)
@@ -76,23 +64,6 @@ endif()
 
 # Continuous exposure uses the corrected calculations with complete planner
 # snapshot accessors. Original and corrected comparison variants stay unchanged.
-set(contained_planner "${CMAKE_CURRENT_BINARY_DIR}/corrected/buehlmann-contained.c")
-add_custom_command(OUTPUT "${contained_planner}"
-    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/corrections/contain_planner.py
-        ${CMAKE_CURRENT_SOURCE_DIR}/upstream/Discovery/Src/buehlmann.c "${contained_planner}"
-    DEPENDS corrections/contain_planner.py upstream/Discovery/Src/buehlmann.c src/ostc4_scratch.h upstream-manifest.json
-    VERBATIM)
-add_library(ostc4_upstream_contained STATIC "${corrected_decom}" "${contained_planner}")
-add_dependencies(ostc4_upstream_contained ostc4_corrected_source)
-target_include_directories(ostc4_upstream_contained SYSTEM PUBLIC compat upstream/Common/Inc upstream/Discovery/Inc)
-target_include_directories(ostc4_upstream_contained PRIVATE src)
-target_compile_options(ostc4_upstream_contained PRIVATE -O2 -fno-fast-math -ffp-contract=off -ffunction-sections -fdata-sections)
-add_library(ostc4_exposure STATIC src/ostc4_baseline.c)
-target_compile_definitions(ostc4_exposure PUBLIC OSTC4_TISSUE_CORRECTIONS=1 PRIVATE OSTC4_CONTINUOUS_EXPOSURE=1)
-target_include_directories(ostc4_exposure PUBLIC include)
-target_link_libraries(ostc4_exposure PRIVATE ostc4_upstream_contained m)
-target_link_options(ostc4_exposure INTERFACE -Wl,--gc-sections)
-target_compile_options(ostc4_exposure PRIVATE -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off)
 if(BUILD_TESTING)
     add_executable(test_ostc4_exposure tests/test_exposure.c)
     target_link_libraries(test_ostc4_exposure PRIVATE ostc4_exposure)

@@ -1,0 +1,232 @@
+{
+  "evidence_level": "custom-board compilation and static linked-image analysis only",
+  "full_watch_fit_established": false,
+  "target_execution": false,
+  "board": "dc_v2_1/nrf52833",
+  "elf_sha256": "7da7576b607ae96350bf933f4facbebfe9d9d406b85ffd2523fdbeca600a76f1",
+  "compiler": "arm-zephyr-eabi-gcc (Zephyr SDK 1.0.1) 14.3.0",
+  "regions": {
+    "FLASH": {
+      "origin": 49152,
+      "capacity_bytes": 225280,
+      "used_bytes": 38500,
+      "remaining_bytes": 186780
+    },
+    "RAM": {
+      "origin": 536870912,
+      "capacity_bytes": 131072,
+      "used_bytes": 15104,
+      "remaining_bytes": 115968
+    }
+  },
+  "allocated_stack_objects_bytes": {
+    "z_idle_stacks": 512,
+    "z_interrupt_stacks": 2176,
+    "z_main_stack": 8320
+  },
+  "configuration": {
+    "MAIN_STACK_SIZE": "8192",
+    "ISR_STACK_SIZE": "2048",
+    "IDLE_STACK_SIZE": "320",
+    "SYSTEM_WORKQUEUE_STACK_SIZE": "1024",
+    "HEAP_MEM_POOL_SIZE": "0",
+    "COMMON_LIBC_MALLOC_ARENA_SIZE": "0",
+    "FPU": "y",
+    "FP_HARDABI": "y",
+    "FP_SOFTABI": "n",
+    "PICOLIBC": "y",
+    "USE_DT_CODE_PARTITION": "y",
+    "RTT_CONSOLE": "y",
+    "USE_SEGGER_RTT": "y",
+    "BT": "n",
+    "DISPLAY": "n",
+    "LVGL": "n",
+    "SENSOR": "n",
+    "I2C": "n",
+    "SPI": "n"
+  },
+  "ram_note": "Remaining is linker headroom; no runtime stack/heap/timing measurement.",
+  "missing_application_features": [
+    "JDI display driver and target LVGL presentation",
+    "Bluetooth application/services",
+    "sensor acquisition and complete pressure history",
+    "persistent clock/storage/restart adapter"
+  ],
+  "elf_attributes": "Attribute Section: aeabi\nFile Attributes\n  Tag_CPU_name: \"7E-M\"\n  Tag_CPU_arch: v7E-M\n  Tag_CPU_arch_profile: Microcontroller\n  Tag_THUMB_ISA_use: Thumb-2\n  Tag_FP_arch: VFPv4-D16\n  Tag_ABI_PCS_wchar_t: 4\n  Tag_ABI_FP_rounding: Needed\n  Tag_ABI_FP_denormal: Needed\n  Tag_ABI_FP_exceptions: Needed\n  Tag_ABI_FP_user_exceptions: Needed\n  Tag_ABI_FP_number_model: IEEE 754\n  Tag_ABI_align_needed: 8-byte\n  Tag_ABI_enum_size: small\n  Tag_ABI_HardFP_use: SP only\n  Tag_ABI_VFP_args: VFP registers\n  Tag_ABI_optimization_goals: Aggressive Size\n  Tag_CPU_unaligned_access: v6\n  Tag_ABI_FP_16bit_format: IEEE 754\n",
+  "linked_math_symbols": [
+    "__aeabi_d2f",
+    "__aeabi_dadd",
+    "__aeabi_dcmpeq",
+    "__aeabi_dcmpge",
+    "__aeabi_dcmpgt",
+    "__aeabi_dcmple",
+    "__aeabi_dcmplt",
+    "__aeabi_ddiv",
+    "__aeabi_dmul",
+    "__aeabi_drsub",
+    "__aeabi_dsub",
+    "ceilf",
+    "expf",
+    "expm1f"
+  ],
+  "math_archive_members": [
+    "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/../../../../arm-zephyr-eabi/lib/thumb/v7e-m+fp/hard/space/libc.a(libm_common_math_err_divzero.c.o)",
+    "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/../../../../arm-zephyr-eabi/lib/thumb/v7e-m+fp/hard/space/libc.a(libm_common_math_err_invalid.c.o)",
+    "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/../../../../arm-zephyr-eabi/lib/thumb/v7e-m+fp/hard/space/libc.a(libm_common_math_err_oflow.c.o)",
+    "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/../../../../arm-zephyr-eabi/lib/thumb/v7e-m+fp/hard/space/libc.a(libm_common_math_err_uflow.c.o)",
+    "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/../../../../arm-zephyr-eabi/lib/thumb/v7e-m+fp/hard/space/libc.a(libm_common_math_errf_divzerof.c.o)",
+    "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/../../../../arm-zephyr-eabi/lib/thumb/v7e-m+fp/hard/space/libc.a(libm_common_math_errf_invalidf.c.o)",
+    "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/../../../../arm-zephyr-eabi/lib/thumb/v7e-m+fp/hard/space/libc.a(libm_common_math_errf_oflowf.c.o)",
+    "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/../../../../arm-zephyr-eabi/lib/thumb/v7e-m+fp/hard/space/libc.a(libm_common_math_errf_uflowf.c.o)",
+    "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/../../../../arm-zephyr-eabi/lib/thumb/v7e-m+fp/hard/space/libc.a(libm_common_math_inexactf.c.o)",
+    "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/../../../../arm-zephyr-eabi/lib/thumb/v7e-m+fp/hard/space/libc.a(libm_common_s_isnan.c.o)",
+    "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/../../../../arm-zephyr-eabi/lib/thumb/v7e-m+fp/hard/space/libc.a(libm_common_s_scalbn.c.o)",
+    "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/../../../../arm-zephyr-eabi/lib/thumb/v7e-m+fp/hard/space/libc.a(libm_common_sf_expm1.c.o)",
+    "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/../../../../arm-zephyr-eabi/lib/thumb/v7e-m+fp/hard/space/libc.a(libm_common_sf_isnan.c.o)",
+    "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/../../../../arm-zephyr-eabi/lib/thumb/v7e-m+fp/hard/space/libc.a(libm_machine_arm_s_sqrt.c.o)",
+    "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/../../../../arm-zephyr-eabi/lib/thumb/v7e-m+fp/hard/space/libc.a(libm_machine_arm_sf_ceil.c.o)",
+    "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/../../../../arm-zephyr-eabi/lib/thumb/v7e-m+fp/hard/space/libc.a(libm_math_s_pow.c.o)",
+    "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/../../../../arm-zephyr-eabi/lib/thumb/v7e-m+fp/hard/space/libc.a(libm_math_sf_exp.c.o)",
+    "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/../../../../arm-zephyr-eabi/lib/thumb/v7e-m+fp/hard/space/libc.a(libm_math_sf_log.c.o)"
+  ],
+  "math_archive_note": "Map archive members can contain discarded sections; linked_math_symbols lists retained named math functions.",
+  "core_compile_commands": [
+    {
+      "directory": "/tmp/dive-ticket08-canonical",
+      "command": "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc -DKERNEL -DK_HEAP_MEM_POOL_SIZE=0 -DNRF52833_XXAA -DNRF54L_CONFIGURATION_56_ENABLE=0 -DPICOLIBC_DOUBLE_PRINTF_SCANF -D_POSIX_THREAD_SAFE_FUNCTIONS=200809L -D__LINUX_ERRNO_EXTENSIONS__ -D__PROGRAM_START -D__ZEPHYR__=1 -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src -I/tmp/dive-ticket08-canonical/zephyr/include/generated/zephyr -I/home/Bilal/ncs/v3.4.1/zephyr/include -I/tmp/dive-ticket08-canonical/zephyr/include/generated -I/home/Bilal/ncs/v3.4.1/zephyr/soc/nordic -I/home/Bilal/ncs/v3.4.1/zephyr/lib/libc/picolibc/include -I/home/Bilal/ncs/v3.4.1/zephyr/lib/posix/c_lib_ext/getopt -I/home/Bilal/ncs/v3.4.1/zephyr/soc/nordic/nrf52/. -I/home/Bilal/ncs/v3.4.1/zephyr/soc/nordic/common/. -I/home/Bilal/ncs/v3.4.1/nrf/include -I/home/Bilal/ncs/v3.4.1/nrf/tests/include -I/home/Bilal/ncs/v3.4.1/nrf/modules/hal_nordic/. -I/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx -I/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/drivers/include -I/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/bsp/stable -I/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/bsp/stable/templates -I/home/Bilal/ncs/v3.4.1/zephyr/modules/hal_nordic/nrfx/. -I/home/Bilal/ncs/v3.4.1/modules/hal/cmsis_6/CMSIS/Core/Include -I/home/Bilal/ncs/v3.4.1/zephyr/modules/cmsis_6/. -I/home/Bilal/ncs/v3.4.1/modules/debug/segger/SEGGER -I/home/Bilal/ncs/v3.4.1/modules/debug/segger/Config -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -isystem /home/Bilal/ncs/v3.4.1/zephyr/lib/libc/common/include -O2 -fno-fast-math -ffp-contract=off -ffunction-sections -fdata-sections -fno-strict-aliasing -Os -imacros /tmp/dive-ticket08-canonical/zephyr/include/generated/zephyr/autoconf.h -fno-common -g -gdwarf-4 -fdiagnostics-color=always -mcpu=cortex-m4 -mthumb -mabi=aapcs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mfp16-format=ieee -mtp=soft --sysroot=/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/arm-zephyr-eabi -imacros /home/Bilal/ncs/v3.4.1/zephyr/include/zephyr/toolchain/zephyr_stdint.h -Wall -Wformat -Wformat-security -Wno-format-zero-length -Wdouble-promotion -Wno-pointer-sign -Wpointer-arith -Wexpansion-to-defined -Wno-unused-but-set-variable -Werror=implicit-int -fno-pic -fno-pie -fno-asynchronous-unwind-tables -ftls-model=local-exec -fno-reorder-functions --param=min-pagesize=0 -fno-defer-pop -fmacro-prefix-map=/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware=CMAKE_SOURCE_DIR -fmacro-prefix-map=/home/Bilal/ncs/v3.4.1/zephyr=ZEPHYR_BASE -fmacro-prefix-map=/home/Bilal/ncs/v3.4.1=WEST_TOPDIR -specs=picolibc.specs -std=c17 -o CMakeFiles/ostc4_upstream_contained.dir/corrected/decom.c.obj -c /tmp/dive-ticket08-canonical/corrected/decom.c",
+      "file": "/tmp/dive-ticket08-canonical/corrected/decom.c",
+      "output": "/tmp/dive-ticket08-canonical/CMakeFiles/ostc4_upstream_contained.dir/corrected/decom.c.obj"
+    },
+    {
+      "directory": "/tmp/dive-ticket08-canonical",
+      "command": "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc -DKERNEL -DK_HEAP_MEM_POOL_SIZE=0 -DNRF52833_XXAA -DNRF54L_CONFIGURATION_56_ENABLE=0 -DPICOLIBC_DOUBLE_PRINTF_SCANF -D_POSIX_THREAD_SAFE_FUNCTIONS=200809L -D__LINUX_ERRNO_EXTENSIONS__ -D__PROGRAM_START -D__ZEPHYR__=1 -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src -I/tmp/dive-ticket08-canonical/zephyr/include/generated/zephyr -I/home/Bilal/ncs/v3.4.1/zephyr/include -I/tmp/dive-ticket08-canonical/zephyr/include/generated -I/home/Bilal/ncs/v3.4.1/zephyr/soc/nordic -I/home/Bilal/ncs/v3.4.1/zephyr/lib/libc/picolibc/include -I/home/Bilal/ncs/v3.4.1/zephyr/lib/posix/c_lib_ext/getopt -I/home/Bilal/ncs/v3.4.1/zephyr/soc/nordic/nrf52/. -I/home/Bilal/ncs/v3.4.1/zephyr/soc/nordic/common/. -I/home/Bilal/ncs/v3.4.1/nrf/include -I/home/Bilal/ncs/v3.4.1/nrf/tests/include -I/home/Bilal/ncs/v3.4.1/nrf/modules/hal_nordic/. -I/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx -I/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/drivers/include -I/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/bsp/stable -I/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/bsp/stable/templates -I/home/Bilal/ncs/v3.4.1/zephyr/modules/hal_nordic/nrfx/. -I/home/Bilal/ncs/v3.4.1/modules/hal/cmsis_6/CMSIS/Core/Include -I/home/Bilal/ncs/v3.4.1/zephyr/modules/cmsis_6/. -I/home/Bilal/ncs/v3.4.1/modules/debug/segger/SEGGER -I/home/Bilal/ncs/v3.4.1/modules/debug/segger/Config -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -isystem /home/Bilal/ncs/v3.4.1/zephyr/lib/libc/common/include -O2 -fno-fast-math -ffp-contract=off -ffunction-sections -fdata-sections -fno-strict-aliasing -Os -imacros /tmp/dive-ticket08-canonical/zephyr/include/generated/zephyr/autoconf.h -fno-common -g -gdwarf-4 -fdiagnostics-color=always -mcpu=cortex-m4 -mthumb -mabi=aapcs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mfp16-format=ieee -mtp=soft --sysroot=/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/arm-zephyr-eabi -imacros /home/Bilal/ncs/v3.4.1/zephyr/include/zephyr/toolchain/zephyr_stdint.h -Wall -Wformat -Wformat-security -Wno-format-zero-length -Wdouble-promotion -Wno-pointer-sign -Wpointer-arith -Wexpansion-to-defined -Wno-unused-but-set-variable -Werror=implicit-int -fno-pic -fno-pie -fno-asynchronous-unwind-tables -ftls-model=local-exec -fno-reorder-functions --param=min-pagesize=0 -fno-defer-pop -fmacro-prefix-map=/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware=CMAKE_SOURCE_DIR -fmacro-prefix-map=/home/Bilal/ncs/v3.4.1/zephyr=ZEPHYR_BASE -fmacro-prefix-map=/home/Bilal/ncs/v3.4.1=WEST_TOPDIR -specs=picolibc.specs -std=c17 -o CMakeFiles/ostc4_upstream_contained.dir/corrected/buehlmann-contained.c.obj -c /tmp/dive-ticket08-canonical/corrected/buehlmann-contained.c",
+      "file": "/tmp/dive-ticket08-canonical/corrected/buehlmann-contained.c",
+      "output": "/tmp/dive-ticket08-canonical/CMakeFiles/ostc4_upstream_contained.dir/corrected/buehlmann-contained.c.obj"
+    },
+    {
+      "directory": "/tmp/dive-ticket08-canonical",
+      "command": "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc -DKERNEL -DK_HEAP_MEM_POOL_SIZE=0 -DNRF52833_XXAA -DNRF54L_CONFIGURATION_56_ENABLE=0 -DOSTC4_CONTINUOUS_EXPOSURE=1 -DOSTC4_TISSUE_CORRECTIONS=1 -DPICOLIBC_DOUBLE_PRINTF_SCANF -D_POSIX_THREAD_SAFE_FUNCTIONS=200809L -D__LINUX_ERRNO_EXTENSIONS__ -D__PROGRAM_START -D__ZEPHYR__=1 -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -I/tmp/dive-ticket08-canonical/zephyr/include/generated/zephyr -I/home/Bilal/ncs/v3.4.1/zephyr/include -I/tmp/dive-ticket08-canonical/zephyr/include/generated -I/home/Bilal/ncs/v3.4.1/zephyr/soc/nordic -I/home/Bilal/ncs/v3.4.1/zephyr/lib/libc/picolibc/include -I/home/Bilal/ncs/v3.4.1/zephyr/lib/posix/c_lib_ext/getopt -I/home/Bilal/ncs/v3.4.1/zephyr/soc/nordic/nrf52/. -I/home/Bilal/ncs/v3.4.1/zephyr/soc/nordic/common/. -I/home/Bilal/ncs/v3.4.1/nrf/include -I/home/Bilal/ncs/v3.4.1/nrf/tests/include -I/home/Bilal/ncs/v3.4.1/nrf/modules/hal_nordic/. -I/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx -I/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/drivers/include -I/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/bsp/stable -I/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/bsp/stable/templates -I/home/Bilal/ncs/v3.4.1/zephyr/modules/hal_nordic/nrfx/. -I/home/Bilal/ncs/v3.4.1/modules/hal/cmsis_6/CMSIS/Core/Include -I/home/Bilal/ncs/v3.4.1/zephyr/modules/cmsis_6/. -I/home/Bilal/ncs/v3.4.1/modules/debug/segger/SEGGER -I/home/Bilal/ncs/v3.4.1/modules/debug/segger/Config -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -isystem /home/Bilal/ncs/v3.4.1/zephyr/lib/libc/common/include -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off -fno-strict-aliasing -Os -imacros /tmp/dive-ticket08-canonical/zephyr/include/generated/zephyr/autoconf.h -fno-common -g -gdwarf-4 -fdiagnostics-color=always -mcpu=cortex-m4 -mthumb -mabi=aapcs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mfp16-format=ieee -mtp=soft --sysroot=/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/arm-zephyr-eabi -imacros /home/Bilal/ncs/v3.4.1/zephyr/include/zephyr/toolchain/zephyr_stdint.h -Wformat -Wformat-security -Wno-format-zero-length -Wdouble-promotion -Wno-pointer-sign -Wpointer-arith -Wexpansion-to-defined -Wno-unused-but-set-variable -Werror=implicit-int -fno-pic -fno-pie -fno-asynchronous-unwind-tables -ftls-model=local-exec -fno-reorder-functions --param=min-pagesize=0 -fno-defer-pop -fmacro-prefix-map=/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware=CMAKE_SOURCE_DIR -fmacro-prefix-map=/home/Bilal/ncs/v3.4.1/zephyr=ZEPHYR_BASE -fmacro-prefix-map=/home/Bilal/ncs/v3.4.1=WEST_TOPDIR -ffunction-sections -fdata-sections -specs=picolibc.specs -std=c17 -o CMakeFiles/ostc4_exposure.dir/ostc4_baseline/src/ostc4_baseline.c.obj -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+      "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+      "output": "/tmp/dive-ticket08-canonical/CMakeFiles/ostc4_exposure.dir/ostc4_baseline/src/ostc4_baseline.c.obj"
+    }
+  ],
+  "generated_source_sha256": {
+    "decom.c": "55159152a51a1d844570f966f206b27af73196934dd132c1b599c8cc11d28654",
+    "buehlmann-contained.c": "e7f4c3729ab18846a6ddd4c00dd9f0d8f6f440ff684d39d0d6c3f4ad2c7faf9b"
+  },
+  "policy": {
+    "identity": "ostc4-beta-7198d20-tissue-corrected-air-gf30-70-v1",
+    "status": "experimental corrected tissue variant; tissue analytical checks separate from schedule acceptance",
+    "arrays_transcribed_from_pinned_source": {
+      "buehlmann_N2_t_halflife": [
+        5.0,
+        8.0,
+        12.5,
+        18.5,
+        27.0,
+        38.3,
+        54.3,
+        77.0,
+        109.0,
+        146.0,
+        187.0,
+        239.0,
+        305.0,
+        390.0,
+        498.0,
+        635.0
+      ],
+      "buehlmann_N2_a": [
+        1.1696,
+        1.0,
+        0.8618,
+        0.7562,
+        0.62,
+        0.5043,
+        0.441,
+        0.4,
+        0.375,
+        0.35,
+        0.3295,
+        0.3065,
+        0.2835,
+        0.261,
+        0.248,
+        0.2327
+      ],
+      "buehlmann_N2_b": [
+        0.5578,
+        0.6514,
+        0.7222,
+        0.7825,
+        0.8126,
+        0.8434,
+        0.8693,
+        0.891,
+        0.9092,
+        0.9222,
+        0.9319,
+        0.9403,
+        0.9477,
+        0.9544,
+        0.9602,
+        0.9653
+      ],
+      "nitrogen_time_constant": [
+        0.138629436111989,
+        0.0866433975699932,
+        0.0554517744447956,
+        0.0374674151654024,
+        0.0256721177985165,
+        0.0180978376125312,
+        0.0127651414467762,
+        0.00900191143584345,
+        0.00635914844550409,
+        0.00474758342849278,
+        0.00370666941475907,
+        0.00290019740820061,
+        0.00227261370675392,
+        0.00177730046297422,
+        0.0013918618083533,
+        0.00109157036308653
+      ]
+    },
+    "pressure_unit": "bar absolute",
+    "time_unit": "integer seconds, no subsecond truncation",
+    "surface_fixture_bar": 1.01325,
+    "surface_range_bar": [
+      0.8,
+      1.2
+    ],
+    "sample_range_bar": "surface to surface+6",
+    "max_interval_seconds": 3600,
+    "interpolation": "linear pressure; equal endpoints use cached exposure factors with four 10-second literals corrected",
+    "fresh_initialization": "upstream decom_reset_with_ambientmbar, N2=0.7902*(surface-0.0493), helium=0",
+    "exposure_nitrogen_fraction": 0.79,
+    "water_vapour_bar": 0.0493,
+    "gf": [
+      30,
+      70
+    ],
+    "ascent_meters_per_minute": 9,
+    "depth_conversion_bar_per_meter": 0.1,
+    "last_stop_gauge_bar": 0.3,
+    "second_to_last_stop_gauge_bar": 0.6,
+    "stop_increment_bar": 0.3,
+    "stop_time_quantum_seconds": 10,
+    "stop_slots": 50,
+    "stop_index": "index 0=3m, index 1=6m, index i=(i+1)*3m",
+    "ndl": "10 minute steps; one minute refinement at <=120 minutes; capped at 240 minutes",
+    "tts": "upstream zero without deco, not travel-only TTS; deco includes travel and mandatory stops",
+    "tts_and_per_stop_cap_seconds": 59940,
+    "availability": "unavailable before 60 accumulated underwater/transition seconds, at surface, or when both NDL and TTS are zero; cap values limited; available means upstream produced an estimate, not validated guidance",
+    "anchor": "zero at explicit fresh reset; planner may raise persistent settings anchor; upstream global GF-low depth persists across accepted samples; planner immediately precedes ceiling",
+    "known_unchanged_defects": [
+      "Schreiner minute-rate conversion already present; unchanged units. Cancellation corrected separately.",
+      "reset N2 fraction 0.7902 differs from exposure 0.79; retained and modeled explicitly"
+    ],
+    "prediction_isolation": "not claimed; single active serialized scenario; each advance runs planner and commits its settings anchor; read only copies last observation",
+    "correction_set": "cached-10s-and-stable-schreiner-v1",
+    "precision": "original binary32/binary64 types retained; stable binary32 Schreiner evaluation uses expm1f and small-x polynomial to avoid cancellation; -O2 -fno-fast-math -ffp-contract=off"
+  }
+}
