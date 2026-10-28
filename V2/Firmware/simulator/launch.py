@@ -25,11 +25,14 @@ parser.add_argument("--gallery", help="Check all V1 pages and save screenshots t
 parser.add_argument("--scale-check", action="store_true", help="Check repeated Scale clicks, rendered frames and input responsiveness")
 parser.add_argument("--water-check", action="store_true")
 parser.add_argument("--dive-check", action="store_true")
+parser.add_argument("--apnea-check", action="store_true", help="Deterministic freediving session and Main render journey")
 parser.add_argument("--scuba-check", action="store_true", help="Exercise the scuba UI with accelerated scenarios")
 args = parser.parse_args()
 args.bench = args.bench or bool(args.bench_profile) or args.bench_check or args.calculated_check or args.restart_check or args.gf_check or args.checkpoint_check
-if args.bench and (args.gallery or args.scuba_check or args.scale_check or args.check_controls or args.water_check or args.dive_check):
+if args.bench and (args.gallery or args.scuba_check or args.scale_check or args.check_controls or args.water_check or args.dive_check or args.apnea_check):
     parser.error("Bench checks use --bench-check; legacy gallery/control checks run without --bench")
+if args.apnea_check and not args.gallery:
+    parser.error("--apnea-check requires --gallery DIRECTORY")
 if args.scuba_check and not args.gallery:
     parser.error("--scuba-check requires --gallery DIRECTORY")
 root = Path(__file__).resolve().parent
@@ -112,6 +115,8 @@ if not args.build_only:
         env["DIVE_SIM_SCALE_CHECK"] = "1"
     if args.scuba_check:
         env["DIVE_SIM_SCUBA_CHECK"] = "1"
+    if args.apnea_check:
+        env["DIVE_SIM_APNEA_CHECK"] = "1"
     if args.dive_check:
         env["DIVE_SIM_DIVE_CHECK"] = "1"
     if args.scale_check:
@@ -127,7 +132,7 @@ if not args.build_only:
         env["SDL_VIDEODRIVER"] = "dummy"
         env["DIVE_SIM_GALLERY"] = str(gallery)
         if not args.water_check:
-            command += ["--stop_at=44" if args.scuba_check else "--stop_at=23" if args.dive_check else "--stop_at=58"]
+            command += ["--stop_at=14" if args.apnea_check else "--stop_at=44" if args.scuba_check else "--stop_at=23" if args.dive_check else "--stop_at=58"]
     elif args.smoke or args.check_controls:
         env["SDL_VIDEODRIVER"] = "dummy"
         command += ["--stop_at=2"]

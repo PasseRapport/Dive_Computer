@@ -44,3 +44,5 @@ int sim_host_bench_check_enabled(void);
 struct scuba_model;
 void sim_host_bench_watch(const struct scuba_model *model);
 #endif
+
+int sim_host_apnea_check_enabled(void);

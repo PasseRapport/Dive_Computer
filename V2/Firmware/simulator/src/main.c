@@ -8,6 +8,7 @@
 #include "sim_layout.h"
 #include "sim_checks.h"
 #include "sim_dive.h"
+#include "apnea_checks.h"
 #include "scuba_checks.h"
 #include "appearance_checks.h"
 #ifdef DIVE_PC_BENCH
@@ -25,8 +26,6 @@ int main(void)
 
     struct watch_data data = {
         .depth_dm = 0, .temperature_c = 18, .battery_percent = 87,
-        .last_depth_dm = 173, .max_depth_dm = 217, .max_dive_s = 94,
-        .total_dives = 8,
     };
     watch_ui_create(sim_controls_create());
     sim_host_init();
@@ -50,9 +49,6 @@ int main(void)
     printk("LVGL UI ready: 320x300, RGB565, simulated data\n");
     uint64_t last_update = UINT64_MAX;
     struct sim_dive dive = {0};
-#ifdef DIVE_PC_BENCH
-    uint64_t last_exposure_ms=0;
-#endif
     int check_stage=0,scale_stage=0,stress_stage=0;
     bool check_done = false;
     bool was_animating = false;
@@ -115,40 +111,27 @@ int main(void)
             }
             if(stress_stage==180)printk("SCALE STRESS PASS: 60 real clicks, visible frames and responsive controls\n");
         }
-        uint64_t now_ms = k_uptime_get();
-        if (last_update == UINT64_MAX || now_ms - last_update >= 50 ||
+        uint64_t now_ms = k_uptime_get(),sample_ms=now_ms;
+        bool apnea_step=apnea_checks_inputs(&sample_ms);
+        if (apnea_step || last_update == UINT64_MAX || now_ms - last_update >= 50 ||
+            dive.session_active != (watch_ui_view()==WATCH_DIVE_VIEW) ||
             data.depth_dm != sim_controls_depth_dm() ||
             data.heading_degrees != sim_controls_heading_degrees()) {
             data.heading_degrees = sim_controls_heading_degrees();
-#ifdef DIVE_PC_BENCH
-            uint64_t exposure_ms=(uint64_t)pc_bench_read()->seconds*1000;
-            if(exposure_ms<last_exposure_ms) {
-                dive=(struct sim_dive){0};
-                data.elapsed_s=data.recovery_s=data.recovery_elapsed_ms=data.recovery_target_ms=0;
-                data.show_recovery=data.recovery_ring_visible=false;
-            }
-#endif
-            if(watch_ui_view()==WATCH_SCUBA_VIEW) {data.depth_dm=sim_controls_depth_dm();data.depth_mm=sim_controls_depth_mm();data.depth_mm_valid=true;}
-            else {
-#ifdef DIVE_PC_BENCH
-                data.depth_mm=sim_controls_depth_mm();data.depth_mm_valid=true;
-                sim_dive_update(&dive,&data,exposure_ms,sim_controls_depth_dm());
-#else
-                sim_dive_update(&dive, &data, now_ms, sim_controls_depth_dm());
-#endif
-            }
-#ifdef DIVE_PC_BENCH
-            last_exposure_ms=(uint64_t)pc_bench_read()->seconds*1000;
-            data.runtime_s=pc_bench_read()->seconds;
-#else
-            data.runtime_s = now_ms / 1000;
-#endif
+            /* Session time uses the watch clock, independent of exposure/bench time.
+             * Only the freediving tracker resets here; scuba keeps receiving samples. */
+            bool freediving=watch_ui_view()==WATCH_DIVE_VIEW;
+            sim_dive_session(&dive,&data,sample_ms,freediving);
+            data.depth_dm=sim_controls_depth_dm();
+            data.depth_mm=sim_controls_depth_mm();data.depth_mm_valid=true;
+            if(freediving)sim_dive_update(&dive,&data,sample_ms,data.depth_dm);
             sim_host_get_clock(&hour, &minute);
             data.clock_hour = hour;
             data.clock_minute=minute;
             sim_host_get_date(&day,&month,&weekday,&second);
             data.clock_day=day;data.clock_month=month;data.clock_weekday=weekday;data.clock_second=second;
             watch_ui_update(&data);
+            if(apnea_step)apnea_checks_observe(&data);
             last_update = now_ms;
         }
         /* Desktop-only scaled canvas: redraw during transitions and one

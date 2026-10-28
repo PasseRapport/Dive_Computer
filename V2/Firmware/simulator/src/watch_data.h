@@ -11,6 +11,9 @@ struct watch_data {
     uint32_t elapsed_s;
     int16_t temperature_c;
     uint8_t battery_percent;
+    bool apnea_active;
+    int8_t apnea_direction; /* +1 descent, -1 ascent, 0 stationary/surface. */
+    uint16_t current_max_depth_dm;
     uint16_t last_depth_dm, max_depth_dm;
     uint32_t max_dive_s, total_dives, runtime_s, recovery_s;
     bool show_recovery, recovery_red, recovery_ring_visible;

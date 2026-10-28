@@ -1,6 +1,7 @@
 /* V1 layout rendered at native V2 pixel sizes, retaining Montserrat and colours.
  * Do not scale whole pages: that interpolates text and makes it blurry. */
 #include "v1_ui_layout.h"
+#include "apnea_main.h"
 #include "selection.h"
 #include "battery_icon.h"
 #include "native_fonts.h"
@@ -28,12 +29,6 @@ static lv_obj_t *dive_mode_cursor;
 static lv_obj_t *dive_mode_labels[2], *dive_mode_icons[2];
 
 // --- Pointeurs internes pour la mise à jour ---
-static lv_obj_t * label_time_val;
-static lv_obj_t * label_recovery_time;
-static lv_obj_t * label_temp_val;
-static lv_obj_t * label_depth_val;
-static lv_obj_t * label_depth_unit;
-static lv_obj_t * label_max_val;
 static lv_obj_t * label_clear;
 static lv_obj_t * label_salt;
 static lv_obj_t * cursor_box;
@@ -135,72 +130,7 @@ void v1_ui_build(lv_obj_t *parent) {
     lv_obj_set_style_bg_color(app_screen, lv_color_black(), 0);
     lv_obj_clear_flag(app_screen, LV_OBJ_FLAG_SCROLLABLE);
 
-    // ---------------------------------------- CREATE MAIN SCREEN ------------------------------------
-    main_screen = lv_obj_create(app_screen); // Attaché à la toile
-    format_as_page(main_screen);
-    lv_obj_set_x(main_screen, V1_PAGE_HOME_X);
-    lv_obj_set_style_text_color(main_screen, lv_color_white(), 0);
-
-    // QUADRANT 1: TOP LEFT (TIME)
-    lv_obj_t * label_time_title = lv_label_create(main_screen);
-    lv_label_set_text(label_time_title, "TIME");
-    lv_obj_set_style_text_font(label_time_title, &lv_font_montserrat_22, 0);       
-    lv_obj_set_style_text_color(label_time_title, lv_color_white(), 0);
-    lv_obj_align(label_time_title, LV_ALIGN_TOP_LEFT, 28, 2); 
-
-    label_time_val = lv_label_create(main_screen);
-    lv_label_set_text(label_time_val, "0:00");
-    lv_obj_set_style_text_font(label_time_val, &lv_font_montserrat_42, 0);         
-    lv_obj_align_to(label_time_val, label_time_title, LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
-
-    // QUADRANT 2: TOP RIGHT (TEMP)
-    lv_obj_t * label_temp_title = lv_label_create(main_screen);
-    lv_label_set_text(label_temp_title, "TEMP");
-    lv_obj_set_style_text_font(label_temp_title, &lv_font_montserrat_22, 0);       
-    lv_obj_set_style_text_color(label_temp_title, lv_color_white(), 0);
-    lv_obj_align(label_temp_title, LV_ALIGN_TOP_RIGHT, -18, 2);
-
-    label_temp_val = lv_label_create(main_screen);
-    lv_label_set_text(label_temp_val, "00°C");
-    lv_obj_set_style_text_font(label_temp_val, &lv_font_montserrat_42, 0);         
-    lv_obj_align_to(label_temp_val, label_temp_title, LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
-
-    // QUADRANT 3: BOTTOM LEFT (DEPTH)
-    lv_obj_t * label_depth_title = lv_label_create(main_screen);
-    lv_label_set_text(label_depth_title, "DEPTH");
-    lv_obj_set_style_text_font(label_depth_title, &lv_font_montserrat_22, 0);      
-    lv_obj_set_style_text_color(label_depth_title, lv_color_white(), 0);
-    lv_obj_align(label_depth_title, LV_ALIGN_TOP_LEFT, 21, 84);
-
-    label_depth_val = lv_label_create(main_screen);
-    lv_label_set_text(label_depth_val, "0.0");                                     
-    lv_obj_set_style_text_font(label_depth_val, &watch_montserrat_60, 0);        
-    lv_obj_align_to(label_depth_val, label_depth_title, LV_ALIGN_OUT_BOTTOM_MID, 0, -4);
-
-    label_depth_unit = lv_label_create(main_screen);
-    lv_label_set_text(label_depth_unit, "m");
-    lv_obj_set_style_text_font(label_depth_unit, &lv_font_montserrat_24, 0);       
-    lv_obj_align_to(label_depth_unit, label_depth_val, LV_ALIGN_OUT_RIGHT_BOTTOM, 4, -7);
-
-    // QUADRANT 4: BOTTOM RIGHT (LASTDEPTH)
-    lv_obj_t * label_max_title = lv_label_create(main_screen);
-    lv_label_set_text(label_max_title, "LAST");
-    lv_obj_set_style_text_font(label_max_title, &lv_font_montserrat_22, 0);        
-    lv_obj_set_style_text_color(label_max_title, lv_color_white(), 0);
-    lv_obj_align(label_max_title, LV_ALIGN_BOTTOM_RIGHT, -9, -28);
-
-    label_max_val = lv_label_create(main_screen);
-    lv_label_set_text(label_max_val, "0.0");
-    lv_obj_set_style_text_font(label_max_val, &lv_font_montserrat_24, 0);          
-    lv_obj_align_to(label_max_val, label_max_title, LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
-
-
-    // RIGHT CENTER (RECOVERY TIME)
-    label_recovery_time = lv_label_create(main_screen);
-    lv_label_set_text(label_recovery_time, "");
-    lv_obj_set_style_text_font(label_recovery_time, &lv_font_montserrat_28, 0); 
-    lv_obj_set_style_text_color(label_recovery_time, lv_color_hex(0x00FF00), 0);         
-    lv_obj_align(label_recovery_time, LV_ALIGN_BOTTOM_RIGHT, -26, -56);
+    main_screen=apnea_main_create(app_screen);
 
    // ---------------------------------------- CREATE WATER TYPE SCREEN ------------------------------------
     water_screen = lv_obj_create(app_screen);
@@ -473,57 +403,16 @@ void ui_refresh_water_selection(bool is_salt) {
     }
 }
 
-void ui_refresh_dive_time(uint32_t total_secs) {
-    uint32_t m = total_secs / 60;
-    uint32_t s = total_secs % 60;
-    lv_label_set_text_fmt(label_time_val, "%lu:%02lu", (unsigned long)m, (unsigned long)s);
-}
-
-void ui_refresh_depth(float depth) {
-    char buf[16]; 
-    snprintf(buf, sizeof(buf), "%.1f", (double)depth); 
-    lv_label_set_text(label_depth_val, buf); 
-    lv_obj_align_to(label_depth_unit, label_depth_val, LV_ALIGN_OUT_RIGHT_BOTTOM, 4, -7);
-}
-
-void ui_refresh_temp(float temp) {
-    char buf[16];
-    snprintf(buf, sizeof(buf), "%.0f°C", (double)temp); 
-    lv_label_set_text(label_temp_val, buf);
-}
-
-void ui_update_recovery_display(uint32_t seconds, bool visible, bool is_red) {
-    if (!visible) {
-        lv_obj_add_flag(label_recovery_time, LV_OBJ_FLAG_HIDDEN);
-        return;
-    }
-    
-    lv_obj_clear_flag(label_recovery_time, LV_OBJ_FLAG_HIDDEN);
-    uint32_t m = seconds / 60;
-    uint32_t s = seconds % 60;
-    lv_label_set_text_fmt(label_recovery_time, "%lu:%02lu", (unsigned long)m, (unsigned long)s);
-    
-    if (is_red) {
-        lv_obj_set_style_text_color(label_recovery_time, lv_color_hex(0xFF0000), 0);
-    } else {
-        lv_obj_set_style_text_color(label_recovery_time, lv_color_hex(0x00FF00), 0);
-    }
-}
-
-void ui_refresh_last_depth(float depth) {
-    char buf[16];
-    snprintf(buf, sizeof(buf), "%.1f", (double)depth);
-    lv_label_set_text(label_max_val, buf);
-}
-
 void ui_refresh_stats(uint32_t max_time_s, float max_depth, uint32_t total_dives) {
     char buf[16];
     
     uint32_t m = max_time_s / 60;
     uint32_t s = max_time_s % 60;
-    lv_label_set_text_fmt(label_stat_divetime_val, "%lu:%02lu", (unsigned long)m, (unsigned long)s);
+    if(total_dives)lv_label_set_text_fmt(label_stat_divetime_val, "%lu:%02lu", (unsigned long)m, (unsigned long)s);
+    else lv_label_set_text(label_stat_divetime_val,"--");
     
-    snprintf(buf, sizeof(buf), "%.1f", (double)max_depth);
+    if(total_dives)snprintf(buf, sizeof(buf), "%.1f", (double)max_depth);
+    else snprintf(buf,sizeof(buf),"--");
     lv_label_set_text(label_stat_max_val, buf);
     lv_obj_align_to(label_stat_max_val, label_stat_max_unit, LV_ALIGN_OUT_LEFT_BOTTOM, -4, 4);
 
@@ -536,15 +425,17 @@ void ui_refresh_stats(uint32_t max_time_s, float max_depth, uint32_t total_dives
 
 void ui_slide_pages(lv_obj_t * page_out, lv_obj_t * page_in, int direction) {
     int16_t offset = V1_PAGE_TRAVEL * direction;
+    int out_x=(320-lv_obj_get_width(page_out))/2;
+    int in_x=(320-lv_obj_get_width(page_in))/2;
     
     // Entrée depuis le côté choisi, au-delà de la zone visible de la montre.
-    lv_obj_set_x(page_in, V1_PAGE_HOME_X + offset);
+    lv_obj_set_x(page_in, in_x + offset);
     
     // Sortie depuis la position centrée jusqu'au-delà du bord opposé.
     lv_anim_t a_out;
     lv_anim_init(&a_out);
     lv_anim_set_var(&a_out, page_out);
-    lv_anim_set_values(&a_out, V1_PAGE_HOME_X, V1_PAGE_HOME_X - offset);
+    lv_anim_set_values(&a_out, out_x, out_x - offset);
     lv_anim_set_duration(&a_out, 250);
     lv_anim_set_path_cb(&a_out, lv_anim_path_ease_in_out);
     lv_anim_set_exec_cb(&a_out, (lv_anim_exec_xcb_t)lv_obj_set_x);
@@ -554,7 +445,7 @@ void ui_slide_pages(lv_obj_t * page_out, lv_obj_t * page_in, int direction) {
     lv_anim_t a_in;
     lv_anim_init(&a_in);
     lv_anim_set_var(&a_in, page_in);
-    lv_anim_set_values(&a_in, V1_PAGE_HOME_X + offset, V1_PAGE_HOME_X);
+    lv_anim_set_values(&a_in, in_x + offset, in_x);
     lv_anim_set_duration(&a_in, 250);
     lv_anim_set_path_cb(&a_in, lv_anim_path_ease_in_out);
     lv_anim_set_exec_cb(&a_in, (lv_anim_exec_xcb_t)lv_obj_set_x);

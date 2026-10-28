@@ -409,3 +409,5 @@ int sim_host_bench_capture(unsigned milestone)
     return fclose(out);
 }
 #endif
+
+int sim_host_apnea_check_enabled(void) {return getenv("DIVE_SIM_APNEA_CHECK")!=NULL;}

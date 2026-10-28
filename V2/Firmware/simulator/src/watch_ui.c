@@ -1,4 +1,5 @@
 #include "watch_ui.h"
+#include "apnea_main.h"
 #include "v1_ui_layout.h"
 #include "selection.h"
 #include "native_fonts.h"
@@ -337,9 +338,9 @@ static void show_page(enum watch_page next, int direction, bool animate)
     lv_obj_remove_flag(in, LV_OBJ_FLAG_HIDDEN);
     if (next != current_page && animate) {
         lv_obj_remove_flag(out, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_set_x(out, V1_PAGE_HOME_X);
+        lv_obj_set_x(out, (320-lv_obj_get_width(out))/2);
         ui_slide_pages(out, in, direction);
-    } else lv_obj_set_x(in, next == WATCH_DIVE_MODE ? 20 : V1_PAGE_HOME_X);
+    } else lv_obj_set_x(in, (320-lv_obj_get_width(in))/2);
     if(next==WATCH_BRIGHTNESS||next==WATCH_SENSITIVITY)lv_obj_set_pos(in,0,0);
     current_page = next;
     refresh_confirmation();
@@ -403,7 +404,7 @@ void watch_ui_create(lv_obj_t *parent)
     digital_logo=clock_logo(clock_view,60,73);
     digital_date=text(clock_view,"",&lv_font_montserrat_18,202);
     digital_battery=battery_icon_create(clock_view,142,238);
-    free_battery=battery_icon_create(app_screen,142,35);
+    free_battery=battery_icon_create(app_screen,142,16);
     build_analog_clock(clock_view);
     mode_view = make_view(parent);
     mode_cursor = cursor(mode_view);
@@ -725,13 +726,9 @@ void watch_ui_update(const struct watch_data *data)
     battery_icon_update(digital_battery,data->battery_percent);battery_icon_update(analog_battery,data->battery_percent);
     battery_icon_update(free_battery,data->battery_percent);
     compass_ui_update(data->heading_degrees);
-    ui_refresh_dive_time(data->elapsed_s);
-    ui_refresh_depth(data->depth_dm / 10.0f);
-    ui_refresh_temp(data->temperature_c);
-    ui_refresh_last_depth(data->last_depth_dm / 10.0f);
+    apnea_main_update(pages[WATCH_MAIN],data);
     ui_refresh_stats(data->max_dive_s, data->max_depth_dm / 10.0f, data->total_dives);
     ui_refresh_runtime_display(data->runtime_s / 3600, data->runtime_s / 60 % 60);
-    ui_update_recovery_display(data->recovery_s, data->show_recovery, data->recovery_red);
     recovery_active = data->recovery_ring_visible;
     int progress = data->recovery_target_ms ?
                    (uint64_t)data->recovery_elapsed_ms * 1000 / data->recovery_target_ms : 0;

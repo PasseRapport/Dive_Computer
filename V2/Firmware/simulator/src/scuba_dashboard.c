@@ -1,4 +1,5 @@
 #include "scuba_dashboard.h"
+#include "dive_layout.h"
 #include "scuba_presentation.h"
 #include "native_fonts.h"
 #include "battery_icon.h"
@@ -16,7 +17,7 @@ struct dashboard {
     lv_obj_t *compass,*battery,*arc,*depth_title,*depth,*unit,*zone,*stop_mark;
     lv_obj_t *left_box,*left_title,*left_value,*left_seconds,*left_note;
     lv_obj_t *time_title,*time_minutes,*time_seconds,*footer_title,*footer_value;
-    lv_obj_t *ascent_bg,*ascent[5],*rails[2];
+    lv_obj_t *ascent_bg,*ascent[5];
     enum scuba_field field, preferred_field;
     enum scuba_ring ring;
     enum dive_phase phase;
@@ -41,23 +42,11 @@ static void hidden(lv_obj_t *o,bool flag)
 static void color(lv_obj_t *o,uint32_t rgb){lv_obj_set_style_text_color(o,lv_color_hex(rgb),0);}
 static void depth_group(struct dashboard *d,uint16_t dm)
 {
-    char value[20],whole[16];snprintf(value,sizeof(value),"%u.%u",dm/10,dm%10);
-    snprintf(whole,sizeof(whole),"%u",dm/10);
-    lv_label_set_text(d->depth,value);lv_obj_update_layout(d->depth);lv_obj_update_layout(d->unit);
     bool marker=!lv_obj_has_flag(d->stop_mark,LV_OBJ_FLAG_HIDDEN);
-    int marker_width=marker?26:0;
-    /* Centre the visible decimal point on the screen; integers grow left. */
-    lv_point_t prefix;
-    lv_text_get_size(&prefix,whole,&watch_montserrat_60,0,0,LV_COORD_MAX,LV_TEXT_FLAG_NONE);
-    lv_font_glyph_dsc_t dot;
-    lv_font_get_glyph_dsc(&watch_montserrat_60,&dot,'.','0'+dm%10);
-    int x=160-prefix.x-dot.ofs_x-dot.box_w/2+1; /* Optical alignment of the dot bitmap. */
-    if(marker)lv_obj_set_pos(d->stop_mark,x-marker_width,68);
-    lv_obj_set_pos(d->depth,x,47);
-    const lv_font_t *small=&lv_font_montserrat_18;
-    lv_obj_set_pos(d->unit,x+lv_obj_get_width(d->depth)+5,
-        47+watch_montserrat_60.line_height-watch_montserrat_60.base_line-small->line_height+small->base_line);
+    dive_layout_depth(d->depth,d->unit,dm);
+    if(marker)lv_obj_set_pos(d->stop_mark,lv_obj_get_x(d->depth)-26,68);
 }
+
 static void timer(lv_obj_t *minutes,lv_obj_t *seconds,unsigned value,int cx)
 {
     char a[24],b[12];unsigned mins=value/60;
@@ -95,26 +84,6 @@ static void draw_chevron(lv_event_t *event)
         lv_area_t a={area.x1+left,area.y1+y,area.x1+right,area.y1+y};
         lv_area_t b={area.x1+19-right,area.y1+y,area.x1+19-left,area.y1+y};
         lv_draw_rect(layer,&ink,&a);lv_draw_rect(layer,&ink,&b);
-    }
-}
-static void draw_rail(lv_event_t *event)
-{
-    lv_area_t area;lv_obj_get_coords(lv_event_get_target_obj(event),&area);
-    /* At the lower latitude, move both ends inwards to preserve the same
-     * radial gap to the round display edge as the upper separator. */
-    int inset=(int)(uintptr_t)lv_event_get_user_data(event);
-    lv_layer_t *layer=lv_event_get_layer(event);
-    lv_draw_rect_dsc_t ink;lv_draw_rect_dsc_init(&ink);ink.bg_color=lv_color_hex(CYAN);ink.bg_opa=LV_OPA_COVER;
-    lv_area_t middle={area.x1+67+inset,area.y1,area.x1+252-inset,area.y1};lv_draw_rect(layer,&ink,&middle);
-    for(int x=40;x<67;x++) {
-        int fixed=x<=52?512+(52-x)*1536/12:(67-x)*512/15;
-        int y=fixed/256,fraction=fixed%256;
-        for(int side=0;side<2;side++) {
-            int px=area.x1+(side?319-x-inset:x+inset);
-            lv_area_t pixel={px,area.y1+y,px,area.y1+y};
-            ink.bg_opa=255-fraction;lv_draw_rect(layer,&ink,&pixel);
-            if(fraction) {pixel.y1++;pixel.y2++;ink.bg_opa=fraction;lv_draw_rect(layer,&ink,&pixel);}
-        }
     }
 }
 static void ascent(struct dashboard *d,const struct scuba_model *m)
@@ -196,12 +165,7 @@ lv_obj_t *scuba_dashboard_create(lv_obj_t *parent)
     d->time_minutes=text(view,&lv_font_montserrat_48,0,150,"");d->time_seconds=text(view,&lv_font_montserrat_22,0,171,"");
     d->footer_title=text(view,&lv_font_montserrat_12,0,219,"");color(d->footer_title,0xffffff);
     d->footer_value=text(view,&lv_font_montserrat_34,0,239,"");
-    for(int i=0;i<2;i++) {
-        d->rails[i]=lv_obj_create(view);lv_obj_remove_style_all(d->rails[i]);
-        lv_obj_set_pos(d->rails[i],0,i?215:118);lv_obj_set_size(d->rails[i],320,10);
-        lv_obj_remove_flag(d->rails[i],LV_OBJ_FLAG_SCROLLABLE);
-        lv_obj_add_event_cb(d->rails[i],draw_rail,LV_EVENT_DRAW_MAIN,(void *)(uintptr_t)(i?23:0));
-    }
+    dive_layout_rails(view,CYAN);
     d->ascent_bg=lv_obj_create(view);lv_obj_remove_style_all(d->ascent_bg);lv_obj_set_pos(d->ascent_bg,148,141);lv_obj_set_size(d->ascent_bg,24,64);
     lv_obj_set_style_radius(d->ascent_bg,8,0);lv_obj_set_style_bg_color(d->ascent_bg,lv_color_hex(RED),0);lv_obj_set_style_bg_opa(d->ascent_bg,LV_OPA_COVER,0);
     for(int i=0;i<5;i++) {
