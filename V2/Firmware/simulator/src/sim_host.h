@@ -3,6 +3,9 @@
 /* Host-only SDL bridge; never accesses LVGL from an SDL event callback. */
 void sim_host_init(void);
 int sim_host_take_wheel(void);
+int sim_host_take_battery_wheel(void);
+/* UI-thread publication of the visible battery control; -1 disables it. */
+void sim_host_set_battery_y(int y);
 int sim_host_check_enabled(void);
 void sim_host_push_wheel(int x, int y, int steps);
 void sim_host_push_button(int x, int y, int pressed);

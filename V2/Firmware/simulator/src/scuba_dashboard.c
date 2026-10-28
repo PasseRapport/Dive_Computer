@@ -257,7 +257,7 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
         centred(d->left_title,"DECO",101,127);
         lv_obj_set_style_text_font(d->left_value,&lv_font_montserrat_22,0);
         lv_obj_set_style_text_align(d->left_value,LV_TEXT_ALIGN_CENTER,0);
-        centred(d->left_value,"NO\nDATA",101,146);
+        centred(d->left_value,"NO\nDATA",101,151);
     } else if(!guidance && !surface) {
         centred(d->left_title,"DECO",101,127);centred(d->left_value,"--",101,150);
     } else if(surface) {

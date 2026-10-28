@@ -9,6 +9,8 @@
 #include "sim_layout.h"
 
 static atomic_int wheel_milli_steps, orientation_milli_steps;
+static atomic_int battery_milli_steps;
+static atomic_int battery_y = -1;
 static unsigned requested_zoom;
 static atomic_bool redraw_requested;
 
@@ -66,10 +68,15 @@ static int watch_events(void *unused, SDL_Event *event)
                  y >= SIM_CROWN_Y && y < SIM_CROWN_Y + SIM_CROWN_HEIGHT;
     bool orientation = x >= SIM_ORIENTATION_X && x < SIM_ORIENTATION_X + SIM_ORIENTATION_WIDTH &&
                        y >= SIM_ORIENTATION_Y && y < SIM_ORIENTATION_Y + SIM_ORIENTATION_HEIGHT;
-    if (crown || orientation) {
+    int battery_top = atomic_load(&battery_y);
+    bool battery = battery_top >= 0 && x >= SIM_PANEL_X &&
+                   x < SIM_PANEL_X + SIM_CONTROL_WIDTH &&
+                   y >= battery_top && y < battery_top + 30;
+    if (crown || orientation || battery) {
         int steps = (int)(event->wheel.preciseY * 1000.0f);
         if (event->wheel.direction == SDL_MOUSEWHEEL_FLIPPED) steps = -steps;
-        atomic_fetch_add(orientation ? &orientation_milli_steps : &wheel_milli_steps, steps);
+        atomic_fetch_add(battery ? &battery_milli_steps :
+                         orientation ? &orientation_milli_steps : &wheel_milli_steps, steps);
     }
     return 1;
 }
@@ -83,6 +90,20 @@ int sim_host_take_wheel(void)
 {
     static int remainder;
     remainder += atomic_exchange(&wheel_milli_steps, 0);
+    int steps = remainder / 1000;
+    remainder %= 1000;
+    return steps;
+}
+
+void sim_host_set_battery_y(int y)
+{
+    atomic_store(&battery_y, y);
+}
+
+int sim_host_take_battery_wheel(void)
+{
+    static int remainder;
+    remainder += atomic_exchange(&battery_milli_steps, 0);
     int steps = remainder / 1000;
     remainder %= 1000;
     return steps;

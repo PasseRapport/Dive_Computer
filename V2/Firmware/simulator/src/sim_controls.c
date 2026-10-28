@@ -130,17 +130,11 @@ static void speed_click(lv_event_t *event)
     unsigned speed=scuba_ui_model()->speed;
     scuba_ui_set_speed(speed==1?10:speed==10?60:1);
 }
-static void battery_click(lv_event_t *event)
-{
-    (void)event;
-    unsigned battery=scuba_ui_model()->battery;
-    scuba_ui_set_battery(battery>15?15:battery>5?5:87);
-}
 static lv_obj_t *test_button(lv_obj_t *parent,int y,lv_event_cb_t callback)
 {
     lv_obj_t *button=lv_button_create(parent);
     lv_obj_set_pos(button,0,y);lv_obj_set_size(button,224,30);
-    lv_obj_add_event_cb(button,callback,LV_EVENT_CLICKED,NULL);
+    if(callback)lv_obj_add_event_cb(button,callback,LV_EVENT_CLICKED,NULL);
     lv_obj_t *label=lv_label_create(button);lv_obj_center(label);return label;
 }
 
@@ -252,7 +246,7 @@ lv_obj_t *sim_controls_create(void)
     lv_obj_remove_flag(scuba_panel,LV_OBJ_FLAG_SCROLLABLE);
     scenario_label=test_button(scuba_panel,0,scenario_click);
     speed_label=test_button(scuba_panel,34,speed_click);
-    battery_label=test_button(scuba_panel,68,battery_click);
+    battery_label=test_button(scuba_panel,68,NULL);
     haptic_label=label_at(scuba_panel,"DEMO VALUES",0,110);
     lv_obj_set_style_text_font(haptic_label,&lv_font_montserrat_12,0);
     lv_obj_t *scale=lv_button_create(scuba_panel);lv_obj_set_pos(scale,124,104);lv_obj_set_size(scale,100,30);
@@ -278,8 +272,11 @@ void sim_controls_poll(void)
         if((!depth_dm&&depth_rate<0)||(depth_dm==1000&&depth_rate>0))rate_fraction=0;
     }
     lv_label_set_text_fmt(depth_label,"Depth: %u.%u m | Rate: %+d m/min",depth_dm/10,depth_dm%10,depth_rate);
+    int battery_steps=sim_host_take_battery_wheel();
     if(scuba) {
         const struct scuba_model *s=scuba_ui_model();
+        sim_host_set_battery_y(s->calculated?274:342);
+        if(battery_steps)scuba_ui_set_battery(LV_CLAMP(0,(int64_t)s->battery+battery_steps,100));
         lv_obj_remove_flag(scuba_panel,LV_OBJ_FLAG_HIDDEN);
         lv_obj_t *legacy_buttons[]={lv_obj_get_parent(scenario_label),lv_obj_get_parent(speed_label)};
         for(unsigned i=0;i<2;++i) {
@@ -293,11 +290,14 @@ void sim_controls_poll(void)
         }
         lv_obj_set_y(lv_obj_get_parent(battery_label),s->calculated?0:68);
         lv_obj_set_y(haptic_label,s->calculated?40:110);
-        lv_label_set_text_fmt(battery_label,"Battery: %u%%",s->battery);lv_obj_center(battery_label);
+        lv_label_set_text_fmt(battery_label,"Battery: %u%% (wheel)",s->battery);lv_obj_center(battery_label);
         lv_label_set_text(haptic_label,scuba_ui_haptic_active()?"VIBRATION":s->calculated?"CALCULATED":"DEMO VALUES");
         lv_obj_set_style_text_color(haptic_label,lv_color_hex(scuba_ui_haptic_active()?0xffaa66:0xaaaaaa),0);
         lv_label_set_text_fmt(depth_label,"Depth: %u.%u m | Rate: %+d m/min",s->depth_dm/10,s->depth_dm%10,depth_rate);
-    } else lv_obj_add_flag(scuba_panel,LV_OBJ_FLAG_HIDDEN);
+    } else {
+        sim_host_set_battery_y(-1);
+        lv_obj_add_flag(scuba_panel,LV_OBJ_FLAG_HIDDEN);
+    }
 
     int rotation = -sim_host_take_orientation();
     if (rotation) {

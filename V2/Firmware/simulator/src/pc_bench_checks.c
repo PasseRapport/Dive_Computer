@@ -12,6 +12,8 @@ static void calculated_checks(void)
 {
     static unsigned stage;
     static uint64_t after;
+    static enum scuba_screen battery_screen;
+    static uint32_t battery_seconds;
     uint64_t now=k_uptime_get();
     if(now<500 || (after && now<after))return;
     const struct bench_view *v=pc_bench_read();
@@ -73,6 +75,30 @@ static void calculated_checks(void)
         case 12:
             __ASSERT(v->automatic && !v->replay && v->paused,"SDL auto control failed");
             printk("CALCULATED WATCH PASS: NDL, deco, automatic stop, manual violation, acknowledgement, invalidity, two dives, SDL auto control\n");break;
+        case 13:
+            __ASSERT(v->paused && m->battery==87,"battery fixture must be paused");
+            battery_screen=scuba_ui_screen();battery_seconds=v->seconds;
+            sim_host_push_wheel(400,285,1);break;
+        case 14:
+            __ASSERT(m->battery==88,"battery wheel must increment by one");
+            sim_host_push_wheel(400,285,-1);break;
+        case 15:
+            __ASSERT(m->battery==87,"battery wheel must decrement by one");
+            sim_host_push_wheel(400,285,100);break;
+        case 16:
+            __ASSERT(m->battery==100,"battery must clamp at 100 percent");
+            sim_host_push_wheel(400,285,-101);break;
+        case 17:
+            __ASSERT(m->battery==0 && (m->alerts&SCUBA_BATTERY),"battery must clamp at zero and warn while paused");
+            sim_host_push_wheel(400,285,1);break;
+        case 18:
+            __ASSERT(m->battery==1,"battery wheel must leave zero one percent at a time");
+            sim_host_push_wheel(400,285,86);break;
+        case 19:
+            __ASSERT(m->battery==87 && !(m->alerts&SCUBA_BATTERY),"battery must clear low-battery warning");
+            __ASSERT(scuba_ui_screen()==battery_screen && v->seconds==battery_seconds && v->paused,
+                "battery wheel changed the watch page or exposure");
+            printk("BATTERY WHEEL PASS: real SDL events, one-percent steps, 0/100 bounds, paused updates, crown isolation\n");break;
         default:return;
         }
         if(stage/2<10)pc_bench_pause(true);

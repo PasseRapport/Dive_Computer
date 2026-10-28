@@ -392,7 +392,21 @@ bool scuba_ui_input(enum watch_input input, int steps)
 void scuba_ui_set_scenario(enum scuba_scenario scenario) {if(model.calculated)return;scuba_model_scenario(&model,scenario,k_uptime_get());last_active=false;show(SCUBA_PREP);}
 void scuba_ui_set_speed(uint8_t speed) {if(!model.calculated&&(speed==1||speed==10||speed==60)) model.speed=speed;}
 void scuba_ui_manual(void) {if(model.calculated)return;model.scenario=SCUBA_MANUAL;}
-void scuba_ui_set_battery(uint8_t battery) {test_battery=battery;}
+void scuba_ui_set_battery(uint8_t battery)
+{
+    test_battery=LV_MIN(battery,100);
+    model.battery=test_battery;
+    /* Desktop battery edits remain visible while exposure is paused. */
+    if(test_battery<=15) {
+        model.alerts|=SCUBA_BATTERY;
+        model.notifications|=SCUBA_BATTERY & ~model.acknowledged;
+    } else {
+        model.alerts&=~SCUBA_BATTERY;
+        model.notifications&=~SCUBA_BATTERY;
+        model.acknowledged&=~SCUBA_BATTERY;
+    }
+    render();
+}
 const struct scuba_model *scuba_ui_model(void) {return &model;}
 enum scuba_screen scuba_ui_screen(void) {return screen;}
 uint32_t scuba_ui_haptic_count(void) {return haptic_count;}

@@ -7,7 +7,7 @@
 #include <zephyr/kernel.h>
 #include <stdio.h>
 #include <stdlib.h>
-enum op { OPEN, ENTER, SCREEN, SHOT, TAP, DOUBLE, CROWN, SCENE_DOWN, SPEED_DOWN, BATTERY_DOWN, BUTTON_UP, SPEED, ACTIVE, ROTATE, SCENARIO, EXITED, DEPTH, CEILING_ALERT, ACKED, LOW_BATTERY, FIELDS, FIELD, DASHBOARD_TEST, NDL_SCENE, NAV, PICK_FIELD, MENU_CHECK, BACKLIGHT_CHECK, OPEN_FIELD, DONE };
+enum op { OPEN, ENTER, SCREEN, SHOT, TAP, DOUBLE, CROWN, SCENE_DOWN, SPEED_DOWN, BATTERY_WHEEL, BUTTON_UP, SPEED, ACTIVE, ROTATE, SCENARIO, EXITED, DEPTH, CEILING_ALERT, ACKED, LOW_BATTERY, FIELDS, FIELD, DASHBOARD_TEST, NDL_SCENE, NAV, PICK_FIELD, MENU_CHECK, BACKLIGHT_CHECK, OPEN_FIELD, DONE };
 struct step {int ms;enum op op;int value;const char *name;};
 static const struct step steps[]={
     {100, OPEN, 0},
@@ -108,10 +108,8 @@ static const struct step steps[]={
     {23300, CROWN, 100},
     {23400, SCREEN, SCUBA_OPTIONS_GATE},
     {23600, DEPTH, 60},
-    {24000, BATTERY_DOWN, 0},
-    {24100, BUTTON_UP, 0},
-    {24400, BATTERY_DOWN, 0},
-    {24500, BUTTON_UP, 0},
+    {24000, BATTERY_WHEEL, -72},
+    {24400, BATTERY_WHEEL, -10},
     {24900, NAV, SCUBA_MAIN},
     {25000, LOW_BATTERY, 0},
     {25250, SHOT, 0, "scuba-16-low-battery"},
@@ -276,7 +274,7 @@ void scuba_checks_poll(void)
     case CROWN:watch_ui_input(WATCH_CROWN,step->value);break;
     case SCENE_DOWN:button_y=286;sim_host_push_button(SIM_PANEL_X+30,button_y,1);break;
     case SPEED_DOWN:button_y=320;sim_host_push_button(SIM_PANEL_X+30,button_y,1);break;
-    case BATTERY_DOWN:button_y=354;sim_host_push_button(SIM_PANEL_X+30,button_y,1);break;
+    case BATTERY_WHEEL:sim_host_push_wheel(SIM_PANEL_X+30,354,step->value);break;
     case BUTTON_UP:sim_host_push_button(SIM_PANEL_X+30,button_y,0);break;
     case SPEED:__ASSERT(s->speed==step->value&&s->scenario==SCUBA_NO_DECO,"Scenario/speed buttons failed");break;
     case ACTIVE:__ASSERT(s->active==step->value,"Scuba did not start automatically");break;
@@ -286,7 +284,7 @@ void scuba_checks_poll(void)
     case DEPTH:scuba_ui_manual();sim_controls_set_depth_dm(step->value);break;
     case CEILING_ALERT:__ASSERT(s->alerts&SCUBA_CEILING,"Missing ceiling violation");break;
     case ACKED:__ASSERT(!s->notifications&&(s->alerts&SCUBA_CEILING),"Acknowledgement cleared the persistent alert");break;
-    case LOW_BATTERY:__ASSERT(s->battery==5&&(s->alerts&SCUBA_BATTERY),"Battery test buttons failed");break;
-    case DONE:__ASSERT(scuba_ui_haptic_count()>0,"Alerts did not trigger simulated haptics");printk("SCUBA UI PASS: preparation, settings, actual scenario/speed/battery buttons, options entry, shared backlight, animated ring and footer selectors, brightness return, bounded underwater navigation, safety/deco, alert acknowledgement, resubmersion guard, surface exit and summary\n");break;
+    case LOW_BATTERY:__ASSERT(s->battery==5&&(s->alerts&SCUBA_BATTERY),"Battery wheel failed");break;
+    case DONE:__ASSERT(scuba_ui_haptic_count()>0,"Alerts did not trigger simulated haptics");printk("SCUBA UI PASS: preparation, settings, actual scenario/speed buttons and battery wheel, options entry, shared backlight, animated ring and footer selectors, brightness return, bounded underwater navigation, safety/deco, alert acknowledgement, resubmersion guard, surface exit and summary\n");break;
     }
 }
