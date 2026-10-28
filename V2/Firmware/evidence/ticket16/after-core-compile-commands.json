@@ -1,0 +1,20 @@
+[
+  {
+    "directory": "/tmp/ticket16-after/ostc4",
+    "command": "/usr/bin/gcc -DOSTC4_CONTINUOUS_EXPOSURE=1 -DOSTC4_TISSUE_CORRECTIONS=1 -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off -o CMakeFiles/ostc4_exposure.dir/src/ostc4_baseline.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+    "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+    "output": "ostc4/CMakeFiles/ostc4_exposure.dir/src/ostc4_baseline.c.o"
+  },
+  {
+    "directory": "/tmp/ticket16-after/ostc4",
+    "command": "/usr/bin/gcc  -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off -o CMakeFiles/ostc4_baseline.dir/src/ostc4_baseline.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+    "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+    "output": "ostc4/CMakeFiles/ostc4_baseline.dir/src/ostc4_baseline.c.o"
+  },
+  {
+    "directory": "/tmp/ticket16-after/ostc4",
+    "command": "/usr/bin/gcc -DOSTC4_TISSUE_CORRECTIONS=1 -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off -o CMakeFiles/ostc4_corrected.dir/src/ostc4_baseline.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+    "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+    "output": "ostc4/CMakeFiles/ostc4_corrected.dir/src/ostc4_baseline.c.o"
+  }
+]

@@ -1,0 +1,9 @@
+Test project /tmp/ticket16-after
+    Start 4: configurable_gf_public_behavior
+1/2 Test #4: configurable_gf_public_behavior ..........   Passed    0.03 sec
+    Start 5: configurable_gf_independent_acceptance
+2/2 Test #5: configurable_gf_independent_acceptance ...   Passed    2.11 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Total Test time (real) =   2.14 sec

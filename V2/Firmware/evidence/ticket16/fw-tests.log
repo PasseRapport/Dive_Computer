@@ -1,0 +1,33 @@
+Test project /tmp/ticket16-fw-host
+      Start  1: firmware_pressure_time_contract
+ 1/14 Test  #1: firmware_pressure_time_contract .....................   Passed    0.02 sec
+      Start  2: upstream_source_identity
+ 2/14 Test  #2: upstream_source_identity ............................   Passed    0.22 sec
+      Start  3: synthetic_replay_contracts
+ 3/14 Test  #3: synthetic_replay_contracts ..........................   Passed    0.47 sec
+      Start  4: public_pressure_time_contract
+ 4/14 Test  #4: public_pressure_time_contract .......................   Passed    0.01 sec
+      Start  5: corrected_public_pressure_time_contract
+ 5/14 Test  #5: corrected_public_pressure_time_contract .............   Passed    0.01 sec
+      Start  6: corrected_synthetic_replay_contracts
+ 6/14 Test  #6: corrected_synthetic_replay_contracts ................   Passed    0.47 sec
+      Start  7: independently_verified_tissues
+ 7/14 Test  #7: independently_verified_tissues ......................   Passed    2.33 sec
+      Start  8: continuous_exposure_contract
+ 8/14 Test  #8: continuous_exposure_contract ........................   Passed    0.05 sec
+      Start  9: independent_repetitive_exposure
+ 9/14 Test  #9: independent_repetitive_exposure .....................   Passed    0.50 sec
+      Start 10: continuity_replay_faults
+10/14 Test #10: continuity_replay_faults ............................   Passed    0.37 sec
+      Start 11: independent_schedule_analytical_checks
+11/14 Test #11: independent_schedule_analytical_checks ..............   Passed    0.30 sec
+      Start 12: independent_schedule_comparator_rejects_mutations
+12/14 Test #12: independent_schedule_comparator_rejects_mutations ...   Passed    0.18 sec
+      Start 13: checkpoint_restart_continuity
+13/14 Test #13: checkpoint_restart_continuity .......................   Passed    0.00 sec
+      Start 14: checkpoint_fresh_process
+14/14 Test #14: checkpoint_fresh_process ............................   Passed    0.10 sec
+
+100% tests passed, 0 tests failed out of 14
+
+Total Test time (real) =   5.06 sec

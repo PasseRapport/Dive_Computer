@@ -1,0 +1,19 @@
+Review base: 92f1caf3085902b4f031fa0f9529d56dcab3da50.
+Scope: endpoint function diff, public-bench revision report helper and ticket16
+evidence. Preexisting deco_core work and AGENTS.md excluded. Reviewed working
+delta against base before commit, including new files explicitly.
+
+Standards axis (independent Sol 6.1 reviewer): 0 material findings.
+Accepted ADR honored; only endpoint math converted. No material baseline smells.
+Comparison helper rerun independently, source hash matches manifest, tolerance
+unchanged. Evidence distinguishes PC, static target and unperformed runtime work.
+
+Spec axis (independent Sol 6.1 reviewer): 0 findings.
+Binary32 operands/constants/intermediates, unchanged formula/validation/public
+contract, no unrelated numerical change or scope creep. Independently reran
+578 observations/1156 endpoints: nonendpoint state exactly unchanged, maximum
+reference error 0.0000087993 m below 0.006 m. Existing tests cover read/prediction
+isolation, faults, availability and zero. Target instruction/resource evidence
+meets compilation scope and preserves physical/runtime evidence boundaries.
+
+Summary: Standards 0; Spec 0. No outstanding review issue.

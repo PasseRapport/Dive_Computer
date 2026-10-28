@@ -1,0 +1,92 @@
+[  2%] Generating corrected/decom.c
+[  2%] Building C object ostc4/CMakeFiles/ostc4_upstream.dir/upstream/Common/Src/decom.c.o
+[  4%] Building C object ostc4/CMakeFiles/ostc4_upstream.dir/upstream/Discovery/Src/buehlmann.c.o
+[  4%] Built target ostc4_corrected_source
+[  5%] Generating corrected/buehlmann-contained.c
+[  6%] Building C object ostc4/CMakeFiles/ostc4_upstream_corrected.dir/corrected/decom.c.o
+[  8%] Generating corrected/buehlmann-grid-timed.c
+[  9%] Building C object ostc4/CMakeFiles/ostc4_upstream_contained.dir/corrected/decom.c.o
+[ 11%] Building C object ostc4/CMakeFiles/ostc4_upstream_contained.dir/corrected/buehlmann-grid-timed.c.o
+[ 12%] Linking C static library libostc4_upstream.a
+[ 12%] Built target ostc4_upstream
+[ 13%] Building C object ostc4/CMakeFiles/ostc4_upstream_corrected.dir/upstream/Discovery/Src/buehlmann.c.o
+[ 15%] Building C object ostc4/CMakeFiles/ostc4_baseline.dir/src/ostc4_baseline.c.o
+[ 16%] Linking C static library libostc4_upstream_contained.a
+[ 18%] Linking C static library libostc4_baseline.a
+[ 19%] Built target ostc4_upstream_contained
+[ 20%] Linking C static library libostc4_upstream_corrected.a
+[ 20%] Built target ostc4_baseline
+[ 22%] Building C object ostc4/CMakeFiles/ostc4_exposure.dir/src/ostc4_baseline.c.o
+[ 23%] Building C object ostc4/CMakeFiles/ostc4_replay.dir/src/replay.c.o
+[ 25%] Building C object ostc4/CMakeFiles/test_ostc4_contract.dir/tests/test_contract.c.o
+[ 26%] Built target ostc4_upstream_corrected
+[ 27%] Linking C executable test_ostc4_contract
+[ 29%] Building C object ostc4/CMakeFiles/ostc4_corrected.dir/src/ostc4_baseline.c.o
+[ 30%] Linking C executable ostc4_replay
+[ 30%] Built target test_ostc4_contract
+[ 30%] Built target ostc4_replay
+[ 31%] Linking C static library libostc4_corrected.a
+[ 31%] Built target ostc4_corrected
+[ 33%] Building C object ostc4/CMakeFiles/test_ostc4_corrected_contract.dir/tests/test_contract.c.o
+[ 34%] Building C object ostc4/CMakeFiles/ostc4_replay_corrected.dir/src/replay.c.o
+[ 36%] Linking C static library libostc4_exposure.a
+[ 37%] Linking C executable test_ostc4_corrected_contract
+[ 38%] Linking C executable ostc4_replay_corrected
+[ 38%] Built target test_ostc4_corrected_contract
+[ 38%] Built target ostc4_exposure
+[ 40%] Building C object CMakeFiles/test_pc_bench.dir/test_pc_bench.c.o
+[ 41%] Building C object CMakeFiles/test_restart_bench.dir/test_restart_bench.c.o
+[ 43%] Building C object CMakeFiles/test_calculated_watch.dir/test_calculated_watch.c.o
+[ 43%] Built target ostc4_replay_corrected
+[ 44%] Building C object CMakeFiles/test_gf_pair.dir/test_gf_pair.c.o
+[ 45%] Building C object CMakeFiles/test_calculated_watch.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/scuba_calculated.c.o
+[ 47%] Building C object CMakeFiles/test_restart_bench.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/pc_bench.c.o
+[ 48%] Building C object CMakeFiles/test_pc_bench.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/pc_bench.c.o
+[ 50%] Building C object CMakeFiles/test_calculated_watch.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/scuba_model.c.o
+[ 51%] Building C object CMakeFiles/test_gf_pair.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/pc_bench.c.o
+[ 52%] Linking C executable test_calculated_watch
+[ 54%] Building C object CMakeFiles/test_restart_bench.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/pc_bench_storage.c.o
+[ 55%] Building C object CMakeFiles/test_pc_bench.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/pc_bench_storage.c.o
+[ 55%] Built target test_calculated_watch
+[ 56%] Building C object CMakeFiles/test_gf_pair.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/pc_bench_storage.c.o
+[ 58%] Building C object CMakeFiles/test_restart_bench.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/scuba_calculated.c.o
+[ 59%] Building C object CMakeFiles/gf_bench_replay.dir/gf_bench_replay.c.o
+[ 61%] Building C object CMakeFiles/test_pc_bench.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/scuba_calculated.c.o
+[ 62%] Building C object CMakeFiles/test_restart_bench.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/scuba_model.c.o
+[ 63%] Building C object CMakeFiles/gf_bench_replay.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/pc_bench.c.o
+[ 65%] Linking C executable test_gf_pair
+[ 66%] Building C object CMakeFiles/test_pc_bench.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/scuba_model.c.o
+[ 66%] Built target test_gf_pair
+[ 68%] Linking C executable test_restart_bench
+[ 69%] Building C object CMakeFiles/test_checkpoint_file.dir/test_checkpoint_file.c.o
+[ 70%] Linking C executable test_pc_bench
+[ 72%] Building C object CMakeFiles/gf_bench_replay.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/pc_bench_storage.c.o
+[ 72%] Built target test_restart_bench
+[ 73%] Building C object CMakeFiles/test_checkpoint_file.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/pc_bench.c.o
+[ 73%] Built target test_pc_bench
+[ 75%] Building C object CMakeFiles/test_storage_bench.dir/test_storage_bench.c.o
+[ 76%] Building C object CMakeFiles/test_checkpoint_file.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/pc_bench_checkpoint_file.c.o
+[ 77%] Linking C executable gf_bench_replay
+[ 79%] Building C object CMakeFiles/test_storage_bench.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/pc_bench.c.o
+[ 80%] Building C object CMakeFiles/test_checkpoint_file.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/pc_bench_storage.c.o
+[ 80%] Built target gf_bench_replay
+[ 81%] Building C object CMakeFiles/test_recovery_lifecycle.dir/test_recovery_lifecycle.c.o
+[ 83%] Building C object ostc4/CMakeFiles/test_ostc4_exposure.dir/tests/test_exposure.c.o
+[ 84%] Linking C executable test_checkpoint_file
+[ 86%] Building C object CMakeFiles/test_storage_bench.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/pc_bench_storage.c.o
+[ 87%] Building C object CMakeFiles/test_recovery_lifecycle.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/pc_bench.c.o
+[ 88%] Linking C executable test_ostc4_exposure
+[ 88%] Built target test_checkpoint_file
+[ 90%] Linking C executable test_storage_bench
+[ 91%] Building C object ostc4/CMakeFiles/ostc4_continuity_replay.dir/src/replay.c.o
+[ 91%] Built target test_ostc4_exposure
+[ 93%] Building C object CMakeFiles/test_recovery_lifecycle.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/pc_bench_checkpoint_file.c.o
+[ 93%] Built target test_storage_bench
+[ 94%] Building C object ostc4/CMakeFiles/test_ostc4_restart.dir/tests/test_restart.c.o
+[ 95%] Building C object CMakeFiles/test_recovery_lifecycle.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/pc_bench_storage.c.o
+[ 97%] Linking C executable ostc4_continuity_replay
+[ 98%] Linking C executable test_ostc4_restart
+[100%] Linking C executable test_recovery_lifecycle
+[100%] Built target ostc4_continuity_replay
+[100%] Built target test_ostc4_restart
+[100%] Built target test_recovery_lifecycle

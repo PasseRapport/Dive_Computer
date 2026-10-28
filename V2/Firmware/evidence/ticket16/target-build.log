@@ -1,0 +1,261 @@
+-- west build: generating a build system
+Loading Zephyr default modules (Zephyr base).
+-- Application: /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware
+-- CMake version: 4.2.1
+-- Found Python3: /home/Bilal/ncs/toolchains/8285d8ad56/usr/local/bin/python3.12 (found suitable version "3.12.4", minimum required is "3.12") found components: Interpreter
+-- Cache files will be written to: /tmp/ticket16-target/.cache
+-- Zephyr version: 4.4.2 (/home/Bilal/ncs/v3.4.1/zephyr)
+-- Found west (found suitable version "1.5.0", minimum required is "0.14.0")
+-- Board: dc_v2_1, qualifiers: nrf52833
+-- Found host-tools: zephyr 1.0.1 (/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk)
+-- Found toolchain: zephyr 1.0.1 (/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk)
+-- Found Dtc: /home/Bilal/ncs/toolchains/8285d8ad56/bin/dtc (found suitable version "1.5.0", minimum required is "1.4.6")
+-- Found BOARD.dts: /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/boards/nordic/dc_v2_1/dc_v2_1_nrf52833.dts
+-- Found devicetree overlay: /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/app.overlay
+-- Generated zephyr.dts: /tmp/ticket16-target/zephyr/zephyr.dts
+-- Generated pickled edt: /tmp/ticket16-target/zephyr/edt.pickle
+-- Generated devicetree_generated.h: /tmp/ticket16-target/zephyr/include/generated/zephyr/devicetree_generated.h
+Parsing /home/Bilal/ncs/v3.4.1/zephyr/Kconfig
+Loaded configuration '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/boards/nordic/dc_v2_1/dc_v2_1_nrf52833_defconfig'
+Merged configuration '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/prj.conf'
+Configuration saved to '/tmp/ticket16-target/zephyr/.config'
+Kconfig header saved to '/tmp/ticket16-target/zephyr/include/generated/zephyr/autoconf.h'
+-- Found GnuLd: /home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/arm-zephyr-eabi/bin/ld.bfd (found version "2.43.1")
+-- The C compiler identification is GNU 14.3.0
+-- The CXX compiler identification is GNU 14.3.0
+-- The ASM compiler identification is GNU
+-- Found assembler: /home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc
+-- Using ccache: /home/Bilal/ncs/toolchains/8285d8ad56/bin/ccache
+-- Found gen_kobject_list: /home/Bilal/ncs/v3.4.1/zephyr/scripts/build/gen_kobject_list.py
+-- Found Python3: /home/Bilal/ncs/toolchains/8285d8ad56/usr/local/bin/python3.12 (found version "3.12.4") found components: Interpreter
+-- Configuring done (22.5s)
+-- Generating done (0.4s)
+-- Build files have been written to: /tmp/ticket16-target
+-- west build: building application
+[1/172] Preparing syscall dependency handling
+
+[2/172] Generating ../../zephyr/include/generated/zephyr_commit.h
+[3/172] Generating ../../zephyr/include/generated/ncs_commit.h
+[4/172] Generating ../../zephyr/include/generated/ncs_version.h
+[5/172] Generating include/generated/zephyr/version.h
+-- Zephyr version: 4.4.2 (/home/Bilal/ncs/v3.4.1/zephyr), build: ncs-v3.4.1
+[6/172] Generating corrected/decom.c
+[7/172] Generating misc/generated/syscalls_subdirs.trigger
+[8/172] Generating misc/generated/syscalls.json, misc/generated/struct_tags.json
+[9/172] Generating include/generated/device-api-sections.ld, include/generated/device-api-sections.cmake
+[10/172] Generating include/generated/zephyr/syscall_dispatch.c, include/generated/zephyr/syscall_exports_llext.c, syscall_weakdefs_llext.c, include/generated/zephyr/syscall_list.h
+[11/172] Generating include/generated/zephyr/driver-validation.h
+[12/172] Generating include/generated/zephyr/kobj-types-enum.h, include/generated/zephyr/otype-to-str.h, include/generated/zephyr/otype-to-size.h
+[13/172] Generating corrected/buehlmann-contained.c
+[14/172] Building C object zephyr/lib/heap/CMakeFiles/heap_constants.dir/heap_constants.c.obj
+[15/172] Generating corrected/buehlmann-grid-timed.c
+[16/172] Generating ../../include/generated/zephyr/heap_constants.h
+[17/172] Building C object CMakeFiles/ostc4_upstream_contained.dir/corrected/buehlmann-grid-timed.c.obj
+/tmp/ticket16-target/corrected/buehlmann-grid-timed.c: In function 'buehlmann_super_saturation_calculator':
+/tmp/ticket16-target/corrected/buehlmann-grid-timed.c:363:35: warning: implicit conversion from 'float' to 'double' to match other operand of binary expression [-Wdouble-promotion]
+  363 |                         if(M_surf > 9.99)
+      |                                   ^
+/tmp/ticket16-target/corrected/buehlmann-grid-timed.c: In function 'compute_ceiling':
+/tmp/ticket16-target/corrected/buehlmann-grid-timed.c:657:26: warning: implicit conversion from 'float' to 'double' to match other operand of binary expression [-Wdouble-promotion]
+  657 |         if ((high - low) < 0.01)
+      |                          ^
+[18/172] Building C object CMakeFiles/ostc4_exposure.dir/ostc4_baseline/src/ostc4_baseline.c.obj
+[19/172] Building C object zephyr/CMakeFiles/offsets.dir/arch/arm/core/offsets/offsets.c.obj
+[20/172] Building C object CMakeFiles/ostc4_upstream_contained.dir/corrected/decom.c.obj
+/tmp/ticket16-target/corrected/decom.c: In function 'decom_reset_with_1000mbar':
+/tmp/ticket16-target/corrected/decom.c:406:20: warning: implicit conversion from 'float' to 'double' to match other operand of binary expression [-Wdouble-promotion]
+  406 |         saturation -= WATER_VAPOUR_PRESSURE;
+      |                    ^~
+/tmp/ticket16-target/corrected/decom.c: In function 'decom_reset_with_ambientmbar':
+/tmp/ticket16-target/corrected/decom.c:426:20: warning: implicit conversion from 'float' to 'double' to match other operand of binary expression [-Wdouble-promotion]
+  426 |         saturation *= FRACTION_N2_AIR;
+      |                    ^~
+/tmp/ticket16-target/corrected/decom.c: In function 'decom_tissues_exposure_stage_schreiner':
+/tmp/ticket16-target/corrected/decom.c:587:42: warning: implicit conversion from 'float' to 'double' to match other operand of binary expression [-Wdouble-promotion]
+  587 |                         (rate_N2_seconds *60.0),
+      |                                          ^
+/tmp/ticket16-target/corrected/decom.c:595:42: warning: implicit conversion from 'float' to 'double' to match other operand of binary expression [-Wdouble-promotion]
+  595 |                         (rate_He_seconds *60.0),
+      |                                          ^
+/tmp/ticket16-target/corrected/decom.c: In function 'decom_oxygen_calculate_otu':
+/tmp/ticket16-target/corrected/decom.c:854:108: warning: implicit conversion from 'float' to 'double' to match other operand of binary expression [-Wdouble-promotion]
+  854 |         *oxygen_otu += (pow((double)(0.5f / (pressure_oxygen_real - 0.5f)),OXY_NEGATIVE_FIVE_SIXTH_PARTS)) * OXY_ONE_SIXTIETH_PART;
+      |                                                                                                            ^
+/tmp/ticket16-target/corrected/decom.c:854:21: warning: implicit conversion from 'float' to 'double' to match other operand of binary expression [-Wdouble-promotion]
+  854 |         *oxygen_otu += (pow((double)(0.5f / (pressure_oxygen_real - 0.5f)),OXY_NEGATIVE_FIVE_SIXTH_PARTS)) * OXY_ONE_SIXTIETH_PART;
+      |                     ^~
+/tmp/ticket16-target/corrected/decom.c: In function 'decom_oxygen_calculate_otu_degrade':
+/tmp/ticket16-target/corrected/decom.c:873:29: warning: implicit conversion from 'float' to 'double' to match other operand of binary expression [-Wdouble-promotion]
+  873 |                 *oxygen_otu -= ((double)cycles_since_last_call) * otu_degrade_every_10_minutes;
+      |                             ^~
+/tmp/ticket16-target/corrected/decom.c: In function 'decom_calc_SimppO2':
+/tmp/ticket16-target/corrected/decom.c:1069:29: warning: implicit conversion from 'float' to 'double' to match other operand of binary expression [-Wdouble-promotion]
+ 1069 |         inertGasRatio = 1.0 - o2Ratio;
+      |                             ^
+/tmp/ticket16-target/corrected/decom.c:1072:30: warning: implicit conversion from 'float' to 'double' to match other operand of binary expression [-Wdouble-promotion]
+ 1072 |         if(simulatedPSCRppo2 < 0.0)
+      |                              ^
+/tmp/ticket16-target/corrected/decom.c: In function 'decom_calc_SimppO2_O2based':
+/tmp/ticket16-target/corrected/decom.c:1086:29: warning: implicit conversion from 'float' to 'double' to match other operand of binary expression [-Wdouble-promotion]
+ 1086 |         inertGasRatio = 1.0 - o2Ratio;
+      |                             ^
+/tmp/ticket16-target/corrected/decom.c:1089:30: warning: implicit conversion from 'float' to 'double' to match other operand of binary expression [-Wdouble-promotion]
+ 1089 |         if(simulatedPSCRppo2 < 0.0)
+      |                              ^
+[21/172] Linking C static library libostc4_upstream_contained.a
+[22/172] Linking C static library libostc4_exposure.a
+[23/172] Generating include/generated/zephyr/offsets.h
+[24/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/set.c.obj
+[25/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/dec.c.obj
+[26/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/hex.c.obj
+[27/172] Building C object CMakeFiles/app.dir/src/firmware_exposure.c.obj
+[28/172] Building C object zephyr/arch/common/CMakeFiles/isr_tables.dir/isr_tables.c.obj
+[29/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/os/sem.c.obj
+[30/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/os/assert.c.obj
+[31/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/os/printk.c.obj
+[32/172] Building C object CMakeFiles/app.dir/src/main.c.obj
+[33/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/os/thread_entry.c.obj
+[34/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/last_section_id.c.obj
+[35/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/bitmask.c.obj
+[36/172] Building C object zephyr/CMakeFiles/zephyr.dir/misc/generated/configs.c.obj
+[37/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/libc/validate_libc.c.obj
+[38/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/timeutil.c.obj
+[39/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/getopt/getopt.c.obj
+[40/172] Linking C static library zephyr/arch/common/libisr_tables.a
+[41/172] Generating linker_zephyr_pre0.cmd
+[42/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/getopt/getopt_common.c.obj
+[43/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/ring_buffer.c.obj
+[44/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/notify.c.obj
+[45/172] Building ASM object zephyr/arch/arch/arm/core/CMakeFiles/arch__arm__core.dir/nmi_on_reset.S.obj
+[46/172] Building ASM object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/fault_s.S.obj
+[47/172] Building C object zephyr/arch/common/CMakeFiles/arch__common.dir/init.c.obj
+[48/172] Building C object zephyr/CMakeFiles/zephyr.dir/subsys/tracing/tracing_none.c.obj
+[49/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/heap/heap.c.obj
+[50/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/os/clock.c.obj
+[51/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/os/cbprintf_packaged.c.obj
+[52/172] Building C object zephyr/arch/common/CMakeFiles/arch__common.dir/sw_isr_common.c.obj
+[53/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/bitarray.c.obj
+[54/172] Building ASM object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/vector_table.S.obj
+[55/172] Building C object zephyr/CMakeFiles/zephyr.dir/subsys/mem_mgmt/mem_attr.c.obj
+[56/172] Building ASM object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/reset.S.obj
+[57/172] Building C object zephyr/CMakeFiles/zephyr.dir/home/Bilal/ncs/v3.4.1/nrf/lib/boot_banner/banner.c.obj
+[58/172] Building C object zephyr/arch/common/CMakeFiles/arch__common.dir/xip.c.obj
+[59/172] Building ASM object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/svc.S.obj
+[60/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/rb.c.obj
+[61/172] Building ASM object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/__aeabi_read_tp.S.obj
+[62/172] Building C object zephyr/arch/arch/arm/core/CMakeFiles/arch__arm__core.dir/fatal.c.obj
+[63/172] Building C object zephyr/arch/arch/arm/core/CMakeFiles/arch__arm__core.dir/nmi.c.obj
+[64/172] Building C object zephyr/arch/arch/arm/core/CMakeFiles/arch__arm__core.dir/tls.c.obj
+[65/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/onoff.c.obj
+[66/172] Building ASM object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/swap_helper.S.obj
+[67/172] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/fpu.c.obj
+[68/172] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/scb.c.obj
+[69/172] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/fault.c.obj
+[70/172] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/irq_manage.c.obj
+[71/172] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/cpu_idle.c.obj
+[72/172] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/irq_init.c.obj
+[73/172] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/prep_c.c.obj
+[74/172] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/thread.c.obj
+[75/172] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/thread_abort.c.obj
+[76/172] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/exc_exit.c.obj
+[77/172] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/isr_wrapper.c.obj
+[78/172] Building C object zephyr/CMakeFiles/zephyr.dir/lib/os/cbprintf_complete.c.obj
+[79/172] Building C object zephyr/arch/arch/arm/core/mpu/CMakeFiles/arch__arm__core__mpu.dir/arm_mpu_regions.c.obj
+[80/172] Building C object zephyr/arch/arch/arm/core/mpu/CMakeFiles/arch__arm__core__mpu.dir/arm_core_mpu.c.obj
+[81/172] Building C object zephyr/lib/libc/picolibc/CMakeFiles/lib__libc__picolibc.dir/chk_fail.c.obj
+[82/172] Building C object zephyr/lib/libc/common/CMakeFiles/lib__libc__common.dir/source/time/time.c.obj
+[83/172] Building C object zephyr/lib/libc/picolibc/CMakeFiles/lib__libc__picolibc.dir/errno_wrap.c.obj
+[84/172] Building C object zephyr/lib/libc/picolibc/CMakeFiles/lib__libc__picolibc.dir/assert.c.obj
+[85/172] Building C object zephyr/lib/libc/picolibc/CMakeFiles/lib__libc__picolibc.dir/cbprintf.c.obj
+[86/172] Building C object zephyr/lib/libc/picolibc/CMakeFiles/lib__libc__picolibc.dir/exit.c.obj
+[87/172] Building C object zephyr/lib/libc/picolibc/CMakeFiles/lib__libc__picolibc.dir/locks.c.obj
+[88/172] Building C object zephyr/lib/posix/c_lib_ext/CMakeFiles/lib__posix__c_lib_ext.dir/fnmatch.c.obj
+[89/172] Building C object zephyr/arch/arch/arm/core/mpu/CMakeFiles/arch__arm__core__mpu.dir/arm_mpu.c.obj
+[90/172] Building C object zephyr/lib/libc/picolibc/CMakeFiles/lib__libc__picolibc.dir/stdio.c.obj
+[91/172] Building C object zephyr/lib/libc/common/CMakeFiles/lib__libc__common.dir/source/stdlib/malloc.c.obj
+[92/172] Building C object zephyr/lib/libc/common/CMakeFiles/lib__libc__common.dir/source/stdlib/abort.c.obj
+[93/172] Building C object zephyr/soc/soc/nrf52833/CMakeFiles/soc__nordic.dir/validate_binding_headers.c.obj
+[94/172] Building C object zephyr/soc/soc/nrf52833/CMakeFiles/soc__nordic.dir/validate_base_addresses.c.obj
+[95/172] Building C object zephyr/lib/posix/c_lib_ext/CMakeFiles/lib__posix__c_lib_ext.dir/getopt_shim.c.obj
+[96/172] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/bsp/stable/mdk/system_nrf52833.c.obj
+[97/172] Building C object zephyr/lib/posix/c_lib_ext/CMakeFiles/lib__posix__c_lib_ext.dir/getentropy.c.obj
+[98/172] Building C object zephyr/drivers/timer/CMakeFiles/drivers__timer.dir/sys_clock_init.c.obj
+[99/172] Building C object zephyr/soc/soc/nrf52833/CMakeFiles/soc__nordic.dir/nrf52/soc.c.obj
+[100/172] Building C object zephyr/drivers/console/CMakeFiles/drivers__console.dir/rtt_console.c.obj
+[101/172] Building C object zephyr/soc/soc/nrf52833/CMakeFiles/soc__nordic.dir/validate_enabled_instances.c.obj
+[102/172] Building C object zephyr/soc/soc/nrf52833/CMakeFiles/soc__nordic.dir/common/reboot.c.obj
+[103/172] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/nrfx_glue.c.obj
+[104/172] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/drivers/src/nrfx_clock_hfclkaudio.c.obj
+[105/172] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/helpers/nrfx_ram_ctrl.c.obj
+[106/172] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/helpers/nrfx_flag32_allocator.c.obj
+[107/172] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/drivers/src/nrfx_clock_hfclk192m.c.obj
+[108/172] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/drivers/src/nrfx_clock.c.obj
+[109/172] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/drivers/src/nrfx_clock_hfclk.c.obj
+[110/172] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/drivers/src/nrfx_clock_xo.c.obj
+[111/172] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/drivers/src/nrfx_clock_lfclk.c.obj
+[112/172] Building C object zephyr/drivers/timer/CMakeFiles/drivers__timer.dir/nrf_rtc_timer.c.obj
+[113/172] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/drivers/src/nrfx_clock_xo24m.c.obj
+[114/172] Building C object modules/segger/CMakeFiles/modules__segger.dir/SEGGER_RTT_zephyr.c.obj
+[115/172] Building C object zephyr/soc/soc/nrf52833/CMakeFiles/soc__nordic.dir/common/gpiote_nrfx.c.obj
+[116/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/version.c.obj
+[117/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/main_weak.c.obj
+[118/172] Building C object zephyr/drivers/clock_control/CMakeFiles/drivers__clock_control.dir/clock_control_nrf.c.obj
+[119/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/banner.c.obj
+[120/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/errno.c.obj
+[121/172] Building C object modules/segger/CMakeFiles/modules__segger.dir/home/Bilal/ncs/v3.4.1/modules/debug/segger/SEGGER/SEGGER_RTT.c.obj
+[122/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/fatal.c.obj
+[123/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/device.c.obj
+[124/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/busy_wait.c.obj
+[125/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/kheap.c.obj
+[126/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/float.c.obj
+[127/172] Building C object zephyr/drivers/gpio/CMakeFiles/drivers__gpio.dir/gpio_nrfx.c.obj
+[128/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/mem_slab.c.obj
+[129/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/idle.c.obj
+[130/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/mailbox.c.obj
+[131/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/sem.c.obj
+[132/172] Linking C static library app/libapp.a
+[133/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/system_work_q.c.obj
+[134/172] Linking C static library zephyr/libzephyr.a
+[135/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/init.c.obj
+[136/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/mutex.c.obj
+[137/172] Linking C static library zephyr/arch/common/libarch__common.a
+[138/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/stack.c.obj
+[139/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/condvar.c.obj
+[140/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/queue.c.obj
+[141/172] Linking C static library zephyr/arch/arch/arm/core/mpu/libarch__arm__core__mpu.a
+[142/172] Linking C static library zephyr/arch/arch/arm/core/libarch__arm__core.a
+[143/172] Building C object zephyr/CMakeFiles/zephyr_pre0.dir/misc/empty_file.c.obj
+[144/172] Linking C static library zephyr/arch/arch/arm/core/cortex_m/libarch__arm__core__cortex_m.a
+[145/172] Linking C static library zephyr/lib/libc/common/liblib__libc__common.a
+[146/172] Linking C static library zephyr/soc/soc/nrf52833/libsoc__nordic.a
+[147/172] Linking C static library zephyr/lib/posix/c_lib_ext/liblib__posix__c_lib_ext.a
+[148/172] Linking C static library zephyr/lib/libc/picolibc/liblib__libc__picolibc.a
+[149/172] Linking C static library zephyr/drivers/clock_control/libdrivers__clock_control.a
+[150/172] Linking C static library zephyr/drivers/console/libdrivers__console.a
+[151/172] Linking C static library zephyr/drivers/gpio/libdrivers__gpio.a
+[152/172] Linking C static library modules/segger/libmodules__segger.a
+[153/172] Linking C static library zephyr/drivers/timer/libdrivers__timer.a
+[154/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/msg_q.c.obj
+[155/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/timeslicing.c.obj
+[156/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/dynamic_disabled.c.obj
+[157/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/pipe.c.obj
+[158/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/thread.c.obj
+[159/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/mempool.c.obj
+[160/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/timer.c.obj
+[161/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/timeout.c.obj
+[162/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/work.c.obj
+[163/172] Building C object zephyr/kernel/CMakeFiles/kernel.dir/sched.c.obj
+[164/172] Linking C static library zephyr/kernel/libkernel.a
+[165/172] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/home/Bilal/ncs/v3.4.1/modules/hal/nordic/nrfx/drivers/src/nrfx_gpiote.c.obj
+[166/172] Linking C static library modules/hal_nordic/modules/hal_nordic/nrfx/libnrfx.a
+[167/172] Linking C executable zephyr/zephyr_pre0.elf; Logical command for additional byproducts on target: zephyr_pre0
+[168/172] Generating linker.cmd
+[169/172] Generating isr_tables.c, isr_tables_vt.ld, isr_tables_swi.ld
+[170/172] Building C object zephyr/CMakeFiles/zephyr_final.dir/misc/empty_file.c.obj
+[171/172] Building C object zephyr/CMakeFiles/zephyr_final.dir/isr_tables.c.obj
+[172/172] Linking C executable zephyr/zephyr.elf
+Memory region         Used Size  Region Size  %age Used
+           FLASH:       39396 B       220 KB     17.49%
+             RAM:       15104 B       128 KB     11.52%
+        IDT_LIST:           0 B        32 KB      0.00%
+Generating files from /tmp/ticket16-target/zephyr/zephyr.elf for board: dc_v2_1/nrf52833

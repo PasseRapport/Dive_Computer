@@ -51,7 +51,9 @@ ostc4_status ostc4_initialize(const ostc4_initial *initial)
     return OSTC4_OK;
 }
 
-/* Air-only analytical fixed-GF endpoints. This consumes no planner scratch:
+/* Air-only analytical fixed-GF endpoints, endpoint-binary32-v1.
+ * All floating operands and intermediates here are binary32 on PC and ARM.
+ * This consumes no planner scratch:
  * reads and predictions cannot change the active interpolation anchor. */
 static void endpoint_ceilings(ostc4_observation *r, float surface)
 {
@@ -63,7 +65,7 @@ static void endpoint_ceilings(ostc4_observation *r, float surface)
         r->gf_low_ceiling = r->gf_high_ceiling = OSTC4_INVALID;
         return;
     }
-    double pressure[2] = {surface, surface};
+    float pressure[2] = {surface, surface};
     const unsigned factors[2] = {r->gf_pair.low, r->gf_pair.high};
     for (int i = 0; i < OSTC4_TISSUES; ++i) {
         if (!isfinite(r->nitrogen_bar[i]) || r->nitrogen_bar[i] < 0 || r->helium_bar[i] != 0) {
@@ -71,14 +73,14 @@ static void endpoint_ceilings(ostc4_observation *r, float surface)
             return;
         }
         for (unsigned endpoint = 0; endpoint < 2; ++endpoint) {
-            const double gf = factors[endpoint] / 100.0;
-            const double required = ((double)r->nitrogen_bar[i] - gf * (double)buehlmann_N2_a[i]) /
-                (1.0 + gf * (1.0 / (double)buehlmann_N2_b[i] - 1.0));
+            const float gf = factors[endpoint] / 100.0f;
+            const float required = (r->nitrogen_bar[i] - gf * buehlmann_N2_a[i]) /
+                (1.0f + gf * (1.0f / buehlmann_N2_b[i] - 1.0f));
             if (required > pressure[endpoint]) pressure[endpoint] = required;
         }
     }
-    r->gf_low_ceiling_meters = (float)((pressure[0] - (double)surface) * 10.0);
-    r->gf_high_ceiling_meters = (float)((pressure[1] - (double)surface) * 10.0);
+    r->gf_low_ceiling_meters = (pressure[0] - surface) * 10.0f;
+    r->gf_high_ceiling_meters = (pressure[1] - surface) * 10.0f;
 }
 
 ostc4_status ostc4_read(ostc4_observation *observation)

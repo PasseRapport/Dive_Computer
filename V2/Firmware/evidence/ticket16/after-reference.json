@@ -1,0 +1,12 @@
+{
+  "identity": "configurable-gf-production-comparison-v1",
+  "cases": 12,
+  "one_second_cases": 5,
+  "one_second_events": 455,
+  "large_endpoint_events": 9,
+  "endpoint_max_error_m": 8.799294029415705e-06,
+  "endpoint_tolerance_m": 0.006,
+  "events": 114,
+  "tts_differences": [],
+  "failures": []
+}

@@ -1,0 +1,19 @@
+{
+  "base_commit": "92f1caf3085902b4f031fa0f9529d56dcab3da50",
+  "branch": "main",
+  "arithmetic_revision": "endpoint-binary32-v1",
+  "before_source_sha256": "ce4093a51f9cd39d938e953d64361b46243c015b063b5f9d1a28dc78d6b14c65",
+  "after_source_sha256": "f69a257f90f1cc15cf2846140624d450d5a35770c9a3031ddcde762c5d98442e",
+  "host_compiler": "gcc (GCC) 16.2.1 20260819 (Red Hat 16.2.1-2)",
+  "reference_sha256": {
+    "comparison-policy-gf.json": "dfe67f6bcd70a7fd4bda9df48b2587104f96aabef5a3219583959116beb4a55e",
+    "configurable_reference.py": "c34c137314a8cc1c12ee8b71b71ae4be5205258be7407001a0c3b43bce2e2dc6",
+    "findings.txt": "6cad979dff4181a5506a136ce885f6ca472acd9968ffdbab8c0cbf7cd0b1698e",
+    "generate_gf_vectors.py": "5090efc530cba595e79a4a41953ba282580459535b4c285f345fd30afdff6759",
+    "gf-provenance.json": "f62709f9e8bf1a201316a7bb0e19422bfe0ae7fc5f2586e0a7074ba851d76a91",
+    "gf-vectors.json": "4bdfd620fe0232e4e58414506831398c6fa32499d0cb906c4bb0082fa9f0814c",
+    "schedule_reference.py": "e788ce657245a832cd1dc29a7d54e8ce00fc4b2e71f9efabb828fa5663c9866d",
+    "tissue_reference.py": "842186e884ddd3fdba8fd7aff76322f688706de6b5b31ce7ec1da4ed4b77208a"
+  },
+  "scope": "Only endpoint_ceilings floating arithmetic; checkpoint fingerprints and public interfaces unchanged"
+}

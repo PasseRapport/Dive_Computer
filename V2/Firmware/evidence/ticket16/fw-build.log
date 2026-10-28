@@ -1,0 +1,50 @@
+[  2%] Generating corrected/decom.c
+[  5%] Building C object core/CMakeFiles/ostc4_upstream.dir/upstream/Discovery/Src/buehlmann.c.o
+[  8%] Building C object core/CMakeFiles/ostc4_upstream.dir/upstream/Common/Src/decom.c.o
+[  8%] Built target ostc4_corrected_source
+[ 10%] Generating corrected/buehlmann-contained.c
+[ 13%] Building C object core/CMakeFiles/ostc4_upstream_corrected.dir/corrected/decom.c.o
+[ 16%] Generating corrected/buehlmann-grid-timed.c
+[ 18%] Building C object core/CMakeFiles/ostc4_upstream_contained.dir/corrected/decom.c.o
+[ 21%] Building C object core/CMakeFiles/ostc4_upstream_contained.dir/corrected/buehlmann-grid-timed.c.o
+[ 24%] Linking C static library libostc4_upstream.a
+[ 24%] Built target ostc4_upstream
+[ 27%] Building C object core/CMakeFiles/ostc4_upstream_corrected.dir/upstream/Discovery/Src/buehlmann.c.o
+[ 29%] Building C object core/CMakeFiles/ostc4_baseline.dir/src/ostc4_baseline.c.o
+[ 32%] Linking C static library libostc4_upstream_contained.a
+[ 35%] Built target ostc4_upstream_contained
+[ 37%] Linking C static library libostc4_baseline.a
+[ 40%] Building C object core/CMakeFiles/ostc4_exposure.dir/src/ostc4_baseline.c.o
+[ 40%] Built target ostc4_baseline
+[ 43%] Building C object core/CMakeFiles/ostc4_replay.dir/src/replay.c.o
+[ 45%] Building C object core/CMakeFiles/test_ostc4_contract.dir/tests/test_contract.c.o
+[ 48%] Linking C static library libostc4_upstream_corrected.a
+[ 51%] Linking C executable test_ostc4_contract
+[ 54%] Built target ostc4_upstream_corrected
+[ 56%] Building C object core/CMakeFiles/ostc4_corrected.dir/src/ostc4_baseline.c.o
+[ 59%] Linking C executable ostc4_replay
+[ 59%] Built target test_ostc4_contract
+[ 59%] Built target ostc4_replay
+[ 62%] Linking C static library libostc4_corrected.a
+[ 62%] Built target ostc4_corrected
+[ 64%] Building C object core/CMakeFiles/test_ostc4_corrected_contract.dir/tests/test_contract.c.o
+[ 67%] Building C object core/CMakeFiles/ostc4_replay_corrected.dir/src/replay.c.o
+[ 70%] Linking C static library libostc4_exposure.a
+[ 72%] Linking C executable test_ostc4_corrected_contract
+[ 75%] Linking C executable ostc4_replay_corrected
+[ 75%] Built target test_ostc4_corrected_contract
+[ 75%] Built target ostc4_exposure
+[ 75%] Built target ostc4_replay_corrected
+[ 78%] Building C object CMakeFiles/test_firmware_exposure.dir/test_firmware_exposure.c.o
+[ 81%] Building C object core/CMakeFiles/ostc4_continuity_replay.dir/src/replay.c.o
+[ 83%] Building C object core/CMakeFiles/test_ostc4_exposure.dir/tests/test_exposure.c.o
+[ 86%] Building C object core/CMakeFiles/test_ostc4_restart.dir/tests/test_restart.c.o
+[ 89%] Building C object CMakeFiles/test_firmware_exposure.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/src/firmware_exposure.c.o
+[ 91%] Linking C executable test_ostc4_exposure
+[ 94%] Linking C executable test_firmware_exposure
+[ 97%] Linking C executable test_ostc4_restart
+[100%] Linking C executable ostc4_continuity_replay
+[100%] Built target test_ostc4_exposure
+[100%] Built target test_ostc4_restart
+[100%] Built target test_firmware_exposure
+[100%] Built target ostc4_continuity_replay

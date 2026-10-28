@@ -1,0 +1,82 @@
+Ticket 16: fixed-GF endpoint binary32 implementation, 2026-10-28
+================================================================
+
+Production revision: endpoint-binary32-v1; see manifest.json for base and hashes.
+Only endpoint_ceilings() changes: float operands/constants/intermediates for the
+same formula, coefficients and two outputs. Pinned upstream, tissues, operational
+planner, GF anchor, public APIs, checkpoint policy fingerprints and display remain
+unchanged. No global precision flag, relaxed math or runtime selector was added.
+
+Existing user-confirmed public seams were reused: PC bench configuration and
+timestamped pressure input, public observations/checkpoints/reads/predictions.
+Existing tests already exercise all required behaviors; no private helper test or
+production-derived numerical oracle was introduced. This narrowly scoped change
+uses existing acceptance tests rather than inventing an exact-rounding contract.
+
+Before/after: same gcc (GCC) 16.2.1 20260819 (Red Hat 16.2.1-2) host toolchain,
+same existing comparison script and immutable independent binary64 oracle.
+578 observations / 1156 endpoint comparisons across 12 frozen GF cases, five
+one-second shallow pairs and three large/extreme pairs, including repetitive
+exposure, default/equal/boundary GF pairs. Every emitted non-endpoint field is
+exactly equal: nitrogen tissues, timestamps, pair/lock, pressure, anchor/GF-low
+depth, operational ceiling, NDL, every stop slot, TTS and all availability fields.
+Air-only helium stays zero by the existing input contract; replay emits nitrogen.
+Maximum before/after endpoint delta: 0.00000380 m.
+Maximum float-versus-independent-binary64 endpoint error: 0.0000087993 m.
+Required absolute tolerance remains 0.006 m. Raw signed differences and both raw
+runs are retained. All other policies remain exact except total TTS +/-3 s.
+report_endpoint_revision.py also rejected a deliberately altered NDL observation.
+
+Host firmware CTest: 14/14. Public simulator bench CTest: 26/26.
+Independent schedule acceptance: pass. Independent GF acceptance: pass.
+Repeated reads, good/bad interleaved predictions and subsequent state equality,
+invalid pairs, uninitialized endpoints, unknown exposure and checkpoint faults
+remain covered by existing public tests, with no changes to those tests.
+Native SDL/LVGL --gf-check and both existing GF rendering checks pass:
+zero, ordering, equal endpoints, 13.4/7.2 m, 44.3 m, and invalid presentation.
+Captured JSON/CSV and selected PNGs retained; no presentation code changed.
+
+Target: complete currently configured dc_v2_1/nrf52833 Zephyr application linked.
+Flash region origin 0xc000, capacity 225280 B, use 39396 B, remaining 185884 B.
+RAM capacity 131072 B, static/reserved use 15104 B, remaining 115968 B.
+Board physical flash: 524288 B; boot 49152 B, image0/image1 each 225280 B,
+storage 24576 B. Configured linked image uses image0; no update-package claim.
+Usable main/IRQ/idle stack settings: 8192/2048/320 B; allocated protected/aligned
+objects: 8320/2176/512 B. Workqueue setting 1024 B has no allocated stack in this
+image. Heap and libc malloc arena reservations: zero. These are static budgets.
+
+Compiler: ARM GCC 14.3.0, Zephyr SDK 1.0.1 / Picolibc, NCS 3.4.1, Zephyr 4.4.2.
+Effective ARM -Os, -mfpu=fpv4-sp-d16 -mfloat-abi=hard; strict warnings retained,
+-fno-fast-math -ffp-contract=off. Full compile commands in target-report.json.
+endpoint-arm.txt proves f32 division, multiplication, subtraction and integer
+conversion in the linked endpoint function, with no double helper calls there.
+M4 VMLA/VMLS are non-fused operations; no fused VFMA introduced. Other linked
+functions retain software double helpers; the ticket explicitly permits that.
+Source still asserts IEEE binary32 and binary64 support. No tissue conversion.
+
+Historical evidence/nrf52833 and older simulator evidence are retained unchanged.
+Current target-report.json is a later snapshot, not a rewrite of that evidence.
+The image lacks target LVGL/JDI presentation, Bluetooth application/services,
+sensor acquisition/full history, persistent clock/storage/restart integration.
+This is not proof of complete watch fit or a deployable signed update package.
+PC synthetic execution, ARM compilation/static analysis only: no physical run,
+runtime stack high-water, timing, measured speedup or operational safety claim.
+
+Reproduce from repository root (build output remains outside the checkout):
+  CCACHE_DISABLE=1 cmake -S V2/Firmware/simulator/tests/bench -B /tmp/t16-bench -DCMAKE_C_COMPILER=/usr/bin/gcc
+  cmake --build /tmp/t16-bench -j4
+  ctest --test-dir /tmp/t16-bench --output-on-failure
+  cmake --build /tmp/t16-bench --target independent_schedule_acceptance
+  python3 V2/Firmware/simulator/tests/bench/compare_gf_reference.py /tmp/t16-bench/gf_bench_replay /tmp/t16-raw.jsonl
+  python3 V2/Firmware/simulator/tests/bench/report_endpoint_revision.py V2/Firmware/evidence/ticket16/before-raw.jsonl /tmp/t16-raw.jsonl /tmp/t16-matched.json
+  CCACHE_DISABLE=1 cmake -S V2/Firmware/tests/firmware -B /tmp/t16-fw -DCMAKE_C_COMPILER=/usr/bin/gcc
+  cmake --build /tmp/t16-fw -j4
+  ctest --test-dir /tmp/t16-fw --output-on-failure
+  python3 V2/Firmware/tools/build_target.py --build-dir /tmp/t16-target
+  python3 V2/Firmware/tools/report_target.py /tmp/t16-target --output /tmp/t16-target/report.json
+  python3 V2/Firmware/simulator/launch.py --gf-check --capture /tmp/t16-gf
+  python3 V2/Firmware/simulator/tests/check_gf_ceilings_render.py /tmp/t16-gf
+  python3 V2/Firmware/simulator/tests/check_gf_render.py /tmp/t16-gf
+
+Local deco_core anchor work and untracked AGENTS.md were present at start and
+are excluded from this change and commit. No suspended BMAD files were changed.

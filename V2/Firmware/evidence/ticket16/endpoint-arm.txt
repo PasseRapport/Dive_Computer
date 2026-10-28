@@ -1,0 +1,112 @@
+
+/tmp/ticket16-target/zephyr/zephyr.elf:     file format elf32-littlearm
+
+
+Disassembly of section rom_start:
+
+Disassembly of section text:
+
+0000ff84 <endpoint_ceilings>:
+    ff84:	2300      	movs	r3, #0
+    ff86:	b573      	push	{r0, r1, r4, r5, r6, lr}
+    ff88:	f8c0 30a8 	str.w	r3, [r0, #168]	@ 0xa8
+    ff8c:	f8c0 30a4 	str.w	r3, [r0, #164]	@ 0xa4
+    ff90:	f890 3112 	ldrb.w	r3, [r0, #274]	@ 0x112
+    ff94:	f880 30ad 	strb.w	r3, [r0, #173]	@ 0xad
+    ff98:	2b01      	cmp	r3, #1
+    ff9a:	f880 30ac 	strb.w	r3, [r0, #172]	@ 0xac
+    ff9e:	d10c      	bne.n	ffba <endpoint_ceilings+0x36>
+    ffa0:	eddf 3a4b 	vldr	s7, [pc, #300]	@ 100d0 <endpoint_ceilings+0x14c>
+    ffa4:	eef0 7ac0 	vabs.f32	s15, s0
+    ffa8:	eef4 7a63 	vcmp.f32	s15, s7
+    ffac:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+    ffb0:	d905      	bls.n	ffbe <endpoint_ceilings+0x3a>
+    ffb2:	f240 3303 	movw	r3, #771	@ 0x303
+    ffb6:	f8a0 30ac 	strh.w	r3, [r0, #172]	@ 0xac
+    ffba:	b002      	add	sp, #8
+    ffbc:	bd70      	pop	{r4, r5, r6, pc}
+    ffbe:	eddf 7a45 	vldr	s15, [pc, #276]	@ 100d4 <endpoint_ceilings+0x150>
+    ffc2:	eeb4 0ae7 	vcmpe.f32	s0, s15
+    ffc6:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+    ffca:	d4f2      	bmi.n	ffb2 <endpoint_ceilings+0x2e>
+    ffcc:	eddf 7a42 	vldr	s15, [pc, #264]	@ 100d8 <endpoint_ceilings+0x154>
+    ffd0:	eeb4 0ae7 	vcmpe.f32	s0, s15
+    ffd4:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+    ffd8:	dceb      	bgt.n	ffb2 <endpoint_ceilings+0x2e>
+    ffda:	7801      	ldrb	r1, [r0, #0]
+    ffdc:	2900      	cmp	r1, #0
+    ffde:	d0e8      	beq.n	ffb2 <endpoint_ceilings+0x2e>
+    ffe0:	7842      	ldrb	r2, [r0, #1]
+    ffe2:	2a64      	cmp	r2, #100	@ 0x64
+    ffe4:	d8e5      	bhi.n	ffb2 <endpoint_ceilings+0x2e>
+    ffe6:	4291      	cmp	r1, r2
+    ffe8:	d8e3      	bhi.n	ffb2 <endpoint_ceilings+0x2e>
+    ffea:	4d3c      	ldr	r5, [pc, #240]	@ (100dc <endpoint_ceilings+0x158>)
+    ffec:	4c3c      	ldr	r4, [pc, #240]	@ (100e0 <endpoint_ceilings+0x15c>)
+    ffee:	ed9f 4a3d 	vldr	s8, [pc, #244]	@ 100e4 <endpoint_ceilings+0x160>
+    fff2:	ed8d 0a00 	vstr	s0, [sp]
+    fff6:	ed8d 0a01 	vstr	s0, [sp, #4]
+    fffa:	f100 0310 	add.w	r3, r0, #16
+    fffe:	f100 0650 	add.w	r6, r0, #80	@ 0x50
+   10002:	eeb7 6a00 	vmov.f32	s12, #112	@ 0x3f800000  1.0
+   10006:	ecf3 7a01 	vldmia	r3!, {s15}
+   1000a:	eeb0 7ae7 	vabs.f32	s14, s15
+   1000e:	eeb4 7a63 	vcmp.f32	s14, s7
+   10012:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+   10016:	d8cc      	bhi.n	ffb2 <endpoint_ceilings+0x2e>
+   10018:	eef5 7ac0 	vcmpe.f32	s15, #0.0
+   1001c:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+   10020:	d4c7      	bmi.n	ffb2 <endpoint_ceilings+0x2e>
+   10022:	ed93 7a0f 	vldr	s14, [r3, #60]	@ 0x3c
+   10026:	eeb5 7a40 	vcmp.f32	s14, #0.0
+   1002a:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+   1002e:	d1c0      	bne.n	ffb2 <endpoint_ceilings+0x2e>
+   10030:	ecb4 7a01 	vldmia	r4!, {s14}
+   10034:	ecf5 4a01 	vldmia	r5!, {s9}
+   10038:	eec6 5a07 	vdiv.f32	s11, s12, s14
+   1003c:	ee07 1a10 	vmov	s14, r1
+   10040:	eef8 6a47 	vcvt.f32.u32	s13, s14
+   10044:	ee75 5ac6 	vsub.f32	s11, s11, s12
+   10048:	ee86 7a84 	vdiv.f32	s14, s13, s8
+   1004c:	eeb0 5a67 	vmov.f32	s10, s15
+   10050:	eef0 6a46 	vmov.f32	s13, s12
+   10054:	ee04 5ac7 	vmls.f32	s10, s9, s14
+   10058:	ee45 6a87 	vmla.f32	s13, s11, s14
+   1005c:	ee85 7a26 	vdiv.f32	s14, s10, s13
+   10060:	eddd 6a00 	vldr	s13, [sp]
+   10064:	eeb4 7ae6 	vcmpe.f32	s14, s13
+   10068:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+   1006c:	bfd8      	it	le
+   1006e:	eeb0 7a66 	vmovle.f32	s14, s13
+   10072:	ee06 2a90 	vmov	s13, r2
+   10076:	eef8 6a66 	vcvt.f32.u32	s13, s13
+   1007a:	ed8d 7a00 	vstr	s14, [sp]
+   1007e:	ee86 5a84 	vdiv.f32	s10, s13, s8
+   10082:	ee44 7ac5 	vmls.f32	s15, s9, s10
+   10086:	eef0 4a46 	vmov.f32	s9, s12
+   1008a:	ee45 4a85 	vmla.f32	s9, s11, s10
+   1008e:	eef0 6a67 	vmov.f32	s13, s15
+   10092:	eec6 7aa4 	vdiv.f32	s15, s13, s9
+   10096:	eddd 6a01 	vldr	s13, [sp, #4]
+   1009a:	eef4 6ae7 	vcmpe.f32	s13, s15
+   1009e:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+   100a2:	bf58      	it	pl
+   100a4:	eef0 7a66 	vmovpl.f32	s15, s13
+   100a8:	42b3      	cmp	r3, r6
+   100aa:	edcd 7a01 	vstr	s15, [sp, #4]
+   100ae:	d1aa      	bne.n	10006 <endpoint_ceilings+0x82>
+   100b0:	ee37 7a40 	vsub.f32	s14, s14, s0
+   100b4:	ee77 7ac0 	vsub.f32	s15, s15, s0
+   100b8:	eef2 6a04 	vmov.f32	s13, #36	@ 0x41200000  10.0
+   100bc:	ee27 7a26 	vmul.f32	s14, s14, s13
+   100c0:	ee67 7aa6 	vmul.f32	s15, s15, s13
+   100c4:	ed80 7a29 	vstr	s14, [r0, #164]	@ 0xa4
+   100c8:	edc0 7a2a 	vstr	s15, [r0, #168]	@ 0xa8
+   100cc:	e775      	b.n	ffba <endpoint_ceilings+0x36>
+   100ce:	bf00      	nop
+   100d0:	7f7fffff 	.word	0x7f7fffff
+   100d4:	3f4ccccd 	.word	0x3f4ccccd
+   100d8:	3f99999a 	.word	0x3f99999a
+   100dc:	00015198 	.word	0x00015198
+   100e0:	00015158 	.word	0x00015158
+   100e4:	42c80000 	.word	0x42c80000
