@@ -1,5 +1,6 @@
 #include "scuba_presentation.h"
 #include <assert.h>
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 int main(void)
@@ -24,5 +25,18 @@ int main(void)
     scuba_surface_text(out,sizeof(out),86400);assert(!strcmp(out,"24h"));
     scuba_surface_text(out,sizeof(out),604800);assert(!strcmp(out,"7d"));
     assert(scuba_demo_ppo2(0)==21&&scuba_demo_ppo2(200)==63);
+    /* Literal formatting expectations, independent of the raw endpoint oracle. */
+    scuba_ceiling_pair_text(out,sizeof(out),13.362f,true,7.249f,true);
+    assert(!strcmp(out,"13.4 / 7.2 m"));
+    scuba_ceiling_pair_text(out,sizeof(out),-0.1f,true,0,true);
+    assert(!strcmp(out,"0.0 / 0.0 m"));
+    scuba_ceiling_pair_text(out,sizeof(out),123.44f,true,100.06f,true);
+    assert(!strcmp(out,"123.4 / 100.1 m"));
+    scuba_ceiling_pair_text(out,sizeof(out),7.25f,true,7.25f,true);
+    assert(!strcmp(out,"7.3 / 7.3 m"));
+    scuba_ceiling_pair_text(out,sizeof(out),0,false,0,false);
+    assert(!strcmp(out,"-- / -- m"));
+    scuba_ceiling_pair_text(out,sizeof(out),NAN,true,3.14f,true);
+    assert(!strcmp(out,"-- / 3.1 m"));
     puts("SCUBA PRESENTATION PASS: NDL >99, surface formats, ascent thresholds/duration and air ppO2 preview");
 }

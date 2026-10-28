@@ -24,6 +24,8 @@ struct scuba_model {
     enum scuba_calculated_state calculated_state;
     struct exposure_gap data_gap;
     uint16_t calculated_ceiling_dm, calculated_stop_dm;
+    float calculated_gf_low_ceiling_m, calculated_gf_high_ceiling_m;
+    bool calculated_gf_low_ceiling_valid, calculated_gf_high_ceiling_valid;
     uint32_t calculated_tts_s, calculated_stop_remaining_ms, calculated_stop_total_ms;
     uint32_t calculated_stop_raw_ms;
     /* The calculated watch follows controller recording transitions. Scripted

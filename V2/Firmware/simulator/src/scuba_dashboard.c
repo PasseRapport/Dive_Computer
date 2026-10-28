@@ -152,14 +152,20 @@ static void footer(struct dashboard *d,const struct scuba_model *m,const struct 
         caption="HEADING";snprintf(value,sizeof(value),"%03u° %s",data->heading_degrees,directions[((data->heading_degrees+22)/45)%8]);
         lv_obj_set_style_text_font(d->footer_value,&lv_font_montserrat_28,0);break;
     }
-    case FIELD_CEILING:lv_obj_set_style_text_font(d->footer_value,&lv_font_montserrat_42,0);caption="CEILING";snprintf(value,sizeof(value),"%u.%u m",scuba_model_ceiling(m)/10,scuba_model_ceiling(m)%10);break;
+    case FIELD_GF_CEILINGS:
+        caption="CEIL GF LOW / HIGH";
+        scuba_ceiling_pair_text(value,sizeof(value),m->calculated_gf_low_ceiling_m,
+            m->calculated && m->calculated_gf_low_ceiling_valid,m->calculated_gf_high_ceiling_m,
+            m->calculated && m->calculated_gf_high_ceiling_valid);
+        lv_obj_set_style_text_font(d->footer_value,&lv_font_montserrat_24,0);break;
+    case FIELD_CEILING:lv_obj_set_style_text_font(d->footer_value,&lv_font_montserrat_42,0);caption="STOP DEPTH";snprintf(value,sizeof(value),"%u.%u m",scuba_model_stop_depth(m)/10,scuba_model_stop_depth(m)%10);break;
     case FIELD_STOP_COMPLETE:caption="STOP COMPLETE";snprintf(value,sizeof(value),"DONE");ink=GREEN;break;
     }
     if(m->calculated && (m->calculated_state==SCUBA_CALCULATED_INVALID||m->calculated_state==SCUBA_CALCULATED_UNAVAILABLE) &&
        (d->field==FIELD_TTS||d->field==FIELD_CEILING||d->field==FIELD_SAFETY_STOP||d->field==FIELD_STOP_COMPLETE))
         snprintf(value,sizeof(value),"--");
     lv_obj_set_style_text_font(d->footer_title,d->field==FIELD_CEILING?&lv_font_montserrat_16:&lv_font_montserrat_12,0);
-    if(d->field!=FIELD_CEILING&&(m->notifications&~SCUBA_BATTERY))lv_obj_set_style_text_font(d->footer_value,&lv_font_montserrat_28,0);
+    if(d->field!=FIELD_CEILING&&d->field!=FIELD_GF_CEILINGS&&(m->notifications&~SCUBA_BATTERY))lv_obj_set_style_text_font(d->footer_value,&lv_font_montserrat_28,0);
     centred(d->footer_title,caption,160,219);centred(d->footer_value,value,160,d->field==FIELD_CEILING?237:(m->notifications&~SCUBA_BATTERY)?235:239);
     color(d->footer_value,ink);
 }
@@ -220,7 +226,8 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
     bool complete=!surface&&(m->deco_done||(target&&m->stop_ms==target));
     enum dive_phase phase=surface?PHASE_SURFACE:complete?PHASE_COMPLETE:stop?PHASE_STOP:stop_depth?PHASE_DECO:PHASE_NDL;
     if(!d->has_phase||phase!=d->phase) {
-        if(stop_depth)d->field=FIELD_CEILING;
+        if(d->preferred_field==FIELD_GF_CEILINGS)d->field=FIELD_GF_CEILINGS;
+        else if(stop_depth)d->field=FIELD_CEILING;
         else if(stop)d->field=FIELD_SAFETY_STOP;
         else if(complete)d->field=FIELD_STOP_COMPLETE;
         else d->field=d->preferred_field;
@@ -270,8 +277,7 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
         if(!scuba_model_in_stop(m))centred(d->left_note,"PAUSED",101,197);
     } else if(stop_depth&&!complete) {
         centred(d->left_title,"DECO",101,127);snprintf(text,sizeof(text),"%u'",(scuba_model_tts(m)+59)/60);centred(d->left_value,text,101,150);
-        if(m->calculated)snprintf(text,sizeof(text),"CEIL %u.%u m",ceiling/10,ceiling%10);
-        else snprintf(text,sizeof(text),"CEIL %u m",ceiling/10);
+        snprintf(text,sizeof(text),"STOP %u m",stop_depth/10);
         centred(d->left_note,text,101,197);
         ring_color=ORANGE;progress=scuba_ring_tts(scuba_model_tts(m));
     } else {
@@ -314,7 +320,7 @@ enum scuba_field scuba_dashboard_field(lv_obj_t *view){return ((struct dashboard
 
 const char *scuba_field_name(enum scuba_field field)
 {
-    static const char *const names[]={"Temperature","Max depth","Clock","Battery","Safety stop","TTS","ppO2","Heading"};
+    static const char *const names[]={"Temperature","Max depth","Clock","Battery","Safety stop","TTS","ppO2","Heading","GF ceilings"};
     return field<SCUBA_FIELD_COUNT?names[field]:"Temperature";
 }
 const char *scuba_ring_name(enum scuba_ring ring)
