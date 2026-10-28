@@ -103,7 +103,9 @@ if not args.build_only:
     # Every automated run starts from isolated storage, even when the caller has
     # a normal preference directory configured in their environment.
     storage_fixture = None
-    if args.bench and (args.bench_check or args.calculated_check or args.restart_check or args.gf_check or args.checkpoint_check or args.smoke):
+    if (args.gallery or args.smoke or args.check_controls or args.scale_check or args.water_check or
+        args.dive_check or args.apnea_check or args.apnea_settings_check or args.scuba_check or
+        args.bench_check or args.calculated_check or args.restart_check or args.gf_check or args.checkpoint_check):
         storage_fixture = tempfile.TemporaryDirectory(prefix="dive-watch-state-")
         env["DIVE_WATCH_STATE_DIR"] = storage_fixture.name
     if args.bench_profile:

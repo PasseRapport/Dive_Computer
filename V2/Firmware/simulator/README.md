@@ -54,7 +54,7 @@ Options contains **Bluetooth / Watch / Backlight / Haptics / Sleep**. Bluetooth
 and haptics are previews; they do not drive physical hardware.
 
 **Freediving** Main shares scuba's large decimal-anchored depth, two central
-blocks, cyan separators, temperature footer and battery header. During an apnea,
+blocks, cyan separators, selected bottom field and battery header. During an apnea,
 read its maximum depth and duration; at the surface, read the last apnea's maximum
 and recovery time. The white centre stroke gains one chevron for descent or ascent
 and loses it immediately at rest or on surfacing. Recovery stays visible beyond
@@ -63,8 +63,12 @@ seconds later. Entering freediving starts a fresh session, including surface tim
 leaving ends it without resetting scuba exposure or watch preferences. Session
 records update during the current apnea. Statistics uses the same geometry with orange separators and shows session
 maximum depth, longest apnea, apnea count and elapsed session time (H:MM:SS).
-It has no direction indicator or recovery ring. Water Type retains its existing
-page pending the Settings redesign.
+It has no direction indicator or recovery ring. The page sequence is Main →
+Statistics → Settings → Leave. Settings groups Water Type (Fresh/Marine) and
+Bottom Field (Temperature/Session Depth/Session Apnea). Rotation is bounded;
+tap opens or confirms and double tap cancels. Changes are surface-only, including
+confirmation of an editor opened before immersion. The applied choices survive
+session changes and simulator restarts; session records always start fresh.
 **Scuba Diving** has preparation/settings, depth with its metre unit, dive time,
 NDL, display customization, stop displays, alerts and the last completed summary.
 The in-dive dashboard places depth at the top, ascent chevrons at the centre,
@@ -86,8 +90,8 @@ The NDL ring spans 0–60 minutes and turns orange strictly below five minutes.
 TTS uses a fixed orange 0–50 minute scale. Stop rings show the remaining time
 for the current stop, from full to empty. Auto adapts to dive phases. Stop/decompression transitions
 still foreground their lower-field information; the normal chosen field returns
-afterwards. Alerts retain tap priority. The standalone compass and freediving
-screens retain their existing navigation.
+afterwards. Alerts retain tap priority. The standalone compass keeps its existing
+navigation. Freediving uses its own Main/Statistics/Settings/Leave sequence.
 
 It starts at 2 m by default (Dive Settings allows 0.5–10 m in 0.5 m steps), considers depth below 0.5 m to be the surface, and finishes
 after five surface minutes. The exit ring is available at the surface; descending
@@ -139,7 +143,8 @@ cc -std=c11 -Wall -Wextra -Werror -Isrc src/sim_dive.c tests/test_sim_dive.c -o 
 ## Source layout
 
 - `src/watch_ui.c`: watch navigation, options, startup and sleep transitions.
-- `src/apnea_main.c`, `src/apnea_stats.c` and `src/sim_dive.c`: freediving data pages and portable session tracker.
+- `src/apnea_main.c`, `src/apnea_stats.c`, `src/apnea_settings.c` and `src/sim_dive.c`: freediving data pages, settings and portable session tracker.
+- `src/apnea_preferences_host.c`: host-only freediving preferences, independent of scuba storage.
 - `src/dive_layout.c`: shared depth anchor and separator geometry.
 - `src/v1_ui_layout.c`: retained menu layout and page transitions.
 - `src/scuba_ui.c` and `src/scuba_model.c`: scuba screens and scripted scenarios.
@@ -452,6 +457,34 @@ failures. Exact continuation equality establishes serialization consistency only
 existing independently authored numerical acceptance remains a separate gate.
 
 ### Durable PC preferences and completed-dive logs
+
+Freediving uses a separate versioned `apnea-preferences.txt` in the same state
+directory convention described below. It contains only applied water type and
+bottom field; missing or invalid files use Fresh/Temperature. Loading it never
+restores session records, last-apnea data or recovery. Confirmed surface changes
+are flushed and atomically replaced; cancelled, browsed or underwater edits do
+not save. Failed writes retain the previous file and report a host diagnostic.
+Scuba GF preferences, logs and checkpoints remain separate files and are not
+read or rewritten by the freediving adapter.
+
+Every automated launcher mode replaces an inherited `DIVE_WATCH_STATE_DIR` with
+fresh temporary storage, including ordinary galleries, smoke/control/scale checks
+and both freediving checks. Direct native check commands without an explicit
+state directory disable freediving disk storage; provide a temporary directory
+when a direct check needs persistence. Interactive startup uses the configured normal state
+directory. The separate-process persistence test intentionally launches the built
+binary directly, sharing one isolated temporary directory across each restart:
+
+```sh
+python3 tests/check_apnea_persistence.py <build>/zephyr/zephyr.exe /tmp/apnea-restarts
+python3 tests/check_apnea_persistence_render.py /tmp/apnea-restarts
+```
+
+It covers both water types and all three fields, cancellation and confirmation
+after descent, fresh sessions, Main/Statistics record agreement, malformed files,
+write failure and byte-preservation of unrelated scuba files. These are PC/native
+simulator results; Nordic or physical-watch persistence is not implemented here.
+
 
 Normal `--bench` startup loads the preferred pair from
 `$XDG_STATE_HOME/dive-watch-simulator`, falling back to

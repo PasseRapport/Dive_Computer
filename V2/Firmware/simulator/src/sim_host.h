@@ -48,3 +48,10 @@ void sim_host_bench_watch(const struct scuba_model *model);
 int sim_host_apnea_check_enabled(void);
 
 int sim_host_apnea_settings_check_enabled(void);
+
+int sim_host_apnea_persistence_mode(void);
+int sim_host_apnea_persistence_choice(void);
+
+/* Host state adapter; returns 0 on success, 1 if absent, -1 for invalid/error. */
+int sim_host_apnea_preferences_load(int *salt,int *field);
+int sim_host_apnea_preferences_save(int salt,int field);

@@ -1,5 +1,6 @@
 #include "apnea_settings.h"
 #include "selection.h"
+#include "sim_host.h"
 LV_IMAGE_DECLARE(icon_drop);
 LV_IMAGE_DECLARE(icon_wave);
 static lv_obj_t *view,*heading,*pill,*rows[3],*icons[2],*help,*choices,*anchor,*choice_pill;
@@ -54,7 +55,12 @@ bool apnea_settings_input(enum watch_input input,int steps)
  if(input==WATCH_CROWN){int *selected=editor?&pending:&entry;*selected=LV_CLAMP(0,(int64_t)*selected+steps,editor==2?2:1);refresh(true);}
  else if(input==WATCH_DOUBLE_TAP){if(editor)editor=0;else engaged=false;refresh(false);}
  else if(input==WATCH_SINGLE_TAP&&!underwater){
-  if(editor){if(editor==1)salt_water=pending;else bottom=pending;editor=0;}
+  if(editor){
+   bool changed=editor==1?salt_water!=(bool)pending:bottom!=(enum apnea_bottom_field)pending;
+   if(editor==1)salt_water=pending;else bottom=pending;
+   if(changed)(void)sim_host_apnea_preferences_save(salt_water,bottom);
+   editor=0;
+  }
   else {editor=entry+1;pending=entry?bottom:salt_water;}
   refresh(false);
  }

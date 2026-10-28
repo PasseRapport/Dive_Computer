@@ -390,7 +390,7 @@ static const struct step dive_steps[] = {
 
 void sim_checks_poll(void)
 {
-    if(sim_host_apnea_check_enabled()||sim_host_apnea_settings_check_enabled())return;
+    if(sim_host_apnea_persistence_mode()||sim_host_apnea_check_enabled()||sim_host_apnea_settings_check_enabled())return;
     if(sim_host_appearance_check_enabled())return;
     if(sim_host_scuba_check_enabled()) return;
     const char *directory = sim_host_gallery_path();

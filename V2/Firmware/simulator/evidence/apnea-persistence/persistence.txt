@@ -1,0 +1,9 @@
+RESTART PASS: water=0, bottom=0; unrelated GF/log/checkpoint bytes preserved
+RESTART PASS: water=0, bottom=1; unrelated GF/log/checkpoint bytes preserved
+RESTART PASS: water=0, bottom=2; unrelated GF/log/checkpoint bytes preserved
+RESTART PASS: water=1, bottom=0; unrelated GF/log/checkpoint bytes preserved
+RESTART PASS: water=1, bottom=1; unrelated GF/log/checkpoint bytes preserved
+RESTART PASS: water=1, bottom=2; unrelated GF/log/checkpoint bytes preserved
+INVALID PREFERENCE PASS: absent/default and six malformed/version/range/trailing-data files
+WRITE FAILURE PASS: current applied UI choice remains usable, previous durable file survives and reloads
+APNEA PERSISTENCE PASS: 12 separate UI processes, all six combinations, cancel/phase lock, fresh sessions, live Main/Statistics agreement and independent scuba files

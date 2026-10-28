@@ -413,3 +413,6 @@ int sim_host_bench_capture(unsigned milestone)
 int sim_host_apnea_check_enabled(void) {return getenv("DIVE_SIM_APNEA_CHECK")!=NULL;}
 
 int sim_host_apnea_settings_check_enabled(void) { return getenv("DIVE_SIM_APNEA_SETTINGS_CHECK")!=NULL; }
+
+int sim_host_apnea_persistence_mode(void){const char *s=getenv("DIVE_SIM_APNEA_PERSISTENCE");return !s?0:*s=='s'?1:2;}
+int sim_host_apnea_persistence_choice(void){const char *s=getenv("DIVE_SIM_APNEA_PERSISTENCE");return s&&strchr(s,':')?atoi(strchr(s,':')+1):0;}

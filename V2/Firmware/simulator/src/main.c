@@ -9,6 +9,7 @@
 #include "sim_checks.h"
 #include "sim_dive.h"
 #include "apnea_checks.h"
+#include "apnea_persistence_checks.h"
 #include "apnea_settings_checks.h"
 #include "scuba_checks.h"
 #include "appearance_checks.h"
@@ -113,9 +114,10 @@ int main(void)
             if(stress_stage==180)printk("SCALE STRESS PASS: 60 real clicks, visible frames and responsive controls\n");
         }
         uint64_t now_ms = k_uptime_get(),sample_ms=now_ms;
+        bool persistence_step=apnea_persistence_checks_inputs(&sample_ms);
         bool apnea_step=apnea_checks_inputs(&sample_ms);
         bool settings_step=apnea_settings_checks_inputs(&sample_ms);
-        if (apnea_step || settings_step || last_update == UINT64_MAX || now_ms - last_update >= 50 ||
+        if (persistence_step || apnea_step || settings_step || last_update == UINT64_MAX || now_ms - last_update >= 50 ||
             dive.session_active != (watch_ui_view()==WATCH_DIVE_VIEW) ||
             data.depth_dm != sim_controls_depth_dm() ||
             data.heading_degrees != sim_controls_heading_degrees()) {
@@ -133,6 +135,7 @@ int main(void)
             sim_host_get_date(&day,&month,&weekday,&second);
             data.clock_day=day;data.clock_month=month;data.clock_weekday=weekday;data.clock_second=second;
             watch_ui_update(&data);
+            if(persistence_step)apnea_persistence_checks_observe(&data);
             if(apnea_step)apnea_checks_observe(&data);
             if(settings_step)apnea_settings_checks_observe(&data);
             last_update = now_ms;

@@ -1,4 +1,5 @@
 #include "watch_ui.h"
+#include "sim_host.h"
 #include "apnea_main.h"
 #include "apnea_settings.h"
 #include "apnea_stats.h"
@@ -365,6 +366,9 @@ void watch_ui_create(lv_obj_t *parent)
 {
     lv_obj_set_style_bg_color(parent, lv_color_black(), 0);
     lv_obj_set_style_text_color(parent, lv_color_white(), 0);
+    int water=0,field=0;
+    (void)sim_host_apnea_preferences_load(&water,&field);
+    apnea_settings_restore(water,(enum apnea_bottom_field)field);
     v1_ui_build(parent);
     ui_skip_boot();
     pages[WATCH_MAIN] = main_screen;

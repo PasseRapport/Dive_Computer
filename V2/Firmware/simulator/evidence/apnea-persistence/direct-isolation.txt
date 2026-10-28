@@ -1,0 +1,9 @@
+*** Booting nRF Connect SDK v3.4.1-b20f8619ba9a ***
+*** Using Zephyr OS v4.4.2-33fa6a7aac6a ***
+LVGL UI ready: 320x300, RGB565, simulated data
+APNEA SETTINGS PASS: public apply/cancel, all fields, live records, water, phase lock, submenu continuity and reentry x1/x2
+
+Stopped at 22.010s
+WARNING: Using a test - not safe - entropy source
+
+DIRECT CHECK ISOLATION PASS: ignored normal preference, no files changed or created
