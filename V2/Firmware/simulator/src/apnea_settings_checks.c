@@ -12,10 +12,10 @@ static bool scuba_salt;
 static enum scuba_field scuba_bottom;
 static enum scuba_ring scuba_ring;
 static struct scuba_summary scuba_saved_summary;
-static bool visible(lv_obj_t *o,const char *s){if(lv_obj_has_flag(o,LV_OBJ_FLAG_HIDDEN))return false;if(lv_obj_check_type(o,&lv_label_class)&&!strcmp(lv_label_get_text(o),s))return true;for(unsigned i=0;i<lv_obj_get_child_count(o);i++)if(visible(lv_obj_get_child(o,i),s))return true;return false;}
+static bool visible(lv_obj_t *o,const char *s){if(!lv_obj_is_visible(o))return false;if(lv_obj_check_type(o,&lv_label_class)&&!strcmp(lv_label_get_text(o),s))return true;for(unsigned i=0;i<lv_obj_get_child_count(o);i++)if(visible(lv_obj_get_child(o,i),s))return true;return false;}
 static void field_bounds(lv_obj_t *o)
 {
- if(lv_obj_has_flag(o,LV_OBJ_FLAG_HIDDEN))return;
+ if(!lv_obj_is_visible(o))return;
  if(lv_obj_check_type(o,&lv_label_class)){
   const char *s=lv_label_get_text(o);
   if(!strcmp(s,"TEMPERATURE")||!strcmp(s,"SESSION DEPTH")||!strcmp(s,"SESSION APNEA")){

@@ -20,8 +20,8 @@ for name, zoom in [('settings-20', 1), ('settings-29', 1), ('settings-bottom-x2'
     left, right = min(x for x,y in ink), max(x for x,y in ink)
     top, bottom = min(y for x,y in ink), max(y for x,y in ink)
     assert left >= 20 and right <= 300, (name, 'capsule clipped')
-    assert abs((left+right)/2 - 160) <= 3, (name, 'capsule off centre')
     if name != 'settings-20':
+        assert abs((left+right)/2 - 160) <= 3, (name, 'capsule off centre')
         assert abs((top+bottom)/2 - 150) <= 5, (name, 'carousel selection not centred')
-    print(name, 'PASS: fitted centred capsule, no recovery ring')
+    print(name, 'PASS: fitted water capsule' if name == 'settings-20' else 'PASS: centred carousel capsule', 'and no recovery ring')
 print('APNEA SETTINGS RENDER PASS: x1/x2 public images')

@@ -1,0 +1,6 @@
+settings-20 PASS: fitted water capsule and no recovery ring
+settings-29 PASS: centred carousel capsule and no recovery ring
+settings-bottom-x2 PASS: centred carousel capsule and no recovery ring
+APNEA SETTINGS RENDER PASS: x1/x2 public images
+APNEA STATS RENDER PASS: shared geometry/orange rails, battery, four fields, no direction, decimal anchor, x1/x2 and long session
+APNEA RENDER PASS: shared rails/battery, fixed stroke and three directions, recovery ring lifecycle, decimal anchor, long values at x1/x2
