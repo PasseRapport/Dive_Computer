@@ -170,6 +170,8 @@ int main(void)
     pc_bench_poll(1000);
     CHECK(v->gap && v->error && v->result.tissues==OSTC4_INVALID);
     CHECK(v->seconds==0 && v->history_count==1 && v->profile[1].gap);
+    CHECK(v->elapsed_seconds==4000 && v->data_gap.present && v->data_gap.time_known);
+    CHECK(v->data_gap.start_seconds==0 && v->data_gap.duration_seconds==4000 && !v->data_gap.ongoing);
     CHECK(pc_bench_fresh(1,1000,NULL,0)==0);
     pc_bench_poll(2000);
     pc_bench_mark_missing();

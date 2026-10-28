@@ -7,7 +7,7 @@ import sys
 from PIL import Image
 prefix = sys.argv[1]
 frames = {}
-for index in (0, 1, 2, 7):
+for index in (0, 1, 2, 7, 8):
     state = json.loads(Path(f"{prefix}-{index}.json").read_text())
     path = Path(f"{prefix}-{index}.png")
     frame = Image.open(path if path.exists() else f"{prefix}-{index}.bmp").convert("RGB")
@@ -20,7 +20,7 @@ for index in (0, 1, 2, 7):
         assert gap == {"present":True,"time_known":True,"ongoing":False,"seconds":300}
     elif index == 2:
         assert gap["present"] and not gap["time_known"]
-    else:
+    elif index == 7:
         assert gap == {"present":True,"time_known":True,"ongoing":True,"seconds":125}
         assert state["elapsed_seconds"] == 2345 and state["seconds"] == 2220
         assert state["history_count"] == 2221 and state["validity"] == [3]*5
@@ -28,6 +28,10 @@ for index in (0, 1, 2, 7):
         cyan = sum(1 for x in range(1115,1160) for y in range(488,665)
                    if (lambda c:c[0]<150 and c[1]>180 and c[2]>170)(frame.getpixel((x,y))))
         assert cyan == 0, "Invented pressure during sensor loss"
+    else:
+        assert gap == {"present":True,"time_known":True,"ongoing":False,"seconds":4000}
+        assert state["elapsed_seconds"] == 4000 and state["seconds"] == 0
+        assert state["history_count"] == 1 and state["validity"] == [3]*5
     # All five time labels are readable within the plot's bottom margin.
     for left, right in ((62,150),(293,383),(570,660),(846,936),(1078,1168)):
         ink = sum(1 for x in range(left,right) for y in range(672,684)
@@ -35,4 +39,4 @@ for index in (0, 1, 2, 7):
         assert ink>15, (index,left,ink)
 assert frames[1].crop((80,138,280,150)).tobytes() != frames[2].crop((80,138,280,150)).tobytes()
 assert frames[7].crop((80,138,280,150)).tobytes() != frames[2].crop((80,138,280,150)).tobytes()
-print("GAP TIME RENDER PASS: known 5:00 gap, unknown duration, ongoing 2:05 loss, five time ticks, no invented pressure")
+print("GAP TIME RENDER PASS: known 5:00 gap, unknown duration, ongoing 2:05 loss, bounded replay gap 66:40, five time ticks, no invented pressure")

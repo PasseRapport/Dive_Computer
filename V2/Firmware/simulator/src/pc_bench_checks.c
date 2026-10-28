@@ -95,7 +95,7 @@ static void restart_checks(void)
     static unsigned stage;
     static uint64_t after;
     uint64_t now=k_uptime_get();
-    if(now<500 || now<after || stage>=16)return;
+    if(now<500 || now<after || stage>=18)return;
     unsigned scenario=stage/2;
     const struct bench_view *v=pc_bench_read();
     if(stage%2==0) {
@@ -120,12 +120,19 @@ static void restart_checks(void)
             __ASSERT(v->data_gap.time_known && v->data_gap.duration_seconds==125 &&
                 v->elapsed_seconds==2345 && v->seconds==2220,"sensor-loss timing wrong");
         }
+        if(scenario==8) {
+            const ostc4_sample missing_profile[]={{0,1.01325f},{4000,2.01325f}};
+            __ASSERT(pc_bench_fresh(1.01325f,1025,missing_profile,2)==0,"missing fixture failed");
+            pc_bench_poll(1000);
+            __ASSERT(v->data_gap.duration_seconds==4000 && v->elapsed_seconds==4000 &&
+                v->seconds==0,"known replay gap timing wrong");
+        }
         pc_bench_pause(true);after=now+300;
     } else {
         struct watch_data data={.temperature_c=18,.battery_percent=87};
         watch_ui_update(&data);lv_refr_now(NULL);
         __ASSERT(sim_host_bench_capture(scenario)==0,"restart capture failed");
-        if(scenario==7)printk("RESTART WATCH PASS: complete recovery, missing exposure, unknown time, corrupt, incompatible, stale, explicit fresh fixture\n");
+        if(scenario==8)printk("RESTART WATCH PASS: complete recovery, missing exposure, unknown time, corrupt, incompatible, stale, explicit fresh fixture\n");
         after=now+300;
     }
     ++stage;

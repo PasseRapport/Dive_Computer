@@ -107,7 +107,7 @@ static void draw_graph(lv_event_t *e)
         previous=last;have_previous=true;
     }
     struct bench_point current=v->history[v->history_count-1];
-    if(v->data_gap.ongoing)current.seconds=v->elapsed_seconds;
+    if(v->elapsed_seconds>current.seconds)current.seconds=v->elapsed_seconds;
     lv_point_precise_t p=plot_point(current,&a,duration);
     line(layer,(lv_point_precise_t){p.x,a.y1+18},(lv_point_precise_t){p.x,a.y2-18},v->gap?0xff746b:0xffd16a,false);
 }

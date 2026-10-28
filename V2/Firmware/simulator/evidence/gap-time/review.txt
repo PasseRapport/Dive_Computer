@@ -1,0 +1,7 @@
+Independent Sol6.1 two-axis review, base3ebd19e, implementation9fba67a.
+Standards: zero findings initially and after final replay/preparation-screen delta.
+Spec: one finding initially: timestamp-bounded replay gaps were incorrectly shown
+as unknown duration. Added red regression and fixed adapter-only elapsed-time
+advance with no accepted exposure/tissues/history changes. Reviewer rechecked:
+resolved; zero remaining Spec findings. Preparation NO DATA display also reviewed.
+No target/hardware evidence claimed. Final source hashes include reviewed delta.

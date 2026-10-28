@@ -115,3 +115,17 @@ is insufficient. If that evidence is absent, report unknown history and withhold
 guidance. Storage endurance, atomicity, recovery after actual power interruption,
 RTC behavior, full-target resources, timing and stack remain hardware/adapter
 work. PC memory/files and process tests prove none of these physical properties.
+
+Followup: visible missing-data time (2026-10-28)
+----------------------------------------------
+The PC Sensor loss command starts a known interruption at the last accepted
+sample. Its elapsed clock and visible LOST m:ss timer continue with playback
+speed, stop on Pause and never advance tissues, pressure samples or physiology.
+A completed restart gap shows GAP m:ss; unknown elapsed time shows GAP UNKNOWN.
+Known bounding replay timestamps provide the completed missing interval duration,
+even though its pressure cannot be integrated: only the caller's elapsed clock
+moves to the next bound. The watch preparation screen shows NO DATA and GUIDANCE
+INVALID instead of READY when such a gap exists. Fresh explicitly clears it.
+Graph graduations use min:sec, retain the last accepted cyan trace and move a red
+time marker across missing exposure without extrapolating pressure. These are
+synthetic PC presentation checks, not evidence of a physical sensor/RTC adapter.

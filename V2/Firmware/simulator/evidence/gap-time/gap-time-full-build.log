@@ -1,0 +1,21 @@
+[  2%] Built target ostc4_corrected_source
+[  8%] Built target ostc4_upstream
+[ 17%] Built target ostc4_baseline
+[ 24%] Built target ostc4_upstream_contained
+[ 33%] Built target ostc4_upstream_corrected
+[ 37%] Built target test_ostc4_contract
+[ 46%] Built target ostc4_replay
+[ 46%] Built target ostc4_exposure
+[ 51%] Built target ostc4_corrected
+[ 53%] Building C object CMakeFiles/test_pc_bench.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/pc_bench.c.o
+[ 62%] Built target test_calculated_watch
+[ 66%] Built target ostc4_replay_corrected
+[ 68%] Building C object CMakeFiles/test_restart_bench.dir/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/simulator/src/pc_bench.c.o
+[ 75%] Built target test_ostc4_corrected_contract
+[ 77%] Built target test_ostc4_exposure
+[ 82%] Built target test_ostc4_restart
+[ 86%] Built target ostc4_continuity_replay
+[ 88%] Linking C executable test_pc_bench
+[ 91%] Linking C executable test_restart_bench
+[ 93%] Built target test_pc_bench
+[100%] Built target test_restart_bench

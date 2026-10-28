@@ -183,6 +183,16 @@ static void render(void)
         else snprintf(text,sizeof(text),"Time alarm: OFF");
         message(prep_alarm[1],text,214);
         message(hint,"Tap for dive settings",250);
+        if(model.calculated && model.data_gap.present) {
+            message(value,"NO DATA",65);
+            if(model.data_gap.time_known) {
+                duration(text,sizeof(text),model.data_gap.duration_seconds);
+                message(metric,text,117);
+            } else message(metric,"DURATION UNKNOWN",117);
+            message(detail,"GUIDANCE INVALID",150);
+            for(int i=0;i<2;++i)hide(prep_alarm[i],true);
+            message(hint,model.data_gap.ongoing?"Sensor signal lost":"Exposure history missing",250);
+        }
     } else if (screen==SCUBA_OPTIONS_GATE) {
         message(title,"OPTIONS",103);
         message(hint,"Tap to enter",176);

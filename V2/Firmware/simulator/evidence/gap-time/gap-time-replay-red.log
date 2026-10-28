@@ -1,0 +1,13 @@
+Test project /home/Bilal/Documents/ChatGPT/Dive Watch/.work/gap-time-host
+    Start 1: pc_bench_controls_time_graph
+1/1 Test #1: pc_bench_controls_time_graph .....***Failed    1.03 sec
+173: v->elapsed_seconds==4000 && v->data_gap.present && v->data_gap.time_known
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   1.03 sec
+
+The following tests FAILED:
+	  1 - pc_bench_controls_time_graph (Failed)
+Errors while running CTest

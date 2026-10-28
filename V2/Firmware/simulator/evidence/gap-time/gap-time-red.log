@@ -1,0 +1,112 @@
+/tmp/test_gap_red.c: In function ‘main’:
+/tmp/test_gap_red.c:29:16: error: ‘const struct bench_view’ has no member named ‘data_gap’
+   29 |         CHECK(v->data_gap.present==(i<2));
+      |                ^~
+/tmp/test_gap_red.c:7:28: note: in definition of macro ‘CHECK’
+    7 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/test_gap_red.c:30:24: error: ‘const struct bench_view’ has no member named ‘data_gap’
+   30 |         if(i==0)CHECK(v->data_gap.time_known && !v->data_gap.ongoing && v->data_gap.duration_seconds==180);
+      |                        ^~
+/tmp/test_gap_red.c:7:28: note: in definition of macro ‘CHECK’
+    7 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/test_gap_red.c:30:51: error: ‘const struct bench_view’ has no member named ‘data_gap’
+   30 |         if(i==0)CHECK(v->data_gap.time_known && !v->data_gap.ongoing && v->data_gap.duration_seconds==180);
+      |                                                   ^~
+/tmp/test_gap_red.c:7:28: note: in definition of macro ‘CHECK’
+    7 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/test_gap_red.c:30:74: error: ‘const struct bench_view’ has no member named ‘data_gap’
+   30 |         if(i==0)CHECK(v->data_gap.time_known && !v->data_gap.ongoing && v->data_gap.duration_seconds==180);
+      |                                                                          ^~
+/tmp/test_gap_red.c:7:28: note: in definition of macro ‘CHECK’
+    7 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/test_gap_red.c:31:25: error: ‘const struct bench_view’ has no member named ‘data_gap’
+   31 |         if(i==1)CHECK(!v->data_gap.time_known);
+      |                         ^~
+/tmp/test_gap_red.c:7:28: note: in definition of macro ‘CHECK’
+    7 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/test_gap_red.c:49:5: error: implicit declaration of function ‘pc_bench_sensor_loss’ [-Wimplicit-function-declaration]
+   49 |     pc_bench_sensor_loss();
+      |     ^~~~~~~~~~~~~~~~~~~~
+/tmp/test_gap_red.c:51:12: error: ‘const struct bench_view’ has no member named ‘data_gap’
+   51 |     CHECK(v->data_gap.present && v->data_gap.time_known && v->data_gap.ongoing);
+      |            ^~
+/tmp/test_gap_red.c:7:28: note: in definition of macro ‘CHECK’
+    7 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/test_gap_red.c:51:35: error: ‘const struct bench_view’ has no member named ‘data_gap’
+   51 |     CHECK(v->data_gap.present && v->data_gap.time_known && v->data_gap.ongoing);
+      |                                   ^~
+/tmp/test_gap_red.c:7:28: note: in definition of macro ‘CHECK’
+    7 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/test_gap_red.c:51:61: error: ‘const struct bench_view’ has no member named ‘data_gap’
+   51 |     CHECK(v->data_gap.present && v->data_gap.time_known && v->data_gap.ongoing);
+      |                                                             ^~
+/tmp/test_gap_red.c:7:28: note: in definition of macro ‘CHECK’
+    7 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/test_gap_red.c:52:12: error: ‘const struct bench_view’ has no member named ‘data_gap’
+   52 |     CHECK(v->data_gap.start_seconds==60 && v->data_gap.duration_seconds==0);
+      |            ^~
+/tmp/test_gap_red.c:7:28: note: in definition of macro ‘CHECK’
+    7 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/test_gap_red.c:52:45: error: ‘const struct bench_view’ has no member named ‘data_gap’
+   52 |     CHECK(v->data_gap.start_seconds==60 && v->data_gap.duration_seconds==0);
+      |                                             ^~
+/tmp/test_gap_red.c:7:28: note: in definition of macro ‘CHECK’
+    7 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/test_gap_red.c:54:12: error: ‘const struct bench_view’ has no member named ‘elapsed_seconds’
+   54 |     CHECK(v->elapsed_seconds==185 && v->seconds==60 && v->data_gap.duration_seconds==125);
+      |            ^~
+/tmp/test_gap_red.c:7:28: note: in definition of macro ‘CHECK’
+    7 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/test_gap_red.c:54:57: error: ‘const struct bench_view’ has no member named ‘data_gap’
+   54 |     CHECK(v->elapsed_seconds==185 && v->seconds==60 && v->data_gap.duration_seconds==125);
+      |                                                         ^~
+/tmp/test_gap_red.c:7:28: note: in definition of macro ‘CHECK’
+    7 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/test_gap_red.c:59:12: error: ‘const struct bench_view’ has no member named ‘data_gap’
+   59 |     CHECK(v->data_gap.duration_seconds==125);
+      |            ^~
+/tmp/test_gap_red.c:7:28: note: in definition of macro ‘CHECK’
+    7 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/test_gap_red.c:60:55: error: ‘const struct bench_view’ has no member named ‘elapsed_seconds’
+   60 |     pc_bench_pause(true);pc_bench_poll(100000);CHECK(v->elapsed_seconds==185);
+      |                                                       ^~
+/tmp/test_gap_red.c:7:28: note: in definition of macro ‘CHECK’
+    7 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/test_gap_red.c:62:12: error: ‘const struct bench_view’ has no member named ‘elapsed_seconds’
+   62 |     CHECK(v->elapsed_seconds==195 && v->data_gap.duration_seconds==135);
+      |            ^~
+/tmp/test_gap_red.c:7:28: note: in definition of macro ‘CHECK’
+    7 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/test_gap_red.c:62:39: error: ‘const struct bench_view’ has no member named ‘data_gap’
+   62 |     CHECK(v->elapsed_seconds==195 && v->data_gap.duration_seconds==135);
+      |                                       ^~
+/tmp/test_gap_red.c:7:28: note: in definition of macro ‘CHECK’
+    7 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/test_gap_red.c:64:13: error: ‘const struct bench_view’ has no member named ‘data_gap’
+   64 |     CHECK(!v->data_gap.present && v->elapsed_seconds==0);
+      |             ^~
+/tmp/test_gap_red.c:7:28: note: in definition of macro ‘CHECK’
+    7 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^
+/tmp/test_gap_red.c:64:36: error: ‘const struct bench_view’ has no member named ‘elapsed_seconds’
+   64 |     CHECK(!v->data_gap.present && v->elapsed_seconds==0);
+      |                                    ^~
+/tmp/test_gap_red.c:7:28: note: in definition of macro ‘CHECK’
+    7 | #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+      |                            ^

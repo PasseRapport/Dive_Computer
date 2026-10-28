@@ -1,0 +1,54 @@
+-- Configuring done (0.2s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/dive-watch-lvgl-6326eb157c/ostc4-build
+[ 12%] Built target ostc4_corrected_source
+[ 75%] Built target ostc4_upstream_contained
+[100%] Built target ostc4_exposure
+-- west build: generating a build system
+Loading Zephyr default modules (Zephyr base (cached)).
+-- Application: /tmp/dive-watch-lvgl-6326eb157c/app
+-- CMake version: 4.2.1
+-- Cache files will be written to: /tmp/dive-watch-lvgl-6326eb157c/.cache/zephyr
+-- Zephyr version: 4.4.2 (/home/Bilal/ncs/v3.4.1/zephyr), build: local
+-- Found west (found suitable version "1.5.0", minimum required is "0.14.0")
+-- Board: native_sim, qualifiers: native/64
+-- Found host-tools: zephyr 1.0.1 (/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk)
+-- Found toolchain: host (gcc/ld)
+-- Found BOARD.dts: /home/Bilal/ncs/v3.4.1/zephyr/boards/native/native_sim/native_sim_64.dts
+-- Found devicetree overlay: /tmp/dive-watch-lvgl-6326eb157c/app/app.overlay
+-- Generated zephyr.dts: /tmp/dive-watch-lvgl-6326eb157c/build/zephyr/zephyr.dts
+-- Generated pickled edt: /tmp/dive-watch-lvgl-6326eb157c/build/zephyr/edt.pickle
+-- Generated devicetree_generated.h: /tmp/dive-watch-lvgl-6326eb157c/build/zephyr/include/generated/zephyr/devicetree_generated.h
+Parsing /home/Bilal/ncs/v3.4.1/zephyr/Kconfig
+Loaded configuration '/tmp/dive-watch-lvgl-6326eb157c/build/zephyr/.config'
+No change to configuration in '/tmp/dive-watch-lvgl-6326eb157c/build/zephyr/.config'
+No change to Kconfig header in '/tmp/dive-watch-lvgl-6326eb157c/build/zephyr/include/generated/zephyr/autoconf.h'
+CMake Warning at /home/Bilal/ncs/v3.4.1/nrf/cmake/device_support.cmake:34 (message):
+  SoC native is not supported by this release.
+Call Stack (most recent call first):
+  /home/Bilal/ncs/v3.4.1/nrf/CMakeLists.txt:27 (include)
+
+
+-- Using ccache: /home/Bilal/ncs/toolchains/8285d8ad56/bin/ccache
+-- Found gen_kobject_list: /home/Bilal/ncs/v3.4.1/zephyr/scripts/build/gen_kobject_list.py
+CMake Warning at /home/Bilal/ncs/v3.4.1/zephyr/CMakeLists.txt:2358 (message):
+  __ASSERT() statements are globally ENABLED
+
+
+-- Configuring done (10.6s)
+-- Generating done (0.4s)
+-- Build files have been written to: /tmp/dive-watch-lvgl-6326eb157c/build
+-- west build: building application
+[1/114] Generating misc/generated/syscalls.json, misc/generated/struct_tags.json
+[2/5] Generating linker_zephyr_pre0.cmd
+[3/5] Linking C executable zephyr/zephyr.elf; Logical command for additional byproducts on target: zephyr_pre0
+Generating files from /tmp/dive-watch-lvgl-6326eb157c/build/zephyr/zephyr.elf for board: native_sim/native/64
+[4/5] Building native simulator runner, and linking final executable
+[5/5] Running utility command for native_runner_executable
+WARNING: Using a test - not safe - entropy source
+*** Booting nRF Connect SDK v3.4.1-b20f8619ba9a ***
+*** Using Zephyr OS v4.4.2-33fa6a7aac6a ***
+LVGL UI ready: 320x300, RGB565, simulated data
+CALCULATED WATCH PASS: NDL, deco, automatic stop, manual violation, acknowledgement, invalidity, two dives, SDL auto control
+
+Stopped at 15.010s

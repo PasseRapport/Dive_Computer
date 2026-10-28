@@ -202,6 +202,12 @@ void pc_bench_poll(uint32_t elapsed_ms)
         if (view.replay) {
             const ostc4_sample a=samples[next_sample-1], b=samples[next_sample];
             if (b.timestamp_seconds-a.timestamp_seconds>3600) {
+                /* The timestamps bound the missing interval, even though its
+                 * pressure cannot be integrated. Advance only the adapter clock. */
+                view.elapsed_seconds=b.timestamp_seconds;
+                view.data_gap=(struct exposure_gap){true,true,false,a.timestamp_seconds,
+                    b.timestamp_seconds-a.timestamp_seconds};
+                pending_ms=0;
                 missing("Missing exposure: replay gap; fresh fixture required",false); break;
             }
             pressure=a.absolute_pressure_bar+(b.absolute_pressure_bar-a.absolute_pressure_bar)*
