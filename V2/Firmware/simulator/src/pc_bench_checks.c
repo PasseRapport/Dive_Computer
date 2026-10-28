@@ -118,16 +118,16 @@ static void calculated_checks(void)
             __ASSERT(v->rate_m_min==1 && !v->replay,"apnea Rate +1 control failed");
             pc_bench_pause(false);pc_bench_poll(60000);pc_bench_pause(true);
             __ASSERT(sim_controls_depth_dm()==60 && sim_controls_depth_rate()==1,"apnea depth did not follow rate");
-            sim_host_push_button(860,744,1);break;
-        case 23:sim_host_push_button(860,744,0);break;
+            sim_host_push_button(530,744,1);break;
+        case 23:sim_host_push_button(530,744,0);break;
         case 24:
-            __ASSERT(v->depth_m>6.99f && v->depth_m<7.01f && v->rate_m_min==0,"apnea Depth +1 control failed");
+            __ASSERT(v->depth_m>5.99f && v->depth_m<6.01f && v->rate_m_min==0,"apnea Hold control failed");
             pc_bench_pause(false);pc_bench_poll(1000);pc_bench_pause(true);
-            __ASSERT(sim_controls_depth_dm()==70 && sim_controls_depth_rate()==0,"apnea depth input disconnected");break;
+            __ASSERT(sim_controls_depth_dm()==60 && sim_controls_depth_rate()==0,"apnea Hold changed depth");break;
         case 25:
             __ASSERT(watch_ui_view()==WATCH_DIVE_VIEW,"bench controls navigated away from apnea");
-            __ASSERT(sim_host_bench_capture(11)==0,"apnea depth capture failed");
-            printk("APNEA BENCH PASS: real Rate/Depth clicks drive the shared depth, paused exposure and watch view preserved\n");break;
+            __ASSERT(sim_host_bench_capture(11)==0,"apnea Hold capture failed");
+            printk("APNEA BENCH PASS: real Rate/Hold clicks drive the shared depth, paused exposure and watch view preserved\n");break;
         default:return;
         }
         if(stage/2<10)pc_bench_pause(true);
@@ -227,11 +227,11 @@ void pc_bench_checks_poll(void)
         if(post_stage<11 && now>=post_after+post_stage*120) switch(post_stage++) {
         case 0:sim_host_push_button(530,742,1);break;
         case 1:sim_host_push_button(530,742,0);break;
-        case 2:__ASSERT(!v->replay && !v->ended && v->result.nitrogen_bar[5]>0.9f,"Hold reset retained exposure");sim_host_push_button(980,742,1);break;
-        case 3:sim_host_push_button(980,742,0);break;
+        case 2:__ASSERT(!v->replay && !v->ended && v->result.nitrogen_bar[5]>0.9f,"Hold reset retained exposure");sim_host_push_button(750,742,1);break;
+        case 3:sim_host_push_button(750,742,0);break;
         case 4:__ASSERT(v->gap && v->result.tissues==OSTC4_INVALID && v->result.ndl==OSTC4_INVALID && v->result.tts==OSTC4_INVALID,"Gap did not invalidate results");frozen=v->seconds;break;
-        case 5:__ASSERT(v->seconds==frozen,"Invalid exposure advanced");lv_refr_now(NULL);__ASSERT(sim_host_bench_capture(4)==0,"Gap capture failed");sim_host_push_button(1100,742,1);break;
-        case 6:sim_host_push_button(1100,742,0);break;
+        case 5:__ASSERT(v->seconds==frozen,"Invalid exposure advanced");lv_refr_now(NULL);__ASSERT(sim_host_bench_capture(4)==0,"Gap capture failed");sim_host_push_button(880,742,1);break;
+        case 6:sim_host_push_button(880,742,0);break;
         case 7:__ASSERT(v->replay && !v->gap && v->seconds<=1 && v->speed==1,"Explicit fresh replay failed");break;
         case 8:
             /* A one-second excursion between indices retained by the old stride

@@ -8,7 +8,7 @@
 #include <stdio.h>
 
 enum bench_action { BENCH_PAUSE, BENCH_SPEED, BENCH_ASCEND_RATE, BENCH_DESCEND_RATE,
-    BENCH_HOLD, BENCH_SURFACE, BENCH_AUTO, BENCH_SHALLOWER, BENCH_DEEPER, BENCH_FRESH, BENCH_GAP, BENCH_SAVE, BENCH_RESTART, BENCH_RESTART_MODE };
+    BENCH_HOLD, BENCH_SURFACE, BENCH_AUTO, BENCH_FRESH, BENCH_GAP, BENCH_SAVE, BENCH_RESTART, BENCH_RESTART_MODE };
 
 static lv_obj_t *summary, *tissues[16], *stops, *graph, *clock_label, *pause_label, *speed_label, *auto_label;
 static lv_obj_t *time_ticks[5];
@@ -33,8 +33,6 @@ static void command(lv_event_t *e)
     case BENCH_DESCEND_RATE: pc_bench_manual(v->depth_m,v->rate_m_min+1); break;
     case BENCH_HOLD: pc_bench_manual(v->depth_m,0); break;
     case BENCH_SURFACE: pc_bench_manual(0,0); break;
-    case BENCH_SHALLOWER: pc_bench_manual(v->depth_m>1?v->depth_m-1:0,0); break;
-    case BENCH_DEEPER: pc_bench_manual(v->depth_m+1,0); break;
     case BENCH_AUTO: pc_bench_auto(!v->automatic); break;
     case BENCH_FRESH: sim_host_bench_fresh(); break;
     case BENCH_GAP: pc_bench_sensor_loss(); break;
@@ -145,8 +143,7 @@ void pc_bench_ui_create(void)
     speed_label=button("Time x1",134,726,110,BENCH_SPEED);
     button("Rate -1",254,726,108,BENCH_ASCEND_RATE);button("Rate +1",372,726,108,BENCH_DESCEND_RATE);
     button("Hold",490,726,88,BENCH_HOLD);button("Surface",588,726,100,BENCH_SURFACE);
-    button("Depth -1",698,726,106,BENCH_SHALLOWER);button("Depth +1",814,726,106,BENCH_DEEPER);
-    button("Sensor loss",930,726,110,BENCH_GAP);button("FRESH replay",1050,726,128,BENCH_FRESH);
+    button("Sensor loss",698,726,110,BENCH_GAP);button("FRESH replay",818,726,128,BENCH_FRESH);
     auto_label=button("Auto ascent",1048,690,130,BENCH_AUTO);
     label("Cyan: actual | Dashed: replay | Yellow: position | Red: gap",578,774);
     last_host_ms=k_uptime_get();

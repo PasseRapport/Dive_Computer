@@ -180,8 +180,8 @@ lv_obj_t *scuba_dashboard_create(lv_obj_t *parent)
     lv_obj_add_event_cb(d->stop_mark,draw_stop_mark,LV_EVENT_DRAW_MAIN,NULL);hidden(d->stop_mark,true);
     d->depth_title=text(view,&lv_font_montserrat_12,0,0,"DEPTH");color(d->depth_title,0xffffff);
     d->depth=text(view,&watch_montserrat_60,0,47,"");d->unit=text(view,&lv_font_montserrat_18,0,0,"m");
-    d->zone=text(view,&lv_font_montserrat_10,0,108,"");color(d->zone,YELLOW);
-    d->left_box=lv_obj_create(view);lv_obj_remove_style_all(d->left_box);lv_obj_set_pos(d->left_box,52,127);lv_obj_set_size(d->left_box,94,77);
+    d->zone=text(view,&lv_font_montserrat_10,0,108,"");color(d->zone,0xffffff);
+    d->left_box=lv_obj_create(view);lv_obj_remove_style_all(d->left_box);lv_obj_set_pos(d->left_box,52,146);lv_obj_set_size(d->left_box,94,58);
     lv_obj_set_style_radius(d->left_box,10,0);lv_obj_set_style_bg_opa(d->left_box,LV_OPA_COVER,0);lv_obj_remove_flag(d->left_box,LV_OBJ_FLAG_SCROLLABLE);
     d->left_title=text(view,&lv_font_montserrat_12,0,127,"");
     d->left_value=text(view,&lv_font_montserrat_48,0,150,"");d->left_seconds=text(view,&lv_font_montserrat_22,0,171,"");
@@ -245,7 +245,7 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
     }
     centred(d->zone,text,160,107);
     hidden(d->left_box,true);hidden(d->left_seconds,true);
-    lv_obj_set_pos(d->left_box,52,127);lv_obj_set_size(d->left_box,94,77);
+    lv_obj_set_pos(d->left_box,52,146);lv_obj_set_size(d->left_box,94,58);
     lv_obj_set_style_text_font(d->left_value,&lv_font_montserrat_48,0);
     color(d->left_title,0xffffff);color(d->left_value,0xffffff);color(d->left_seconds,0xffffff);
     centred(d->left_note,"",101,197);
@@ -253,7 +253,6 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
     if(!guidance && m->calculated_state==SCUBA_CALCULATED_INVALID) {
         hidden(d->left_box,false);
         lv_obj_set_style_bg_color(d->left_box,lv_color_hex(RED),0);
-        lv_obj_set_pos(d->left_box,52,146);lv_obj_set_size(d->left_box,94,58);
         centred(d->left_title,"DECO",101,127);
         lv_obj_set_style_text_font(d->left_value,&lv_font_montserrat_22,0);
         lv_obj_set_style_text_align(d->left_value,LV_TEXT_ALIGN_CENTER,0);
@@ -267,7 +266,7 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
         centred(d->left_title,"STOP",101,127);hidden(d->left_seconds,false);
         timer(d->left_value,d->left_seconds,(target-m->stop_ms+999)/1000,101);
         ring_color=YELLOW;progress=scuba_ring_stop(m->stop_ms,target);
-        color(d->left_title,YELLOW);color(d->left_value,YELLOW);color(d->left_seconds,YELLOW);
+        color(d->left_value,YELLOW);color(d->left_seconds,YELLOW);
         if(!scuba_model_in_stop(m))centred(d->left_note,"PAUSED",101,197);
     } else if(stop_depth&&!complete) {
         centred(d->left_title,"DECO",101,127);snprintf(text,sizeof(text),"%u'",(scuba_model_tts(m)+59)/60);centred(d->left_value,text,101,150);
@@ -275,7 +274,6 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
         else snprintf(text,sizeof(text),"CEIL %u m",ceiling/10);
         centred(d->left_note,text,101,197);
         ring_color=ORANGE;progress=scuba_ring_tts(scuba_model_tts(m));
-        color(d->left_title,ORANGE);
     } else {
         centred(d->left_title,"NO DECO",101,127);
         if(complete){centred(d->left_value,"--",101,150);progress=0;}
@@ -284,7 +282,7 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
             scuba_ndl_text(text,sizeof(text),m->ndl_s);char number[64];snprintf(number,sizeof(number),"%s'",text);centred(d->left_value,number,101,150);
             progress=scuba_ring_ndl(m->ndl_s);
             if(m->ndl_s<300)ring_color=ORANGE;
-            if(m->ndl_s<=300){hidden(d->left_box,false);lv_obj_set_style_bg_color(d->left_box,lv_color_hex(YELLOW),0);color(d->left_title,0);color(d->left_value,0);}
+            if(m->ndl_s<=300){hidden(d->left_box,false);lv_obj_set_style_bg_color(d->left_box,lv_color_hex(YELLOW),0);color(d->left_value,0);}
         }
     }
     /* Explicit ring choices stay selected; the alert overlay and ceiling track
