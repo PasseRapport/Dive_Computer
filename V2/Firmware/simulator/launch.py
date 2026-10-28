@@ -132,7 +132,7 @@ if not args.build_only:
         env["SDL_VIDEODRIVER"] = "dummy"
         env["DIVE_SIM_GALLERY"] = str(gallery)
         if not args.water_check:
-            command += ["--stop_at=14" if args.apnea_check else "--stop_at=44" if args.scuba_check else "--stop_at=23" if args.dive_check else "--stop_at=58"]
+            command += ["--stop_at=24" if args.apnea_check else "--stop_at=44" if args.scuba_check else "--stop_at=23" if args.dive_check else "--stop_at=58"]
     elif args.smoke or args.check_controls:
         env["SDL_VIDEODRIVER"] = "dummy"
         command += ["--stop_at=2"]

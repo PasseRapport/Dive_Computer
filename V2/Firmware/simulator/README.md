@@ -61,8 +61,10 @@ and loses it immediately at rest or on surfacing. Recovery stays visible beyond
 ten minutes; the twice-duration ring turns green at its target and hides ten
 seconds later. Entering freediving starts a fresh session, including surface time;
 leaving ends it without resetting scuba exposure or watch preferences. Session
-records update during the current apnea. Statistics and Water Type retain their
-existing layout pending their separate redesign.
+records update during the current apnea. Statistics uses the same geometry with orange separators and shows session
+maximum depth, longest apnea, apnea count and elapsed session time (H:MM:SS).
+It has no direction indicator or recovery ring. Water Type retains its existing
+page pending the Settings redesign.
 **Scuba Diving** has preparation/settings, depth with its metre unit, dive time,
 NDL, display customization, stop displays, alerts and the last completed summary.
 The in-dive dashboard places depth at the top, ascent chevrons at the centre,
@@ -109,6 +111,7 @@ python3 launch.py --scuba-check --gallery /tmp/scuba-gallery
 python3 launch.py --dive-check --gallery /tmp/freedive-gallery
 python3 launch.py --apnea-check --gallery /tmp/apnea-main-gallery
 python3 tests/check_apnea_main.py /tmp/apnea-main-gallery
+python3 tests/check_apnea_stats.py /tmp/apnea-main-gallery
 python3 launch.py --water-check
 ```
 
@@ -136,9 +139,9 @@ cc -std=c11 -Wall -Wextra -Werror -Isrc src/sim_dive.c tests/test_sim_dive.c -o 
 ## Source layout
 
 - `src/watch_ui.c`: watch navigation, options, startup and sleep transitions.
-- `src/apnea_main.c` and `src/sim_dive.c`: freediving Main and portable session tracker.
+- `src/apnea_main.c`, `src/apnea_stats.c` and `src/sim_dive.c`: freediving data pages and portable session tracker.
 - `src/dive_layout.c`: shared depth anchor and separator geometry.
-- `src/v1_ui_layout.c`: retained menu/statistics layout and page transitions.
+- `src/v1_ui_layout.c`: retained menu layout and page transitions.
 - `src/scuba_ui.c` and `src/scuba_model.c`: scuba screens and scripted scenarios.
 - `src/compass_ui.c`: standalone watch compass face.
 - `src/sim_controls.c` and `src/sim_host.c`: desktop controls and SDL adapter.

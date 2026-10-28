@@ -1,5 +1,6 @@
 #include "watch_ui.h"
 #include "apnea_main.h"
+#include "apnea_stats.h"
 #include "v1_ui_layout.h"
 #include "selection.h"
 #include "native_fonts.h"
@@ -214,7 +215,7 @@ static void refresh_sensitivity(void)
 static void refresh_recovery_visibility(void)
 {
     if(free_battery) {
-        bool show=current_view==WATCH_DIVE_VIEW&&current_page==WATCH_MAIN&&dive_mode==DIVE_FREE&&!sleeping;
+        bool show=current_view==WATCH_DIVE_VIEW&&(current_page==WATCH_MAIN||current_page==WATCH_STATS)&&dive_mode==DIVE_FREE&&!sleeping;
         if(show)lv_obj_remove_flag(free_battery,LV_OBJ_FLAG_HIDDEN);else lv_obj_add_flag(free_battery,LV_OBJ_FLAG_HIDDEN);
     }
     bool visible = recovery_active && current_view == WATCH_DIVE_VIEW &&
@@ -727,8 +728,7 @@ void watch_ui_update(const struct watch_data *data)
     battery_icon_update(free_battery,data->battery_percent);
     compass_ui_update(data->heading_degrees);
     apnea_main_update(pages[WATCH_MAIN],data);
-    ui_refresh_stats(data->max_dive_s, data->max_depth_dm / 10.0f, data->total_dives);
-    ui_refresh_runtime_display(data->runtime_s / 3600, data->runtime_s / 60 % 60);
+    apnea_stats_update(pages[WATCH_STATS],data);
     recovery_active = data->recovery_ring_visible;
     int progress = data->recovery_target_ms ?
                    (uint64_t)data->recovery_elapsed_ms * 1000 / data->recovery_target_ms : 0;
