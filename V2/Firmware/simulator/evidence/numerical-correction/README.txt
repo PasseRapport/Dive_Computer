@@ -30,3 +30,23 @@ combined final evidence is recorded separately after integration.
 
 All evidence is synthetic PC mathematics/process validation; no target or
 physical-watch validation is claimed.
+
+Final combined acceptance after ticket15 integration and user resume
+-----------------------------------------------------------------
+headless-combined-final.log: 25/25 tests passed, including disk save/load in
+separate processes, later exposure, explicit configuration evidence, corruption
+and legacy-lock checks, predictions, matched controls and original core tests.
+accepted-full-stress-final.json/accepted-observations-final.jsonl: all114 frozen,
+455one-second and9extreme observations accepted, noTTS differences. Endpoints
+maximum absolute error4.9992940347465264e-6m vs unchanged0.006m bound.
+
+rejected-legacy-policy-sync.log preserves the expected integration failure when
+the legacy disk adapter omitted the new planner-correction fingerprint token.
+Its one-line current-policy expression now matches the core. Legacy import
+continues to report unknown recording history and invalid guidance; it does not
+convert cached old arithmetic into healthy current-policy guidance.
+
+Generated Python bytecode accidentally included in the first corrective commit
+is deleted from the final tree. PYTHONDONTWRITEBYTECODE=1 was used for the final
+combined run. No new native build is claimed here; final native captures belong
+to the integrated review stage.
