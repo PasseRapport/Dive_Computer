@@ -50,3 +50,7 @@ void watch_ui_set_brightness(uint8_t value);
 
 void watch_ui_set_backlight_mode(enum watch_backlight_mode mode);
 void watch_ui_set_sensitivity(uint16_t value);
+
+#ifdef DIVE_PC_BENCH
+void watch_ui_open_calculated_scuba(void);
+#endif

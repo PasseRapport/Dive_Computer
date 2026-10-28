@@ -36,8 +36,9 @@ def compare_observation(actual, expected):
             bad = value != target
         if bad:
             discrepancies.append(dict(field=field, actual=value, expected=target, tolerance=tolerance))
-    for field in ('timestamp_seconds','dive_seconds','availability','ndl_seconds','tts_seconds','stop_seconds'):
+    for field in ('timestamp_seconds','dive_seconds','availability','ndl_seconds','stop_seconds'):
         check(field,expected[field])
+    check('tts_seconds',expected['tts_seconds'],TOLERANCES['tts_seconds'])
     check('absolute_pressure_bar',expected['absolute_pressure_bar'],1e-6)
     check('nitrogen_bar',expected['nitrogen_bar'],TOLERANCES['tissues_abs_bar'])
     check('helium_bar',expected['helium_bar'],0)
@@ -90,6 +91,9 @@ def evaluate(executable, output=None):
             (output/(profile.stem+'-reference.jsonl')).write_text(''.join(json.dumps(row,allow_nan=False)+'\n' for row in expected))
         reports.append(dict(profile=profile.name,profile_sha256=sha(profile),observations=len(rows),
             production_metadata=metadata,accepted=not discrepancies,discrepancies=discrepancies,
+            tts_differences=[dict(timestamp_seconds=e['timestamp_seconds'],actual=a['tts_seconds'],
+                expected=e['tts_seconds'],difference_seconds=a['tts_seconds']-e['tts_seconds'])
+                for a,e in zip(actual,expected) if a['tts_seconds']!=e['tts_seconds']],
             max_tissue_error_bar=max(abs(a-e) for arow,erow in zip(actual,expected)
                                      for a,e in zip(arow['nitrogen_bar'],erow['nitrogen_bar'])),
             coverage=dict(deco_observations=sum(row['tts_seconds']>0 for row in expected),

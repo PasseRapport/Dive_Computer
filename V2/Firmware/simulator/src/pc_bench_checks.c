@@ -2,13 +2,86 @@
 #include "pc_bench.h"
 #include "pc_bench_ui.h"
 #include "sim_host.h"
+#include "scuba_ui.h"
 #include <lvgl.h>
 #include <zephyr/kernel.h>
+
+/* Deterministic synthetic integration recipe; the current result, watch state
+ * and exact accepted pressure trace are captured together after rendering. */
+static void calculated_checks(void)
+{
+    static unsigned stage;
+    static uint64_t after;
+    uint64_t now=k_uptime_get();
+    if(now<500 || (after && now<after))return;
+    const struct bench_view *v=pc_bench_read();
+    const struct scuba_model *m=scuba_ui_model();
+    if(stage%2==0) {
+        switch(stage/2) {
+        case 0:
+            __ASSERT(pc_bench_fresh(1.01325f,1025,NULL,0)==0,"fresh failed");
+            pc_bench_manual(5,0);pc_bench_poll(1000);
+            __ASSERT(m->calculated && m->calculated_state==SCUBA_CALCULATED_UNAVAILABLE,"missing output concealed");break;
+        case 1: {
+            const ostc4_sample shallow[]={{0,1.01325f},{60,1.81325f},{180,1.81325f}};
+            __ASSERT(pc_bench_fresh(1.01325f,1025,shallow,3)==0,"shallow fixture failed");
+            pc_bench_poll(120000);
+            __ASSERT((m->calculated_state==SCUBA_CALCULATED_AVAILABLE||m->calculated_state==SCUBA_CALCULATED_LIMITED) && m->ndl_s==(unsigned)v->result.ndl_seconds,"NDL mapping failed");break;
+        }
+        case 2: {
+            const ostc4_sample deep[]={{0,1.01325f},{120,4.01325f},{2220,4.01325f}};
+            __ASSERT(pc_bench_fresh(1.01325f,1025,deep,3)==0,"deco fixture failed");
+            pc_bench_poll(2220000);
+            __ASSERT(m->calculated_stop_dm && scuba_model_tts(m)==(unsigned)v->result.tts_seconds,"calculated deco missing");break;
+        }
+        case 3: {
+            __ASSERT(pc_bench_auto(true)==0,"auto enable failed");
+            pc_bench_pause(false);
+            unsigned guard=0;
+            do {pc_bench_poll(1000);} while((!scuba_model_in_stop(m)||v->rate_m_min!=0) && ++guard<300);
+            __ASSERT(guard<300 && v->automatic && m->calculated_stop_dm && scuba_model_in_stop(m),"auto did not reach calculated stop");break;
+        }
+        case 4:
+            pc_bench_manual(1,0);pc_bench_pause(false);pc_bench_poll(1000);
+            __ASSERT(!v->automatic && (m->alerts&SCUBA_CEILING),"manual violation missing");break;
+        case 5:
+            scuba_ui_input(WATCH_SINGLE_TAP,0);
+            __ASSERT(!(m->notifications&SCUBA_CEILING) && (m->alerts&SCUBA_CEILING) && m->calculated_stop_dm,"ack cleared obligation");break;
+        case 6:
+            pc_bench_mark_missing();
+            __ASSERT(m->calculated_state==SCUBA_CALCULATED_INVALID,"fault not displayed");break;
+        case 7:
+            __ASSERT(sim_host_bench_fresh()==0,"two-dive fixture failed");pc_bench_poll(3600000);
+            __ASSERT(v->seconds==3600 && v->result.nitrogen_bar[5]>0.9f,"surface interval lost loading");break;
+        case 8:
+            pc_bench_pause(false);pc_bench_poll(1320000);
+            __ASSERT(v->seconds==4920 && m->active && m->ndl_s==(unsigned)v->result.ndl_seconds,"second dive mapping failed");break;
+        case 9:sim_host_push_button(1100,706,1);break;
+        case 10:sim_host_push_button(1100,706,0);break;
+        case 11:
+            __ASSERT(v->automatic && !v->replay && v->paused,"SDL auto control failed");
+            printk("CALCULATED WATCH PASS: NDL, deco, automatic stop, manual violation, acknowledgement, invalidity, two dives, SDL auto control\n");break;
+        default:return;
+        }
+        if(stage/2<9)pc_bench_pause(true);
+        after=now+300;++stage;
+    } else {
+        if(stage/2<9) {
+            /* Render the observer's current model, then finish any fade. */
+            struct watch_data data={.temperature_c=18,.battery_percent=87};
+            watch_ui_update(&data);lv_refr_now(NULL);
+            __ASSERT(v->seconds==v->result.timestamp_seconds,"exposure and watch clocks diverged");
+            __ASSERT(sim_host_bench_capture(stage/2)==0,"calculated capture failed");
+        }
+        after=now+300;++stage;
+    }
+}
 
 /* Native rendering check, driven by real SDL button events. Numerical checks
  * remain in tests/bench with no LVGL or Zephyr dependency. */
 void pc_bench_checks_poll(void)
 {
+    if(sim_host_bench_check_enabled()==2){calculated_checks();return;}
     if(!sim_host_bench_check_enabled())return;
     static unsigned stage, milestone, post_stage;
     static uint64_t post_after;

@@ -12,9 +12,12 @@ struct bench_view {
     uint32_t seconds, duration;
     float depth_m, rate_m_min, surface_bar, density_kg_m3;
     unsigned speed;
-    bool paused, replay, ended, gap;
+    bool paused, replay, automatic, ended, gap;
     const char *error;
     const struct bench_point *history, *profile;
+    /* Host-only buffer of exact accepted pressure/time inputs; history_count
+     * entries, including fresh surface initialization, never reconstructed depth. */
+    const ostc4_sample *exposure;
     size_t history_count, profile_count;
 };
 /* One PC fixture, serialized on the UI thread. Only fresh() initializes tissues.
@@ -29,7 +32,23 @@ void pc_bench_pause(bool paused);
 /* Report unknown exposure of any duration; invalid until an explicit fresh fixture. */
 void pc_bench_mark_missing(void);
 void pc_bench_speed(unsigned speed);
+/* An accepted manual command cancels automatic ascent without resetting exposure. */
 void pc_bench_manual(float depth_m, float rate_m_min);
+/* Enable/re-engage from the last observed pressure, preserving exposure/history;
+ * discard any unobserved manual depth command and fixed replay. Disable holds
+ * that observed depth. Both clear pending host time. Return -1 before fresh or
+ * after missing exposure, 0 otherwise. Automatic ascent runs at 9 metres/minute
+ * toward the deepest currently required stop (engine slots are +0.3 bar each,
+ * converted with this fixture's density), or surface when no stop is required.
+ * Recompute the command for every exposure second. Hold on unavailable, limited
+ * or invalid tissues/ceiling/stops/TTS, or when already above a required stop.
+ * Stop time comes from current calculations; no scripted countdown is followed.
+ */
+int pc_bench_auto(bool enabled);
+/* Presentation-only notification after fresh, missing exposure, and each fully
+ * committed one-second sample (including graph and ended state). The callback
+ * must not change bench/engine state. NULL disconnects; fresh preserves it. */
+void pc_bench_set_observer(void (*observer)(const struct bench_view *));
 const struct bench_view *pc_bench_read(void);
 /* Plot contract: normalized x=time/duration, y=depth/max_depth (downwards). */
 void pc_bench_plot(struct bench_point point, uint32_t duration, float max_depth,

@@ -36,3 +36,8 @@ int sim_host_bench_fresh(void);
 int sim_host_bench_capture(unsigned milestone);
 int sim_host_bench_check_enabled(void);
 #endif
+
+#ifdef DIVE_PC_BENCH
+struct scuba_model;
+void sim_host_bench_watch(const struct scuba_model *model);
+#endif

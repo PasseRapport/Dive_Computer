@@ -10,8 +10,19 @@ const ostc4_sample pc_bench_two_dives[8] = {
 static struct bench_view view;
 static struct bench_point history[PC_BENCH_HISTORY], graph[PC_BENCH_PROFILE];
 static ostc4_sample samples[PC_BENCH_PROFILE];
+/* PC evidence storage; never part of the portable engine or target allocation. */
+static ostc4_sample actual_samples[PC_BENCH_HISTORY];
 static size_t next_sample;
 static uint64_t pending_ms;
+static void (*presentation_observer)(const struct bench_view *);
+void pc_bench_set_observer(void (*observer)(const struct bench_view *))
+{
+    presentation_observer=observer;
+}
+static void notify_observer(void)
+{
+    if (presentation_observer) presentation_observer(&view);
+}
 static float depth_to_pressure(float depth)
 {
     return view.surface_bar + depth * view.density_kg_m3 * 9.80665f / 100000.0f;
@@ -35,8 +46,9 @@ int pc_bench_fresh(float surface, float density, const ostc4_sample *profile, si
     memset(&view,0,sizeof(view));
     view.surface_bar=surface; view.density_kg_m3=density; view.speed=1;
     view.replay=count!=0; view.profile_count=count;
-    view.history=history; view.profile=graph; view.history_count=1;
+    view.history=history; view.profile=graph; view.exposure=actual_samples; view.history_count=1;
     history[0]=(struct bench_point){0,0,false};
+    actual_samples[0]=(ostc4_sample){0,surface};
     pending_ms=0; next_sample=1;
     if (count) {
         memcpy(samples,profile,count*sizeof(*profile));
@@ -46,6 +58,7 @@ int pc_bench_fresh(float surface, float density, const ostc4_sample *profile, si
             i && samples[i].timestamp_seconds-samples[i-1].timestamp_seconds>3600};
     }
     ostc4_exposure_read(&view.result);
+    notify_observer();
     return 0;
 }
 void pc_bench_pause(bool paused) { view.paused=paused; }
@@ -57,20 +70,52 @@ void pc_bench_manual(float depth, float rate)
 {
     if (!isfinite(depth)||depth<0||depth>60||depth_to_pressure(depth)>view.surface_bar+6||
         !isfinite(rate)||fabsf(rate)>60) return;
-    view.replay=false; view.ended=false; view.depth_m=depth; view.rate_m_min=rate;
+    view.replay=false; view.automatic=false; view.ended=false; view.depth_m=depth; view.rate_m_min=rate;
     pending_ms=0;
+}
+int pc_bench_auto(bool enabled)
+{
+    if (!view.history_count || view.error) return -1;
+    view.automatic=enabled;
+    view.replay=false; view.ended=false;
+    view.depth_m=pressure_to_depth(view.result.absolute_pressure_bar);
+    view.rate_m_min=0; view.duration=view.seconds;
+    pending_ms=0;
+    return 0;
+}
+static float automatic_depth(void)
+{
+    const ostc4_observation *r=&view.result;
+    view.rate_m_min=0;
+    if (r->tissues!=OSTC4_AVAILABLE || r->ceiling!=OSTC4_AVAILABLE ||
+        r->stops!=OSTC4_AVAILABLE || r->tts!=OSTC4_AVAILABLE ||
+        !isfinite(r->ceiling_meters) || r->ceiling_meters<0 || r->tts_seconds<0)
+        return view.depth_m;
+    float target=0;
+    for (int i=OSTC4_STOPS-1;i>=0;--i) {
+        if (r->stop_seconds[i]) {
+            target=pressure_to_depth(view.surface_bar+0.3f*(i+1));
+            break;
+        }
+    }
+    /* A violated stop never commands an automatic descent or further ascent. */
+    if (view.depth_m<target) return view.depth_m;
+    float next=fmaxf(target,view.depth_m-9.0f/60.0f);
+    view.rate_m_min=(next-view.depth_m)*60;
+    return next;
 }
 static void missing(const char *reason)
 {
     ostc4_exposure_missing();
     ostc4_exposure_read(&view.result);
-    view.gap=true; view.error=reason;
+    view.gap=true; view.error=reason; view.rate_m_min=0;
+    history[view.history_count-1].gap=true;
+    notify_observer();
 }
 void pc_bench_mark_missing(void)
 {
     if(!view.history_count)return;
     missing("Unknown exposure reported: fresh fixture required");
-    history[view.history_count-1].gap=true;
 }
 void pc_bench_poll(uint32_t elapsed_ms)
 {
@@ -92,7 +137,8 @@ void pc_bench_poll(uint32_t elapsed_ms)
             view.depth_m=pressure_to_depth(pressure);
             if (seconds==b.timestamp_seconds) ++next_sample;
         } else {
-            view.depth_m=fmaxf(0,fminf(60,view.depth_m+view.rate_m_min/60));
+            view.depth_m=view.automatic ? automatic_depth() :
+                fmaxf(0,fminf(60,view.depth_m+view.rate_m_min/60));
             /* Engine permits a maximum +6 bar, independent of water density. */
             view.depth_m=fminf(view.depth_m,pressure_to_depth(view.surface_bar+6));
             pressure=depth_to_pressure(view.depth_m);
@@ -102,9 +148,12 @@ void pc_bench_poll(uint32_t elapsed_ms)
         }
         view.seconds=seconds;
         ostc4_exposure_read(&view.result);
+        actual_samples[view.history_count]=(ostc4_sample){seconds,pressure};
         history[view.history_count++]=(struct bench_point){seconds,view.depth_m,false};
         if (!view.replay) view.duration=seconds;
-        if (view.replay && seconds==view.duration) { view.ended=true; pending_ms=0; break; }
+        if (view.replay && seconds==view.duration) { view.ended=true; pending_ms=0; }
+        notify_observer();
+        if (view.ended) break;
     }
 }
 const struct bench_view *pc_bench_read(void) { return &view; }

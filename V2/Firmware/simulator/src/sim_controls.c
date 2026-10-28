@@ -3,6 +3,9 @@
 #include "sim_layout.h"
 #include "watch_ui.h"
 #include "scuba_ui.h"
+#ifdef DIVE_PC_BENCH
+#include "pc_bench.h"
+#endif
 #include <zephyr/sys/printk.h>
 #include <zephyr/kernel.h>
 
@@ -61,6 +64,13 @@ void sim_controls_set_depth_dm(uint16_t value)
 
 static void rate_changed(lv_event_t *event)
 {
+#ifdef DIVE_PC_BENCH
+    if(scuba_ui_model()->calculated && watch_ui_view()==WATCH_SCUBA_VIEW) {
+        const struct bench_view *v=pc_bench_read();
+        int step=(int)(intptr_t)lv_event_get_user_data(event);
+        pc_bench_manual(v->depth_m,v->rate_m_min+step);return;
+    }
+#endif
     if(watch_ui_view()==WATCH_SCUBA_VIEW) {depth_dm=scuba_ui_model()->depth_dm;scuba_ui_manual();}
     int delta=(int)(intptr_t)lv_event_get_user_data(event);
     depth_rate=LV_CLAMP(-60,depth_rate+delta,60);
@@ -68,6 +78,11 @@ static void rate_changed(lv_event_t *event)
 }
 static void surface(lv_event_t *event)
 {
+#ifdef DIVE_PC_BENCH
+    if(scuba_ui_model()->calculated && watch_ui_view()==WATCH_SCUBA_VIEW) {
+        pc_bench_manual(0,0);return;
+    }
+#endif
     (void)event;sim_controls_set_depth_dm(0);
     if(watch_ui_view()==WATCH_SCUBA_VIEW)scuba_ui_manual();
 }
@@ -251,10 +266,17 @@ void sim_controls_poll(void)
     if(scuba) {
         const struct scuba_model *s=scuba_ui_model();
         lv_obj_remove_flag(scuba_panel,LV_OBJ_FLAG_HIDDEN);
-        lv_label_set_text_fmt(scenario_label,"Scenario: %s",scuba_model_scenario_name(s->scenario));lv_obj_center(scenario_label);
-        lv_label_set_text_fmt(speed_label,"Time: x%u",s->speed);lv_obj_center(speed_label);
+        if(s->calculated) {
+            lv_label_set_text(scenario_label,"Calculated: bench controls");
+            lv_obj_add_state(lv_obj_get_parent(scenario_label),LV_STATE_DISABLED);
+            lv_obj_add_state(lv_obj_get_parent(speed_label),LV_STATE_DISABLED);
+        } else lv_label_set_text_fmt(scenario_label,"Scenario: %s",scuba_model_scenario_name(s->scenario));
+        lv_obj_center(scenario_label);
+        if(s->calculated)lv_label_set_text(speed_label,"Time: bench controls");
+        else lv_label_set_text_fmt(speed_label,"Time: x%u",s->speed);
+        lv_obj_center(speed_label);
         lv_label_set_text_fmt(battery_label,"Battery: %u%%",s->battery);lv_obj_center(battery_label);
-        lv_label_set_text(haptic_label,scuba_ui_haptic_active()?"VIBRATION":"DEMO VALUES");
+        lv_label_set_text(haptic_label,scuba_ui_haptic_active()?"VIBRATION":s->calculated?"CALCULATED":"DEMO VALUES");
         lv_obj_set_style_text_color(haptic_label,lv_color_hex(scuba_ui_haptic_active()?0xffaa66:0xaaaaaa),0);
         lv_label_set_text_fmt(depth_label,"Depth: %u.%u m | Rate: %+d m/min",s->depth_dm/10,s->depth_dm%10,depth_rate);
     } else lv_obj_add_flag(scuba_panel,LV_OBJ_FLAG_HIDDEN);

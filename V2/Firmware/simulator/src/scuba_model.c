@@ -53,21 +53,29 @@ void scuba_model_arm(struct scuba_model *s, uint64_t now_ms)
 bool scuba_model_surface(const struct scuba_model *s) { return s->depth_dm < 5; }
 uint16_t scuba_model_ceiling(const struct scuba_model *s)
 {
+    if(s->calculated)return s->calculated_ceiling_dm;
     return s->active && s->deco_started && !s->deco_done ? (s->deco_stage == 0 ? 60 : 30) : 0;
+}
+uint16_t scuba_model_stop_depth(const struct scuba_model *s)
+{
+    return s->calculated?s->calculated_stop_dm:scuba_model_ceiling(s);
 }
 uint32_t scuba_model_stop_target(const struct scuba_model *s)
 {
-    if (scuba_model_ceiling(s)) return s->deco_stage == 0 ? 120000 : 90000;
+    if(s->calculated && s->calculated_stop_dm)return s->calculated_stop_total_ms;
+    if (!s->calculated && scuba_model_ceiling(s)) return s->deco_stage == 0 ? 120000 : 90000;
     return s->safety_required ? 180000 : 0;
 }
 bool scuba_model_in_stop(const struct scuba_model *s)
 {
+    if(s->calculated && s->calculated_stop_dm)return s->active && (s->calculated_state==SCUBA_CALCULATED_AVAILABLE||s->calculated_state==SCUBA_CALCULATED_LIMITED) && s->calculated_stop_zone;
     uint16_t ceiling = scuba_model_ceiling(s);
     return s->active && (ceiling ? s->depth_dm >= ceiling && s->depth_dm <= ceiling+30 :
                           s->safety_required && s->depth_dm >= 30 && s->depth_dm <= 60);
 }
 uint32_t scuba_model_tts(const struct scuba_model *s)
 {
+    if(s->calculated)return s->calculated_tts_s;
     uint32_t remaining = (scuba_model_stop_target(s)-MIN(s->stop_ms,scuba_model_stop_target(s)))/1000;
     if (scuba_model_ceiling(s) && s->deco_stage == 0) remaining += 90;
     return remaining + s->depth_dm*6/10; /* Scripted 10 m/min ascent component. */
@@ -145,6 +153,7 @@ void scuba_model_update_mm(struct scuba_model *s, uint64_t now_ms, uint32_t manu
         s->surface_ms += dt;
         if (s->surface_ms >= 300000) { scuba_model_finish(s); return; }
     }
+    if(!s->calculated) {
     uint32_t budget=s->scenario == SCUBA_NO_DECO ? 7200 : s->scenario == SCUBA_ALERTS ? 240 : 1200;
     uint32_t exposure=s->dive_ms/1000;
     if (s->scenario == SCUBA_DECO) { budget=150; exposure=t; }
@@ -160,6 +169,19 @@ void scuba_model_update_mm(struct scuba_model *s, uint64_t now_ms, uint32_t manu
             else { s->deco_done=true; s->safety_required=false; }
         }
     }
+    } else {
+        bool valid=s->calculated_state==SCUBA_CALCULATED_AVAILABLE||s->calculated_state==SCUBA_CALCULATED_LIMITED;
+        if(s->calculated_stop_dm) {
+            s->deco_started=true;s->deco_done=false;s->safety_required=false;
+            s->stop_ms=s->calculated_stop_total_ms-s->calculated_stop_remaining_ms;
+        } else if(valid) {
+            if(s->deco_started) {s->deco_done=true;s->safety_required=false;}
+            else if(s->peak_dm>=100)s->safety_required=true;
+            if(s->safety_required && scuba_model_in_stop(s))
+                s->stop_ms=MIN((uint64_t)180000,s->stop_ms+dt);
+        }
+        /* The optional safety timer never discharges mandatory decompression. */
+    }
     uint64_t interval=s->scenario_ms-s->rate_ms;
     if (interval >= 1000) {
         /* Round only the final velocity, never the depth samples. */
@@ -173,12 +195,12 @@ void scuba_model_update_mm(struct scuba_model *s, uint64_t now_ms, uint32_t manu
         s->rate_depth_mm=depth_mm; s->rate_ms=s->scenario_ms;
     }
     uint32_t alerts=0;
-    if (scuba_model_ceiling(s) && s->depth_dm < scuba_model_ceiling(s)) alerts|=SCUBA_CEILING;
+    if (s->calculated?s->calculated_ceiling_violation:(scuba_model_ceiling(s) && s->depth_dm < scuba_model_ceiling(s))) alerts|=SCUBA_CEILING;
     if (s->scenario_ms < s->fast_until_ms) alerts|=SCUBA_ASCENT;
     if (s->battery <= 15) alerts|=SCUBA_BATTERY;
     if ((100u+s->depth_dm)*21u > 14000) alerts|=SCUBA_OXYGEN;
     if (s->deco_started && !s->deco_done) alerts|=SCUBA_DECOMPRESSION;
-    if (!s->deco_started && s->ndl_s <= 300) alerts|=SCUBA_NDL;
+    if ((!s->calculated||s->calculated_state==SCUBA_CALCULATED_AVAILABLE||s->calculated_state==SCUBA_CALCULATED_LIMITED) && !s->deco_started && s->ndl_s <= 300) alerts|=SCUBA_NDL;
     if (s->depth_alarm_dm && s->depth_dm >= s->depth_alarm_dm) alerts|=SCUBA_DEPTH;
     if (s->time_alarm_s && s->dive_ms/1000 >= s->time_alarm_s) alerts|=SCUBA_TIME;
     s->acknowledged &= alerts;

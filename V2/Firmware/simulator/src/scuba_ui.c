@@ -6,6 +6,10 @@
 #include "light_editor.h"
 #include <zephyr/kernel.h>
 #include <stdio.h>
+#ifdef DIVE_PC_BENCH
+#include "pc_bench.h"
+#include "scuba_calculated.h"
+#endif
 
 LV_IMAGE_DECLARE(icon_drop);
 LV_IMAGE_DECLARE(icon_wave);
@@ -279,13 +283,16 @@ lv_obj_t *scuba_ui_create(lv_obj_t *parent)
 }
 void scuba_ui_enter(uint64_t now_ms)
 {
+#ifdef DIVE_PC_BENCH
+    if(model.calculated)now_ms=(uint64_t)pc_bench_read()->seconds*1000;
+#endif
     scuba_model_arm(&model,now_ms);leave_progress=0;
     show(model.active?SCUBA_MAIN:SCUBA_PREP);
 }
 void scuba_ui_update(const struct watch_data *data, uint64_t now_ms, bool visible)
 {
-    if(!visible) {model.last_ms=now_ms;return;}
-    scuba_model_update_mm(&model,now_ms,data->depth_mm_valid?data->depth_mm:(uint32_t)data->depth_dm*100,data->temperature_c,test_battery);
+    if(!visible) {if(!model.calculated)model.last_ms=now_ms;return;}
+    if(!model.calculated)scuba_model_update_mm(&model,now_ms,data->depth_mm_valid?data->depth_mm:(uint32_t)data->depth_dm*100,data->temperature_c,test_battery);
     live_data=*data;
     if(model.active&&!last_active) {leave_progress=0; show(SCUBA_MAIN);}
     if(!model.active&&last_active) show(SCUBA_SUMMARY);
@@ -372,9 +379,9 @@ bool scuba_ui_input(enum watch_input input, int steps)
     }
     render();return false;
 }
-void scuba_ui_set_scenario(enum scuba_scenario scenario) {scuba_model_scenario(&model,scenario,k_uptime_get());last_active=false;show(SCUBA_PREP);}
-void scuba_ui_set_speed(uint8_t speed) {if(speed==1||speed==10||speed==60) model.speed=speed;}
-void scuba_ui_manual(void) {model.scenario=SCUBA_MANUAL;}
+void scuba_ui_set_scenario(enum scuba_scenario scenario) {if(model.calculated)return;scuba_model_scenario(&model,scenario,k_uptime_get());last_active=false;show(SCUBA_PREP);}
+void scuba_ui_set_speed(uint8_t speed) {if(!model.calculated&&(speed==1||speed==10||speed==60)) model.speed=speed;}
+void scuba_ui_manual(void) {if(model.calculated)return;model.scenario=SCUBA_MANUAL;}
 void scuba_ui_set_battery(uint8_t battery) {test_battery=battery;}
 const struct scuba_model *scuba_ui_model(void) {return &model;}
 enum scuba_screen scuba_ui_screen(void) {return screen;}
@@ -384,3 +391,18 @@ bool scuba_ui_haptic_active(void) {return haptic_count && k_uptime_get()-last_ha
 enum scuba_field scuba_ui_field(void) {return scuba_dashboard_field(dashboard);}
 
 enum scuba_ring scuba_ui_ring(void) {return scuba_dashboard_ring(dashboard);}
+
+#ifdef DIVE_PC_BENCH
+void scuba_ui_calculated(const struct bench_view *v)
+{
+    if(v->seconds==0 && !v->gap) {
+        scuba_model_scenario(&model,SCUBA_MANUAL,0);
+        model.armed=true;model.calculated=true;
+        model.salt_water=v->density_kg_m3>1010;
+        last_active=false;previous_notifications=0;
+        show(SCUBA_PREP);
+    }
+    float depth=(v->result.absolute_pressure_bar-v->surface_bar)*10;
+    scuba_calculated_apply(&model,&v->result,v->seconds,depth,18,test_battery);
+}
+#endif

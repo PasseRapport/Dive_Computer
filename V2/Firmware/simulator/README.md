@@ -188,7 +188,7 @@ are enlarged. The alert reads **DECOMPRESSION**; acknowledgement uses a tap with
 The scuba preparation screen recaps air, water type, battery, start depth and both alarm thresholds (OFF when disabled). Dive Settings opens a dedicated Fresh/Marine selector with the same water icons and animated capsule as freediving; tap confirms and Back cancels.
 
 
-## Experimental calculated PC bench (OSTC4 ticket 04)
+## Experimental calculated PC bench (OSTC4 tickets 04–06)
 
 ```sh
 python3 V2/Firmware/simulator/launch.py --bench
@@ -196,9 +196,12 @@ python3 V2/Firmware/simulator/launch.py --bench
 
 This expands the existing native simulator to 1200 x 800, adding calculated
 OSTC4 diagnostics alongside the watch and a synchronized depth graph below it.
-The virtual watch and its original controls remain an isolated **scripted demo**.
-Use the lower **bench** row for calculated exposure. Crown/menu/scenario actions
-on the watch do not initialize or change calculated tissues.
+The virtual watch uses the same calculated observation as diagnostics in bench
+mode; no scripted fallback is allowed. Without `--bench`, legacy scripted scuba
+and apnea demonstrations remain available. Use the lower **bench** row for
+calculated exposure; its separate **Auto ascent** button enables automatic
+calculated ascent. Watch crown/menu/scenario actions do not initialize tissues;
+scripted scenario/speed commands are ignored while the watch is calculated.
 
 The default synthetic replay is the accepted two-dive example: absolute pressure
 1.01325 bar at 0 s, 4.01325 at 120 and 1920 s, 1.01325 at 2100 and 3600 s,
@@ -229,7 +232,20 @@ stop/increments of 3 m are fixed test settings. TTS=0 in upstream NDL mode
 **excludes ascent travel**, and is explicitly qualified in the diagnostics.
 Unavailable, limited and invalid result flags are shown, including for every
 nitrogen tissue. Mandatory stops can be scrolled if the full list exceeds its box.
-These displays are experimental; full independent schedule acceptance is ticket05.
+The watch and engine use10m/bar so gauge depth, ceiling and stop labels share
+one coordinate convention. The graph and manual controls use hydrostatic metres,
+as labelled. Depth displays truncate millimetre samples to0.1m; calculated
+ceilings round upward to0.1m, while ceiling alerts compare raw depths. Stop zones
+use millimetre resolution to avoid pressure-conversion flicker at exact stops.
+Unavailable/invalid calculation states show explicitly with blank calculated
+values and an empty grey ring, retaining last known obligations. Limited results
+show capped values with an explicit LIMITED marker (including the existing>99
+NDL display); the automatic diver holds if a required ascent result is limited.
+TTS remains raw upstream output; zero-TTS in NDL mode is labelled travel excluded
+on the watch footer too. The optional180s safety stop remains a separate session
+policy, is omitted after mandatory deco, and is never included in raw TTS.
+Independent profiles pass ticket05 comparison v4 with the user's±3s TTS margin;
+all raw+1s differences and the rejected exact-TTS bundle remain published.
 
 Import a deterministic synthetic pressure profile:
 
@@ -278,3 +294,35 @@ baseline/corrected executables remain headless tools, with no runtime selector.
 The source/correction/policy identities are in `../ostc4_baseline` and its prior
 evidence bundles. PC success does not establish a Nordic target build, physical
 memory/timing/stack fitness or readiness for operational dive guidance.
+
+
+### Automatic ascent and calculated watch checks
+
+**Auto ascent** explicitly leaves replay and starts from the last accepted
+pressure. It commands up to9m/min toward the deepest currently calculated
+mandatory stop, otherwise toward the surface. It holds while required results
+are unavailable, limited or invalid, or when already above a required stop;
+it does not invent a descent recovery. It ignores optional safety stops. Every
+accepted second is recorded as actual exposure. A manual depth/rate/hold/surface
+command cancels automatic control. Re-engage explicitly with **Auto ascent**;
+this discards an unobserved manual target and retains observed tissues, clock,
+anchors and history. Pause stays paused. **Auto: ON** toggles off to a hold at
+accepted depth. No projected automatic path is presented as completed exposure.
+
+The presentation adapter consumes each completed exposure sample, including
+accelerated operation; it owns no physiology and does not call the engine.
+Mandatory countdowns are refreshed from current stop calculations, separately
+from TTS and the optional safety timer. Acknowledgement changes alert visibility
+and haptics only. Menus and recording transitions do not reset exposure.
+
+```sh
+python3 V2/Firmware/simulator/launch.py --calculated-check --capture /tmp/calculated
+```
+
+This deterministic native recipe captures unavailable output, shallow NDL,
+30m/35min decompression, an automatic mandatory stop, manual violation before/after
+acknowledgement, invalid exposure, surface interval and second dive. Each capture
+has a result/watch JSON and exact accepted pressure/time CSV. Gap captures carry
+invalid flags: replaying their preceding known CSV alone cannot recreate the
+explicit missing-exposure command. The scenario recipe is in pc_bench_checks.c.
+This is synthetic PC evidence; no target or physical execution is implied.

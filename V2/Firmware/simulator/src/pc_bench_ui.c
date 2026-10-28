@@ -1,15 +1,16 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "pc_bench_ui.h"
 #include "pc_bench.h"
+#include "scuba_ui.h"
 #include "sim_host.h"
 #include <lvgl.h>
 #include <zephyr/kernel.h>
 #include <stdio.h>
 
 enum bench_action { BENCH_PAUSE, BENCH_SPEED, BENCH_ASCEND_RATE, BENCH_DESCEND_RATE,
-    BENCH_HOLD, BENCH_SURFACE, BENCH_SHALLOWER, BENCH_DEEPER, BENCH_FRESH, BENCH_GAP };
+    BENCH_HOLD, BENCH_SURFACE, BENCH_AUTO, BENCH_SHALLOWER, BENCH_DEEPER, BENCH_FRESH, BENCH_GAP };
 
-static lv_obj_t *summary, *tissues[16], *stops, *graph, *clock_label, *pause_label, *speed_label;
+static lv_obj_t *summary, *tissues[16], *stops, *graph, *clock_label, *pause_label, *speed_label, *auto_label;
 static uint64_t last_host_ms, last_paint;
 static lv_obj_t *label(const char *text,int x,int y)
 {
@@ -29,6 +30,7 @@ static void command(lv_event_t *e)
     case BENCH_SURFACE: pc_bench_manual(0,0); break;
     case BENCH_SHALLOWER: pc_bench_manual(v->depth_m>1?v->depth_m-1:0,0); break;
     case BENCH_DEEPER: pc_bench_manual(v->depth_m+1,0); break;
+    case BENCH_AUTO: pc_bench_auto(!v->automatic); break;
     case BENCH_FRESH: sim_host_bench_fresh(); break;
     case BENCH_GAP: pc_bench_mark_missing(); break;
     }
@@ -96,7 +98,11 @@ static void draw_graph(lv_event_t *e)
 void pc_bench_ui_create(void)
 {
     label("EXPERIMENTAL OSTC4 / SYNTHETIC EXPOSURE",636,14);
-    label("Virtual watch: isolated SCRIPTED DEMO gauges",22,422);
+    label("Virtual watch: CALCULATED / 10 m per bar",22,422);
+    pc_bench_set_observer(scuba_ui_calculated);
+    scuba_ui_calculated(pc_bench_read());
+    watch_ui_open_calculated_scuba();
+    sim_host_bench_watch(scuba_ui_model());
     summary=label("",636,44);lv_obj_set_width(summary,548);
     label("NITROGEN TISSUES (bar) - all 16 compartments",636,158);
     for(int i=0;i<16;++i)tissues[i]=label("",636+(i/8)*270,184+(i%8)*22);
@@ -116,6 +122,7 @@ void pc_bench_ui_create(void)
     button("Hold",490,726,88,BENCH_HOLD);button("Surface",588,726,100,BENCH_SURFACE);
     button("Depth -1",698,726,106,BENCH_SHALLOWER);button("Depth +1",814,726,106,BENCH_DEEPER);
     button("Mark gap",930,726,110,BENCH_GAP);button("FRESH replay",1050,726,128,BENCH_FRESH);
+    auto_label=button("Auto ascent",1048,690,130,BENCH_AUTO);
     label("Cyan: actual | Dashed grey: known replay future | Yellow: position | Red: missing exposure",22,768);
     last_host_ms=k_uptime_get();
 }
@@ -135,8 +142,8 @@ void pc_bench_ui_poll(void)
     result_time(tts,sizeof(tts),v->result.tts_seconds,v->result.tts);
     if(v->result.tts==OSTC4_AVAILABLE && v->result.tts_seconds==0)
         snprintf(tts,sizeof(tts),"0 s (NDL; travel excluded)");
-    lv_label_set_text_fmt(summary,"%s | exposure: %s\nNDL: %s | TTS: %s\nCeiling: %.2f m (%s)\n%.5f bar absolute | surface %.5f bar | water %.0f kg/m3\nGF 30/70; ascent 9 m/min; engine depths: 10 m/bar",
-        v->error?v->error:v->ended?"REPLAY COMPLETE":v->paused?"PAUSED":v->replay?"PRESSURE REPLAY":"MANUAL",
+    lv_label_set_text_fmt(summary,"%s | exposure: %s\nNDL: %s | TTS: %s\nCeiling: %.2f m (%s)\n%.5f bar absolute | surface %.5f bar | water %.0f kg/m3\nGF 30/70; ascent 9 m/min; watch/engine depths: 10 m/bar",
+        v->error?v->error:v->ended?"REPLAY COMPLETE":v->paused?"PAUSED":v->replay?"PRESSURE REPLAY":v->automatic?"AUTO ASCENT":"MANUAL",
         ostc4_availability_name(v->result.tissues),ndl,tts,(double)v->result.ceiling_meters,
         ostc4_availability_name(v->result.ceiling),(double)v->result.absolute_pressure_bar,
         (double)v->surface_bar,(double)v->density_kg_m3);
@@ -154,6 +161,7 @@ void pc_bench_ui_poll(void)
     lv_label_set_text_fmt(clock_label,"Simulation %u / %u s | depth %.3f m | rate %+.0f m/min | sample %u s%s",
         v->seconds,v->duration,(double)v->depth_m,(double)v->rate_m_min,v->result.timestamp_seconds,
         v->gap?" | EXPOSURE GAP":"");
+    lv_label_set_text(auto_label,v->automatic?"Auto: ON":"Auto ascent");
     lv_label_set_text(pause_label,v->paused?"Resume":"Pause");
     lv_label_set_text_fmt(speed_label,"Time x%u",v->speed);
     lv_obj_invalidate(graph);

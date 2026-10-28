@@ -22,3 +22,8 @@ bool scuba_ui_haptic_active(void);
 enum scuba_field scuba_ui_field(void);
 
 enum scuba_ring scuba_ui_ring(void);
+
+#ifdef DIVE_PC_BENCH
+struct bench_view;
+void scuba_ui_calculated(const struct bench_view *view);
+#endif

@@ -1,6 +1,6 @@
 {
-  "identity": "ostc4-independent-schedule-comparison-v3",
-  "declared_before_first_comparison": true,
+  "identity": "ostc4-independent-schedule-comparison-v4-tts3s",
+  "declared_before_first_comparison": false,
   "production_variant": "ostc4-continuous-air-gf30-70-v1",
   "scope": "synthetic PC evidence; no target or physical execution",
   "reference_authorship": "separately authored binary64 mathematical reference; no production calculations invoked",
@@ -47,10 +47,11 @@
     "anchor_abs_bar": 0.0001,
     "ndl_seconds": 0,
     "stop_seconds_each": 0,
-    "tts_seconds": 0,
+    "tts_seconds": 3,
     "availability": "exact",
-    "quantized_values": "Exact primary comparisons: a different NDL bucket or stop quantum is a discrepancy, not automatically accepted. Precision/threshold effects must be investigated and published without widening tolerances.",
-    "ceiling_justification": "0.10m maximum binary-search bracket width plus0.005m binary32/tissue roundoff allowance; compare to independent closed-form ceiling using declared GF, not another binary search"
+    "quantized_values": "NDL buckets and mandatory-stop quanta remain exact. Only total TTS has the explicitly user-approved 3-second absolute tolerance; investigate and publish differences.",
+    "ceiling_justification": "0.10m maximum binary-search bracket width plus0.005m binary32/tissue roundoff allowance; compare to independent closed-form ceiling using declared GF, not another binary search",
+    "tts_justification": "User-approved on 2026-10-28 after the v3 rejection: absolute TTS difference <=3 seconds is accepted. This is a post-observation policy change, not an upstream numerical correction. NDL, every mandatory-stop slot and validity remain exact. Raw differences within tolerance remain published."
   },
   "coverage": [
     "shallow no-deco and NDL cap",
@@ -64,7 +65,7 @@
     "30m with120s descent and2100s bottom;160s ascent to6m,240s hold,20s to3m,900s hold,20s to surface",
     "additional full-stop progression: fixed12m/9m/6m/3m long input holds, not expected mandatory stops"
   ],
-  "outcome_rule": "All primary comparisons must pass for numerical acceptance. Known discrepancies remain visible failures. Passing comparison harness tests alone is not numerical acceptance.",
+  "outcome_rule": "All comparisons must pass under the declared v4 policy. Publish raw TTS differences even when accepted within3s. Preserve the rejected v3 exact-TTS evidence; passing harness tests alone is not numerical acceptance.",
   "policy_correction": "v1 incorrectly assumed integer ascent-rate division. Superseded evidence and frozen reference retained in evidence/ticket05/superseded-v1. Corrected from declared field type before v2 comparison; numerical tolerances unchanged. v3 also removes a demonstrated reference binary64 ceil artifact at nominal3m legs. This is reference arithmetic repair, with an exact20s analytical self-check. Output tolerances unchanged.",
   "reference_precision": "binary64 tissue/ceiling math; exact rational travel from nine-decimal pressure inputs and decimal route legs to avoid spurious ceil of20.000000000000004 instead of nominal20s for3m"
 }

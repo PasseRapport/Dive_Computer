@@ -18,7 +18,7 @@ class ComparisonTests(unittest.TestCase):
         self.assertEqual(compare_observation(self.actual,self.expected), [])
 
     def test_guidance_and_availability_mutations_are_rejected(self):
-        for field,value in [('ndl_seconds',660),('tts_seconds',1),
+        for field,value in [('ndl_seconds',660),('tts_seconds',4),
                             ('stop_seconds',[10]+[0]*49),('availability',{}),
                             ('nitrogen_bar',[float('nan')]+[1.]*15),
                             ('helium_bar',[.01]+[0.]*15),('ceiling_meters',1.)]:
@@ -26,6 +26,14 @@ class ComparisonTests(unittest.TestCase):
                 changed = copy.deepcopy(self.actual)
                 changed[field] = value
                 self.assertTrue(compare_observation(changed,self.expected))
+
+    def test_tts_tolerance_is_inclusive_and_symmetric(self):
+        self.expected['tts_seconds'] = 100
+        for difference in (-4, -3, -2, -1, 0, 1, 2, 3, 4):
+            with self.subTest(difference=difference):
+                changed = copy.deepcopy(self.actual)
+                changed['tts_seconds'] = 100 + difference
+                self.assertEqual(bool(compare_observation(changed, self.expected)), abs(difference)>3)
 
     def test_trace_requires_every_timestamp(self):
         self.assertTrue(compare_trace([], [self.expected]))

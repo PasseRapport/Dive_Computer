@@ -12,6 +12,7 @@ import subprocess
 parser = argparse.ArgumentParser()
 parser.add_argument("--bench", action="store_true", help="Calculated experimental OSTC4 diagnostics and depth graph")
 parser.add_argument("--bench-profile", help="Replay CSV: timestamp_seconds,absolute_pressure_bar (implies --bench)")
+parser.add_argument("--calculated-check", action="store_true", help="Calculated watch and automatic diver captures")
 parser.add_argument("--bench-check", action="store_true", help="Headless bench interaction and visible two-dive replay check")
 parser.add_argument("--build-only", action="store_true")
 parser.add_argument("--smoke", action="store_true", help="Run headless for two seconds")
@@ -23,7 +24,7 @@ parser.add_argument("--water-check", action="store_true")
 parser.add_argument("--dive-check", action="store_true")
 parser.add_argument("--scuba-check", action="store_true", help="Exercise the scuba UI with accelerated scenarios")
 args = parser.parse_args()
-args.bench = args.bench or bool(args.bench_profile) or args.bench_check
+args.bench = args.bench or bool(args.bench_profile) or args.bench_check or args.calculated_check
 if args.bench and (args.gallery or args.scuba_check or args.scale_check or args.check_controls or args.water_check or args.dive_check):
     parser.error("Bench checks use --bench-check; legacy gallery/control checks run without --bench")
 if args.scuba_check and not args.gallery:
@@ -78,8 +79,8 @@ if not args.build_only:
     command = [str(workspace / "build/zephyr/zephyr.exe")]
     if args.bench_profile:
         env["DIVE_SIM_BENCH_PROFILE"] = str(Path(args.bench_profile).resolve())
-    if args.bench_check:
-        env["DIVE_SIM_BENCH_CHECK"] = "1"
+    if args.bench_check or args.calculated_check:
+        env["DIVE_SIM_BENCH_CHECK"] = "calculated" if args.calculated_check else "1"
         env["SDL_VIDEODRIVER"] = "dummy"
         command += ["--stop_at=90", "--no-rt"]
     if args.scale_check:

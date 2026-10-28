@@ -262,8 +262,14 @@ int sim_host_take_redraw(void) {return atomic_exchange(&redraw_requested,false);
 
 #ifdef DIVE_PC_BENCH
 #include "pc_bench.h"
+#include "scuba_model.h"
+static const struct scuba_model *calculated_watch;
+void sim_host_bench_watch(const struct scuba_model *model) {calculated_watch=model;}
 #include <stdio.h>
-int sim_host_bench_check_enabled(void) { return getenv("DIVE_SIM_BENCH_CHECK")!=NULL; }
+int sim_host_bench_check_enabled(void) {
+    const char *mode=getenv("DIVE_SIM_BENCH_CHECK");
+    return !mode?0:!strcmp(mode,"calculated")?2:1;
+}
 int sim_host_bench_fresh(void)
 {
     const char *path=getenv("DIVE_SIM_BENCH_PROFILE");
@@ -303,6 +309,24 @@ int sim_host_bench_capture(unsigned milestone)
     const struct bench_view *v=pc_bench_read();
     fprintf(out,"{\"seconds\":%u,\"duration\":%u,\"depth_m\":%.9g,\"tissues\":[",v->seconds,v->duration,(double)v->depth_m);
     for(int i=0;i<16;++i)fprintf(out,"%s%.9g",i?",":"",(double)v->result.nitrogen_bar[i]);
-    fprintf(out,"]}\n");return fclose(out);
+    const struct scuba_model *m=calculated_watch;
+    if(!m){fclose(out);return -1;}
+    fprintf(out,"],\"automatic\":%s,\"replay\":%s,\"history_count\":%zu,\"absolute_pressure_bar\":%.9g,"
+        "\"ndl_seconds\":%d,\"tts_seconds\":%d,\"ceiling_meters\":%.9g,"
+        "\"validity\":[%d,%d,%d,%d,%d],\"watch\":{\"state\":%d,\"depth_dm\":%u,\"ndl_seconds\":%u,"
+        "\"tts_seconds\":%u,\"stop_depth_dm\":%u,\"stop_remaining_ms\":%u,\"alerts\":%u,\"notifications\":%u},\"stop_seconds\":[",
+        v->automatic?"true":"false",v->replay?"true":"false",v->history_count,(double)v->result.absolute_pressure_bar,
+        v->result.ndl_seconds,v->result.tts_seconds,(double)v->result.ceiling_meters,
+        v->result.tissues,v->result.ndl,v->result.tts,v->result.ceiling,v->result.stops,
+        m->calculated_state,m->depth_dm,m->ndl_s,m->calculated_tts_s,m->calculated_stop_dm,
+        m->calculated_stop_remaining_ms,m->alerts,m->notifications);
+    for(int i=0;i<OSTC4_STOPS;++i)fprintf(out,"%s%u",i?",":"",v->result.stop_seconds[i]);
+    fprintf(out,"]}\n");if(fclose(out))return -1;
+    snprintf(path,sizeof(path),"%s-%u.csv",base,milestone);
+    out=fopen(path,"w");if(!out)return -1;
+    fprintf(out,"timestamp_seconds,absolute_pressure_bar\n");
+    for(size_t i=0;i<v->history_count;++i)fprintf(out,"%u,%.9g\n",v->exposure[i].timestamp_seconds,
+        (double)v->exposure[i].absolute_pressure_bar);
+    return fclose(out);
 }
 #endif

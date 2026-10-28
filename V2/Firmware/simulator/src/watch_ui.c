@@ -791,3 +791,10 @@ void watch_ui_set_sensitivity(uint16_t value)
     sensitivity=LV_MIN((value+5)/10,10)*10;
     refresh_sensitivity();
 }
+
+#ifdef DIVE_PC_BENCH
+void watch_ui_open_calculated_scuba(void)
+{
+    finish_logo();set_view(WATCH_SCUBA_VIEW);scuba_ui_enter(0);
+}
+#endif

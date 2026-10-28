@@ -6,7 +6,7 @@
   "prior_tissue_provenance": "reference-provenance.json",
   "source_revision": "7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
   "frozen_sha256": {
-    "comparison-policy.json": "f904d331c3cb1e22df07e54272db558f0bdff6d6ecec7897b977f1ad5f4aea85",
+    "comparison-policy.json": "87ce792646161a7899a8875f643e19b7af3b016897e3584108a4f3f420120fd1",
     "schedule_reference.py": "e788ce657245a832cd1dc29a7d54e8ce00fc4b2e71f9efabb828fa5663c9866d",
     "test_schedule_reference.py": "599dd130bf6766cb5650fa64448bfe1b376671348c03f74cb202fecd415a6e42",
     "tissue_reference.py": "842186e884ddd3fdba8fd7aff76322f688706de6b5b31ce7ec1da4ed4b77208a",
@@ -31,5 +31,6 @@
     }
   ],
   "reference_precision": "binary64 analytical integration; exact rational timing on declared decimal pressures; all output comparisons keep original tolerances",
-  "superseded": "v1 inferred integer ascent-rate type incorrectly; preserved with original failed comparison. v3 removes a separately proven reference ceil artifact at nominal3m/20s."
+  "superseded": "v1 inferred integer ascent-rate type incorrectly; preserved with original failed comparison. v3 removes a separately proven reference ceil artifact at nominal3m/20s.",
+  "policy_amendment": "2026-10-28: user explicitly requested3s TTS margin after observing v3 rejection. Only comparison policy changed; independent reference unchanged. Previous freeze preserved in evidence/ticket05/policy-v3-exact-tts; this amendment is not a pre-observation declaration."
 }

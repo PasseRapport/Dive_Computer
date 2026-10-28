@@ -14,7 +14,15 @@ struct scuba_summary {
     int16_t min_temperature;
     bool missed_stop;
 };
+enum scuba_calculated_state { SCUBA_CALCULATED_UNAVAILABLE, SCUBA_CALCULATED_AVAILABLE,
+    SCUBA_CALCULATED_LIMITED, SCUBA_CALCULATED_INVALID };
 struct scuba_model {
+    /* Set only by the calculated presentation adapter. Scripted demos leave
+     * this false. Unavailable/invalid samples retain the last known obligation. */
+    bool calculated, calculated_ceiling_violation, calculated_stop_zone;
+    enum scuba_calculated_state calculated_state;
+    uint16_t calculated_ceiling_dm, calculated_stop_dm;
+    uint32_t calculated_tts_s, calculated_stop_remaining_ms, calculated_stop_total_ms;
     bool armed, active, salt_water, safety_required, deco_started, deco_done;
     uint16_t depth_dm, peak_dm, start_depth_dm, depth_alarm_dm;
     uint32_t time_alarm_s, ndl_s, ndl_budget_s, surface_ms, stop_ms, fast_ascent_ms;
@@ -35,6 +43,7 @@ void scuba_model_scenario(struct scuba_model *s, enum scuba_scenario scenario, u
 void scuba_model_update(struct scuba_model *s, uint64_t now_ms, uint16_t manual_depth_dm, int16_t temperature, uint8_t battery);
 void scuba_model_acknowledge(struct scuba_model *s);
 uint16_t scuba_model_ceiling(const struct scuba_model *s);
+uint16_t scuba_model_stop_depth(const struct scuba_model *s);
 uint32_t scuba_model_stop_target(const struct scuba_model *s);
 uint32_t scuba_model_tts(const struct scuba_model *s);
 bool scuba_model_in_stop(const struct scuba_model *s);
