@@ -14,8 +14,8 @@ static lv_obj_t *summary, *tissues[16], *stops, *graph, *clock_label, *pause_lab
 static uint64_t last_host_ms, last_paint;
 static lv_obj_t *recovery_label,*restart_mode_label;
 static enum pc_restart_mode restart_mode;
-static const char *restart_modes[]={"Known recorded history","Missing exposure","Unknown clock",
-    "Corrupt checkpoint","Incompatible schema","Stale checkpoint"};
+static const char *restart_modes[]={"Next: known history","Next: missing exposure","Next: unknown clock",
+    "Next: corrupt data","Next: wrong schema","Next: stale data"};
 static lv_obj_t *label(const char *text,int x,int y)
 {
     lv_obj_t *o=lv_label_create(lv_screen_active());
@@ -115,11 +115,11 @@ void pc_bench_ui_create(void)
     label("NITROGEN TISSUES (bar) - all 16 compartments",636,158);
     for(int i=0;i<16;++i)tissues[i]=label("",636+(i/8)*270,184+(i%8)*22);
     lv_obj_t *stop_box=lv_obj_create(lv_screen_active());
-    lv_obj_remove_style_all(stop_box);lv_obj_set_pos(stop_box,636,368);lv_obj_set_size(stop_box,548,32);
+    lv_obj_remove_style_all(stop_box);lv_obj_set_pos(stop_box,636,368);lv_obj_set_size(stop_box,548,68);
     stops=lv_label_create(stop_box);lv_obj_set_width(stops,528);
-    button("Save checkpoint",636,402,146,BENCH_SAVE);
-    restart_mode_label=button(restart_modes[0],792,402,238,BENCH_RESTART_MODE);
-    button("Restart",1040,402,138,BENCH_RESTART);
+    button("Save checkpoint",22,764,146,BENCH_SAVE);
+    restart_mode_label=button(restart_modes[0],178,764,238,BENCH_RESTART_MODE);
+    button("Restart",426,764,138,BENCH_RESTART);
     label("Depth (m, down) versus elapsed simulation time (seconds, right)",22,446);
     graph=lv_obj_create(lv_screen_active());lv_obj_set_pos(graph,22,466);lv_obj_set_size(graph,1156,224);
     lv_obj_remove_flag(graph,LV_OBJ_FLAG_SCROLLABLE);
@@ -134,7 +134,7 @@ void pc_bench_ui_create(void)
     button("Depth -1",698,726,106,BENCH_SHALLOWER);button("Depth +1",814,726,106,BENCH_DEEPER);
     button("Mark gap",930,726,110,BENCH_GAP);button("FRESH replay",1050,726,128,BENCH_FRESH);
     auto_label=button("Auto ascent",1048,690,130,BENCH_AUTO);
-    label("Cyan: actual | Dashed grey: known replay future | Yellow: position | Red: missing exposure",22,768);
+    label("Cyan: actual | Dashed: replay | Yellow: position | Red: gap",578,774);
     last_host_ms=k_uptime_get();
 }
 static void result_time(char *buffer,size_t size,int seconds,ostc4_availability validity)

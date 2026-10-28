@@ -1,0 +1,12 @@
+Ticket07 independent Sol6.1 reviews, 2026-10-28
+Review base: c542d43241dd93e59a68f3045a656f969b65b708
+Implementation commit: bcf0941; final UI/test delta reviewed before packaging.
+Standards: zero findings in implementation and final delta. Documented calculation
+boundary, vocabulary and evidence limits respected; no actionable baseline smell.
+Spec: zero findings in implementation and final delta. Persistent tissues, time,
+pressure, max depth and both GF anchor values covered. Scratch rebuilt before use.
+Recovery fails closed; complete explicit pressure history required. Same-timestamp
+MarkGap regression prevents a PC gap being laundered into known history. Final
+stop-panel area restored and presentation checker added. Equality evidence remains
+distinct from independent numerical references and physical persistence.
+No target build or physical execution reviewed or claimed.

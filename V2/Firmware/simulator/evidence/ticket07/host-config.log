@@ -1,0 +1,10 @@
+-- The C compiler identification is GNU 16.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/lib64/ccache/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Found Python3: /usr/bin/python3.14 (found version "3.14.8") found components: Interpreter
+-- Configuring done (0.8s)
+-- Generating done (0.1s)
+-- Build files have been written to: /home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host

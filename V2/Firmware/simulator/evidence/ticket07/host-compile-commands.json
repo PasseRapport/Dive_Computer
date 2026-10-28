@@ -1,0 +1,98 @@
+[
+{
+  "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4",
+  "command": "/usr/lib64/ccache/cc  -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -O3 -DNDEBUG -std=c11 -O2 -fno-fast-math -ffp-contract=off -ffunction-sections -fdata-sections -o CMakeFiles/ostc4_upstream_contained.dir/corrected/decom.c.o -c \"/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4/corrected/decom.c\"",
+  "file": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4/corrected/decom.c",
+  "output": "ostc4/CMakeFiles/ostc4_upstream_contained.dir/corrected/decom.c.o"
+},
+{
+  "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4",
+  "command": "/usr/lib64/ccache/cc  -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -O3 -DNDEBUG -std=c11 -O2 -fno-fast-math -ffp-contract=off -ffunction-sections -fdata-sections -o CMakeFiles/ostc4_upstream_contained.dir/corrected/buehlmann-contained.c.o -c \"/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4/corrected/buehlmann-contained.c\"",
+  "file": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4/corrected/buehlmann-contained.c",
+  "output": "ostc4/CMakeFiles/ostc4_upstream_contained.dir/corrected/buehlmann-contained.c.o"
+},
+{
+  "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4",
+  "command": "/usr/lib64/ccache/cc -DOSTC4_CONTINUOUS_EXPOSURE=1 -DOSTC4_TISSUE_CORRECTIONS=1 -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -O3 -DNDEBUG -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off -o CMakeFiles/ostc4_exposure.dir/src/ostc4_baseline.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+  "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+  "output": "ostc4/CMakeFiles/ostc4_exposure.dir/src/ostc4_baseline.c.o"
+},
+{
+  "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4",
+  "command": "/usr/lib64/ccache/cc  -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -O3 -DNDEBUG -std=c11 -O2 -fno-fast-math -ffp-contract=off -ffunction-sections -fdata-sections -o CMakeFiles/ostc4_upstream.dir/upstream/Common/Src/decom.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Src/decom.c",
+  "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Src/decom.c",
+  "output": "ostc4/CMakeFiles/ostc4_upstream.dir/upstream/Common/Src/decom.c.o"
+},
+{
+  "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4",
+  "command": "/usr/lib64/ccache/cc  -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -O3 -DNDEBUG -std=c11 -O2 -fno-fast-math -ffp-contract=off -ffunction-sections -fdata-sections -o CMakeFiles/ostc4_upstream.dir/upstream/Discovery/Src/buehlmann.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Src/buehlmann.c",
+  "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Src/buehlmann.c",
+  "output": "ostc4/CMakeFiles/ostc4_upstream.dir/upstream/Discovery/Src/buehlmann.c.o"
+},
+{
+  "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4",
+  "command": "/usr/lib64/ccache/cc  -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -O3 -DNDEBUG -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off -o CMakeFiles/ostc4_baseline.dir/src/ostc4_baseline.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+  "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+  "output": "ostc4/CMakeFiles/ostc4_baseline.dir/src/ostc4_baseline.c.o"
+},
+{
+  "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4",
+  "command": "/usr/lib64/ccache/cc  -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -O3 -DNDEBUG -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off -o CMakeFiles/ostc4_replay.dir/src/replay.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/replay.c",
+  "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/replay.c",
+  "output": "ostc4/CMakeFiles/ostc4_replay.dir/src/replay.c.o"
+},
+{
+  "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4",
+  "command": "/usr/lib64/ccache/cc  -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -O3 -DNDEBUG -std=c11 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/test_ostc4_contract.dir/tests/test_contract.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_contract.c",
+  "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_contract.c",
+  "output": "ostc4/CMakeFiles/test_ostc4_contract.dir/tests/test_contract.c.o"
+},
+{
+  "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4",
+  "command": "/usr/lib64/ccache/cc  -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -O3 -DNDEBUG -std=c11 -O2 -fno-fast-math -ffp-contract=off -ffunction-sections -fdata-sections -o CMakeFiles/ostc4_upstream_corrected.dir/corrected/decom.c.o -c \"/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4/corrected/decom.c\"",
+  "file": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4/corrected/decom.c",
+  "output": "ostc4/CMakeFiles/ostc4_upstream_corrected.dir/corrected/decom.c.o"
+},
+{
+  "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4",
+  "command": "/usr/lib64/ccache/cc  -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -O3 -DNDEBUG -std=c11 -O2 -fno-fast-math -ffp-contract=off -ffunction-sections -fdata-sections -o CMakeFiles/ostc4_upstream_corrected.dir/upstream/Discovery/Src/buehlmann.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Src/buehlmann.c",
+  "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Src/buehlmann.c",
+  "output": "ostc4/CMakeFiles/ostc4_upstream_corrected.dir/upstream/Discovery/Src/buehlmann.c.o"
+},
+{
+  "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4",
+  "command": "/usr/lib64/ccache/cc -DOSTC4_TISSUE_CORRECTIONS=1 -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/compat -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc -isystem /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc -O3 -DNDEBUG -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off -o CMakeFiles/ostc4_corrected.dir/src/ostc4_baseline.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+  "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/ostc4_baseline.c",
+  "output": "ostc4/CMakeFiles/ostc4_corrected.dir/src/ostc4_baseline.c.o"
+},
+{
+  "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4",
+  "command": "/usr/lib64/ccache/cc -DOSTC4_TISSUE_CORRECTIONS=1 -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -O3 -DNDEBUG -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off -o CMakeFiles/ostc4_replay_corrected.dir/src/replay.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/replay.c",
+  "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/replay.c",
+  "output": "ostc4/CMakeFiles/ostc4_replay_corrected.dir/src/replay.c.o"
+},
+{
+  "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4",
+  "command": "/usr/lib64/ccache/cc -DOSTC4_TISSUE_CORRECTIONS=1 -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -O3 -DNDEBUG -std=c11 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/test_ostc4_corrected_contract.dir/tests/test_contract.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_contract.c",
+  "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_contract.c",
+  "output": "ostc4/CMakeFiles/test_ostc4_corrected_contract.dir/tests/test_contract.c.o"
+},
+{
+  "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4",
+  "command": "/usr/lib64/ccache/cc -DOSTC4_TISSUE_CORRECTIONS=1 -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -O3 -DNDEBUG -std=c11 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/test_ostc4_exposure.dir/tests/test_exposure.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_exposure.c",
+  "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_exposure.c",
+  "output": "ostc4/CMakeFiles/test_ostc4_exposure.dir/tests/test_exposure.c.o"
+},
+{
+  "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4",
+  "command": "/usr/lib64/ccache/cc -DOSTC4_CONTINUOUS_EXPOSURE=1 -DOSTC4_TISSUE_CORRECTIONS=1 -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -O3 -DNDEBUG -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror -fno-fast-math -ffp-contract=off -o CMakeFiles/ostc4_continuity_replay.dir/src/replay.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/replay.c",
+  "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/src/replay.c",
+  "output": "ostc4/CMakeFiles/ostc4_continuity_replay.dir/src/replay.c.o"
+},
+{
+  "directory": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/ostc4-ticket07-host/ostc4",
+  "command": "/usr/lib64/ccache/cc -DOSTC4_TISSUE_CORRECTIONS=1 -I/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/include -O3 -DNDEBUG -std=c11 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/test_ostc4_restart.dir/tests/test_restart.c.o -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_restart.c",
+  "file": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/tests/test_restart.c",
+  "output": "ostc4/CMakeFiles/test_ostc4_restart.dir/tests/test_restart.c.o"
+}
+]

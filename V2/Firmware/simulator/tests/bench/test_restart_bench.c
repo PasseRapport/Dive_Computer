@@ -36,6 +36,10 @@ int main(void)
     CHECK(pc_bench_fresh(1.01325f,1025,NULL,0)==0);
     CHECK(pc_bench_read()->result.tissues==OSTC4_AVAILABLE);
     CHECK(!pc_bench_read()->error && !pc_bench_read()->gap);
+    CHECK(pc_bench_checkpoint()==0);
+    pc_bench_mark_missing(); /* Unknown duration, even though simulation clock did not advance. */
+    CHECK(pc_bench_restart(PC_RESTART_KNOWN)==OSTC4_RESTART_EXPOSURE_UNKNOWN);
+    CHECK(pc_bench_read()->result.tissues==OSTC4_INVALID);
     puts("restart diagnostics and calculated watch validity pass");
     return 0;
 }

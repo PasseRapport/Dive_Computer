@@ -1,0 +1,19 @@
+[  2%] Built target ostc4_corrected_source
+[  8%] Built target ostc4_upstream
+[ 17%] Built target ostc4_upstream_corrected
+[ 28%] Built target ostc4_upstream_contained
+[ 33%] Built target ostc4_baseline
+[ 37%] Built target ostc4_exposure
+[ 42%] Built target ostc4_corrected
+[ 46%] Built target ostc4_replay
+[ 51%] Built target test_ostc4_contract
+[ 62%] Built target test_pc_bench
+[ 66%] Built target test_calculated_watch
+[ 71%] Built target ostc4_replay_corrected
+[ 73%] Building C object CMakeFiles/test_restart_bench.dir/test_restart_bench.c.o
+[ 77%] Built target test_ostc4_exposure
+[ 82%] Built target test_ostc4_corrected_contract
+[ 86%] Built target ostc4_continuity_replay
+[ 91%] Built target test_ostc4_restart
+[ 93%] Linking C executable test_restart_bench
+[100%] Built target test_restart_bench
