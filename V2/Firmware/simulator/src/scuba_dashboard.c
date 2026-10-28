@@ -249,7 +249,13 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
     color(d->left_title,0xffffff);color(d->left_value,0xffffff);color(d->left_seconds,0xffffff);
     centred(d->left_note,"",101,197);
     uint32_t ring_color=GREEN,progress=0;
-    if(!guidance && !surface) {
+    if(!guidance && m->calculated_state==SCUBA_CALCULATED_INVALID) {
+        hidden(d->left_box,false);
+        lv_obj_set_style_bg_color(d->left_box,lv_color_hex(RED),0);
+        centred(d->left_title,"DECO",101,127);
+        lv_obj_set_style_text_font(d->left_value,&lv_font_montserrat_18,0);
+        centred(d->left_value,"NO DATA",101,157);
+    } else if(!guidance && !surface) {
         centred(d->left_title,"DECO",101,127);centred(d->left_value,"--",101,150);
     } else if(surface) {
         centred(d->left_title,"SURFACE",101,127);scuba_surface_text(text,sizeof(text),m->surface_ms/1000);
