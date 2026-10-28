@@ -69,7 +69,7 @@ bool apnea_settings_checks_inputs(uint64_t *sample_ms)
  case 50:turn(2);break;
  case 51:{
   bool salt=watch_ui_salt_water();enum apnea_bottom_field field=apnea_settings_bottom_field();
-  expect("SETTINGS");expect("Tap to enter");
+  expect("OPTIONS");expect("Tap to enter");
   __ASSERT(!visible(lv_screen_active(),"WATER TYPE"),"Gate exposed settings before tap");
   char path[512];snprintf(path,sizeof(path),"%s/settings-gate.bmp",sim_host_gallery_path());lv_refr_now(NULL);__ASSERT(!sim_host_capture(path),"Gate capture");
   click();expect("WATER TYPE");expect("BOTTOM FIELD");

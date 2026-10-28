@@ -37,3 +37,5 @@ Settings navigation amendment:
   and underwater BACK. x1/x2 selector image checks pass.
 PASS: updated-menu restart suite (all ten choices), restart image checks,
 malformed preferences, write failure and direct-check isolation.
+
+OPTIONS gate refinement: Montserrat 18 title y=103, Montserrat 14 gray hint y=176. Native settings journey PASS. Watch pixel comparison to scuba after normalizing x2 display scale: None (None means identical). PC only.

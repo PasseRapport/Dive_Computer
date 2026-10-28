@@ -66,8 +66,8 @@ leaving ends it without resetting scuba exposure or watch preferences. Session
 records update during the current apnea. Statistics uses the same geometry with orange separators and shows session
 maximum depth, longest apnea, apnea count and elapsed session time (H:MM:SS).
 It has no direction indicator or recovery ring. The page sequence is Main →
-Statistics → Settings → Leave. The Settings page first shows a gate with
-Tap to enter, matching scuba. A tap opens Water Type / Bottom Field / BACK.
+Statistics → Settings → Leave. The Settings page first shows OPTIONS in Montserrat 18 at y=103 and
+a gray Tap to enter in Montserrat 14 at y=176, matching scuba. A tap opens Water Type / Bottom Field / BACK.
 Both choice editors include BACK; selecting it or double-tapping returns one
 level without applying the pending edit, including during immersion.
 Settings groups Water Type (Fresh/Marine) and

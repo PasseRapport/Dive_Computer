@@ -11,10 +11,11 @@ static const char *const fields[]={"TEMPERATURE","MAX DEPTH","UNDERWATER TIME","
 static void row_y(void *o,int32_t y){lv_obj_set_y(o,y);}
 static void refresh(bool animate)
 {
- lv_label_set_text(heading,editor==1?"WATER TYPE":editor==2?"BOTTOM FIELD":"SETTINGS");
- lv_obj_set_style_text_font(heading,engaged?&lv_font_montserrat_24:&lv_font_montserrat_34,0);
+ lv_label_set_text(heading,editor==1?"WATER TYPE":editor==2?"BOTTOM FIELD":engaged?"SETTINGS":"OPTIONS");
+ lv_obj_set_style_text_font(heading,engaged?&lv_font_montserrat_24:&lv_font_montserrat_18,0);
  lv_obj_align(heading,LV_ALIGN_TOP_MID,0,engaged?43:103);
  lv_label_set_text(help,engaged?"Double tap to return":"Tap to enter");
+ lv_obj_set_style_text_color(help,engaged?lv_color_white():lv_color_hex(0xaaaaaa),0);
  lv_obj_align(help,LV_ALIGN_TOP_MID,0,engaged?257:176);
  int count=editor==2?APNEA_BOTTOM_COUNT+1:3,selected=editor?pending:entry;
  if(!engaged){
