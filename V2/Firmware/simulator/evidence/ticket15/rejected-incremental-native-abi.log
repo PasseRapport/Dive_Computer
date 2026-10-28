@@ -1,0 +1,31 @@
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+[New Thread 0x7ffff76c56c0 (LWP 103318)]
+WARNING: Using a test - not safe - entropy source
+[New Thread 0x7ffff6ec46c0 (LWP 103319)]
+[New Thread 0x7ffff66c36c0 (LWP 103320)]
+[Thread 0x7ffff76c56c0 (LWP 103318) exited]
+[New Thread 0x7ffff5ec26c0 (LWP 103321)]
+[New Thread 0x7ffff76c56c0 (LWP 103322)]
+*** Booting nRF Connect SDK v3.4.1-b20f8619ba9a ***
+*** Using Zephyr OS v4.4.2-33fa6a7aac6a ***
+[New Thread 0x7ffff48196c0 (LWP 103323)]
+[New Thread 0x7fffeffff6c0 (LWP 103324)]
+LVGL UI ready: 320x300, RGB565, simulated data
+
+Thread 3 "zephyr.exe" received signal SIGSEGV, Segmentation fault.
+[Switching to Thread 0x7ffff6ec46c0 (LWP 103319)]
+warning: BFD: reopening /tmp/dive-watch-lvgl-dadfc5712e/build/zephyr/zephyr.exe: No such file or directory
+warning: Can't read data for section '.eh_frame' in file '/tmp/dive-watch-lvgl-dadfc5712e/build/zephyr/zephyr.exe'
+warning: Can't read data for section '.debug_frame' in file '/tmp/dive-watch-lvgl-dadfc5712e/build/zephyr/zephyr.exe'
+0x000000000047d7f7 in sim_host_bench_capture (warning: Can't read data for section '.debug_loc' in file '/tmp/dive-watch-lvgl-dadfc5712e/build/zephyr/zephyr.exe'
+milestone=0) at /tmp/dive-watch-lvgl-dadfc5712e/app/src/sim_host.c:386
+386	        storage->log_error?storage->log_error:"");
+#0  0x000000000047d7f7 in sim_host_bench_capture (milestone=0) at /tmp/dive-watch-lvgl-dadfc5712e/app/src/sim_host.c:386
+#1  0x0000000000413e52 in checkpoint_file_checks () at /tmp/dive-watch-lvgl-dadfc5712e/app/src/pc_bench_checks.c:407
+#2  pc_bench_checks_poll () at /tmp/dive-watch-lvgl-dadfc5712e/app/src/pc_bench_checks.c:432
+#3  0x0000000000402e7c in main () at /tmp/dive-watch-lvgl-dadfc5712e/app/src/main.c:79
+$1 = (const struct pc_bench_storage_state *) 0x300000003
+$2 = (const struct pc_bench_storage_state *) 0xe3f3a0 <state>
+$3 = (const struct pc_bench_storage_state **) 0xdcf9a0 <view+288>
+$4 = (const struct pc_bench_storage_state **) 0xdcf9b0 <view+304>

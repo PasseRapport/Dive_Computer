@@ -8,8 +8,8 @@ Test project /tmp/dive15-build
     Start  9: disk_checkpoint_requires_configuration_evidence
 4/5 Test  #9: disk_checkpoint_requires_configuration_evidence ...   Passed    0.00 sec
     Start 10: disk_checkpoint_process_continuity_and_faults
-5/5 Test #10: disk_checkpoint_process_continuity_and_faults .....   Passed    0.13 sec
+5/5 Test #10: disk_checkpoint_process_continuity_and_faults .....   Passed    0.17 sec
 
 100% tests passed, 0 tests failed out of 5
 
-Total Test time (real) =   0.14 sec
+Total Test time (real) =   0.19 sec

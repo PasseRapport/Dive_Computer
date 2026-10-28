@@ -39,13 +39,28 @@ tag = hashlib.sha256((str(root) + ("-bench" if args.bench else "")).encode()).he
 workspace = Path(tempfile.gettempdir()) / ("dive-watch-lvgl-" + tag)
 source = workspace / "app"
 source.mkdir(parents=True, exist_ok=True)
+source_copy_stamp = workspace / ".content-aware-source-copy-v1"
+refresh_source_timestamps = not source_copy_stamp.exists()
+
+def copy_changed_source(src, dst):
+    """Preserve incremental builds without importing stale checkout timestamps.
+
+    A newly checked-out header can be older than a host runner object. copy2
+    would retain that old time and make would silently reuse an incompatible ABI.
+    Changed contents get a fresh destination timestamp; equal files stay untouched.
+    """
+    src, dst = Path(src), Path(dst)
+    if refresh_source_timestamps or not dst.exists() or src.read_bytes() != dst.read_bytes():
+        shutil.copy(src, dst)
+    return str(dst)
+
 for name in ("CMakeLists.txt", "prj.conf", "app.overlay"):
-    shutil.copy2(root / name, source / name)
-shutil.copytree(root / "src", source / "src", dirs_exist_ok=True)
+    copy_changed_source(root / name, source / name)
+shutil.copytree(root / "src", source / "src", dirs_exist_ok=True, copy_function=copy_changed_source)
 bench_options = ["-DDIVE_BENCH=OFF"]
 if args.bench:
     core = workspace / "ostc4_baseline"
-    shutil.copytree(root.parent / "ostc4_baseline", core, dirs_exist_ok=True)
+    shutil.copytree(root.parent / "ostc4_baseline", core, dirs_exist_ok=True, copy_function=copy_changed_source)
     core_build = workspace / "ostc4-build"
     core_env = os.environ.copy()
     core_env["CCACHE_DISABLE"] = "1"
@@ -56,6 +71,7 @@ if args.bench:
     with (source / "prj.conf").open("a") as config:
         config.write("\nCONFIG_CBPRINTF_FP_SUPPORT=y\n")
     bench_options = ["-DDIVE_BENCH=ON", "-DDIVE_OSTC4_LIBDIR=" + str(core_build)]
+source_copy_stamp.touch()
 sdk = Path(os.environ.get("DIVE_NCS_ROOT", str(Path.home() / "ncs/v3.4.1")))
 toolchain = Path(os.environ.get("DIVE_TOOLCHAIN_ROOT", str(Path.home() / "ncs/toolchains/8285d8ad56")))
 env = os.environ.copy()

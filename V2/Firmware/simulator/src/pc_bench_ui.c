@@ -160,7 +160,8 @@ void pc_bench_ui_create(void)
     button("Hold",490,726,88,BENCH_HOLD);button("Surface",588,726,100,BENCH_SURFACE);
     button("Sensor loss",698,726,110,BENCH_GAP);button("FRESH replay",818,726,128,BENCH_FRESH);
     auto_label=button("Auto ascent",1048,690,130,BENCH_AUTO);
-    label("Cyan: actual | Dashed: replay | Yellow: position | Red: gap",578,774);
+    lv_obj_t *legend=label("Cyan: actual | Dashed: replay | Yellow: position | Red: gap",636,446);
+    lv_obj_set_style_text_font(legend,&lv_font_montserrat_12,0);
     last_host_ms=k_uptime_get();
 }
 static void result_time(char *buffer,size_t size,int seconds,ostc4_availability validity)

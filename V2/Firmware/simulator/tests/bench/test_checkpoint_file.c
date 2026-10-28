@@ -17,6 +17,8 @@ static void snapshot(void)
         (unsigned)v->gf_locked,(unsigned)v->recording.active,v->recording.started_seconds,v->recording.completed_seconds,
         v->recording.dive_seconds,v->recording.surface_seconds,v->recording.dives_started,v->recording.dives_completed,
         r->tissues,r->ndl,r->tts,r->ceiling,r->stops);
+    printf(" %a %a %d %d %u",(double)r->gf_low_ceiling_meters,(double)r->gf_high_ceiling_meters,
+        r->gf_low_ceiling,r->gf_high_ceiling,(unsigned)r->gf_locked);
     for(int i=0;i<16;++i)printf(" %a %a",(double)r->nitrogen_bar[i],(double)r->helium_bar[i]);
     for(int i=0;i<OSTC4_STOPS;++i)printf(" %u",r->stop_seconds[i]);
     puts("");
@@ -45,7 +47,10 @@ int main(int argc,char **argv)
         CHECK(v->result.tts==OSTC4_INVALID && v->result.ceiling==OSTC4_INVALID && v->result.stops==OSTC4_INVALID);
         CHECK(v->gf_locked && v->active_gf.low==40 && v->seconds==1260);
         CHECK(!memcmp(before.nitrogen_bar,v->result.nitrogen_bar,sizeof(before.nitrogen_bar)));
-        CHECK(pc_bench_set_gf_pair(20,90)==-1);return 0;
+        CHECK(pc_bench_set_gf_pair(20,90)==-1);
+        CHECK(pc_bench_checkpoint_file_load(argv[2],&evidence,true)==expected);
+        CHECK(!memcmp(before.nitrogen_bar,pc_bench_read()->result.nitrogen_bar,sizeof(before.nitrogen_bar)));
+        return 0;
     }
     if(!strcmp(argv[1],"legacy")) {
         ostc4_recovery evidence={true,1260,86400,NULL,0};

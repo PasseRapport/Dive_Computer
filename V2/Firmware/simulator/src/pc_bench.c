@@ -335,7 +335,8 @@ static int accept_sample(const ostc4_sample *sample)
     }
     if(view.recording.dives_started!=previous_recording.dives_started) {
         view.active_gf=view.preferred_gf;
-        ostc4_exposure_set_gf_pair(view.active_gf.low,view.active_gf.high);
+        if(view.result.gf_pair.low!=view.active_gf.low || view.result.gf_pair.high!=view.active_gf.high)
+            ostc4_exposure_set_gf_pair(view.active_gf.low,view.active_gf.high);
     }
     sync_gf_lock(); /* before the calculation which accepts a dive-start input */
     if(ostc4_exposure_advance(sample)!=OSTC4_OK) {
@@ -452,8 +453,16 @@ int pc_bench_checkpoint_export(struct pc_bench_checkpoint_state *state)
 }
 ostc4_restart_status pc_bench_checkpoint_reject(ostc4_restart_status status)
 {
+    ostc4_observation retained=view.result;
     if(ostc4_exposure_missing()!=OSTC4_OK)ostc4_exposure_restore(NULL,0,NULL);
     ostc4_exposure_read(&view.result);
+    if(view.history_count) {
+        /* A second failed import cannot erase previously accepted diagnostics,
+         * even when the already-invalid core cannot export a backup checkpoint. */
+        retained.tissues=retained.ndl=retained.tts=retained.ceiling=retained.stops=OSTC4_INVALID;
+        retained.gf_low_ceiling=retained.gf_high_ceiling=OSTC4_INVALID;
+        view.result=retained;
+    }
     view.error=view.recovery=ostc4_restart_status_name(status);
     view.gap=true;view.paused=true;view.replay=view.automatic=false;
     view.gf_editing=false;pending_ms=0;
