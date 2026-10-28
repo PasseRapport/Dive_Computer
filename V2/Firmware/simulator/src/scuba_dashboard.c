@@ -253,8 +253,9 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
         hidden(d->left_box,false);
         lv_obj_set_style_bg_color(d->left_box,lv_color_hex(RED),0);
         centred(d->left_title,"DECO",101,127);
-        lv_obj_set_style_text_font(d->left_value,&lv_font_montserrat_18,0);
-        centred(d->left_value,"NO DATA",101,157);
+        lv_obj_set_style_text_font(d->left_value,&lv_font_montserrat_22,0);
+        lv_obj_set_style_text_align(d->left_value,LV_TEXT_ALIGN_CENTER,0);
+        centred(d->left_value,"NO\nDATA",101,146);
     } else if(!guidance && !surface) {
         centred(d->left_title,"DECO",101,127);centred(d->left_value,"--",101,150);
     } else if(surface) {

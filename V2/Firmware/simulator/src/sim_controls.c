@@ -227,13 +227,25 @@ lv_obj_t *sim_controls_create(void)
         lv_obj_set_style_radius(button,10,0);
         lv_obj_add_event_cb(button,rate_changed,LV_EVENT_CLICKED,(void *)(intptr_t)(i?1:-1));
         lv_obj_t *label=lv_label_create(button);lv_label_set_text(label,rate_names[i]);lv_obj_center(label);
+#ifdef DIVE_PC_BENCH
+        lv_obj_add_flag(button,LV_OBJ_FLAG_HIDDEN);
+#endif
     }
     lv_obj_t *reset=lv_button_create(screen);lv_obj_set_pos(reset,270,380);lv_obj_set_size(reset,72,30);
     lv_obj_add_event_cb(reset,surface,LV_EVENT_CLICKED,NULL);
     lv_obj_t *reset_text=lv_label_create(reset);lv_label_set_text(reset_text,"Surface");lv_obj_center(reset_text);
     zoom_label = panel_button(screen, "", SIM_ZOOM_Y, change_zoom);
     lv_label_set_text_fmt(zoom_label, "Scale: x%u (click)", sim_host_get_zoom());
-    label_at(screen, "x1: 1 screen pixel per pixel", SIM_PANEL_X, 402);
+    lv_obj_t *scale_hint=label_at(screen, "x1: 1 screen pixel per pixel", SIM_PANEL_X, 402);
+#ifdef DIVE_PC_BENCH
+    /* The calculated bench owns depth/rate/surface/time controls. Keep the
+     * separate legacy shell for its scripted scenarios, outside bench mode. */
+    lv_obj_add_flag(reset,LV_OBJ_FLAG_HIDDEN);
+    lv_obj_add_flag(lv_obj_get_parent(zoom_label),LV_OBJ_FLAG_HIDDEN);
+    lv_obj_add_flag(scale_hint,LV_OBJ_FLAG_HIDDEN);
+#else
+    (void)scale_hint;
+#endif
     scuba_panel=lv_obj_create(screen);lv_obj_remove_style_all(scuba_panel);
     lv_obj_set_pos(scuba_panel,SIM_PANEL_X,274);lv_obj_set_size(scuba_panel,224,146);
     lv_obj_set_style_bg_color(scuba_panel,lv_color_hex(0x20252d),0);lv_obj_set_style_bg_opa(scuba_panel,LV_OPA_COVER,0);
@@ -246,6 +258,9 @@ lv_obj_t *sim_controls_create(void)
     lv_obj_t *scale=lv_button_create(scuba_panel);lv_obj_set_pos(scale,124,104);lv_obj_set_size(scale,100,30);
     lv_obj_add_event_cb(scale,change_zoom,LV_EVENT_CLICKED,NULL);
     scuba_zoom_label=lv_label_create(scale);lv_label_set_text_fmt(scuba_zoom_label,"Scale: x%u",sim_host_get_zoom());lv_obj_set_style_text_font(scuba_zoom_label,&lv_font_montserrat_12,0);lv_obj_center(scuba_zoom_label);
+#ifdef DIVE_PC_BENCH
+    lv_obj_add_flag(scale,LV_OBJ_FLAG_HIDDEN);
+#endif
     lv_obj_add_flag(scuba_panel,LV_OBJ_FLAG_HIDDEN);
     return watch;
 }
@@ -266,15 +281,18 @@ void sim_controls_poll(void)
     if(scuba) {
         const struct scuba_model *s=scuba_ui_model();
         lv_obj_remove_flag(scuba_panel,LV_OBJ_FLAG_HIDDEN);
-        if(s->calculated) {
-            lv_label_set_text(scenario_label,"Calculated: bench controls");
-            lv_obj_add_state(lv_obj_get_parent(scenario_label),LV_STATE_DISABLED);
-            lv_obj_add_state(lv_obj_get_parent(speed_label),LV_STATE_DISABLED);
-        } else lv_label_set_text_fmt(scenario_label,"Scenario: %s",scuba_model_scenario_name(s->scenario));
-        lv_obj_center(scenario_label);
-        if(s->calculated)lv_label_set_text(speed_label,"Time: bench controls");
-        else lv_label_set_text_fmt(speed_label,"Time: x%u",s->speed);
-        lv_obj_center(speed_label);
+        lv_obj_t *legacy_buttons[]={lv_obj_get_parent(scenario_label),lv_obj_get_parent(speed_label)};
+        for(unsigned i=0;i<2;++i) {
+            if(s->calculated)lv_obj_add_flag(legacy_buttons[i],LV_OBJ_FLAG_HIDDEN);
+            else lv_obj_remove_flag(legacy_buttons[i],LV_OBJ_FLAG_HIDDEN);
+        }
+        if(!s->calculated) {
+            lv_label_set_text_fmt(scenario_label,"Scenario: %s",scuba_model_scenario_name(s->scenario));
+            lv_obj_center(scenario_label);
+            lv_label_set_text_fmt(speed_label,"Time: x%u",s->speed);lv_obj_center(speed_label);
+        }
+        lv_obj_set_y(lv_obj_get_parent(battery_label),s->calculated?0:68);
+        lv_obj_set_y(haptic_label,s->calculated?40:110);
         lv_label_set_text_fmt(battery_label,"Battery: %u%%",s->battery);lv_obj_center(battery_label);
         lv_label_set_text(haptic_label,scuba_ui_haptic_active()?"VIBRATION":s->calculated?"CALCULATED":"DEMO VALUES");
         lv_obj_set_style_text_color(haptic_label,lv_color_hex(scuba_ui_haptic_active()?0xffaa66:0xaaaaaa),0);
