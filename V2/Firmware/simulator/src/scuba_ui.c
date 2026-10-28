@@ -19,6 +19,12 @@ static lv_obj_t *root, *content, *arc, *title, *value, *metric, *detail, *hint;
 static lv_obj_t *menu, *pill, *rows[3];
 static lv_obj_t *alert_text, *brightness_editor, *sensitivity_editor;
 static int setting, leave_progress, water_row;
+#ifdef DIVE_PC_BENCH
+static int gf_endpoint;
+static bool gf_rejected;
+static uint32_t calculated_generation;
+#endif
+static int settings_last(void) {return model.calculated?5:4;}
 static lv_obj_t *water_icons[2], *prep_alarm[2];
 static uint8_t test_battery=87, brightness;
 static uint32_t haptic_count, previous_notifications;
@@ -86,7 +92,14 @@ static const char *choice_name(int index)
     if(screen==SCUBA_FIELD_SELECT&&index==SCUBA_FIELD_COUNT)return "Back";
     if(screen==SCUBA_SETTINGS) {
         static char value[48];if(index==0)return "Water Type";
-        if(index==4)return "Back";
+        if(index==settings_last())return "Back";
+#ifdef DIVE_PC_BENCH
+        if(index==4) {
+            const struct bench_view *v=pc_bench_read();
+            snprintf(value,sizeof(value),"GF %u/%u%s",v->preferred_gf.low,v->preferred_gf.high,
+                v->gf_locked?" LOCKED":"");return value;
+        }
+#endif
         if(index==3){snprintf(value,sizeof(value),"START %u.%u m",model.start_depth_dm/10,model.start_depth_dm%10);return value;}
         unsigned amount=index==1?model.depth_alarm_dm/10:model.time_alarm_s/60;
         if(amount)snprintf(value,sizeof(value),index==1?"DEPTH %u m":"TIME %u min",amount);
@@ -98,7 +111,7 @@ static const char *choice_name(int index)
 static void choice_y(void *object,int32_t y) {lv_obj_set_y(object,y);}
 static void refresh_choices(bool animate)
 {
-    int count=screen==SCUBA_SETTINGS?5:screen==SCUBA_OPTIONS||screen==SCUBA_BACKLIGHT?4:screen==SCUBA_RING_SELECT?SCUBA_RING_COUNT+1:SCUBA_FIELD_COUNT+1;
+    int count=screen==SCUBA_SETTINGS?settings_last()+1:screen==SCUBA_OPTIONS||screen==SCUBA_BACKLIGHT?4:screen==SCUBA_RING_SELECT?SCUBA_RING_COUNT+1:SCUBA_FIELD_COUNT+1;
     int selected=screen==SCUBA_SETTINGS?setting:screen==SCUBA_OPTIONS?options_row:screen==SCUBA_BACKLIGHT?backlight_row:display_choice;
     for(int i=0;i<SCUBA_FIELD_COUNT+1;i++) {
         lv_anim_delete(choices[i],choice_y);
@@ -153,7 +166,7 @@ static void render(void)
     bool display=options_menu();
     hide(menu,!(settings||display)); hide(content,settings||display||screen==SCUBA_MAIN||screen==SCUBA_BRIGHTNESS||screen==SCUBA_SENSITIVITY);
     hide(dashboard,screen!=SCUBA_MAIN);
-    hide(arc,screen==SCUBA_MAIN||settings||display||screen==SCUBA_SETTING||screen==SCUBA_BRIGHTNESS||screen==SCUBA_SENSITIVITY||screen==SCUBA_OPTIONS_GATE||screen==SCUBA_SUMMARY||screen==SCUBA_PREP);
+    hide(arc,screen==SCUBA_MAIN||settings||display||screen==SCUBA_SETTING||screen==SCUBA_GF_EDIT||screen==SCUBA_BRIGHTNESS||screen==SCUBA_SENSITIVITY||screen==SCUBA_OPTIONS_GATE||screen==SCUBA_SUMMARY||screen==SCUBA_PREP);
     lv_obj_set_style_text_font(value,&watch_montserrat_60,0);
     lv_obj_set_style_text_font(metric,&lv_font_montserrat_28,0);
     lv_obj_set_style_text_font(detail,&lv_font_montserrat_18,0);
@@ -173,6 +186,13 @@ static void render(void)
         lv_obj_set_style_text_font(metric,&lv_font_montserrat_18,0);
         lv_obj_set_style_text_font(detail,&lv_font_montserrat_16,0);
         snprintf(text,sizeof(text),"AIR  |  %s",model.salt_water?"MARINE":"FRESH");
+#ifdef DIVE_PC_BENCH
+        if(model.calculated) {
+            const struct bench_view *v=pc_bench_read();
+            snprintf(text,sizeof(text),"AIR | %s | GF %u/%u",model.salt_water?"MARINE":"FRESH",
+                v->preferred_gf.low,v->preferred_gf.high);
+        }
+#endif
         message(metric,text,117);
         snprintf(text,sizeof(text),"Battery %u%%  |  Start %u.%u m",model.battery,model.start_depth_dm/10,model.start_depth_dm%10);
         message(detail,text,150);
@@ -220,6 +240,19 @@ static void render(void)
         light_editor_set_value(brightness_editor,brightness);
     } else if (screen==SCUBA_SENSITIVITY) {
         light_editor_set_value(sensitivity_editor,watch_ui_sensitivity());
+#ifdef DIVE_PC_BENCH
+    } else if (screen==SCUBA_GF_EDIT) {
+        const struct bench_view *v=pc_bench_read();
+        lv_obj_set_style_text_font(value,&lv_font_montserrat_42,0);
+        message(title,gf_endpoint==0?"GF LOW":gf_endpoint==1?"GF HIGH":"SAVE GF PAIR",46);
+        if(gf_endpoint<2)snprintf(text,sizeof(text),"%u",gf_endpoint?v->draft_gf.high:v->draft_gf.low);
+        else snprintf(text,sizeof(text),"%u/%u",v->draft_gf.low,v->draft_gf.high);
+        message(value,text,100);
+        snprintf(text,sizeof(text),"Committed %u/%u",v->preferred_gf.low,v->preferred_gf.high);
+        message(metric,text,168);
+        message(detail,gf_rejected?"Low must not exceed High":"Double tap to cancel",208);
+        message(hint,gf_endpoint==2?"Tap to commit both":"Turn to edit | Tap next",250);
+#endif
     } else if (screen==SCUBA_SETTING) {
         message(title,setting==1?"DEPTH ALARM":setting==3?"START DEPTH":"DIVE TIME ALARM",51);
         uint32_t amount=setting==1?model.depth_alarm_dm/10:model.time_alarm_s/60;
@@ -323,9 +356,20 @@ bool scuba_ui_input(enum watch_input input, int steps)
         if(model.notifications&~SCUBA_BATTERY) {scuba_model_acknowledge(&model); previous_notifications=0;}
         else if(screen==SCUBA_PREP) show(SCUBA_SETTINGS);
         else if(screen==SCUBA_SETTINGS) {
-            if(setting==4)show(SCUBA_PREP);
+            if(setting==settings_last())show(SCUBA_PREP);
+#ifdef DIVE_PC_BENCH
+            else if(setting==4 && model.calculated) {
+                if(!pc_bench_gf_edit_begin()) {gf_endpoint=0;gf_rejected=false;show(SCUBA_GF_EDIT);}
+            }
+#endif
             else if(!setting) {water_row=model.salt_water?1:0;show(SCUBA_WATER);}
             else show(SCUBA_SETTING);
+#ifdef DIVE_PC_BENCH
+        } else if(screen==SCUBA_GF_EDIT) {
+            if(gf_endpoint<2) {++gf_endpoint;render();}
+            else if(!pc_bench_gf_edit_commit())show(SCUBA_SETTINGS);
+            else {gf_rejected=true;gf_endpoint=0;}
+#endif
         } else if(screen==SCUBA_WATER) {if(water_row<2)model.salt_water=water_row==1;show(SCUBA_SETTINGS);}
         else if(screen==SCUBA_SETTING) show(SCUBA_SETTINGS);
         else if(screen==SCUBA_BRIGHTNESS) {watch_ui_set_brightness(brightness);show(brightness_origin);}
@@ -353,6 +397,10 @@ bool scuba_ui_input(enum watch_input input, int steps)
             show(SCUBA_OPTIONS);
         }
     } else if(input==WATCH_DOUBLE_TAP) {
+#ifdef DIVE_PC_BENCH
+        if(screen==SCUBA_GF_EDIT) {pc_bench_gf_edit_cancel();show(SCUBA_SETTINGS);}
+        else
+#endif
         if(screen==SCUBA_SETTING||screen==SCUBA_WATER) show(SCUBA_SETTINGS);
         else if(screen==SCUBA_SETTINGS) show(SCUBA_PREP);
         else if(screen==SCUBA_RING_SELECT||screen==SCUBA_FIELD_SELECT) show(SCUBA_OPTIONS);
@@ -364,6 +412,12 @@ bool scuba_ui_input(enum watch_input input, int steps)
     } else if(input==WATCH_CROWN && steps) {
         if(screen==SCUBA_BRIGHTNESS) {brightness=bounded_value(brightness,steps,10);watch_ui_set_brightness(brightness);}
         else if(screen==SCUBA_SENSITIVITY)watch_ui_set_sensitivity(bounded_value(watch_ui_sensitivity(),steps*10,100));
+#ifdef DIVE_PC_BENCH
+        else if(screen==SCUBA_GF_EDIT) {
+            if(gf_endpoint==2)gf_endpoint=steps<0?0:1;
+            else {pc_bench_gf_edit_adjust(gf_endpoint==1,steps);gf_rejected=false;}
+        }
+#endif
         else if(screen==SCUBA_SETTING) {
             if(setting==1) model.depth_alarm_dm=bounded_value(model.depth_alarm_dm/10,steps,100)*10;
             else if(setting==3) {
@@ -375,7 +429,7 @@ bool scuba_ui_input(enum watch_input input, int steps)
                     model.start_depth_dm=start;
             }
             else model.time_alarm_s=bounded_value(model.time_alarm_s/60,steps,180)*60;
-        } else if(screen==SCUBA_SETTINGS) {setting=bounded_value(setting,steps,4);refresh_options_menu(true);return false;}
+        } else if(screen==SCUBA_SETTINGS) {setting=bounded_value(setting,steps,settings_last());refresh_options_menu(true);return false;}
         else if(screen==SCUBA_WATER){water_row=bounded_value(water_row,steps,2);refresh_options_menu(true);return false;}
         else if(options_menu()) {
             if(screen==SCUBA_OPTIONS)options_row=bounded_value(options_row,steps,3);
@@ -437,7 +491,8 @@ enum scuba_ring scuba_ui_ring(void) {return scuba_dashboard_ring(dashboard);}
 #ifdef DIVE_PC_BENCH
 void scuba_ui_calculated(const struct bench_view *v)
 {
-    if(v->seconds==0 && !v->gap) {
+    if(v->generation!=calculated_generation && !v->gap) {
+        calculated_generation=v->generation;
         scuba_model_scenario(&model,SCUBA_MANUAL,0);
         model.armed=true;model.calculated=true;
         model.salt_water=v->density_kg_m3>1010;
@@ -447,5 +502,7 @@ void scuba_ui_calculated(const struct bench_view *v)
     model.data_gap=v->data_gap;
     float depth=(v->result.absolute_pressure_bar-v->surface_bar)*10;
     scuba_calculated_apply_recorded(&model,&v->recording,&v->result,v->seconds,depth,18,test_battery);
+    if(screen==SCUBA_GF_EDIT && (!v->gf_editing || v->gf_locked))
+        show(v->recording.active?SCUBA_MAIN:SCUBA_PREP);
 }
 #endif

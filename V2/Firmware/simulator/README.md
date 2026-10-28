@@ -227,8 +227,9 @@ rate buttons change signed m/min, positive downward. Inputs are limited to 60 m,
 60 m/min and the engine's +6 bar envelope. Initial surface pressure is limited
 to 0.8..1.2 bar. The standalone controller also accepts densities 990..1040 kg/m3.
 The planner's ceiling/stop depths retain the upstream **10 m/bar convention**,
-shown separately from the hydrostatic graph. GF30/70, ascent 9 m/min and last
-stop/increments of 3 m are fixed test settings. TTS=0 in upstream NDL mode
+shown separately from the hydrostatic graph. GF30/70 is the initial preference; the preparation editor commits an integer
+GF pair atomically and locks it for the complete recorded dive. Ascent 9 m/min
+and last stop/increments of 3 m remain fixed test settings. TTS=0 in upstream NDL mode
 **excludes ascent travel**, and is explicitly qualified in the diagnostics.
 Unavailable, limited and invalid result flags are shown, including for every
 nitrogen tissue. Mandatory stops can be scrolled if the full list exceeds its box.
@@ -327,3 +328,34 @@ has a result/watch JSON and exact accepted pressure/time CSV. Gap captures carry
 invalid flags: replaying their preceding known CSV alone cannot recreate the
 explicit missing-exposure command. The scenario recipe is in pc_bench_checks.c.
 This is synthetic PC evidence; no target or physical execution is implied.
+
+### Configurable GF preparation (synthetic PC only)
+
+In scuba preparation, the committed GF pair appears beside AIR and the water
+type. Tap for Dive Settings, choose GF, turn to edit Low in steps of one, tap to
+edit High, then tap through the complete-pair confirmation. Double tap cancels.
+Both endpoints must satisfy `1 <= Low <= High <= 100`; equality is accepted.
+A dive beginning during editing discards the unfinished draft and locks the last
+committed pair before the starting exposure calculation. Brief surfacing retains
+the lock. Manual surface completion or five surface minutes releases it.
+
+Changing the pair while unlocked recalculates at the same exposure instant;
+tissues, elapsed time, exposure history and incoming GF anchor remain intact.
+Normal replanning can increase the persistent first-stop anchor. Completion does
+not clear it. The PC diagnostic panel and replay JSON expose preferred/applied
+pair, recording lock and distinct configurable/legacy policy identities.
+`GF-CONFIGURATION.txt` records the policy and independent comparison evidence.
+
+Run the editor/lock demonstration and verify its captures:
+
+```sh
+python3 V2/Firmware/simulator/launch.py --gf-check --capture /tmp/gf-demo
+python3 V2/Firmware/simulator/tests/check_gf_render.py /tmp/gf-demo
+```
+
+Checkpoint v2 carries the pair and lock; in-memory recovery also captures the
+recording controller. A later settings/manual recording command makes an older
+pressure-only recovery point ineligible, preserving its bytes and reporting the
+reason. Save again after configuration changes. Old fixed-policy v1 data is
+explicitly incompatible at this stage; disk preferences/logs/checkpoint migration
+are subsequent tickets. This is PC/synthetic evidence only.

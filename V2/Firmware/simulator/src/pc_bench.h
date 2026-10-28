@@ -11,13 +11,15 @@
 struct bench_point { uint32_t seconds; float depth_m; bool gap; };
 struct bench_view {
     ostc4_observation result;
+    ostc4_gf_pair preferred_gf, active_gf, draft_gf;
+    bool gf_locked, gf_editing;
     struct recorded_dive recording;
-    uint32_t seconds, duration, elapsed_seconds;
+    uint32_t seconds, duration, elapsed_seconds, generation;
     struct exposure_gap data_gap;
     float depth_m, rate_m_min, surface_bar, density_kg_m3;
     unsigned speed;
     bool paused, replay, automatic, ended, gap;
-    const char *error, *recovery;
+    const char *error, *recovery, *gf_policy;
     const struct bench_point *history, *profile;
     /* Host-only buffer of exact accepted pressure/time inputs; history_count
      * entries, including fresh surface initialization, never reconstructed depth. */
@@ -41,6 +43,16 @@ int pc_bench_checkpoint(void);
 ostc4_restart_status pc_bench_restart(enum pc_restart_mode mode);
 void pc_bench_poll(uint32_t elapsed_ms);
 void pc_bench_pause(bool paused);
+int pc_bench_set_gf_pair(int low, int high);
+int pc_bench_gf_edit_begin(void);
+int pc_bench_gf_edit_adjust(bool high_endpoint, int steps);
+int pc_bench_gf_edit_commit(void);
+void pc_bench_gf_edit_cancel(void);
+/* Accept one asserted complete linear exposure segment at its exact cadence.
+ * Uses the same calculation/controller/history path as one-second poll replay.
+ * Rejected adapter inputs leave the fixture unchanged. Accepted commands release
+ * replay/automatic control; no host time or intermediate tissue sample is added. */
+int pc_bench_accept_sample(const ostc4_sample *sample);
 /* Recording uses the watch/engine 10 m/bar depth convention at millimetre
  * sensor resolution. Start at 0.5..10 m in 0.5 m steps (default 2 m).
  * Recording commands never initialize tissues or advance exposure. */

@@ -1,0 +1,43 @@
+{
+  "identity": "ostc4-configurable-gf-independent-reference-v1",
+  "declared_before_production_comparison": true,
+  "frozen_utc": "2026-10-28T12:14:39.580779+00:00",
+  "scope": "synthetic PC mathematical reference only; no target/hardware validation",
+  "authorship": "GF extension by independent reference agent using only previous independently authored Python reference and canonical tickets; production numerical implementation and outputs not inspected",
+  "base_reference": "existing ticket05 schedule_reference.py and tissue_reference.py; no C imports, compilation, invocation or generated expected production outputs",
+  "coefficient_policy": "ZHL-16C nitrogen; compartment 1b; same frozen independently transcribed tissue tables as ticket05",
+  "initialization": {
+    "surface_bar": 1.01325,
+    "n2_fraction_reset": 0.7902,
+    "inspired_n2_fraction": 0.79,
+    "water_vapor_bar": 0.0493,
+    "helium_bar": 0
+  },
+  "gf_pair": {
+    "integer_percent": true,
+    "min": 1,
+    "max": 100,
+    "low_le_high": true
+  },
+  "set_pair_policy": "At unchanged timestamp/tissues/pressure/max depth, recalculate using retained anchor and low-depth input. Normal planning may grow the persistent maximum first-stop ambient anchor; never reset it due to pair or recording changes. No exposure segment is added.",
+  "endpoint_formula": "max(0,10*(max_i((N2_i-GF*a_i)/(1+GF*(1/b_i-1)))-surface_bar)) for the same current tissue vector; each active endpoint is treated as fixed GF",
+  "endpoint_availability": "Independent numeric fixtures provide valid-tissue mathematical endpoint expectations. Public uninitialized/invalid/unknown-exposure endpoint validity is exact and requires dedicated contract tests; schedule unavailability alone does not erase known tissue mathematics.",
+  "comparisons": {
+    "tissues_abs_bar": 0.0005,
+    "endpoint_ceiling_abs_m": 0.006,
+    "anchor_abs_bar": 0.0001,
+    "operational_ceiling_abs_m": 0.105,
+    "ndl_seconds": 0,
+    "each_stop_seconds": 0,
+    "tts_seconds": 3,
+    "availability": "exact"
+  },
+  "endpoint_tolerance_justification": "Ceiling derivative to a tissue pressure is 10/(1+GF*(1/b-1)) <=10 m/bar since all b<1 and GF>0. Inherited tissue bound 0.0005 bar therefore contributes <=0.005m; 0.001m extra covers floating pressure/coefficient arithmetic. This applies to direct analytical fixed-GF endpoints, not legacy 0.01bar binary search quantization. Display rounding is tested separately.",
+  "retained_policy": "NDL buckets, each mandatory-stop quantum and validity remain exact. Only total TTS uses the explicit existing user-approved absolute 3s allowance. Legacy 30/70 evidence remains separately identified and unchanged.",
+  "outcome_rule": "Publish all differences and fail on any field outside its declared bound. Never regenerate fixtures from production or widen tolerance after comparison.",
+  "frozen_sha256": {
+    "schedule_reference.py": "e788ce657245a832cd1dc29a7d54e8ce00fc4b2e71f9efabb828fa5663c9866d",
+    "tissue_reference.py": "842186e884ddd3fdba8fd7aff76322f688706de6b5b31ce7ec1da4ed4b77208a",
+    "configurable_reference.py": "c34c137314a8cc1c12ee8b71b71ae4be5205258be7407001a0c3b43bce2e2dc6"
+  }
+}

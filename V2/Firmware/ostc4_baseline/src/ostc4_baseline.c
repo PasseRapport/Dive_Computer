@@ -41,6 +41,7 @@ ostc4_status ostc4_initialize(const ostc4_initial *initial)
     settings.input_next_stop_increment_depth_bar = 0.3f;
     settings.decogaslist[0] = life.actualGas;
     gGF_low_depth_bar = 0; /* Match zero-initialized upstream process state. */
+    current.gf_pair = (ostc4_gf_pair){30,70};
     current.timestamp_seconds = initial->timestamp_seconds;
     current.absolute_pressure_bar = initial->surface_pressure_bar;
     memcpy(current.nitrogen_bar, life.tissue_nitrogen_bar, sizeof(current.nitrogen_bar));
@@ -60,6 +61,54 @@ ostc4_status ostc4_read(ostc4_observation *observation)
     return OSTC4_OK;
 }
 
+static ostc4_status calculate(SLifeData *next, SDiveSettings *next_settings,
+    uint32_t timestamp, ostc4_observation *output)
+{
+    SDecoinfo result = {0};
+    ostc4_observation observed = {0};
+    const float old_gf_depth = gGF_low_depth_bar;
+    buehlmann_calc_deco(next, next_settings, &result);
+    /* Upstream ceiling consumes scratch GF left by the immediately prior planner. */
+    buehlmann_ceiling_calculator(next, &result);
+    for (int i = 0; i < OSTC4_TISSUES; ++i) {
+        if (!isfinite(next->tissue_nitrogen_bar[i]) || next->tissue_nitrogen_bar[i] < 0 ||
+            !isfinite(next->tissue_helium_bar[i]) || next->tissue_helium_bar[i] < 0) {
+            gGF_low_depth_bar = old_gf_depth;
+            return OSTC4_NUMERICAL_FAILURE;
+        }
+    }
+    if (!isfinite(result.output_ceiling_meter) || !isfinite(gGF_low_depth_bar) ||
+        !isfinite(next_settings->internal__pressure_first_stop_ambient_bar_as_upper_limit_for_gf_low_otherwise_zero)) {
+        gGF_low_depth_bar = old_gf_depth;
+        return OSTC4_NUMERICAL_FAILURE;
+    }
+    observed.gf_pair = (ostc4_gf_pair){next_settings->gf_low,next_settings->gf_high};
+    observed.gf_locked = current.gf_locked;
+    observed.timestamp_seconds = timestamp;
+    observed.dive_seconds = next->dive_time_seconds_without_surface_time;
+    observed.absolute_pressure_bar = next->pressure_ambient_bar;
+    memcpy(observed.nitrogen_bar, next->tissue_nitrogen_bar, sizeof(observed.nitrogen_bar));
+    memcpy(observed.helium_bar, next->tissue_helium_bar, sizeof(observed.helium_bar));
+    observed.gf_anchor_ambient_bar = next_settings->internal__pressure_first_stop_ambient_bar_as_upper_limit_for_gf_low_otherwise_zero;
+    observed.gf_low_depth_bar = gGF_low_depth_bar;
+    observed.ndl_seconds = result.output_ndl_seconds;
+    observed.tts_seconds = result.output_time_to_surface_seconds;
+    observed.ceiling_meters = result.output_ceiling_meter;
+    memcpy(observed.stop_seconds, result.output_stop_length_seconds, sizeof(observed.stop_seconds));
+    observed.tissues = OSTC4_AVAILABLE;
+    if (observed.dive_seconds >= 60 && next->pressure_ambient_bar > next->pressure_surface_bar &&
+        (observed.ndl_seconds > 0 || observed.tts_seconds > 0)) {
+        observed.ndl = observed.ndl_seconds >= 14400 ? OSTC4_LIMITED : OSTC4_AVAILABLE;
+        observed.tts = observed.tts_seconds >= 59940 ? OSTC4_LIMITED : OSTC4_AVAILABLE;
+        observed.stops = observed.ceiling = observed.tts;
+        for (int i = 0; i < OSTC4_STOPS; ++i)
+            if (observed.stop_seconds[i] >= 59940)
+                observed.stops = OSTC4_LIMITED;
+    }
+    *output = observed;
+    return OSTC4_OK;
+}
+
 ostc4_status ostc4_advance(const ostc4_sample *sample)
 {
     if (!initialized)
@@ -74,9 +123,7 @@ ostc4_status ostc4_advance(const ostc4_sample *sample)
     const uint32_t elapsed = sample->timestamp_seconds - current.timestamp_seconds;
     SLifeData next = life;
     SDiveSettings next_settings = settings;
-    SDecoinfo result = {0};
     ostc4_observation observed = {0};
-    const float old_gf_depth = gGF_low_depth_bar;
     next.pressure_ambient_bar = sample->absolute_pressure_bar;
     /* This baseline excludes wholly surface intervals from the upstream dive
      * counter; transitions include their whole duration. No recording threshold. */
@@ -92,42 +139,8 @@ ostc4_status ostc4_advance(const ostc4_sample *sample)
         decom_tissues_exposure_stage_schreiner((int)elapsed, &next.actualGas,
             life.pressure_ambient_bar, next.pressure_ambient_bar,
             next.tissue_nitrogen_bar, next.tissue_helium_bar);
-    buehlmann_calc_deco(&next, &next_settings, &result);
-    /* Upstream ceiling consumes scratch GF left by the immediately prior planner. */
-    buehlmann_ceiling_calculator(&next, &result);
-    for (int i = 0; i < OSTC4_TISSUES; ++i) {
-        if (!isfinite(next.tissue_nitrogen_bar[i]) || next.tissue_nitrogen_bar[i] < 0 ||
-            !isfinite(next.tissue_helium_bar[i]) || next.tissue_helium_bar[i] < 0) {
-            gGF_low_depth_bar = old_gf_depth;
-            return OSTC4_NUMERICAL_FAILURE;
-        }
-    }
-    if (!isfinite(result.output_ceiling_meter) || !isfinite(gGF_low_depth_bar) ||
-        !isfinite(next_settings.internal__pressure_first_stop_ambient_bar_as_upper_limit_for_gf_low_otherwise_zero)) {
-        gGF_low_depth_bar = old_gf_depth;
-        return OSTC4_NUMERICAL_FAILURE;
-    }
-    observed.timestamp_seconds = sample->timestamp_seconds;
-    observed.dive_seconds = next.dive_time_seconds_without_surface_time;
-    observed.absolute_pressure_bar = next.pressure_ambient_bar;
-    memcpy(observed.nitrogen_bar, next.tissue_nitrogen_bar, sizeof(observed.nitrogen_bar));
-    memcpy(observed.helium_bar, next.tissue_helium_bar, sizeof(observed.helium_bar));
-    observed.gf_anchor_ambient_bar = next_settings.internal__pressure_first_stop_ambient_bar_as_upper_limit_for_gf_low_otherwise_zero;
-    observed.gf_low_depth_bar = gGF_low_depth_bar;
-    observed.ndl_seconds = result.output_ndl_seconds;
-    observed.tts_seconds = result.output_time_to_surface_seconds;
-    observed.ceiling_meters = result.output_ceiling_meter;
-    memcpy(observed.stop_seconds, result.output_stop_length_seconds, sizeof(observed.stop_seconds));
-    observed.tissues = OSTC4_AVAILABLE;
-    if (observed.dive_seconds >= 60 && next.pressure_ambient_bar > next.pressure_surface_bar &&
-        (observed.ndl_seconds > 0 || observed.tts_seconds > 0)) {
-        observed.ndl = observed.ndl_seconds >= 14400 ? OSTC4_LIMITED : OSTC4_AVAILABLE;
-        observed.tts = observed.tts_seconds >= 59940 ? OSTC4_LIMITED : OSTC4_AVAILABLE;
-        observed.stops = observed.ceiling = observed.tts;
-        for (int i = 0; i < OSTC4_STOPS; ++i)
-            if (observed.stop_seconds[i] >= 59940)
-                observed.stops = OSTC4_LIMITED;
-    }
+    ostc4_status status=calculate(&next,&next_settings,sample->timestamp_seconds,&observed);
+    if(status!=OSTC4_OK)return status;
     life = next;
     settings = next_settings;
     current = observed;
@@ -189,6 +202,28 @@ ostc4_status ostc4_exposure_advance(const ostc4_sample *sample)
     return status;
 }
 
+ostc4_status ostc4_exposure_set_gf_pair(int low,int high)
+{
+    if(!initialized)return OSTC4_NOT_INITIALIZED;
+    if(exposure_incomplete || current.gf_locked || low<1 || high>100 || low>high)
+        return OSTC4_BAD_INPUT;
+    SDiveSettings next_settings=settings;
+    next_settings.gf_low=(uint8_t)low;next_settings.gf_high=(uint8_t)high;
+    SLifeData next=life;
+    ostc4_observation observed={0};
+    ostc4_scratch scratch;ostc4_scratch_save(&scratch);
+    ostc4_status status=calculate(&next,&next_settings,current.timestamp_seconds,&observed);
+    if(status!=OSTC4_OK) {ostc4_scratch_restore(&scratch);return status;}
+    settings=next_settings;current=observed;
+    return OSTC4_OK;
+}
+ostc4_status ostc4_exposure_set_gf_lock(bool locked)
+{
+    if(!initialized)return OSTC4_NOT_INITIALIZED;
+    current.gf_locked=locked;
+    return OSTC4_OK;
+}
+
 ostc4_status ostc4_exposure_predict(const ostc4_sample *future, ostc4_observation *prediction)
 {
     if (!prediction)
@@ -231,8 +266,8 @@ static uint32_t checkpoint_crc(const unsigned char *bytes, size_t size)
 static uint32_t checkpoint_policy(void)
 {
     static const unsigned char policy[]=OSTC4_REVISION "\n" OSTC4_POLICY "\n"
-        OSTC4_CORRECTION_SET "\n" OSTC4_EXPOSURE_POLICY
-        "\nieee-binary32-binary64-no-fast-math-no-contract-checkpoint-v1";
+        OSTC4_CORRECTION_SET "\n" OSTC4_CONFIGURABLE_GF_POLICY
+        "\nieee-binary32-binary64-no-fast-math-no-contract-checkpoint-v2";
     return checkpoint_crc(policy,sizeof(policy)-1);
 }
 static void put_u32(unsigned char **p,uint32_t value)
@@ -259,7 +294,7 @@ ostc4_status ostc4_exposure_checkpoint(void *buffer,size_t size)
     if(exposure_incomplete || !buffer || size!=OSTC4_CHECKPOINT_BYTES)return OSTC4_BAD_INPUT;
     unsigned char bytes[OSTC4_CHECKPOINT_BYTES],*p=bytes;
     put_u32(&p,UINT32_C(0x31435845)); /* EXC1 */
-    put_u32(&p,1);put_u32(&p,checkpoint_policy());put_u32(&p,OSTC4_CHECKPOINT_BYTES);
+    put_u32(&p,2);put_u32(&p,checkpoint_policy());put_u32(&p,OSTC4_CHECKPOINT_BYTES);
     put_u32(&p,current.timestamp_seconds);put_u32(&p,current.dive_seconds);
     put_float(&p,life.pressure_surface_bar);put_float(&p,current.absolute_pressure_bar);
     put_float(&p,life.max_depth_meter);put_float(&p,current.gf_anchor_ambient_bar);
@@ -273,6 +308,7 @@ ostc4_status ostc4_exposure_checkpoint(void *buffer,size_t size)
     }
     *p++=(unsigned char)current.tissues;*p++=(unsigned char)current.ndl;
     *p++=(unsigned char)current.tts;*p++=(unsigned char)current.ceiling;*p++=(unsigned char)current.stops;
+    *p++=current.gf_pair.low;*p++=current.gf_pair.high;*p++=current.gf_locked;
     put_u32(&p,checkpoint_crc(bytes,sizeof(bytes)-4));
     memcpy(buffer,bytes,sizeof(bytes));return OSTC4_OK;
 }
@@ -289,6 +325,7 @@ static bool checkpoint_observation_valid(const ostc4_observation *r,float surfac
        !checkpoint_number(r->gf_low_depth_bar,0,15) ||
        !checkpoint_number(r->ceiling_meters,0,150) ||
        r->ndl_seconds<0 || r->ndl_seconds>14400 || r->tts_seconds<0 || r->tts_seconds>59940 ||
+       r->gf_pair.low<1 || r->gf_pair.high>100 || r->gf_pair.low>r->gf_pair.high ||
        r->tissues!=OSTC4_AVAILABLE || r->ndl>OSTC4_LIMITED || r->tts>OSTC4_LIMITED ||
        r->ceiling>OSTC4_LIMITED || r->stops>OSTC4_LIMITED)return false;
     for(int i=0;i<OSTC4_TISSUES;++i)
@@ -300,10 +337,17 @@ ostc4_restart_status ostc4_exposure_restore(const void *buffer,size_t size,const
 {
     /* Rejection must be visible even before a first fixture exists. */
     memset(&current,0,sizeof(current));initialized=true;invalidate_exposure();
+    if(buffer && size==293) {
+        /* Fixed-30/70 v1 has no recording/lock evidence. Migration belongs to
+         * the caller's explicit compatibility path, never an unlocked default. */
+        const unsigned char *old=buffer,*tail=old+289;
+        return get_u32(&tail)==checkpoint_crc(old,289)?
+            OSTC4_CHECKPOINT_INCOMPATIBLE:OSTC4_CHECKPOINT_CORRUPT;
+    }
     if(!buffer || size!=OSTC4_CHECKPOINT_BYTES)return OSTC4_CHECKPOINT_CORRUPT;
     const unsigned char *bytes=buffer,*tail=bytes+size-4,*p=bytes;
     if(get_u32(&tail)!=checkpoint_crc(bytes,size-4))return OSTC4_CHECKPOINT_CORRUPT;
-    if(get_u32(&p)!=UINT32_C(0x31435845) || get_u32(&p)!=1 ||
+    if(get_u32(&p)!=UINT32_C(0x31435845) || get_u32(&p)!=2 ||
        get_u32(&p)!=checkpoint_policy() || get_u32(&p)!=OSTC4_CHECKPOINT_BYTES)
         return OSTC4_CHECKPOINT_INCOMPATIBLE;
     ostc4_observation saved={0};
@@ -322,6 +366,9 @@ ostc4_restart_status ostc4_exposure_restore(const void *buffer,size_t size,const
         saved.stop_seconds[i]=(unsigned short)(p[0]|((unsigned)p[1]<<8));p+=2;
     }
     saved.tissues=*p++;saved.ndl=*p++;saved.tts=*p++;saved.ceiling=*p++;saved.stops=*p++;
+    saved.gf_pair.low=*p++;saved.gf_pair.high=*p++;
+    if(*p>1)return OSTC4_CHECKPOINT_INVALID;
+    saved.gf_locked=*p++;
     if(!checkpoint_observation_valid(&saved,surface,max_depth))return OSTC4_CHECKPOINT_INVALID;
     if(!recovery || !recovery->time_known)return OSTC4_RESTART_TIME_UNKNOWN;
     if(recovery->restart_seconds<saved.timestamp_seconds)return OSTC4_RESTART_TIME_UNKNOWN;
@@ -348,6 +395,7 @@ ostc4_restart_status ostc4_exposure_restore(const void *buffer,size_t size,const
     memcpy(life.tissue_nitrogen_bar,saved.nitrogen_bar,sizeof(saved.nitrogen_bar));
     memcpy(life.tissue_helium_bar,saved.helium_bar,sizeof(saved.helium_bar));
     settings.internal__pressure_first_stop_ambient_bar_as_upper_limit_for_gf_low_otherwise_zero=saved.gf_anchor_ambient_bar;
+    settings.gf_low=saved.gf_pair.low;settings.gf_high=saved.gf_pair.high;
     gGF_low_depth_bar=saved.gf_low_depth_bar;current=saved;
     for(size_t i=0;i<recovery->count;++i)
         if(ostc4_exposure_advance(&recovery->history[i])!=OSTC4_OK) {
@@ -358,6 +406,7 @@ ostc4_restart_status ostc4_exposure_restore(const void *buffer,size_t size,const
 const char *ostc4_restart_status_name(ostc4_restart_status status)
 {
     switch(status) {
+    case OSTC4_RESTART_CONFIGURATION_UNKNOWN:return "Unknown checkpoint configuration history";
     case OSTC4_RESTORED:return "Recovered: complete exposure";
     case OSTC4_CHECKPOINT_CORRUPT:return "Corrupt checkpoint";
     case OSTC4_CHECKPOINT_INCOMPATIBLE:return "Incompatible checkpoint";

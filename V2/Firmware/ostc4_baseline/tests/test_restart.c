@@ -63,6 +63,13 @@ static void faults(const unsigned char *checkpoint)
     }
     memcpy(bad,checkpoint,sizeof(bad));memset(bad+20,0xff,4);reseal(bad);
     CHECK(ostc4_exposure_restore(bad,sizeof(bad),&r)==OSTC4_CHECKPOINT_INVALID);invalid();
+    /* v2 policy tuple/lock are validated, never restored by a default. */
+    const unsigned offsets[]={289,290,291};
+    const unsigned char values[]={0,101,2};
+    for(size_t i=0;i<3;++i) {
+        memcpy(bad,checkpoint,sizeof(bad));bad[offsets[i]]=values[i];reseal(bad);
+        CHECK(ostc4_exposure_restore(bad,sizeof(bad),&r)==OSTC4_CHECKPOINT_INVALID);invalid();
+    }
     r.time_known=false;
     CHECK(ostc4_exposure_restore(checkpoint,sizeof(bad),&r)==OSTC4_RESTART_TIME_UNKNOWN);invalid();
     CHECK(ostc4_exposure_restore(checkpoint,sizeof(bad),NULL)==OSTC4_RESTART_TIME_UNKNOWN);invalid();

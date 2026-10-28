@@ -1,0 +1,48 @@
+Configurable GF pair — ticket 12 synthetic PC evidence
+====================================================
+
+Public configuration: pc_bench_set_gf_pair(low,high), editor draft/commit/cancel,
+then timestamped exposure through pc_bench_accept_sample or normal poll/replay,
+with pc_bench_read observations. Core ostc4_exposure_set_gf_pair independently
+rejects the recording lock. The serialized recording controller sets that lock
+before accepting a dive-start calculation. Preferred and active pairs are
+explicit atomic tuples; editor changes do not become calculation settings.
+
+Initial pair is 30/70. Valid pairs are integer 1..100, Low<=High, equal accepted.
+Cancellation/rejection preserve every committed field. A settings change uses
+current tissues, ambient pressure, exposure timestamp, dive-time/max-depth state,
+settings anchor and GF-low-depth input. It reruns the same contained planner
+without a fake exposure segment or tissue integration. It commits only valid
+results; failure restores all planner scratch. Normal replanning may grow the
+persistent maximum first-stop anchor; GF edits and recording completion never
+arbitrarily clear either anchor, loading or obligations.
+
+Policy identities stay separate:
+- OSTC4_POLICY and OSTC4_EXPOSURE_POLICY retain legacy fixed-30/70 evidence identity.
+- OSTC4_CONFIGURABLE_GF_POLICY is ostc4-continuous-air-configurable-gf-retained-anchor-v2.
+Original baseline/corrected comparison variants retain their fixed settings and
+policy strings; configurable setters exist only in continuous exposure.
+
+The independently authored oracle and vectors are frozen in tests/bench/gf-reference.
+Their provenance/policy files predate production comparison and remain unchanged.
+The production comparator consumes their values, never rewrites them. It tests
+12 cases/114 exact-cadence events, five schedule pairs, shallow availability,
+decompression and repetitive 30/70->20/60 with retained anchors/residual obligations.
+Five additional shallow cases evaluate the independent frozen oracle on actual
+one-second exposure cadence (455 observations). Endpoint vectors remain unused
+until ticket 13; this ticket does not implement endpoint display/calculations.
+
+Exact comparisons: NDL, each mandatory-stop slot, availability, pair/time counters.
+Absolute bounds: tissue 0.0005 bar, anchor/GF-low-depth 0.0001 bar, operational ceiling
+0.105 m. Only total TTS has the previously user-approved 3 s allowance. The current
+comparison has no TTS differences and no failures; former fixed 30/70 exact-TTS
+rejections remain in their original evidence bundles and are not rewritten.
+
+The public-behavior test also compares subsequent anchor-sensitive observations
+and checkpoint bytes after cancelled/rejected settings and hypothetical predictions
+against a matched untouched control. Current tissues/timestamps/history do not
+change on an accepted same-time pair change. Checkpoint v2 preserves pair+lock;
+controller recovery and configuration-history limitations are in ../ostc4_baseline/CHECKPOINT.txt.
+
+PC synthetic mathematics and native simulator rendering only. No Nordic target,
+physical-watch, BLE/Android or operational dive validation is implied.

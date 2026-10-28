@@ -1,0 +1,310 @@
+Start testing: Oct 28 13:32 CET
+----------------------------------------------------------
+1/18 Testing: pc_bench_controls_time_graph
+1/18 Test: pc_bench_controls_time_graph
+Command: "/tmp/gf12-bench/test_pc_bench"
+Directory: /tmp/gf12-bench
+"pc_bench_controls_time_graph" start time: Oct 28 13:32 CET
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   1.03 sec
+----------------------------------------------------------
+Test Passed.
+"pc_bench_controls_time_graph" end time: Oct 28 13:32 CET
+"pc_bench_controls_time_graph" time elapsed: 00:00:01
+----------------------------------------------------------
+
+2/18 Testing: calculated_watch_mapping_session_alerts
+2/18 Test: calculated_watch_mapping_session_alerts
+Command: "/tmp/gf12-bench/test_calculated_watch"
+Directory: /tmp/gf12-bench
+"calculated_watch_mapping_session_alerts" start time: Oct 28 13:32 CET
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"calculated_watch_mapping_session_alerts" end time: Oct 28 13:32 CET
+"calculated_watch_mapping_session_alerts" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/18 Testing: restart_watch_diagnostics
+3/18 Test: restart_watch_diagnostics
+Command: "/tmp/gf12-bench/test_restart_bench"
+Directory: /tmp/gf12-bench
+"restart_watch_diagnostics" start time: Oct 28 13:32 CET
+Output:
+----------------------------------------------------------
+restart diagnostics and calculated watch validity pass
+<end of output>
+Test time =   0.69 sec
+----------------------------------------------------------
+Test Passed.
+"restart_watch_diagnostics" end time: Oct 28 13:32 CET
+"restart_watch_diagnostics" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/18 Testing: configurable_gf_public_behavior
+4/18 Test: configurable_gf_public_behavior
+Command: "/tmp/gf12-bench/test_gf_pair"
+Directory: /tmp/gf12-bench
+"configurable_gf_public_behavior" start time: Oct 28 13:32 CET
+Output:
+----------------------------------------------------------
+atomic GF editing, recording lock, checkpoint, matched-control/prediction isolation pass
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"configurable_gf_public_behavior" end time: Oct 28 13:32 CET
+"configurable_gf_public_behavior" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/18 Testing: configurable_gf_independent_acceptance
+5/18 Test: configurable_gf_independent_acceptance
+Command: "/usr/bin/python3.14" "/tmp/dive-gf-ticket12/V2/Firmware/simulator/tests/bench/compare_gf_reference.py" "/tmp/gf12-bench/gf_bench_replay"
+Directory: /tmp/gf12-bench
+"configurable_gf_independent_acceptance" start time: Oct 28 13:32 CET
+Output:
+----------------------------------------------------------
+{
+  "identity": "configurable-gf-production-comparison-v1",
+  "cases": 12,
+  "one_second_cases": 5,
+  "one_second_events": 455,
+  "events": 114,
+  "tts_differences": [],
+  "failures": []
+}
+<end of output>
+Test time =   0.28 sec
+----------------------------------------------------------
+Test Passed.
+"configurable_gf_independent_acceptance" end time: Oct 28 13:32 CET
+"configurable_gf_independent_acceptance" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/18 Testing: upstream_source_identity
+6/18 Test: upstream_source_identity
+Command: "/usr/bin/python3.14" "/tmp/dive-gf-ticket12/V2/Firmware/ostc4_baseline/tests/test_source_identity.py" "/tmp/dive-gf-ticket12/V2/Firmware/ostc4_baseline"
+Directory: /tmp/gf12-bench/ostc4
+"upstream_source_identity" start time: Oct 28 13:32 CET
+Output:
+----------------------------------------------------------
+all 11 selected upstream files retain their exact audited bytes
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"upstream_source_identity" end time: Oct 28 13:32 CET
+"upstream_source_identity" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/18 Testing: synthetic_replay_contracts
+7/18 Test: synthetic_replay_contracts
+Command: "/usr/bin/python3.14" "/tmp/dive-gf-ticket12/V2/Firmware/ostc4_baseline/tests/test_replay.py" "/tmp/gf12-bench/ostc4/ostc4_replay" "/tmp/dive-gf-ticket12/V2/Firmware/ostc4_baseline"
+Directory: /tmp/gf12-bench/ostc4
+"synthetic_replay_contracts" start time: Oct 28 13:32 CET
+Output:
+----------------------------------------------------------
+deterministic synthetic replay and malformed-profile contracts pass
+<end of output>
+Test time =   0.10 sec
+----------------------------------------------------------
+Test Passed.
+"synthetic_replay_contracts" end time: Oct 28 13:32 CET
+"synthetic_replay_contracts" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/18 Testing: public_pressure_time_contract
+8/18 Test: public_pressure_time_contract
+Command: "/tmp/gf12-bench/ostc4/test_ostc4_contract"
+Directory: /tmp/gf12-bench/ostc4
+"public_pressure_time_contract" start time: Oct 28 13:32 CET
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"public_pressure_time_contract" end time: Oct 28 13:32 CET
+"public_pressure_time_contract" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/18 Testing: corrected_public_pressure_time_contract
+9/18 Test: corrected_public_pressure_time_contract
+Command: "/tmp/gf12-bench/ostc4/test_ostc4_corrected_contract"
+Directory: /tmp/gf12-bench/ostc4
+"corrected_public_pressure_time_contract" start time: Oct 28 13:32 CET
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"corrected_public_pressure_time_contract" end time: Oct 28 13:32 CET
+"corrected_public_pressure_time_contract" time elapsed: 00:00:00
+----------------------------------------------------------
+
+10/18 Testing: corrected_synthetic_replay_contracts
+10/18 Test: corrected_synthetic_replay_contracts
+Command: "/usr/bin/python3.14" "/tmp/dive-gf-ticket12/V2/Firmware/ostc4_baseline/tests/test_replay.py" "/tmp/gf12-bench/ostc4/ostc4_replay_corrected" "/tmp/dive-gf-ticket12/V2/Firmware/ostc4_baseline"
+Directory: /tmp/gf12-bench/ostc4
+"corrected_synthetic_replay_contracts" start time: Oct 28 13:32 CET
+Output:
+----------------------------------------------------------
+deterministic synthetic replay and malformed-profile contracts pass
+<end of output>
+Test time =   0.10 sec
+----------------------------------------------------------
+Test Passed.
+"corrected_synthetic_replay_contracts" end time: Oct 28 13:32 CET
+"corrected_synthetic_replay_contracts" time elapsed: 00:00:00
+----------------------------------------------------------
+
+11/18 Testing: independently_verified_tissues
+11/18 Test: independently_verified_tissues
+Command: "/usr/bin/python3.14" "/tmp/dive-gf-ticket12/V2/Firmware/ostc4_baseline/tests/reference/test_tissue_verification.py" "/tmp/gf12-bench/ostc4/ostc4_replay" "/tmp/gf12-bench/ostc4/ostc4_replay_corrected" "/tmp/dive-gf-ticket12/V2/Firmware/ostc4_baseline/upstream/Common/Src/decom.c" "/tmp/gf12-bench/ostc4/corrected/decom.c"
+Directory: /tmp/gf12-bench/ostc4
+"independently_verified_tissues" start time: Oct 28 13:32 CET
+Output:
+----------------------------------------------------------
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.550s
+
+OK
+<end of output>
+Test time =   0.68 sec
+----------------------------------------------------------
+Test Passed.
+"independently_verified_tissues" end time: Oct 28 13:32 CET
+"independently_verified_tissues" time elapsed: 00:00:00
+----------------------------------------------------------
+
+12/18 Testing: continuous_exposure_contract
+12/18 Test: continuous_exposure_contract
+Command: "/tmp/gf12-bench/ostc4/test_ostc4_exposure"
+Directory: /tmp/gf12-bench/ostc4
+"continuous_exposure_contract" start time: Oct 28 13:32 CET
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"continuous_exposure_contract" end time: Oct 28 13:32 CET
+"continuous_exposure_contract" time elapsed: 00:00:00
+----------------------------------------------------------
+
+13/18 Testing: independent_repetitive_exposure
+13/18 Test: independent_repetitive_exposure
+Command: "/usr/bin/python3.14" "/tmp/dive-gf-ticket12/V2/Firmware/ostc4_baseline/tests/reference/test_continuity_reference.py" "/tmp/gf12-bench/ostc4/ostc4_continuity_replay"
+Directory: /tmp/gf12-bench/ostc4
+"independent_repetitive_exposure" start time: Oct 28 13:32 CET
+Output:
+----------------------------------------------------------
+{
+  "pass": true,
+  "tolerance_bar": 0.0005,
+  "max_absolute_error_bar": 3.2053389542596733e-07
+}
+<end of output>
+Test time =   0.13 sec
+----------------------------------------------------------
+Test Passed.
+"independent_repetitive_exposure" end time: Oct 28 13:32 CET
+"independent_repetitive_exposure" time elapsed: 00:00:00
+----------------------------------------------------------
+
+14/18 Testing: continuity_replay_faults
+14/18 Test: continuity_replay_faults
+Command: "/usr/bin/python3.14" "/tmp/dive-gf-ticket12/V2/Firmware/ostc4_baseline/tests/test_continuity_replay.py" "/tmp/gf12-bench/ostc4/ostc4_continuity_replay"
+Directory: /tmp/gf12-bench/ostc4
+"continuity_replay_faults" start time: Oct 28 13:32 CET
+Output:
+----------------------------------------------------------
+continuity replay faults and explicit availability pass
+<end of output>
+Test time =   0.10 sec
+----------------------------------------------------------
+Test Passed.
+"continuity_replay_faults" end time: Oct 28 13:32 CET
+"continuity_replay_faults" time elapsed: 00:00:00
+----------------------------------------------------------
+
+15/18 Testing: independent_schedule_analytical_checks
+15/18 Test: independent_schedule_analytical_checks
+Command: "/usr/bin/python3.14" "/tmp/dive-gf-ticket12/V2/Firmware/ostc4_baseline/tests/reference/test_schedule_reference.py"
+Directory: /tmp/gf12-bench/ostc4
+"independent_schedule_analytical_checks" start time: Oct 28 13:32 CET
+Output:
+----------------------------------------------------------
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 0.039s
+
+OK
+<end of output>
+Test time =   0.14 sec
+----------------------------------------------------------
+Test Passed.
+"independent_schedule_analytical_checks" end time: Oct 28 13:32 CET
+"independent_schedule_analytical_checks" time elapsed: 00:00:00
+----------------------------------------------------------
+
+16/18 Testing: independent_schedule_comparator_rejects_mutations
+16/18 Test: independent_schedule_comparator_rejects_mutations
+Command: "/usr/bin/python3.14" "/tmp/dive-gf-ticket12/V2/Firmware/ostc4_baseline/tests/reference/test_comparison.py"
+Directory: /tmp/gf12-bench/ostc4
+"independent_schedule_comparator_rejects_mutations" start time: Oct 28 13:32 CET
+Output:
+----------------------------------------------------------
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.002s
+
+OK
+<end of output>
+Test time =   0.10 sec
+----------------------------------------------------------
+Test Passed.
+"independent_schedule_comparator_rejects_mutations" end time: Oct 28 13:32 CET
+"independent_schedule_comparator_rejects_mutations" time elapsed: 00:00:00
+----------------------------------------------------------
+
+17/18 Testing: checkpoint_restart_continuity
+17/18 Test: checkpoint_restart_continuity
+Command: "/tmp/gf12-bench/ostc4/test_ostc4_restart"
+Directory: /tmp/gf12-bench/ostc4
+"checkpoint_restart_continuity" start time: Oct 28 13:32 CET
+Output:
+----------------------------------------------------------
+restart complete exposure agrees with uninterrupted replay
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"checkpoint_restart_continuity" end time: Oct 28 13:32 CET
+"checkpoint_restart_continuity" time elapsed: 00:00:00
+----------------------------------------------------------
+
+18/18 Testing: checkpoint_fresh_process
+18/18 Test: checkpoint_fresh_process
+Command: "/usr/bin/python3.14" "/tmp/dive-gf-ticket12/V2/Firmware/ostc4_baseline/tests/test_restart_process.py" "/tmp/gf12-bench/ostc4/test_ostc4_restart"
+Directory: /tmp/gf12-bench/ostc4
+"checkpoint_fresh_process" start time: Oct 28 13:32 CET
+Output:
+----------------------------------------------------------
+Fresh-process checkpoint/restart matches uninterrupted exposure
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"checkpoint_fresh_process" end time: Oct 28 13:32 CET
+"checkpoint_fresh_process" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 28 13:32 CET

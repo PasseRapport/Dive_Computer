@@ -1,0 +1,51 @@
+Independent configurable-GF reference extension: tickets 12/13
+
+Artifacts are in this directory only; production repository was not modified.
+
+The frozen comparison policy predates production implementation/output inspection.
+No production source arithmetic or production executable was consulted. The extension
+parameterizes the prior separately authored Python schedule reference and reuses its
+independently transcribed tissue model. Original copied files are retained unchanged.
+
+Run: python test_gf_reference.py
+Result: 8 independent reference self-checks passed. Includes analytical fixed-GF
+inequality inversion, default 30/70 regression against original reference, atomic
+invalid pair rejection, unchanged exposure on same-time GF change, equal endpoints,
+zero clamping, isolated observations and reproducibility of frozen fixture values.
+These checks establish reference internal consistency; production acceptance still
+requires comparing actual public bench observations against the frozen vectors.
+
+Fixture coverage: 12 profile cases / 114 events, five schedule pairs (20/60, 30/70,
+40/85, 70/70, 100/100), shallow availability boundary, decompression, repetitive
+30/70 -> 20/60 same-instant change with residual obligations and retained anchor,
+fresh second-dive control. 21 endpoint-only vectors add 1/1, 1/100 and 99/100,
+zero/equal endpoints and large values. Explicit unavailable/invalid contract inputs
+are listed separately; their unavailable numeric payload must not be treated valid.
+
+API: Reference(gf_low=30,gf_high=70); advance(timestamp_seconds, absolute_bar);
+set_gf_pair(low,high); observe(). Reference covers calculation policy, not recording
+lock or UI lifecycle. Complete/unlock the first recorded dive at surface before
+applying the repetitive case's set_gf_pair event through the public bench.
+
+GF changes retain current tissue pressures, timestamp, ambient/max-depth history
+and incoming persistent planner anchors. Replanning may grow the maximum first-stop
+anchor normally, but cannot clear it. The frozen surface-change example preserves
+both anchor and low-depth exactly. Fixed-GF endpoints depend on current tissues and
+GF only, independently of interpolation, maximum depth or planner anchor.
+
+Endpoint tolerance: absolute 0.006m, declared before production comparison. The
+inherited 0.0005bar tissue error contributes <=0.005m because inversion denominator
+is >=1 for these b coefficients and positive GF; extra 0.001m covers float arithmetic.
+Legacy operational-ceiling bound remains 0.105m. NDL, each stop and availability are
+exact; only total TTS uses the existing user-approved +/-3s allowance. A legacy
+0.01bar binary-search endpoint implementation would exceed this direct-root policy;
+publish any failure rather than silently widen the endpoint tolerance.
+
+At t=4640s, previous 30/70 High ceiling is zero. Changing to 20/60 produces High
+ceiling 0.4378173517774542m and projected TTS360s without exposure advancement.
+Persistent first-stop anchor remains 2.51325bar, interpolation depth 1.5bar. Schedule
+availability at surface is still unavailable by inherited policy. Endpoint mathematics
+remain defined from known tissues; production endpoint validity needs exact dedicated
+public contract tests for uninitialized, unknown-exposure and invalid states.
+
+All evidence is synthetic PC mathematical evidence; no target or physical validation.

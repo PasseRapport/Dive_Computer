@@ -167,6 +167,8 @@ static void recording_surface_completion_and_second_dive(void)
     CHECK(pc_bench_recording_finish()==0);
     CHECK(!v->recording.active && !v->recording.armed && v->recording.dives_completed==1);
     CHECK(recorded_watch.summary.valid && recorded_watch.summary.duration_s==12);
+    CHECK(before.gf_locked && !v->result.gf_locked);
+    before.gf_locked=false; /* Completion changes lock metadata only. */
     CHECK(memcmp(&before,&v->result,sizeof(before))==0 && v->history_count==history_count);
     pc_bench_recording_arm();
     CHECK(memcmp(&before,&v->result,sizeof(before))==0 && v->history_count==history_count);

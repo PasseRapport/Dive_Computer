@@ -9,7 +9,7 @@ with tempfile.TemporaryDirectory() as directory:
     checkpoint = str(Path(directory) / "exposure.bin")
     control = subprocess.check_output([sys.argv[1], "--save", checkpoint], text=True)
     recovered = subprocess.check_output([sys.argv[1], "--resume", checkpoint], text=True)
-    assert len(Path(checkpoint).read_bytes()) == 293
+    assert len(Path(checkpoint).read_bytes()) == 296
     assert len(control.splitlines()) == len(recovered.splitlines()) == 4
     for a, b in zip(control.splitlines(), recovered.splitlines()):
         left, right = a.split(), b.split()
