@@ -158,7 +158,7 @@ static void footer(struct dashboard *d,const struct scuba_model *m,const struct 
     if(m->calculated && (m->calculated_state==SCUBA_CALCULATED_INVALID||m->calculated_state==SCUBA_CALCULATED_UNAVAILABLE) &&
        (d->field==FIELD_TTS||d->field==FIELD_CEILING||d->field==FIELD_SAFETY_STOP||d->field==FIELD_STOP_COMPLETE))
         snprintf(value,sizeof(value),"--");
-    if(m->calculated && m->calculated_state==SCUBA_CALCULATED_AVAILABLE &&
+    if(m->calculated && (m->calculated_state==SCUBA_CALCULATED_AVAILABLE||m->calculated_state==SCUBA_CALCULATED_LIMITED) &&
         d->field==FIELD_TTS && !scuba_model_tts(m))caption="TTS (TRAVEL EXCLUDED)";
     lv_obj_set_style_text_font(d->footer_title,d->field==FIELD_CEILING?&lv_font_montserrat_16:&lv_font_montserrat_12,0);
     if(d->field!=FIELD_CEILING&&(m->notifications&~SCUBA_BATTERY))lv_obj_set_style_text_font(d->footer_value,&lv_font_montserrat_28,0);
@@ -215,13 +215,14 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
 {
     struct dashboard *d=lv_obj_get_user_data(view);
     bool guidance=!m->calculated||m->calculated_state==SCUBA_CALCULATED_AVAILABLE||m->calculated_state==SCUBA_CALCULATED_LIMITED;
-    bool surface=scuba_model_surface(m);uint16_t ceiling=scuba_model_stop_depth(m);
+    bool surface=scuba_model_surface(m);uint16_t stop_depth=scuba_model_stop_depth(m);
+    uint16_t ceiling=scuba_model_ceiling(m);
     uint32_t target=scuba_model_stop_target(m);
-    bool stop=!surface&&target&&(scuba_model_in_stop(m)||(!ceiling&&m->depth_dm<30));
+    bool stop=!surface&&target&&(scuba_model_in_stop(m)||(!stop_depth&&m->depth_dm<30));
     bool complete=!surface&&(m->deco_done||(target&&m->stop_ms==target));
-    enum dive_phase phase=surface?PHASE_SURFACE:complete?PHASE_COMPLETE:stop?PHASE_STOP:ceiling?PHASE_DECO:PHASE_NDL;
+    enum dive_phase phase=surface?PHASE_SURFACE:complete?PHASE_COMPLETE:stop?PHASE_STOP:stop_depth?PHASE_DECO:PHASE_NDL;
     if(!d->has_phase||phase!=d->phase) {
-        if(ceiling)d->field=FIELD_CEILING;
+        if(stop_depth)d->field=FIELD_CEILING;
         else if(stop)d->field=FIELD_SAFETY_STOP;
         else if(complete)d->field=FIELD_STOP_COMPLETE;
         else d->field=d->preferred_field;
@@ -234,8 +235,8 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
     hidden(d->stop_mark,!(guidance&&stop&&!complete));
     depth_group(d,m->depth_dm);
     char text[48];
-    if(stop)snprintf(text,sizeof(text),ceiling?"STOP %u-%u m":"STOP 3-6 m",ceiling/10,ceiling/10+3);
-    else if(ceiling&&m->depth_dm<ceiling)snprintf(text,sizeof(text),"DESCEND TO %u m",ceiling/10);
+    if(stop)snprintf(text,sizeof(text),stop_depth?"STOP %u-%u m":"STOP 3-6 m",stop_depth/10,stop_depth/10+3);
+    else if(stop_depth&&m->depth_dm<stop_depth)snprintf(text,sizeof(text),"DESCEND TO %u m",stop_depth/10);
     else text[0]=0;
     if(m->calculated && m->calculated_state==SCUBA_CALCULATED_LIMITED)snprintf(text,sizeof(text),"LIMITED");
     if(!guidance)snprintf(text,sizeof(text),"%s",m->calculated_state==SCUBA_CALCULATED_INVALID?"INVALID":
@@ -257,9 +258,10 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
         ring_color=YELLOW;progress=scuba_ring_stop(m->stop_ms,target);
         color(d->left_title,YELLOW);color(d->left_value,YELLOW);color(d->left_seconds,YELLOW);
         if(!scuba_model_in_stop(m))centred(d->left_note,"PAUSED",101,197);
-    } else if(ceiling&&!complete) {
+    } else if(stop_depth&&!complete) {
         centred(d->left_title,"DECO",101,127);snprintf(text,sizeof(text),"%u'",(scuba_model_tts(m)+59)/60);centred(d->left_value,text,101,150);
-        snprintf(text,sizeof(text),"CEIL %u m",ceiling/10);centred(d->left_note,text,101,197);
+        if(m->calculated)snprintf(text,sizeof(text),"CEIL %u.%u m",ceiling/10,ceiling%10);
+        else snprintf(text,sizeof(text),"CEIL %u m",ceiling/10);centred(d->left_note,text,101,197);
         ring_color=ORANGE;progress=scuba_ring_tts(scuba_model_tts(m));
         color(d->left_title,ORANGE);
     } else {
@@ -289,7 +291,7 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
     hidden(d->arc,d->ring==RING_COMPASS);hidden(d->compass,d->ring!=RING_COMPASS);
     if(d->ring==RING_COMPASS)compass_ring_update(d->compass,data->heading_degrees);
     lv_arc_set_value(d->arc,progress);lv_obj_set_style_arc_color(d->arc,lv_color_hex(ring_color),LV_PART_INDICATOR);
-    lv_obj_set_style_arc_color(d->arc,lv_color_hex(guidance&&ceiling&&m->depth_dm<ceiling?RED:0x282e32),LV_PART_MAIN);
+    lv_obj_set_style_arc_color(d->arc,lv_color_hex(guidance&&(m->calculated?m->calculated_ceiling_violation:(ceiling&&m->depth_dm<ceiling))?RED:0x282e32),LV_PART_MAIN);
     timer(d->time_minutes,d->time_seconds,m->dive_ms/1000,219);
     /* Anchor the minute units at a fixed right edge. Additional minute
      * digits grow towards the centre, preserving the space for seconds. */

@@ -26,7 +26,12 @@ static void calculated_checks(void)
             const ostc4_sample shallow[]={{0,1.01325f},{60,1.81325f},{180,1.81325f}};
             __ASSERT(pc_bench_fresh(1.01325f,1025,shallow,3)==0,"shallow fixture failed");
             pc_bench_poll(120000);
-            __ASSERT((m->calculated_state==SCUBA_CALCULATED_AVAILABLE||m->calculated_state==SCUBA_CALCULATED_LIMITED) && m->ndl_s==(unsigned)v->result.ndl_seconds,"NDL mapping failed");break;
+            __ASSERT((m->calculated_state==SCUBA_CALCULATED_AVAILABLE||m->calculated_state==SCUBA_CALCULATED_LIMITED) && m->ndl_s==(unsigned)v->result.ndl_seconds,"NDL mapping failed");
+            scuba_ui_input(WATCH_CROWN,1);scuba_ui_input(WATCH_SINGLE_TAP,0);
+            scuba_ui_input(WATCH_CROWN,1);scuba_ui_input(WATCH_SINGLE_TAP,0);
+            scuba_ui_input(WATCH_CROWN,FIELD_TTS);scuba_ui_input(WATCH_SINGLE_TAP,0);
+            scuba_ui_input(WATCH_DOUBLE_TAP,0);
+            __ASSERT(scuba_ui_field()==FIELD_TTS,"TTS footer selection failed");break;
         }
         case 2: {
             const ostc4_sample deep[]={{0,1.01325f},{120,4.01325f},{2220,4.01325f}};
@@ -56,17 +61,24 @@ static void calculated_checks(void)
         case 8:
             pc_bench_pause(false);pc_bench_poll(1320000);
             __ASSERT(v->seconds==4920 && m->active && m->ndl_s==(unsigned)v->result.ndl_seconds,"second dive mapping failed");break;
-        case 9:sim_host_push_button(1100,706,1);break;
-        case 10:sim_host_push_button(1100,706,0);break;
-        case 11:
+        case 9: {
+            const ostc4_sample deep[]={{0,1.01325f},{120,4.01325f},{2220,4.01325f}};
+            __ASSERT(pc_bench_fresh(1.01325f,1025,deep,3)==0,"ceiling fixture failed");
+            pc_bench_poll(2220000);pc_bench_manual(8,0);pc_bench_poll(1000);
+            __ASSERT(!m->calculated_ceiling_violation && m->calculated_stop_dm>m->depth_dm,
+                "ceiling/stop boundary fixture failed");break;
+        }
+        case 10:sim_host_push_button(1100,706,1);break;
+        case 11:sim_host_push_button(1100,706,0);break;
+        case 12:
             __ASSERT(v->automatic && !v->replay && v->paused,"SDL auto control failed");
             printk("CALCULATED WATCH PASS: NDL, deco, automatic stop, manual violation, acknowledgement, invalidity, two dives, SDL auto control\n");break;
         default:return;
         }
-        if(stage/2<9)pc_bench_pause(true);
+        if(stage/2<10)pc_bench_pause(true);
         after=now+300;++stage;
     } else {
-        if(stage/2<9) {
+        if(stage/2<10) {
             /* Render the observer's current model, then finish any fade. */
             struct watch_data data={.temperature_c=18,.battery_percent=87};
             watch_ui_update(&data);lv_refr_now(NULL);
