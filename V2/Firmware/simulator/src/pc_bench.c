@@ -46,7 +46,10 @@ int pc_bench_fresh(float surface, float density, const ostc4_sample *profile, si
     }
     if (count && (profile[0].timestamp_seconds!=0||profile[0].absolute_pressure_bar!=surface)) return -1;
     if (ostc4_exposure_initialize(&(ostc4_initial){0,surface})!=OSTC4_OK) return -1;
+    uint16_t start_depth=view.recording.start_depth_dm;
     memset(&view,0,sizeof(view));
+    view.recording=(struct recorded_dive){.armed=true,
+        .start_depth_dm=start_depth?start_depth:20};
     view.surface_bar=surface; view.density_kg_m3=density; view.speed=1;
     view.replay=count!=0; view.profile_count=count;
     view.history=history; view.profile=graph; view.exposure=actual_samples; view.history_count=1;
@@ -112,6 +115,52 @@ ostc4_restart_status pc_bench_restart(enum pc_restart_mode mode)
     notify_observer();return status;
 }
 void pc_bench_pause(bool paused) { view.paused=paused; }
+int pc_bench_start_depth(uint16_t decimetres)
+{
+    if (!view.history_count || decimetres<5 ||
+        decimetres>100 || decimetres%5) return -1;
+    view.recording.start_depth_dm=decimetres;
+    notify_observer();
+    return 0;
+}
+void pc_bench_recording_arm(void)
+{
+    if (!view.history_count || view.recording.armed) return;
+    view.recording.armed=true;
+    notify_observer();
+}
+int pc_bench_recording_finish(void)
+{
+    long depth_mm=lroundf((view.result.absolute_pressure_bar-view.surface_bar)*10000);
+    if (!view.history_count || view.error || depth_mm>=500) return -1;
+    if(view.recording.active) {
+        view.recording.active=false;
+        view.recording.completed_seconds=view.seconds;
+        ++view.recording.dives_completed;
+    }
+    view.recording.armed=false;
+    notify_observer();
+    return 0;
+}
+static void recording_sample(uint32_t seconds,float pressure)
+{
+    struct recorded_dive *r=&view.recording;
+    uint32_t depth_mm=(uint32_t)lroundf(fmaxf(0,(pressure-view.surface_bar)*10000));
+    if (!r->armed) return;
+    if (!r->active && depth_mm/100>=r->start_depth_dm) {
+        r->active=true;r->started_seconds=seconds;++r->dives_started;
+        r->dive_seconds=r->surface_seconds=0;
+        return;
+    }
+    if (!r->active) {
+        if(r->dives_completed && depth_mm<500)++r->surface_seconds;
+        return;
+    }
+    if(depth_mm>=500) {++r->dive_seconds;r->surface_seconds=0;}
+    else if(++r->surface_seconds>=300) {
+        r->active=false;r->completed_seconds=seconds;++r->dives_completed;
+    }
+}
 void pc_bench_speed(unsigned speed)
 {
     if (speed==1||speed==10||speed==60) view.speed=speed;
@@ -222,7 +271,12 @@ void pc_bench_poll(uint32_t elapsed_ms)
             view.depth_m=fminf(view.depth_m,pressure_to_depth(view.surface_bar+6));
             pressure=depth_to_pressure(view.depth_m);
         }
+        /* Establish the recording boundary before the crossing calculation.
+         * Publish only accepted samples; a rejected sample cannot start a dive. */
+        struct recorded_dive previous_recording=view.recording;
+        recording_sample(seconds,pressure);
         if (ostc4_exposure_advance(&(ostc4_sample){seconds,pressure})!=OSTC4_OK) {
+            view.recording=previous_recording;
             missing("Exposure rejected: fresh fixture required",false); break;
         }
         view.seconds=seconds;view.elapsed_seconds=seconds;

@@ -294,7 +294,10 @@ lv_obj_t *scuba_ui_create(lv_obj_t *parent)
 void scuba_ui_enter(uint64_t now_ms)
 {
 #ifdef DIVE_PC_BENCH
-    if(model.calculated)now_ms=(uint64_t)pc_bench_read()->seconds*1000;
+    if(model.calculated) {
+        pc_bench_recording_arm();
+        now_ms=(uint64_t)pc_bench_read()->seconds*1000;
+    }
 #endif
     scuba_model_arm(&model,now_ms);leave_progress=0;
     show(model.active?SCUBA_MAIN:SCUBA_PREP);
@@ -363,7 +366,14 @@ bool scuba_ui_input(enum watch_input input, int steps)
         else if(screen==SCUBA_SENSITIVITY)watch_ui_set_sensitivity(bounded_value(watch_ui_sensitivity(),steps*10,100));
         else if(screen==SCUBA_SETTING) {
             if(setting==1) model.depth_alarm_dm=bounded_value(model.depth_alarm_dm/10,steps,100)*10;
-            else if(setting==3)model.start_depth_dm=LV_CLAMP(5,(int64_t)model.start_depth_dm+steps*5,100);
+            else if(setting==3) {
+                uint16_t start=LV_CLAMP(5,(int64_t)model.start_depth_dm+steps*5,100);
+#ifdef DIVE_PC_BENCH
+                if(model.calculated)pc_bench_start_depth(start);
+                else
+#endif
+                    model.start_depth_dm=start;
+            }
             else model.time_alarm_s=bounded_value(model.time_alarm_s/60,steps,180)*60;
         } else if(screen==SCUBA_SETTINGS) {setting=bounded_value(setting,steps,4);refresh_options_menu(true);return false;}
         else if(screen==SCUBA_WATER){water_row=bounded_value(water_row,steps,2);refresh_options_menu(true);return false;}
@@ -377,7 +387,15 @@ bool scuba_ui_input(enum watch_input input, int steps)
             else if(steps<0&&!leave_progress) show(SCUBA_OPTIONS_GATE);
             else {
                 leave_progress=bounded_value(leave_progress,steps,24);
-                if(leave_progress==24) {scuba_model_finish(&model);model.armed=false;last_active=false;leave_progress=0;return true;}
+                if(leave_progress==24) {
+#ifdef DIVE_PC_BENCH
+                    if(model.calculated) {
+                        if(pc_bench_recording_finish()!=0) {leave_progress=0;return false;}
+                    } else
+#endif
+                    {scuba_model_finish(&model);model.armed=false;}
+                    last_active=false;leave_progress=0;return true;
+                }
             }
         } else {
             /* The top-level crown only changes pages. Menus require a tap. */
@@ -428,6 +446,6 @@ void scuba_ui_calculated(const struct bench_view *v)
     }
     model.data_gap=v->data_gap;
     float depth=(v->result.absolute_pressure_bar-v->surface_bar)*10;
-    scuba_calculated_apply(&model,&v->result,v->seconds,depth,18,test_battery);
+    scuba_calculated_apply_recorded(&model,&v->recording,&v->result,v->seconds,depth,18,test_battery);
 }
 #endif

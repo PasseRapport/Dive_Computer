@@ -7,6 +7,51 @@
 #include <lvgl.h>
 #include <zephyr/kernel.h>
 
+/* Public bench inputs plus real watch menu commands share one recording. */
+static void recording_checks(void)
+{
+    __ASSERT(pc_bench_fresh(1,1000,NULL,0)==0,"recording fixture failed");
+    const struct bench_view *v=pc_bench_read();
+    const struct scuba_model *m=scuba_ui_model();
+    struct watch_data data={.temperature_c=18,.battery_percent=87};
+    scuba_ui_enter(0);
+    scuba_ui_input(WATCH_SINGLE_TAP,0);
+    scuba_ui_input(WATCH_CROWN,-100);scuba_ui_input(WATCH_CROWN,3);
+    scuba_ui_input(WATCH_SINGLE_TAP,0);scuba_ui_input(WATCH_CROWN,2);
+    __ASSERT(v->recording.start_depth_dm==30 && m->start_depth_dm==30,"watch setting missed controller");
+    scuba_ui_input(WATCH_DOUBLE_TAP,0);scuba_ui_input(WATCH_DOUBLE_TAP,0);
+    pc_bench_manual(2.5f,0);pc_bench_poll(1000);
+    __ASSERT(!v->recording.active && !m->active,"watch started below selected threshold");
+    pc_bench_manual(3.2f,0);pc_bench_poll(1000);
+    scuba_ui_update(&data,0,true);
+    __ASSERT(v->recording.active && m->active && v->recording.started_seconds==2 &&
+        scuba_ui_screen()==SCUBA_MAIN,"shared recording did not open main screen");
+    pc_bench_manual(0,0);pc_bench_poll(299000);
+    __ASSERT(v->recording.active && m->active && m->surface_ms==299000,"brief return completed recording");
+    pc_bench_manual(3.2f,0);pc_bench_poll(1000);
+    __ASSERT(v->recording.dives_started==1 && m->surface_ms==0,"brief return started another dive");
+    pc_bench_manual(0,0);pc_bench_poll(1000);
+    ostc4_observation before=v->result;
+    watch_ui_update(&data);
+    scuba_ui_input(WATCH_CROWN,2);
+    __ASSERT(scuba_ui_input(WATCH_CROWN,24),"surface manual exit failed");
+    __ASSERT(!v->recording.active && !v->recording.armed && !m->active && !m->armed &&
+        m->summary.valid && m->summary.duration_s==1,"manual exit missed shared lifecycle");
+    __ASSERT(v->result.timestamp_seconds==before.timestamp_seconds &&
+        v->result.nitrogen_bar[0]==before.nitrogen_bar[0],"manual completion changed exposure");
+    scuba_ui_enter(0);
+    pc_bench_manual(3.2f,0);pc_bench_poll(1000);
+    scuba_ui_update(&data,0,true);
+    __ASSERT(v->recording.dives_started==2 && m->active,"second recording did not start");
+    pc_bench_manual(0,0);pc_bench_poll(300000);
+    scuba_ui_update(&data,0,true);
+    __ASSERT(!v->recording.active && !m->active && m->summary.valid &&
+        v->recording.dives_completed==2 && scuba_ui_screen()==SCUBA_SUMMARY,
+        "five-minute completion did not open shared summary");
+    __ASSERT(pc_bench_start_depth(20)==0,"restore default start threshold failed");
+    printk("RECORDING LIFECYCLE PASS: watch start setting, main/summary, brief surface, manual/automatic completion, second dive\n");
+}
+
 /* Deterministic synthetic integration recipe; the current result, watch state
  * and exact accepted pressure trace are captured together after rendering. */
 static void calculated_checks(void)
@@ -22,6 +67,7 @@ static void calculated_checks(void)
     if(stage%2==0) {
         switch(stage/2) {
         case 0:
+            recording_checks();
             __ASSERT(pc_bench_fresh(1.01325f,1025,NULL,0)==0,"fresh failed");
             pc_bench_manual(5,0);pc_bench_poll(1000);
             __ASSERT(m->calculated && m->calculated_state==SCUBA_CALCULATED_UNAVAILABLE,"missing output concealed");break;

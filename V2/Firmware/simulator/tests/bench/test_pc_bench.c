@@ -1,5 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "pc_bench.h"
+#include "scuba_calculated.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -94,9 +95,11 @@ static void automatic_stop_progression_and_violation(void)
     uint32_t surfaced=v->seconds;
     pc_bench_speed(60); pc_bench_poll(25000);
     CHECK(v->seconds==surfaced+1500 && v->depth_m==0);
+    CHECK(!v->recording.active && v->recording.dives_completed==1);
     CHECK(v->result.nitrogen_bar[5]>0.9f);
     pc_bench_manual(20,0); pc_bench_poll(20000);
     CHECK(v->seconds==surfaced+2700 && !v->automatic);
+    CHECK(v->recording.active && v->recording.dives_started==2);
     CHECK(pc_bench_auto(true)==0);
     pc_bench_poll(1000);
     CHECK(v->depth_m<20 && v->history_count==v->seconds+1);
@@ -109,8 +112,79 @@ static void automatic_stop_progression_and_violation(void)
     pc_bench_poll(10000);
     CHECK(fabsf(v->depth_m-2)<1e-5f && v->rate_m_min==0);
 }
+static void recording_start_threshold(void)
+{
+    CHECK(pc_bench_fresh(1,1000,NULL,0)==0);
+    const struct bench_view *v=pc_bench_read();
+    CHECK(v->recording.armed && !v->recording.active && v->recording.start_depth_dm==20);
+    pc_bench_manual(1.9f,0);pc_bench_poll(1000);
+    CHECK(!v->recording.active);
+    CHECK(pc_bench_start_depth(30)==0);
+    pc_bench_manual(2.5f,0);pc_bench_poll(1000);
+    CHECK(!v->recording.active);
+    pc_bench_manual(3.1f,0);pc_bench_poll(1000);
+    CHECK(v->recording.active && v->recording.started_seconds==3 &&
+          v->recording.dive_seconds==0 && v->recording.dives_started==1);
+    CHECK(v->seconds==3 && v->result.timestamp_seconds==3 && v->history_count==4);
+    pc_bench_poll(1000);
+    CHECK(v->recording.dive_seconds==1);
+    /* Existing start-depth settings remain editable for the next recording. */
+    CHECK(pc_bench_start_depth(20)==0);
+    CHECK(v->recording.active && v->recording.dives_started==1 && v->recording.dive_seconds==1);
+}
+static struct scuba_model recorded_watch;
+static void recording_observer(const struct bench_view *v)
+{
+    scuba_calculated_apply_recorded(&recorded_watch,&v->recording,&v->result,v->seconds,
+        (v->result.absolute_pressure_bar-v->surface_bar)*10,18,87);
+    CHECK(recorded_watch.active==v->recording.active);
+    CHECK(recorded_watch.armed==v->recording.armed);
+    CHECK(recorded_watch.dive_ms==(uint64_t)v->recording.dive_seconds*1000);
+    CHECK(recorded_watch.surface_ms==v->recording.surface_seconds*1000);
+}
+static void recording_surface_completion_and_second_dive(void)
+{
+    CHECK(pc_bench_fresh(1,1000,NULL,0)==0);
+    CHECK(pc_bench_start_depth(20)==0);
+    scuba_model_init(&recorded_watch);
+    pc_bench_set_observer(recording_observer);
+    recording_observer(pc_bench_read());
+    const struct bench_view *v=pc_bench_read();
+    pc_bench_manual(3,0);pc_bench_poll(11000);
+    CHECK(v->recording.active && v->recording.dive_seconds==10);
+    CHECK(pc_bench_recording_finish()==-1);
+    /* Hydrostatic .51m becomes .500m on the watch: exactly .5 is underwater. */
+    pc_bench_manual(.51f,0);pc_bench_poll(1000);
+    CHECK(v->recording.surface_seconds==0 && v->recording.dive_seconds==11);
+    pc_bench_manual(.50f,0);pc_bench_poll(299000);
+    CHECK(v->recording.active && v->recording.surface_seconds==299);
+    pc_bench_manual(3,0);pc_bench_poll(1000);
+    CHECK(v->recording.active && v->recording.dives_started==1 &&
+          v->recording.surface_seconds==0 && v->recording.dive_seconds==12);
+    pc_bench_manual(0,0);pc_bench_poll(1000);
+    ostc4_observation before=v->result;
+    size_t history_count=v->history_count;
+    CHECK(pc_bench_recording_finish()==0);
+    CHECK(!v->recording.active && !v->recording.armed && v->recording.dives_completed==1);
+    CHECK(recorded_watch.summary.valid && recorded_watch.summary.duration_s==12);
+    CHECK(memcmp(&before,&v->result,sizeof(before))==0 && v->history_count==history_count);
+    pc_bench_recording_arm();
+    CHECK(memcmp(&before,&v->result,sizeof(before))==0 && v->history_count==history_count);
+    pc_bench_manual(3,0);pc_bench_poll(1000);
+    CHECK(v->recording.active && v->recording.dives_started==2 && v->recording.dive_seconds==0);
+    pc_bench_poll(10000);pc_bench_manual(0,0);pc_bench_poll(299000);
+    CHECK(v->recording.active && v->recording.surface_seconds==299);
+    pc_bench_poll(1000);
+    CHECK(!v->recording.active && v->recording.armed && v->recording.surface_seconds==300 &&
+          v->recording.dives_completed==2 && recorded_watch.summary.duration_s==10);
+    pc_bench_poll(1000);
+    CHECK(v->recording.surface_seconds==301);
+    pc_bench_set_observer(NULL);
+}
 int main(void)
 {
+    recording_surface_completion_and_second_dive();
+    recording_start_threshold();
     automatic_takeover();
     automatic_holds_unavailable_and_invalid();
     automatic_acceleration_preserves_exposure();
@@ -147,6 +221,7 @@ int main(void)
         if(v->error) fprintf(stderr,"at %u: %s\n",v->seconds,v->error);
         CHECK(v->ended && !v->error && v->seconds==5040);
         CHECK(v->result.timestamp_seconds==5040 && v->history_count==5041);
+        CHECK(v->recording.active && v->recording.dives_started==2 && v->recording.dives_completed==1);
         CHECK(v->result.tissues==OSTC4_AVAILABLE);
         CHECK(v->result.nitrogen_bar[5]>0.9f); /* residual loading above fresh ~0.76 bar */
         if (speed==1) normal=v->result;

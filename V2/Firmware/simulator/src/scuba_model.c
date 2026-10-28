@@ -131,7 +131,7 @@ void scuba_model_update_mm(struct scuba_model *s, uint64_t now_ms, uint32_t manu
     uint32_t depth_mm=s->scenario==SCUBA_MANUAL?manual_depth_mm:(uint32_t)s->depth_dm*100;
     s->temperature=temperature;
     s->battery=s->scenario == SCUBA_ALERTS && t >= 85 ? 5 : battery;
-    if (!s->active && s->depth_dm >= s->start_depth_dm) {
+    if (!s->active && (s->recording_external ? s->recorded_active : s->depth_dm >= s->start_depth_dm)) {
         s->active=true; s->dive_ms=s->depth_integral=s->underwater_ms=0;
         s->peak_dm=s->depth_dm; s->min_temperature=temperature;
         s->stop_ms=s->surface_ms=0; s->safety_required=s->deco_started=s->deco_done=false;
@@ -151,7 +151,7 @@ void scuba_model_update_mm(struct scuba_model *s, uint64_t now_ms, uint32_t manu
         if (temperature < s->min_temperature) s->min_temperature=temperature;
     } else {
         s->surface_ms += dt;
-        if (s->surface_ms >= 300000) { scuba_model_finish(s); return; }
+        if (s->recording_external ? !s->recorded_active : s->surface_ms >= 300000) { scuba_model_finish(s); return; }
     }
     if(!s->calculated) {
     uint32_t budget=s->scenario == SCUBA_NO_DECO ? 7200 : s->scenario == SCUBA_ALERTS ? 240 : 1200;

@@ -195,9 +195,10 @@ void pc_bench_ui_poll(void)
             v->data_gap.duration_seconds/60,v->data_gap.duration_seconds%60);
         else snprintf(gap,sizeof(gap)," | GAP DURATION UNKNOWN");
     }
-    lv_label_set_text_fmt(clock_label,"Elapsed %u:%02u | depth %.2f m | last sample %u:%02u%s",
+    lv_label_set_text_fmt(clock_label,"Elapsed %u:%02u | depth %.2f m | last sample %u:%02u%s | recording %s #%u",
         v->elapsed_seconds/60,v->elapsed_seconds%60,
-        (double)v->depth_m,v->seconds/60,v->seconds%60,gap);
+        (double)v->depth_m,v->seconds/60,v->seconds%60,gap,
+        v->recording.active?"ACTIVE":v->recording.armed?"READY":"DISARMED",v->recording.dives_started);
     lv_label_set_text(recovery_label,v->recovery?v->recovery:"FRESH synthetic fixture; no recovered history");
     lv_label_set_text(restart_mode_label,restart_modes[restart_mode]);
     lv_label_set_text(auto_label,v->automatic?"Auto: ON":"Auto ascent");

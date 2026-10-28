@@ -3,6 +3,7 @@
 #define PC_BENCH_H
 #include "ostc4_exposure.h"
 #include "exposure_gap.h"
+#include "recorded_dive.h"
 #include <stdbool.h>
 #include <stddef.h>
 #define PC_BENCH_HISTORY 21601
@@ -10,6 +11,7 @@
 struct bench_point { uint32_t seconds; float depth_m; bool gap; };
 struct bench_view {
     ostc4_observation result;
+    struct recorded_dive recording;
     uint32_t seconds, duration, elapsed_seconds;
     struct exposure_gap data_gap;
     float depth_m, rate_m_min, surface_bar, density_kg_m3;
@@ -39,6 +41,14 @@ int pc_bench_checkpoint(void);
 ostc4_restart_status pc_bench_restart(enum pc_restart_mode mode);
 void pc_bench_poll(uint32_t elapsed_ms);
 void pc_bench_pause(bool paused);
+/* Recording uses the watch/engine 10 m/bar depth convention at millimetre
+ * sensor resolution. Start at 0.5..10 m in 0.5 m steps (default 2 m).
+ * Recording commands never initialize tissues or advance exposure. */
+int pc_bench_start_depth(uint16_t decimetres);
+void pc_bench_recording_arm(void);
+/* Complete/disarm only at the last accepted surface sample (<0.5 m).
+ * An unprocessed manual depth command is not surface evidence. */
+int pc_bench_recording_finish(void);
 /* Report unknown exposure of any duration; invalid until an explicit fresh fixture. */
 void pc_bench_mark_missing(void);
 /* Explicit synthetic loss beginning at the last accepted sample. The caller's

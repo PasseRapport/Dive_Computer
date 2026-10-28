@@ -59,3 +59,16 @@ void scuba_calculated_apply(struct scuba_model *m,const ostc4_observation *r,
     uint32_t mm=isfinite(depth)&&depth>=0&&depth<=61?(uint32_t)lroundf(depth*1000):m->depth_dm*100u;
     scuba_model_update_mm(m,(uint64_t)seconds*1000,mm,temperature,battery);
 }
+
+void scuba_calculated_apply_recorded(struct scuba_model *m,const struct recorded_dive *recording,
+    const ostc4_observation *r,uint32_t seconds,float depth,int16_t temperature,uint8_t battery)
+{
+    m->recording_external=true;m->recorded_active=recording->active;
+    /* Let an active presentation finish its summary before disarming. */
+    m->armed=recording->armed || m->active;
+    m->start_depth_dm=recording->start_depth_dm;
+    scuba_calculated_apply(m,r,seconds,depth,temperature,battery);
+    m->armed=recording->armed;
+    m->dive_ms=(uint64_t)recording->dive_seconds*1000;
+    m->surface_ms=recording->surface_seconds*1000;
+}

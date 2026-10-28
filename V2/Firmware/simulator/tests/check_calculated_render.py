@@ -24,6 +24,9 @@ for index in range(10):
     assert [int(row["timestamp_seconds"]) for row in samples] == list(range(state["seconds"]+1))
     assert math.isclose(float(samples[-1]["absolute_pressure_bar"]), state["absolute_pressure_bar"], abs_tol=1e-8)
     watch = state["watch"]
+    if "recording" in state:  # Published pre-lifecycle captures remain readable.
+        for field in ("active", "armed", "dive_seconds", "surface_seconds"):
+            assert watch[field] == state["recording"][field], (index, field)
     if watch["state"] in (1, 2):
         assert watch["ndl_seconds"] == state["ndl_seconds"]
         assert watch["tts_seconds"] == state["tts_seconds"]

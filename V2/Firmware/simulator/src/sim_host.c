@@ -330,15 +330,23 @@ int sim_host_bench_capture(unsigned milestone)
     const struct bench_view *v=pc_bench_read();
     fprintf(out,"{\"seconds\":%u,\"duration\":%u,\"depth_m\":%.9g,\"tissues\":[",v->seconds,v->duration,(double)v->depth_m);
     for(int i=0;i<16;++i)fprintf(out,"%s%.9g",i?",":"",(double)v->result.nitrogen_bar[i]);
+    const struct recorded_dive *recording=&v->recording;
     const struct scuba_model *m=calculated_watch;
     if(!m){fclose(out);return -1;}
-    fprintf(out,"],\"automatic\":%s,\"replay\":%s,\"history_count\":%zu,\"absolute_pressure_bar\":%.9g,"
+    fprintf(out,"],\"recording\":{\"armed\":%s,\"active\":%s,\"start_depth_dm\":%u,"
+        "\"started_seconds\":%u,\"completed_seconds\":%u,\"dive_seconds\":%u,\"surface_seconds\":%u,"
+        "\"dives_started\":%u,\"dives_completed\":%u},\"automatic\":%s,\"replay\":%s,\"history_count\":%zu,\"absolute_pressure_bar\":%.9g,"
         "\"ndl_seconds\":%d,\"tts_seconds\":%d,\"ceiling_meters\":%.9g,"
-        "\"validity\":[%d,%d,%d,%d,%d],\"watch\":{\"state\":%d,\"depth_dm\":%u,\"ndl_seconds\":%u,"
+        "\"validity\":[%d,%d,%d,%d,%d],\"watch\":{\"active\":%s,\"armed\":%s,"
+        "\"dive_seconds\":%u,\"surface_seconds\":%u,\"state\":%d,\"depth_dm\":%u,\"ndl_seconds\":%u,"
         "\"tts_seconds\":%u,\"stop_depth_dm\":%u,\"stop_remaining_ms\":%u,\"alerts\":%u,\"notifications\":%u},\"stop_seconds\":[",
+        recording->armed?"true":"false",recording->active?"true":"false",recording->start_depth_dm,
+        recording->started_seconds,recording->completed_seconds,recording->dive_seconds,recording->surface_seconds,
+        recording->dives_started,recording->dives_completed,
         v->automatic?"true":"false",v->replay?"true":"false",v->history_count,(double)v->result.absolute_pressure_bar,
         v->result.ndl_seconds,v->result.tts_seconds,(double)v->result.ceiling_meters,
         v->result.tissues,v->result.ndl,v->result.tts,v->result.ceiling,v->result.stops,
+        m->active?"true":"false",m->armed?"true":"false",(unsigned)(m->dive_ms/1000),m->surface_ms/1000,
         m->calculated_state,m->depth_dm,m->ndl_s,m->calculated_tts_s,m->calculated_stop_dm,
         m->calculated_stop_remaining_ms,m->alerts,m->notifications);
     for(int i=0;i<OSTC4_STOPS;++i)fprintf(out,"%s%u",i?",":"",v->result.stop_seconds[i]);
