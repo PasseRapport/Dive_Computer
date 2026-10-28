@@ -1,0 +1,9 @@
+{
+  "identity": "exact-three-metre-stop-travel-v1",
+  "scope": "contained continuous-exposure planner only; fixed air, 3m stop grid",
+  "contained_source_sha256": "e7f4c3729ab18846a6ddd4c00dd9f0d8f6f440ff684d39d0d6c3f4ad2c7faf9b",
+  "cause": "Subtracting rounded binary32 pressure endpoints can turn a nominal 3m leg into 20.000011444 seconds, whose ceil is 21 rather than 20. Repetition changes projected offgassing, exact stop quanta and total TTS.",
+  "correction": "Mark mandatory stop-to-stop grid legs explicitly. For the fixed 0.3/0.6/0.3bar grid with no ascent gas changes, calculate duration as ceil(60.0 * 3.0 / ascent_rate_m_per_min) in binary64. At 9m/min this is exactly20s. All non-grid legs/probes/first-stop approach retain the original ceilf duration; pressure endpoints, exposure math and stop decision logic stay unchanged.",
+  "independent_expected": "Frozen separate Python oracle and 65-digit Decimal convergence audit; no expected values or tolerances changed",
+  "compatibility": "New configurable GF numerical-policy v3 changes checkpoint fingerprint; unchanged schema2 layout; previous numerical policies are incompatible without explicit proven migration."
+}

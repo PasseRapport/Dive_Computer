@@ -4,7 +4,8 @@
 #include "ostc4_baseline.h"
 #include <stdbool.h>
 #include <stddef.h>
-#define OSTC4_CONFIGURABLE_GF_POLICY "ostc4-continuous-air-configurable-gf-retained-anchor-v2"
+#define OSTC4_PLANNER_CORRECTION_SET "exact-three-metre-stop-travel-v1"
+#define OSTC4_CONFIGURABLE_GF_POLICY "ostc4-continuous-air-configurable-gf-retained-anchor-grid-time-v3"
 #define OSTC4_EXPOSURE_POLICY "ostc4-continuous-air-gf30-70-v1"
 /* One serialized synthetic exposure. No sensor, clock, UI or recording access.
  * Explicit initialize starts fresh; rejected actual exposure latches INVALID

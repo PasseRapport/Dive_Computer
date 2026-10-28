@@ -33,7 +33,7 @@ bits, no native padding or upstream structs. Offsets (bytes):
      init/xorout 0xffffffff (u32); matches Python zlib.crc32.
 
 The policy fingerprint uses the same CRC over the newline-separated revision,
-OSTC4_POLICY, correction set, configurable-GF retained-anchor policy and literal
+OSTC4_POLICY, tissue correction set, planner timing correction set, configurable-GF policy and literal
 ieee-binary32-binary64-no-fast-math-no-contract-checkpoint-v2, without final NUL.
 These identifiers MUST change whenever numerical/settings semantics change.
 CRC and fingerprint detect accidental corruption/compatibility mismatch; neither
@@ -150,3 +150,14 @@ change after Save marks the retained checkpoint ineligible, reports
 bytes. Attempting recovery reports Unknown checkpoint configuration history and
 invalidates guidance. Save again to establish a complete new recovery point.
 No file format or on-disk lifecycle migration is supplied by this ticket.
+
+Numerical-policy v3 compatibility
+--------------------------------
+The exact-three-metre-stop-travel-v1 correction changes projected ascent timing
+only in the contained continuous-exposure planner. Its correction identity and
+ostc4-continuous-air-configurable-gf-retained-anchor-grid-time-v3 enter the policy
+fingerprint. Schema2/296-byte layout is unchanged. Previous configurable-v2
+arithmetic fingerprints are INCOMPATIBLE, even when pair/lock fields are valid;
+restoring old arithmetic as new policy requires an explicit proven migration.
+Fixed original comparison variants and historical evidence remain unchanged.
+See PLANNER-TIMING-CORRECTION.txt for the diagnosis and acceptance evidence.

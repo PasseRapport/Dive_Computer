@@ -1,0 +1,6 @@
+GF 1/100, 60m, t=1920: actual TTS=6682, expected=6682, delta=+0s
+GF 1/100, 30m, t=3720: actual TTS=3472, expected=3472, delta=+0s
+GF 1/100, 60m, t=3720: actual TTS=21402, expected=21402, delta=+0s
+GF 1/1, 60m, t=3720: actual TTS=170472, expected=170472, delta=+0s
+GF 100/100, 60m, t=3720: actual TTS=16272, expected=16272, delta=+0s
+EXACT STOP TRAVEL PASS: five independent schedules; exact stop slots, unchanged TTS-only tolerance

@@ -1,0 +1,67 @@
+Exact mandatory-stop travel — corrected continuous-exposure variant v3
+====================================================================
+
+Reproduced failure
+------------------
+The independently frozen full schedule comparison rejects GF1/1 and1/100 after
+60m/60min. A smaller public bench input reproduces TTS6688 vs6682 (+6s) at
+GF1/100: fresh surface1.01325bar, advance120s to7.01325bar, advance1920s at the
+same pressure. At30m/60min total TTS differs only1s but two mandatory-stop slots
+differ10s, so checking total TTS alone would miss the error. Original rejected
+stress evidence is retained in simulator/evidence/ticket13; corrective before/
+after evidence is in simulator/evidence/numerical-correction.
+
+Diagnosis
+---------
+Ranked hypotheses were planner binary32 travel/uptake accumulation, capped-output
+policy mismatch, and cadence/anchor mismatch. The independent oracle author
+confirmed all five minimized schedules using65-digit Decimal tissue and ceiling
+math; every stop slot and TTS matched the frozen binary64 oracle. Cap, anchor and
+cadence rules agree. No oracle or tolerance change was needed.
+
+The decisive single-variable probe changed only projected travel duration.
+Upstream computes ceilf((bottom-top)*(600/rate)) from rounded binary32 absolute
+pressures. One nominal3m leg at45m gives bottom5.513249874bar,
+top5.213249683bar, difference0.3000001907bar, duration20.000011444s and ceiling21s.
+The declared policy gives exactly60*3/9=20s. Repeating the extra second changes
+both ascent total and projected offgassing; later ten-second wait decisions can
+therefore change. Actual tracked tissue integration was not the cause.
+
+Narrow correction
+-----------------
+The generated corrected planner explicitly marks mandatory stop-to-stop legs.
+Only with the existing fixed air policy (last/second/increment0.3/0.6/0.3bar and
+no ascent gas changes), their mathematical height is3m and duration is computed
+as ceil(60.0*3.0/ascent_rate) in binary64: exactly20s at9m/min. The original
+pressure endpoints and all tissue/ceiling/stop calculations remain unchanged.
+Coarse ascent probes, the noninteger0.333334bar probe, arbitrary pressure inputs,
+first-stop approach and other settings retain their original duration path.
+There is no epsilon snapping, rounding of real inputs, tolerance increase,
+expected-value regeneration, stop bypass or accepted-GF range restriction.
+
+The patch is applied to a hash-verified contained build copy by
+corrections/correct_planner_timing.py. The pinned upstream tree and original/
+corrected fixed comparison variants stay byte-identical. The correction record
+is corrections/planner-timing-corrections.json. New local parameters introduce no
+persistent scratch, so prediction/checkpoint state shape remains unchanged.
+
+Identity and compatibility
+--------------------------
+Planner correction: exact-three-metre-stop-travel-v1.
+Configurable policy: ostc4-continuous-air-configurable-gf-retained-anchor-grid-time-v3.
+Both enter the checkpoint numerical-policy fingerprint. Checkpoint schema2 and
+296-byte layout remain unchanged; older arithmetic fingerprints are explicitly
+incompatible and cannot be silently accepted under new arithmetic. Legacy fixed
+comparison identities and all superseded evidence retain their original meaning.
+
+Validation
+----------
+The public regression exercises five independently confirmed schedules:
+GF1/10060m30min6682s; GF1/10030m60min3472s; GF1/10060m60min21402s;
+GF1/160m60min170472s; GF100/10060m60min16272s. Mandatory-stop slots compare
+exactly. The full frozen comparator retains exact NDL/stops/availability and the
+existing total-TTS-only absolute3s allowance. Previous114 frozen and455 one-second
+observations remain included; no accepted assertion is skipped.
+
+All results are synthetic PC evidence. No Nordic target, physical watch or
+operational diving validation is implied.

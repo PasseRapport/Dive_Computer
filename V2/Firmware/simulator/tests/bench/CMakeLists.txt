@@ -40,3 +40,6 @@ target_link_libraries(test_storage_bench PRIVATE ostc4_exposure m)
 target_compile_options(test_storage_bench PRIVATE -Wall -Wextra -Wpedantic -Werror)
 add_test(NAME durable_preferences_logs_separate_processes COMMAND ${Python3_EXECUTABLE}
     ${CMAKE_CURRENT_SOURCE_DIR}/check_storage_processes.py $<TARGET_FILE:test_storage_bench>)
+
+add_test(NAME independent_exact_stop_grid_travel COMMAND ${Python3_EXECUTABLE}
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_nominal_stop_travel.py $<TARGET_FILE:gf_bench_replay>)

@@ -19,7 +19,10 @@ arbitrarily clear either anchor, loading or obligations.
 
 Policy identities stay separate:
 - OSTC4_POLICY and OSTC4_EXPOSURE_POLICY retain legacy fixed-30/70 evidence identity.
-- OSTC4_CONFIGURABLE_GF_POLICY is ostc4-continuous-air-configurable-gf-retained-anchor-v2.
+- OSTC4_CONFIGURABLE_GF_POLICY is ostc4-continuous-air-configurable-gf-retained-anchor-grid-time-v3.
+  This corrected exposure-only variant uses exact mathematical3m stop-leg timing;
+  see ../ostc4_baseline/PLANNER-TIMING-CORRECTION.txt. Historicalv2 evidence remains
+  identified by its original policy and is not rewritten.
 Original baseline/corrected comparison variants retain their fixed settings and
 policy strings; configurable setters exist only in continuous exposure.
 
