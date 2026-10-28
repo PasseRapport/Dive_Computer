@@ -3,18 +3,18 @@
 #include "sim_host.h"
 LV_IMAGE_DECLARE(icon_drop);
 LV_IMAGE_DECLARE(icon_wave);
-static lv_obj_t *view,*heading,*pill,*rows[3],*icons[2],*help,*choices,*anchor,*choice_pill;
+static lv_obj_t *view,*heading,*pill,*rows[APNEA_BOTTOM_COUNT],*icons[2],*help,*choices,*anchor,*choice_pill;
 static bool salt_water,underwater,engaged;
 static enum apnea_bottom_field bottom;
 static int entry,pending,editor;
-static const char *const fields[]={"TEMPERATURE","SESSION DEPTH","SESSION APNEA"};
+static const char *const fields[]={"TEMPERATURE","SESSION DEPTH","UNDERWATER TIME","CLOCK","APNEAS"};
 static void row_y(void *o,int32_t y){lv_obj_set_y(o,y);}
 static void refresh(bool animate)
 {
  lv_label_set_text(heading,editor==1?"WATER TYPE":editor==2?"BOTTOM FIELD":"SETTINGS");
  lv_label_set_text(help,underwater?"Surface only":engaged?"Tap to select":"Tap to edit");
- int count=editor==2?3:2,selected=editor?pending:entry;
- for(int i=0;i<3;i++){
+ int count=editor==2?APNEA_BOTTOM_COUNT:2,selected=editor?pending:entry;
+ for(int i=0;i<APNEA_BOTTOM_COUNT;i++){
   if(i>=count){lv_obj_add_flag(rows[i],LV_OBJ_FLAG_HIDDEN);continue;}
   lv_obj_remove_flag(rows[i],LV_OBJ_FLAG_HIDDEN);
   lv_label_set_text(rows[i],editor==1?(i?"MARINE":"FRESH"):editor==2?fields[i]:(i?"BOTTOM FIELD":"WATER TYPE"));
@@ -44,7 +44,7 @@ lv_obj_t *apnea_settings_create(lv_obj_t *parent)
  choices=lv_obj_create(view);lv_obj_remove_style_all(choices);lv_obj_set_size(choices,320,155);lv_obj_set_pos(choices,0,73);lv_obj_remove_flag(choices,LV_OBJ_FLAG_SCROLLABLE);
  choice_pill=lv_obj_create(choices);lv_obj_remove_style_all(choice_pill);lv_obj_set_style_bg_color(choice_pill,lv_color_hex(0x008b8b),0);lv_obj_set_style_bg_opa(choice_pill,LV_OPA_COVER,0);
  anchor=lv_label_create(choices);lv_obj_set_style_text_font(anchor,&lv_font_montserrat_22,0);lv_obj_set_style_opa(anchor,LV_OPA_TRANSP,0);
- for(int i=0;i<3;i++)rows[i]=label("",100,&lv_font_montserrat_22);
+ for(int i=0;i<APNEA_BOTTOM_COUNT;i++)rows[i]=label("",100,&lv_font_montserrat_22);
  for(int i=0;i<2;i++){icons[i]=lv_image_create(view);lv_image_set_src(icons[i],i?&icon_wave:&icon_drop);lv_obj_set_pos(icons[i],76,90+56*i);lv_obj_set_style_image_recolor_opa(icons[i],LV_OPA_COVER,0);}
  help=label("Tap to edit",257,&lv_font_montserrat_14);refresh(false);return view;
 }
@@ -52,7 +52,7 @@ void apnea_settings_update(bool active){if(underwater!=active){underwater=active
 bool apnea_settings_input(enum watch_input input,int steps)
 {
  if(!engaged){if(input!=WATCH_SINGLE_TAP)return false;engaged=true;refresh(false);return true;}
- if(input==WATCH_CROWN){int *selected=editor?&pending:&entry;*selected=LV_CLAMP(0,(int64_t)*selected+steps,editor==2?2:1);refresh(true);}
+ if(input==WATCH_CROWN){int *selected=editor?&pending:&entry;*selected=LV_CLAMP(0,(int64_t)*selected+steps,editor==2?APNEA_BOTTOM_COUNT-1:1);refresh(true);}
  else if(input==WATCH_DOUBLE_TAP){if(editor)editor=0;else engaged=false;refresh(false);}
  else if(input==WATCH_SINGLE_TAP&&!underwater){
   if(editor){

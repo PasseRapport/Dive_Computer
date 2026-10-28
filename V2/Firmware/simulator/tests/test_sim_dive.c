@@ -17,6 +17,7 @@ int main(void)
     sim_dive_update(&state, &data, 12000, 0);
     assert(!state.diving && data.recovery_red && data.recovery_ring_visible);
     assert(data.last_depth_dm == 120 && data.max_depth_dm == 120);
+    assert(data.total_underwater_s == 10);
     assert(data.elapsed_s == 10 && data.recovery_target_ms == 20000);
     sim_dive_update(&state, &data, 22000, 0);
     assert(data.recovery_elapsed_ms == 10000 && data.recovery_red);
@@ -30,6 +31,7 @@ int main(void)
     sim_dive_update(&state, &data, 45000, 50);
     assert(!data.show_recovery && !data.recovery_ring_visible && data.total_dives == 2);
     sim_dive_update(&state, &data, 47000, 0);
+    assert(data.total_underwater_s == 12);
     assert(data.recovery_target_ms == 4000 && data.last_depth_dm == 50);
     assert(data.max_depth_dm == 120 && data.max_dive_s == 10);
     sim_dive_update(&state, &data, 51000, 0);
@@ -62,17 +64,31 @@ int main(void)
     sim_dive_update(&state, &data, 292000, 0);
     assert(data.recovery_s == 130 && data.show_recovery && !data.recovery_ring_visible);
     sim_dive_update(&state, &data, 823000, 2);
+    assert(data.total_underwater_s == 60);
     assert(data.recovery_s == 661 && data.show_recovery && data.apnea_direction == 0);
     sim_dive_update(&state, &data, 824000, 50);
     assert(data.total_dives == 2 && data.current_max_depth_dm == 50 && !data.show_recovery);
     assert(data.max_depth_dm == 200 && data.max_dive_s == 60);
     sim_dive_update(&state, &data, 885000, 50);
+    assert(data.total_underwater_s == 121);
     assert(data.max_dive_s == 61 && data.runtime_s == 785);
     sim_dive_session(&state, &data, 886000, false);
     sim_dive_session(&state, &data, 900000, true);
+    assert(data.total_underwater_s == 0);
     assert(data.runtime_s == 0 && !data.apnea_active && !data.show_recovery);
     assert(data.total_dives == 0 && data.last_depth_dm == 0 && data.max_depth_dm == 0);
     sim_dive_update(&state, &data, 901000, 0);
     assert(data.runtime_s == 1 && data.max_dive_s == 0);
+    /* Preserve fractional seconds across apneas; surface gaps add nothing. */
+    sim_dive_session(&state, &data, 910000, false);
+    sim_dive_session(&state, &data, 920000, true);
+    sim_dive_update(&state, &data, 921000, 20);
+    sim_dive_update(&state, &data, 922600, 0);
+    assert(data.total_underwater_s == 1);
+    sim_dive_update(&state, &data, 950000, 0);
+    assert(data.total_underwater_s == 1);
+    sim_dive_update(&state, &data, 951000, 20);
+    sim_dive_update(&state, &data, 952600, 0);
+    assert(data.total_underwater_s == 3 && data.total_dives == 2);
     puts("DIVE MODEL CHECK PASS: V1 thresholds, per-dive target, red/green, 10-second hold, restart, stats");
 }

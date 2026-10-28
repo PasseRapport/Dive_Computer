@@ -1,0 +1,8 @@
+WARNING: Using a test - not safe - entropy source
+*** Booting nRF Connect SDK v3.4.1-b20f8619ba9a ***
+*** Using Zephyr OS v4.4.2-33fa6a7aac6a ***
+LVGL UI ready: 320x300, RGB565, simulated data
+APNEA MAIN PASS: thresholds, direction, live records, 119/120/130/661 s recovery, page continuity, two apneas, exit/re-entry and x1/x2 renders
+APNEA STATISTICS PASS: initial placeholders, active records, recovery continuity, shorter second apnea, new live depth/time records, long timers, x1/x2 and re-entry
+
+Stopped at 24.010s

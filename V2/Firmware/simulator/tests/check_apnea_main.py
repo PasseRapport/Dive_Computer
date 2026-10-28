@@ -20,7 +20,11 @@ cyan = lambda p: p[0]<90 and p[1]>180 and p[2]>180
 def geometry(name):
     for y in (118,215):
         assert pixels(name,(100,y,220,y+1),cyan)>110, f'{name}: missing common cyan separator at {y}'
-    assert pixels(name,(159,160,162,185),white)>65, f'{name}: central white stroke missing'
+    image,z=frame(name)
+    grey=lambda p: all(105<v<135 for v in p)
+    for y in (149,161,173,185,197):
+        assert pixels(name,(157,y,163,y+3),grey)==18, f'{name}: scuba dash missing'
+    assert pixels(name,(150,145,170,202),white)==0, f'{name}: unexpected white arrow'
     assert pixels(name,(140,12,180,34),white)>15, f'{name}: battery header missing'
 
 # Baseline option makes the changed geometry's red result reproducible.
@@ -31,13 +35,9 @@ if '--baseline' in sys.argv:
 for name in ('apnea-01-fresh','apnea-04-descent','apnea-05-hold','apnea-06-ascent',
              'apnea-08-surface','apnea-12-long-recovery','apnea-17-long-x1','apnea-20-long-x2','apnea-25-reentry'):
     geometry(name)
-# Indicator chevrons occupy distinct regions outside the permanent stroke.
-for name, upper, lower in (
-    ('apnea-04-descent',False,True),('apnea-05-hold',False,False),
-    ('apnea-06-ascent',True,False),('apnea-08-surface',False,False),
-    ('apnea-09-red',False,False),('apnea-12-long-recovery',False,False)):
-    assert (pixels(name,(151,145,170,154),white)>20)==upper, f'{name}: wrong ascent chevron'
-    assert (pixels(name,(151,193,170,202),white)>20)==lower, f'{name}: wrong descent chevron'
+# Surface right-hand timer and caption are absent throughout recovery.
+for name in ('apnea-08-surface','apnea-09-red','apnea-10-green','apnea-11-expired','apnea-12-long-recovery'):
+    assert pixels(name,(175,125,272,202),white)==0, f'{name}: surface timer still visible'
 
 def ring(name):
     image,z=frame(name);red=green=0
@@ -59,4 +59,4 @@ for name in ('apnea-04-descent','apnea-06-ascent','apnea-17-long-x1','apnea-20-l
 for name in ('apnea-17-long-x1','apnea-20-long-x2'):
     assert pixels(name,(146,154,150,191),white)==0, f'{name}: left block crosses gutter'
     assert pixels(name,(171,154,173,191),white)==0, f'{name}: timer crosses gutter'
-print('APNEA RENDER PASS: shared rails/battery, fixed stroke and three directions, recovery ring lifecycle, decimal anchor, long values at x1/x2')
+print('APNEA RENDER PASS: shared rails/battery, five scuba dashes and hidden surface timer, recovery ring lifecycle, decimal anchor, long values at x1/x2')

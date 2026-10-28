@@ -65,7 +65,7 @@ bool apnea_checks_inputs(uint64_t *sample_ms)
     case 29:clock_ms=1714000;sim_controls_set_depth_dm(200);break;
     case 30:clock_ms=1724000;sim_controls_set_depth_dm(0);break;
     case 31:clock_ms=1725000;watch_ui_input(WATCH_CROWN,-1);break;
-    case 32:expect("LAST DEPTH");expect("20.0");expect("0:01");capture("stats-main-return");clock_ms=1726000;sim_controls_set_depth_dm(50);watch_ui_input(WATCH_CROWN,1);break;
+    case 32:expect("LAST DEPTH");expect("20.0");capture("stats-main-return");clock_ms=1726000;sim_controls_set_depth_dm(50);watch_ui_input(WATCH_CROWN,1);break;
     case 33:clock_ms=1727000;break;
     case 34:clock_ms=1730000;sim_controls_set_depth_dm(0);break;
     case 35:clock_ms=1731000;sim_controls_set_depth_dm(1000);break;
@@ -98,11 +98,11 @@ void apnea_checks_observe(const struct watch_data *data)
     case 5:expect("0:30");capture("apnea-05-hold");break;
     case 6:expect("9.9");expect("12.3");capture("apnea-06-ascent");break;
     case 7:__ASSERT(data->apnea_active,"0.3 m ended apnea");break;
-    case 8:expect("LAST DEPTH");expect("0:00");capture("apnea-08-surface");break;
-    case 9:expect("1:59");__ASSERT(data->recovery_red,"119 s green early");capture("apnea-09-red");break;
-    case 10:expect("2:00");__ASSERT(!data->recovery_red,"120 s missing green");capture("apnea-10-green");break;
-    case 11:expect("2:10");__ASSERT(!data->recovery_ring_visible,"130 s ring still visible");capture("apnea-11-expired");break;
-    case 12:expect("11:01");capture("apnea-12-long-recovery");break;
+    case 8:expect("LAST DEPTH");capture("apnea-08-surface");break;
+    case 9:__ASSERT(data->recovery_red,"119 s green early");capture("apnea-09-red");break;
+    case 10:__ASSERT(!data->recovery_red,"120 s missing green");capture("apnea-10-green");break;
+    case 11:__ASSERT(!data->recovery_ring_visible,"130 s ring still visible");capture("apnea-11-expired");break;
+    case 12:capture("apnea-12-long-recovery");break;
     case 14:__ASSERT(data->runtime_s==724&&data->total_dives==1,"Page navigation reset session");capture("apnea-14-statistics-no-ring");break;
     case 16:expect("5.0");expect("0:00");__ASSERT(data->max_depth_dm==123&&data->total_dives==2,"Second apnea lost session");break;
     case 17:expect("100.0");expect("10:00");__ASSERT(data->max_dive_s==600,"Live duration record stale");capture("apnea-17-long-x1");break;
@@ -118,6 +118,9 @@ void apnea_checks_observe(const struct watch_data *data)
     case 40:expect("1666:40");expect("27:47:11");capture("stats-07-long-session");break;
     case 46:expect("--");expect("0");expect("0:00:02");capture("stats-08-reentry");printk("APNEA STATISTICS PASS: initial placeholders, active records, recovery continuity, shorter second apnea, new live depth/time records, long timers, x1/x2 and re-entry\n");break;
     case 22:__ASSERT(watch_ui_view()==WATCH_MODE_MENU,"Leave control changed");break;
+    }
+    if((step>=8&&step<=12)||step==1||step==25) {
+        __ASSERT(!visible_text(lv_screen_active(),"RECOVERY")&&!visible_text(lv_screen_active(),"APNEA TIME"),"Surface timer visible");
     }
     step++;
 }

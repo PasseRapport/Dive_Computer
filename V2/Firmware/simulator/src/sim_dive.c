@@ -6,7 +6,7 @@ void sim_dive_session(struct sim_dive *state, struct watch_data *data,
     if (active && !state->session_active) {
         *state = (struct sim_dive){.session_active=true,.session_start_ms=now_ms};
         data->elapsed_s=data->runtime_s=data->recovery_s=0;
-        data->max_dive_s=data->total_dives=0;
+        data->max_dive_s=data->total_dives=data->total_underwater_s=0;
         data->last_depth_dm=data->max_depth_dm=data->current_max_depth_dm=0;
         data->show_recovery=data->recovery_red=data->recovery_ring_visible=false;
         data->recovery_elapsed_ms=data->recovery_target_ms=0;
@@ -37,6 +37,7 @@ void sim_dive_update(struct sim_dive *state, struct watch_data *data,
                               depth_mm<state->previous_depth_mm?-1:0;
         uint32_t duration = now_ms - state->start_ms;
         data->elapsed_s = duration / 1000;
+        data->total_underwater_s = (state->completed_underwater_ms + duration) / 1000;
         if (data->elapsed_s > data->max_dive_s) data->max_dive_s = data->elapsed_s;
         if (depth_dm > state->peak_dm) state->peak_dm = depth_dm;
         if (depth_dm > data->max_depth_dm) data->max_depth_dm = depth_dm;
@@ -45,6 +46,7 @@ void sim_dive_update(struct sim_dive *state, struct watch_data *data,
         data->recovery_ring_visible = false;
         if (depth_dm < 3) {
             state->diving = false;
+            state->completed_underwater_ms += duration;
             data->apnea_direction=0;
             state->has_dived = true;
             state->surface_ms = now_ms;

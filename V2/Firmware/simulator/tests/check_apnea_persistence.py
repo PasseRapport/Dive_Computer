@@ -20,7 +20,7 @@ def run(directory,mode,choice):
     assert result.returncode==0,result.stdout+result.stderr
     assert f'APNEA PERSISTENCE {mode.upper()} PASS' in result.stdout,result.stdout
     return gallery
-for choice in range(6):
+for choice in range(10):
     with tempfile.TemporaryDirectory(prefix='apnea-restart-') as tmp:
         directory=Path(tmp)
         sentinels={'preference.txt':b'DIVE_WATCH_GF 1 30 70\n','dive-17.log':b'Unrelated scuba log\x00\xff','recovery.checkpoint':bytes(range(256))}
@@ -31,10 +31,10 @@ for choice in range(6):
         run(directory,'load',choice)
         for name,data in sentinels.items():assert (directory/name).read_bytes()==data,f'Apnea changed unrelated {name}'
         assert not list(directory.glob('.apnea-pending-*')),'Temporary preference files leaked'
-        print(f'RESTART PASS: water={choice//3}, bottom={choice%3}; unrelated GF/log/checkpoint bytes preserved')
+        print(f'RESTART PASS: water={choice//5}, bottom={choice%5}; unrelated GF/log/checkpoint bytes preserved')
 # Corrupt schemas fall back through a fresh public UI process and remain untouched.
 for bad in (b'',b'DIVE_WATCH_APNEA 2 1 2\n',b'DIVE_WATCH_APNEA 1 2 0\n',
-            b'DIVE_WATCH_APNEA 1 0 3\n',b'DIVE_WATCH_APNEA 1 1 2\nextra',b'DIVE_WATCH_APNEA 1 0 0\n\x00'):
+            b'DIVE_WATCH_APNEA 1 0 5\n',b'DIVE_WATCH_APNEA 1 1 2\nextra',b'DIVE_WATCH_APNEA 1 0 0\n\x00'):
     with tempfile.TemporaryDirectory(prefix='apnea-corrupt-') as tmp:
         directory=Path(tmp);path=directory/'apnea-preferences.txt';path.write_bytes(bad)
         run(directory,'load',0)
@@ -66,4 +66,4 @@ with tempfile.TemporaryDirectory(prefix='apnea-direct-isolation-') as tmp:
     assert target.read_bytes()==b'DIVE_WATCH_APNEA 1 1 2\n'
     assert sorted(p.name for p in normal.iterdir())==['apnea-preferences.txt']
 print('DIRECT CHECK ISOLATION PASS: ignored normal preference; no normal files changed or created')
-print('APNEA PERSISTENCE PASS: 12 separate UI processes, all six combinations, cancel/phase lock, fresh sessions, live Main/Statistics agreement and independent scuba files')
+print('APNEA PERSISTENCE PASS: 20 separate UI processes, all ten combinations, cancel/phase lock, fresh sessions, live Main/Statistics agreement and independent scuba files')

@@ -46,14 +46,14 @@ int sim_host_apnea_preferences_load(int *salt,int *field)
  unsigned version=0,water=0,bottom=0;
  int fields=sscanf(content,"DIVE_WATCH_APNEA %u %u %u",&version,&water,&bottom);
  int expected=snprintf(canonical,sizeof(canonical),"DIVE_WATCH_APNEA 1 %u %u\n",water,bottom);
- /* Version 1 uses stable water 0/1 and bottom-field 0/1/2 identifiers. */
- if(failed||fields!=3||version!=1||water>1||bottom>2||expected<0||bytes!=(size_t)expected||memcmp(content,canonical,bytes))return -1;
+ /* Version 1 uses stable water 0/1 and bottom-field 0..4 identifiers (2 now selects cumulative underwater time). */
+ if(failed||fields!=3||version!=1||water>1||bottom>4||expected<0||bytes!=(size_t)expected||memcmp(content,canonical,bytes))return -1;
  *salt=water;*field=bottom;return 0;
 }
 int sim_host_apnea_preferences_save(int salt,int field)
 {
  char directory[4096],target[4096],temporary[4096],backup[4128],content[64];
- if(salt<0||salt>1||field<0||field>2)goto failed;
+ if(salt<0||salt>1||field<0||field>4)goto failed;
  int status=state_directory(directory,sizeof(directory));if(status==1)return 0;
  if(status||make_directory(directory))goto failed;
  if(snprintf(target,sizeof(target),"%s/apnea-preferences.txt",directory)>=(int)sizeof(target)||

@@ -6,7 +6,6 @@
 
 struct apnea_main {
     lv_obj_t *depth,*unit,*left_title,*left,*time_title,*time,*bottom_title,*bottom,*direction;
-    int8_t heading;
 };
 static void deleted(lv_event_t *event){lv_free(lv_event_get_user_data(event));}
 static lv_obj_t *label(lv_obj_t *parent,const lv_font_t *font)
@@ -27,14 +26,11 @@ static void direction(lv_event_t *event)
     lv_draw_rect_dsc_t ink;lv_draw_rect_dsc_init(&ink);
     ink.bg_color=lv_color_white();ink.bg_opa=LV_OPA_COVER;
     lv_layer_t *layer=lv_event_get_layer(event);
-    lv_area_t stroke={a.x1+9,a.y1+9,a.x1+11,a.y1+47};
-    lv_draw_rect(layer,&ink,&stroke);
-    if(!m->heading)return;
-    for(int row=0;row<9;row++) {
-        int y=m->heading<0?row:56-row;
-        lv_area_t left={a.x1+9-row,a.y1+y,a.x1+11-row,a.y1+y};
-        lv_area_t right={a.x1+9+row,a.y1+y,a.x1+11+row,a.y1+y};
-        lv_draw_rect(layer,&ink,&left);lv_draw_rect(layer,&ink,&right);
+    /* Same five inactive dashes, positions, dimensions and colour as scuba. */
+    ink.bg_color=lv_color_hex(0x777777);
+    for(int i=0;i<5;i++) {
+        lv_area_t dash={a.x1+7,a.y1+3+12*i,a.x1+12,a.y1+5+12*i};
+        lv_draw_rect(layer,&ink,&dash);
     }
 }
 lv_obj_t *apnea_main_create(lv_obj_t *parent)
@@ -49,7 +45,7 @@ lv_obj_t *apnea_main_create(lv_obj_t *parent)
     m->bottom_title=label(view,&lv_font_montserrat_12);m->bottom=label(view,&lv_font_montserrat_34);
     dive_layout_rails(view,0x33dbd4);
     m->direction=lv_obj_create(view);lv_obj_remove_style_all(m->direction);
-    lv_obj_set_pos(m->direction,150,145);lv_obj_set_size(m->direction,21,57);
+    lv_obj_set_pos(m->direction,150,146);lv_obj_set_size(m->direction,20,56);
     lv_obj_remove_flag(m->direction,LV_OBJ_FLAG_SCROLLABLE|LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(m->direction,direction,LV_EVENT_DRAW_MAIN,m);
     return view;
@@ -64,20 +60,33 @@ void apnea_main_update(lv_obj_t *view,const struct watch_data *data)
     else snprintf(text,sizeof(text),"--");
     lv_obj_set_style_text_font(m->left,peak>=1000?&lv_font_montserrat_28:&lv_font_montserrat_34,0);
     centred(m->left,text,101,157);
-    centred(m->time_title,data->apnea_active?"APNEA TIME":"RECOVERY",219,127);
-    uint32_t seconds=data->apnea_active?data->elapsed_s:data->recovery_s;
-    if(data->apnea_active||data->show_recovery)snprintf(text,sizeof(text),"%u:%02u",seconds/60,seconds%60);
-    else snprintf(text,sizeof(text),"--");
+    centred(m->time_title,"APNEA TIME",219,127);
+    uint32_t seconds=data->elapsed_s;
+    if(data->apnea_active) {
+        lv_obj_remove_flag(m->time_title,LV_OBJ_FLAG_HIDDEN);
+        lv_obj_remove_flag(m->time,LV_OBJ_FLAG_HIDDEN);
+    } else {
+        lv_obj_add_flag(m->time_title,LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(m->time,LV_OBJ_FLAG_HIDDEN);
+    }
+    snprintf(text,sizeof(text),"%u:%02u",seconds/60,seconds%60);
     lv_obj_set_style_text_font(m->time,seconds>=6000?&lv_font_montserrat_22:&lv_font_montserrat_34,0);
     centred(m->time,text,219,157);
-    lv_obj_set_style_text_color(m->time,lv_color_hex(data->show_recovery?(data->recovery_red?0xff0000:0x00ff00):0xffffff),0);
     enum apnea_bottom_field field=apnea_settings_bottom_field();
-    centred(m->bottom_title,field==APNEA_SESSION_DEPTH?"SESSION DEPTH":field==APNEA_SESSION_TIME?"SESSION APNEA":"TEMPERATURE",160,219);
-    if(field!=APNEA_TEMPERATURE&&!data->total_dives)snprintf(text,sizeof(text),"--");
-    else if(field==APNEA_SESSION_DEPTH)snprintf(text,sizeof(text),"%u.%u m",data->max_depth_dm/10,data->max_depth_dm%10);
-    else if(field==APNEA_SESSION_TIME)snprintf(text,sizeof(text),"%u:%02u",data->max_dive_s/60,data->max_dive_s%60);
-    else snprintf(text,sizeof(text),"%d°C",data->temperature_c);
-    lv_obj_set_style_text_font(m->bottom,field==APNEA_SESSION_TIME&&data->max_dive_s>=6000?&lv_font_montserrat_22:&lv_font_montserrat_34,0);
+    static const char *const captions[]={"TEMPERATURE","SESSION DEPTH","UNDERWATER TIME","CLOCK","APNEAS"};
+    centred(m->bottom_title,captions[field],160,219);
+    switch(field) {
+    case APNEA_SESSION_DEPTH:
+        if(data->total_dives)snprintf(text,sizeof(text),"%u.%u m",data->max_depth_dm/10,data->max_depth_dm%10);
+        else snprintf(text,sizeof(text),"--");
+        break;
+    case APNEA_SESSION_TIME:
+        seconds=data->total_underwater_s;
+        snprintf(text,sizeof(text),"%u:%02u:%02u",seconds/3600,seconds/60%60,seconds%60);break;
+    case APNEA_CLOCK:snprintf(text,sizeof(text),"%02u:%02u",data->clock_hour,data->clock_minute);break;
+    case APNEA_DIVE_COUNT:snprintf(text,sizeof(text),"%u",data->total_dives);break;
+    default:snprintf(text,sizeof(text),"%d°C",data->temperature_c);break;
+    }
+    lv_obj_set_style_text_font(m->bottom,field==APNEA_SESSION_TIME&&data->total_underwater_s>=36000?&lv_font_montserrat_22:&lv_font_montserrat_34,0);
     centred(m->bottom,text,160,239);
-    m->heading=data->apnea_active?data->apnea_direction:0;lv_obj_invalidate(m->direction);
 }

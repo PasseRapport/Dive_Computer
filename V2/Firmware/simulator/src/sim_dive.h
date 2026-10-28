@@ -6,7 +6,7 @@ struct sim_dive {
     bool diving, has_dived, session_active;
     uint64_t session_start_ms;
     uint32_t previous_depth_mm;
-    uint64_t start_ms, surface_ms;
+    uint64_t start_ms, surface_ms, completed_underwater_ms;
     uint32_t last_duration_ms;
     uint16_t peak_dm;
 };

@@ -1,0 +1,25 @@
+Freediving requested refinement — 2026-10-29
+
+Bottom field: temperature, maximum session depth, cumulative underwater time,
+clock (HH:MM), apnea count. Cumulative time is H:MM:SS, includes the active
+apnea, excludes surface pauses, preserves fractional milliseconds between apneas
+and resets with the session. Existing preference ID 2 selects this cumulative
+value in place of the previous longest-apnea value. Statistics retains its record.
+
+Five fixed grey dashes have the exact inactive scuba coordinates, dimensions and
+colour. The central white stroke and direction chevrons are removed.
+Surface Main hides both the centre-right timer and caption. Recovery ring timing,
+colours and visibility rules remain unchanged.
+
+PASS: native build; strict-warning portable model test (two apneas, live total,
+long surface exclusion, fractional-second accumulation and reset).
+PASS: public-control Main/Statistics and Settings journeys at x1/x2.
+PASS: Main, Statistics and Settings image assertions (five dashes, blank surface
+timer area, recovery ring lifecycle, aligned depths, fitted selections).
+PASS: all ten water/field combinations in 20 separate UI processes; malformed
+preferences, failed-write preservation, cancellation, immersion lock and isolation.
+PASS: restart image checks for all ten choices and Main/Statistics/Main continuity.
+
+Evidence is PC/native simulation only. No Nordic build or physical-watch validation.
+Implementation continues in /tmp/dive-interface-apnee, branch codex/interface-apnee.
+No push or merge into main. Original checkout files are untouched.

@@ -15,6 +15,7 @@ struct watch_data {
     int8_t apnea_direction; /* +1 descent, -1 ascent, 0 stationary/surface. */
     uint16_t current_max_depth_dm;
     uint16_t last_depth_dm, max_depth_dm;
+    uint32_t total_underwater_s; /* Session sum, including the active apnea. */
     uint32_t max_dive_s, total_dives, runtime_s, recovery_s;
     bool show_recovery, recovery_red, recovery_ring_visible;
     uint32_t recovery_elapsed_ms, recovery_target_ms;
