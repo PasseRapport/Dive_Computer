@@ -27,3 +27,13 @@ No push or merge into main. Original checkout files are untouched.
 
 Label update: DIVE TIME, MAX DEPTH, MAX TIME, DIVES. Total underwater
 time now uses total minutes and seconds (e.g. 3661 s = 61:01), without hours.
+
+Settings navigation amendment:
+- SETTINGS gate matches scuba: tap to open WATER TYPE / BOTTOM FIELD / BACK.
+- BACK in the menu and both editors returns one level, cancelling pending edits.
+- Double tap also returns one level; BACK remains available underwater.
+- Native public-input checks cover the gate before tap, menu entry, BACK from
+  both editors and root, double tap, unchanged preferences on cancellation,
+  and underwater BACK. x1/x2 selector image checks pass.
+PASS: updated-menu restart suite (all ten choices), restart image checks,
+malformed preferences, write failure and direct-check isolation.

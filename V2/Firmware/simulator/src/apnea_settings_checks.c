@@ -1,4 +1,5 @@
 #include "watch_ui.h"
+#include "apnea_settings.h"
 #include "sim_controls.h"
 #include "scuba_ui.h"
 #include "sim_host.h"
@@ -28,13 +29,13 @@ static void expect(const char *s){__ASSERT(visible(lv_screen_active(),s),"Settin
 static void click(void){watch_ui_input(WATCH_SINGLE_TAP,0);}
 static void turn(int n){watch_ui_input(WATCH_CROWN,n);}
 static void back(void){watch_ui_input(WATCH_DOUBLE_TAP,0);}
-static void open_bottom(void){turn(2);click();turn(100);click();}
+static void open_bottom(void){turn(2);click();turn(-100);turn(1);click();}
 static void main_page(void){back();back();turn(-100);}
 bool apnea_settings_checks_inputs(uint64_t *sample_ms)
 {
  if(!sim_host_apnea_settings_check_enabled())return false;
  *sample_ms=clock_ms;
- if(step>=50||k_uptime_get()<500+(uint64_t)step*400)return false;
+ if(step>=54||k_uptime_get()<500+(uint64_t)step*400)return false;
  switch(step){
  case 0:scuba_salt=scuba_ui_model()->salt_water;scuba_bottom=scuba_ui_field();scuba_ring=scuba_ui_ring();scuba_saved_summary=scuba_ui_model()->summary;turn(1);turn(24);turn(-100);turn(WATCH_DIVING);click();turn(100);click();break;
  case 2:open_bottom();turn(-100);turn(2);click();main_page();break;
@@ -44,16 +45,16 @@ bool apnea_settings_checks_inputs(uint64_t *sample_ms)
  case 10:clock_ms=162000;sim_controls_set_depth_dm(0);break;
  case 12:open_bottom();turn(-100);turn(2);click();main_page();break;
  case 14:open_bottom();turn(-100);back();main_page();break;
- case 16:turn(2);click();turn(-100);click();turn(100);click();main_page();break;
+ case 16:turn(2);click();turn(-100);click();turn(1);click();main_page();break;
  case 18:turn(2);click();turn(-100);click();turn(-100);break;
  case 19:clock_ms=163000;sim_controls_set_depth_dm(150);break;
  case 21:click();main_page();break;
- case 23:turn(2);click();turn(100);click();turn(-100);click();main_page();break;
+ case 23:turn(2);click();turn(-100);turn(1);click();turn(-100);click();main_page();break;
  case 24:clock_ms=233000;break;
  case 25:clock_ms=234000;sim_controls_set_depth_dm(0);break;
  case 27:open_bottom();turn(-100);break;
  case 28:clock_ms=235000;sim_controls_set_depth_dm(160);break;
- case 30:click();main_page();break;
+ case 30:turn(100);click();main_page();break;
  case 32:turn(3);turn(24);break;
  case 33:clock_ms=300000;sim_controls_set_depth_dm(0);break;
  case 34:click();click();break;
@@ -64,7 +65,29 @@ bool apnea_settings_checks_inputs(uint64_t *sample_ms)
  case 42:clock_ms=301000;sim_controls_set_depth_dm(20);break;
  case 44:clock_ms=311000;sim_controls_set_depth_dm(0);break;
  case 46:turn(2);click();turn(-100);click();turn(-100);click();main_page();break;
- case 48:turn(2);click();turn(-100);click();turn(100);back();main_page();break;
+ case 48:turn(2);click();turn(-100);click();turn(1);back();main_page();break;
+ case 50:turn(2);break;
+ case 51:{
+  bool salt=watch_ui_salt_water();enum apnea_bottom_field field=apnea_settings_bottom_field();
+  expect("SETTINGS");expect("Tap to enter");
+  __ASSERT(!visible(lv_screen_active(),"WATER TYPE"),"Gate exposed settings before tap");
+  char path[512];snprintf(path,sizeof(path),"%s/settings-gate.bmp",sim_host_gallery_path());lv_refr_now(NULL);__ASSERT(!sim_host_capture(path),"Gate capture");
+  click();expect("WATER TYPE");expect("BOTTOM FIELD");
+  snprintf(path,sizeof(path),"%s/settings-menu.bmp",sim_host_gallery_path());lv_refr_now(NULL);__ASSERT(!sim_host_capture(path),"Menu capture");
+  turn(100);click();expect("Tap to enter");
+  click();turn(-100);click();expect("FRESH");turn(100);click();expect("BOTTOM FIELD");
+  turn(-100);turn(1);click();expect("BOTTOM FIELD");turn(100);click();expect("WATER TYPE");
+  turn(100);click();expect("Tap to enter");
+  click();back();expect("Tap to enter");
+  __ASSERT(watch_ui_salt_water()==salt&&apnea_settings_bottom_field()==field,"BACK saved a pending choice");
+  click();turn(100);break;
+ }
+ case 52:{
+  expect("BACK");char path[512];snprintf(path,sizeof(path),"%s/settings-back.bmp",sim_host_gallery_path());lv_refr_now(NULL);__ASSERT(!sim_host_capture(path),"Back capture");
+  click();expect("Tap to enter");break;
+ }
+ case 53:expect("Tap to enter");turn(-100);break;
+
  }
  *sample_ms=clock_ms;return true;
 }
@@ -92,7 +115,7 @@ void apnea_settings_checks_observe(const struct watch_data *data)
  if(step==43||step==45){expect("TEMPERATURE");expect("18°C");}
  if(step==47||step==49)__ASSERT(!watch_ui_salt_water(),"Fresh apply/cancel failed");
  if(step==49){__ASSERT(scuba_ui_model()->salt_water==scuba_salt&&scuba_ui_field()==scuba_bottom&&scuba_ui_ring()==scuba_ring&&!memcmp(&scuba_saved_summary,&scuba_ui_model()->summary,sizeof(scuba_saved_summary)),"Apnea changed scuba settings or stored summary");}
- if(step==49)printk("APNEA SETTINGS PASS: public apply/cancel, all fields, live records, water, phase lock, submenu continuity and reentry x1/x2\n");
+ if(step==53)printk("APNEA SETTINGS PASS: public apply/cancel, all fields, live records, water, phase lock, submenu continuity and reentry x1/x2\n");
  if(step==11||step==17||step==20||step==29){char path[512];snprintf(path,sizeof(path),"%s/settings-%02u.bmp",sim_host_gallery_path(),step);lv_refr_now(NULL);__ASSERT(sim_host_capture(path)==0,"Capture");}
  step++;
 }
