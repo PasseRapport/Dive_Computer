@@ -89,10 +89,48 @@ static void calculated_checks(void)
     }
 }
 
+/* Every fault is deliberate PC adapter input, not a physical power-loss test. */
+static void restart_checks(void)
+{
+    static unsigned stage;
+    static uint64_t after;
+    uint64_t now=k_uptime_get();
+    if(now<500 || now<after || stage>=14)return;
+    unsigned scenario=stage/2;
+    const struct bench_view *v=pc_bench_read();
+    if(stage%2==0) {
+        const ostc4_sample deep[]={{0,1.01325f},{120,4.01325f},{2220,4.01325f}};
+        __ASSERT(pc_bench_fresh(1.01325f,1025,deep,3)==0,"fresh failed");
+        if(scenario<6) {
+            pc_bench_poll(1920000);
+            __ASSERT(pc_bench_checkpoint()==0,"save failed");
+            pc_bench_poll(300000);
+            ostc4_observation control=v->result;
+            const ostc4_restart_status expected[]={OSTC4_RESTORED,OSTC4_RESTART_EXPOSURE_UNKNOWN,
+                OSTC4_RESTART_TIME_UNKNOWN,OSTC4_CHECKPOINT_CORRUPT,
+                OSTC4_CHECKPOINT_INCOMPATIBLE,OSTC4_CHECKPOINT_STALE};
+            __ASSERT(pc_bench_restart((enum pc_restart_mode)scenario)==expected[scenario],"wrong restart reason");
+            if(!scenario) {
+                __ASSERT(v->result.nitrogen_bar[0]==control.nitrogen_bar[0] &&
+                    v->result.tts_seconds==control.tts_seconds && v->result.tts==OSTC4_AVAILABLE,"recovery changed exposure");
+            } else __ASSERT(scuba_ui_model()->calculated_state==SCUBA_CALCULATED_INVALID,"restart concealed invalidity");
+        }
+        pc_bench_pause(true);after=now+300;
+    } else {
+        struct watch_data data={.temperature_c=18,.battery_percent=87};
+        watch_ui_update(&data);lv_refr_now(NULL);
+        __ASSERT(sim_host_bench_capture(scenario)==0,"restart capture failed");
+        if(scenario==6)printk("RESTART WATCH PASS: complete recovery, missing exposure, unknown time, corrupt, incompatible, stale, explicit fresh fixture\n");
+        after=now+300;
+    }
+    ++stage;
+}
+
 /* Native rendering check, driven by real SDL button events. Numerical checks
  * remain in tests/bench with no LVGL or Zephyr dependency. */
 void pc_bench_checks_poll(void)
 {
+    if(sim_host_bench_check_enabled()==3){restart_checks();return;}
     if(sim_host_bench_check_enabled()==2){calculated_checks();return;}
     if(!sim_host_bench_check_enabled())return;
     static unsigned stage, milestone, post_stage;

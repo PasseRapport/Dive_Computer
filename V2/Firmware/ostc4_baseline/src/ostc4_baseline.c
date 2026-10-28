@@ -215,4 +215,158 @@ ostc4_status ostc4_exposure_predict(const ostc4_sample *future, ostc4_observatio
     ostc4_scratch_restore(&scratch);
     return status;
 }
+/* Checkpoint v1 layout and compatibility contract are in CHECKPOINT.txt.
+ * Byte codec avoids padding, alignment, endianness and upstream struct ABI.
+ */
+static uint32_t checkpoint_crc(const unsigned char *bytes, size_t size)
+{
+    uint32_t crc=UINT32_MAX;
+    for(size_t i=0;i<size;++i) {
+        crc^=bytes[i];
+        for(unsigned bit=0;bit<8;++bit)
+            crc=(crc>>1)^((crc&1)?UINT32_C(0xedb88320):0);
+    }
+    return ~crc;
+}
+static uint32_t checkpoint_policy(void)
+{
+    static const unsigned char policy[]=OSTC4_REVISION "\n" OSTC4_POLICY "\n"
+        OSTC4_CORRECTION_SET "\n" OSTC4_EXPOSURE_POLICY
+        "\nieee-binary32-binary64-no-fast-math-no-contract-checkpoint-v1";
+    return checkpoint_crc(policy,sizeof(policy)-1);
+}
+static void put_u32(unsigned char **p,uint32_t value)
+{
+    for(unsigned i=0;i<4;++i) *(*p)++=(unsigned char)(value>>(8*i));
+}
+static uint32_t get_u32(const unsigned char **p)
+{
+    uint32_t value=0;
+    for(unsigned i=0;i<4;++i)value|=(uint32_t)*(*p)++<<(8*i);
+    return value;
+}
+static void put_float(unsigned char **p,float value)
+{
+    uint32_t bits;memcpy(&bits,&value,sizeof(bits));put_u32(p,bits);
+}
+static float get_float(const unsigned char **p)
+{
+    uint32_t bits=get_u32(p);float value;memcpy(&value,&bits,sizeof(value));return value;
+}
+ostc4_status ostc4_exposure_checkpoint(void *buffer,size_t size)
+{
+    if(!initialized)return OSTC4_NOT_INITIALIZED;
+    if(exposure_incomplete || !buffer || size!=OSTC4_CHECKPOINT_BYTES)return OSTC4_BAD_INPUT;
+    unsigned char bytes[OSTC4_CHECKPOINT_BYTES],*p=bytes;
+    put_u32(&p,UINT32_C(0x31435845)); /* EXC1 */
+    put_u32(&p,1);put_u32(&p,checkpoint_policy());put_u32(&p,OSTC4_CHECKPOINT_BYTES);
+    put_u32(&p,current.timestamp_seconds);put_u32(&p,current.dive_seconds);
+    put_float(&p,life.pressure_surface_bar);put_float(&p,current.absolute_pressure_bar);
+    put_float(&p,life.max_depth_meter);put_float(&p,current.gf_anchor_ambient_bar);
+    put_float(&p,current.gf_low_depth_bar);put_float(&p,current.ceiling_meters);
+    for(int i=0;i<OSTC4_TISSUES;++i)put_float(&p,current.nitrogen_bar[i]);
+    for(int i=0;i<OSTC4_TISSUES;++i)put_float(&p,current.helium_bar[i]);
+    put_u32(&p,(uint32_t)current.ndl_seconds);put_u32(&p,(uint32_t)current.tts_seconds);
+    for(int i=0;i<OSTC4_STOPS;++i) {
+        *p++=(unsigned char)current.stop_seconds[i];
+        *p++=(unsigned char)(current.stop_seconds[i]>>8);
+    }
+    *p++=(unsigned char)current.tissues;*p++=(unsigned char)current.ndl;
+    *p++=(unsigned char)current.tts;*p++=(unsigned char)current.ceiling;*p++=(unsigned char)current.stops;
+    put_u32(&p,checkpoint_crc(bytes,sizeof(bytes)-4));
+    memcpy(buffer,bytes,sizeof(bytes));return OSTC4_OK;
+}
+static bool checkpoint_number(float value,float low,float high)
+{
+    return isfinite(value) && value>=low && value<=high;
+}
+static bool checkpoint_observation_valid(const ostc4_observation *r,float surface,float max_depth)
+{
+    if(r->dive_seconds>r->timestamp_seconds || !checkpoint_number(surface,0.8f,1.2f) ||
+       !checkpoint_number(r->absolute_pressure_bar,surface,surface+6) ||
+       !checkpoint_number(max_depth,0,60.00001f) ||
+       !checkpoint_number(r->gf_anchor_ambient_bar,0,surface+15) ||
+       !checkpoint_number(r->gf_low_depth_bar,0,15) ||
+       !checkpoint_number(r->ceiling_meters,0,150) ||
+       r->ndl_seconds<0 || r->ndl_seconds>14400 || r->tts_seconds<0 || r->tts_seconds>59940 ||
+       r->tissues!=OSTC4_AVAILABLE || r->ndl>OSTC4_LIMITED || r->tts>OSTC4_LIMITED ||
+       r->ceiling>OSTC4_LIMITED || r->stops>OSTC4_LIMITED)return false;
+    for(int i=0;i<OSTC4_TISSUES;++i)
+        if(!checkpoint_number(r->nitrogen_bar[i],0,8) || r->helium_bar[i]!=0)return false;
+    for(int i=0;i<OSTC4_STOPS;++i)if(r->stop_seconds[i]>59940)return false;
+    return true;
+}
+ostc4_restart_status ostc4_exposure_restore(const void *buffer,size_t size,const ostc4_recovery *recovery)
+{
+    /* Rejection must be visible even before a first fixture exists. */
+    memset(&current,0,sizeof(current));initialized=true;invalidate_exposure();
+    if(!buffer || size!=OSTC4_CHECKPOINT_BYTES)return OSTC4_CHECKPOINT_CORRUPT;
+    const unsigned char *bytes=buffer,*tail=bytes+size-4,*p=bytes;
+    if(get_u32(&tail)!=checkpoint_crc(bytes,size-4))return OSTC4_CHECKPOINT_CORRUPT;
+    if(get_u32(&p)!=UINT32_C(0x31435845) || get_u32(&p)!=1 ||
+       get_u32(&p)!=checkpoint_policy() || get_u32(&p)!=OSTC4_CHECKPOINT_BYTES)
+        return OSTC4_CHECKPOINT_INCOMPATIBLE;
+    ostc4_observation saved={0};
+    saved.timestamp_seconds=get_u32(&p);saved.dive_seconds=get_u32(&p);
+    const float surface=get_float(&p);
+    saved.absolute_pressure_bar=get_float(&p);
+    const float max_depth=get_float(&p);
+    saved.gf_anchor_ambient_bar=get_float(&p);saved.gf_low_depth_bar=get_float(&p);
+    saved.ceiling_meters=get_float(&p);
+    for(int i=0;i<OSTC4_TISSUES;++i)saved.nitrogen_bar[i]=get_float(&p);
+    for(int i=0;i<OSTC4_TISSUES;++i)saved.helium_bar[i]=get_float(&p);
+    uint32_t ndl=get_u32(&p),tts=get_u32(&p);
+    if(ndl>14400 || tts>59940)return OSTC4_CHECKPOINT_INVALID;
+    saved.ndl_seconds=(int)ndl;saved.tts_seconds=(int)tts;
+    for(int i=0;i<OSTC4_STOPS;++i) {
+        saved.stop_seconds[i]=(unsigned short)(p[0]|((unsigned)p[1]<<8));p+=2;
+    }
+    saved.tissues=*p++;saved.ndl=*p++;saved.tts=*p++;saved.ceiling=*p++;saved.stops=*p++;
+    if(!checkpoint_observation_valid(&saved,surface,max_depth))return OSTC4_CHECKPOINT_INVALID;
+    if(!recovery || !recovery->time_known)return OSTC4_RESTART_TIME_UNKNOWN;
+    if(recovery->restart_seconds<saved.timestamp_seconds)return OSTC4_RESTART_TIME_UNKNOWN;
+    if(recovery->restart_seconds-saved.timestamp_seconds>recovery->max_age_seconds)
+        return OSTC4_CHECKPOINT_STALE;
+    if((recovery->count && !recovery->history) ||
+       (recovery->restart_seconds>saved.timestamp_seconds && !recovery->count) ||
+       (recovery->count && recovery->history[recovery->count-1].timestamp_seconds!=recovery->restart_seconds))
+        return OSTC4_RESTART_EXPOSURE_UNKNOWN;
+    uint32_t previous=saved.timestamp_seconds;
+    for(size_t i=0;i<recovery->count;++i) {
+        const ostc4_sample *sample=&recovery->history[i];
+        if(sample->timestamp_seconds<=previous || sample->timestamp_seconds-previous>3600 ||
+           !checkpoint_number(sample->absolute_pressure_bar,surface,surface+6))
+            return OSTC4_RESTART_EXPOSURE_REJECTED;
+        previous=sample->timestamp_seconds;
+    }
+    /* Restore only persistent physiology/settings. Planner scratch other than
+     * GF-low depth is rebuilt on each calculation; see pinned-source audit. */
+    ostc4_exposure_initialize(&(ostc4_initial){saved.timestamp_seconds,surface});
+    life.pressure_ambient_bar=saved.absolute_pressure_bar;
+    life.max_depth_meter=max_depth;
+    life.dive_time_seconds_without_surface_time=saved.dive_seconds;
+    memcpy(life.tissue_nitrogen_bar,saved.nitrogen_bar,sizeof(saved.nitrogen_bar));
+    memcpy(life.tissue_helium_bar,saved.helium_bar,sizeof(saved.helium_bar));
+    settings.internal__pressure_first_stop_ambient_bar_as_upper_limit_for_gf_low_otherwise_zero=saved.gf_anchor_ambient_bar;
+    gGF_low_depth_bar=saved.gf_low_depth_bar;current=saved;
+    for(size_t i=0;i<recovery->count;++i)
+        if(ostc4_exposure_advance(&recovery->history[i])!=OSTC4_OK) {
+            invalidate_exposure();return OSTC4_RESTART_EXPOSURE_REJECTED;
+        }
+    return OSTC4_RESTORED;
+}
+const char *ostc4_restart_status_name(ostc4_restart_status status)
+{
+    switch(status) {
+    case OSTC4_RESTORED:return "Recovered: complete exposure";
+    case OSTC4_CHECKPOINT_CORRUPT:return "Corrupt checkpoint";
+    case OSTC4_CHECKPOINT_INCOMPATIBLE:return "Incompatible checkpoint";
+    case OSTC4_CHECKPOINT_STALE:return "Stale checkpoint";
+    case OSTC4_RESTART_TIME_UNKNOWN:return "Unknown restart time";
+    case OSTC4_RESTART_EXPOSURE_UNKNOWN:return "Unknown restart exposure";
+    case OSTC4_CHECKPOINT_INVALID:return "Invalid checkpoint state";
+    case OSTC4_RESTART_EXPOSURE_REJECTED:return "Rejected restart exposure";
+    }
+    return "Unknown restart failure";
+}
 #endif

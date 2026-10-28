@@ -8,10 +8,14 @@
 #include <stdio.h>
 
 enum bench_action { BENCH_PAUSE, BENCH_SPEED, BENCH_ASCEND_RATE, BENCH_DESCEND_RATE,
-    BENCH_HOLD, BENCH_SURFACE, BENCH_AUTO, BENCH_SHALLOWER, BENCH_DEEPER, BENCH_FRESH, BENCH_GAP };
+    BENCH_HOLD, BENCH_SURFACE, BENCH_AUTO, BENCH_SHALLOWER, BENCH_DEEPER, BENCH_FRESH, BENCH_GAP, BENCH_SAVE, BENCH_RESTART, BENCH_RESTART_MODE };
 
 static lv_obj_t *summary, *tissues[16], *stops, *graph, *clock_label, *pause_label, *speed_label, *auto_label;
 static uint64_t last_host_ms, last_paint;
+static lv_obj_t *recovery_label,*restart_mode_label;
+static enum pc_restart_mode restart_mode;
+static const char *restart_modes[]={"Known recorded history","Missing exposure","Unknown clock",
+    "Corrupt checkpoint","Incompatible schema","Stale checkpoint"};
 static lv_obj_t *label(const char *text,int x,int y)
 {
     lv_obj_t *o=lv_label_create(lv_screen_active());
@@ -33,6 +37,9 @@ static void command(lv_event_t *e)
     case BENCH_AUTO: pc_bench_auto(!v->automatic); break;
     case BENCH_FRESH: sim_host_bench_fresh(); break;
     case BENCH_GAP: pc_bench_mark_missing(); break;
+    case BENCH_SAVE: pc_bench_checkpoint(); break;
+    case BENCH_RESTART: pc_bench_restart(restart_mode); break;
+    case BENCH_RESTART_MODE: restart_mode=(restart_mode+1)%6; break;
     }
 }
 static lv_obj_t *button(const char *text,int x,int y,int width,enum bench_action action)
@@ -104,11 +111,15 @@ void pc_bench_ui_create(void)
     watch_ui_open_calculated_scuba();
     sim_host_bench_watch(scuba_ui_model());
     summary=label("",636,44);lv_obj_set_width(summary,548);
+    recovery_label=label("",636,132);lv_obj_set_width(recovery_label,548);
     label("NITROGEN TISSUES (bar) - all 16 compartments",636,158);
     for(int i=0;i<16;++i)tissues[i]=label("",636+(i/8)*270,184+(i%8)*22);
     lv_obj_t *stop_box=lv_obj_create(lv_screen_active());
-    lv_obj_remove_style_all(stop_box);lv_obj_set_pos(stop_box,636,368);lv_obj_set_size(stop_box,548,68);
+    lv_obj_remove_style_all(stop_box);lv_obj_set_pos(stop_box,636,368);lv_obj_set_size(stop_box,548,32);
     stops=lv_label_create(stop_box);lv_obj_set_width(stops,528);
+    button("Save checkpoint",636,402,146,BENCH_SAVE);
+    restart_mode_label=button(restart_modes[0],792,402,238,BENCH_RESTART_MODE);
+    button("Restart",1040,402,138,BENCH_RESTART);
     label("Depth (m, down) versus elapsed simulation time (seconds, right)",22,446);
     graph=lv_obj_create(lv_screen_active());lv_obj_set_pos(graph,22,466);lv_obj_set_size(graph,1156,224);
     lv_obj_remove_flag(graph,LV_OBJ_FLAG_SCROLLABLE);
@@ -161,6 +172,8 @@ void pc_bench_ui_poll(void)
     lv_label_set_text_fmt(clock_label,"Simulation %u / %u s | depth %.3f m | rate %+.0f m/min | sample %u s%s",
         v->seconds,v->duration,(double)v->depth_m,(double)v->rate_m_min,v->result.timestamp_seconds,
         v->gap?" | EXPOSURE GAP":"");
+    lv_label_set_text(recovery_label,v->recovery?v->recovery:"FRESH synthetic fixture; no recovered history");
+    lv_label_set_text(restart_mode_label,restart_modes[restart_mode]);
     lv_label_set_text(auto_label,v->automatic?"Auto: ON":"Auto ascent");
     lv_label_set_text(pause_label,v->paused?"Resume":"Pause");
     lv_label_set_text_fmt(speed_label,"Time x%u",v->speed);

@@ -130,3 +130,12 @@ add_custom_target(independent_schedule_acceptance
     DEPENDS ostc4_continuity_replay
     COMMENT "Strict independent schedule acceptance; nonzero means numerical rejection"
     VERBATIM)
+
+if(BUILD_TESTING)
+    add_executable(test_ostc4_restart tests/test_restart.c)
+    target_link_libraries(test_ostc4_restart PRIVATE ostc4_exposure)
+    target_compile_options(test_ostc4_restart PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    add_test(NAME checkpoint_restart_continuity COMMAND test_ostc4_restart)
+    add_test(NAME checkpoint_fresh_process COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_restart_process.py $<TARGET_FILE:test_ostc4_restart>)
+endif()

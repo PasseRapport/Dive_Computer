@@ -268,7 +268,7 @@ void sim_host_bench_watch(const struct scuba_model *model) {calculated_watch=mod
 #include <stdio.h>
 int sim_host_bench_check_enabled(void) {
     const char *mode=getenv("DIVE_SIM_BENCH_CHECK");
-    return !mode?0:!strcmp(mode,"calculated")?2:1;
+    return !mode?0:!strcmp(mode,"restart")?3:!strcmp(mode,"calculated")?2:1;
 }
 int sim_host_bench_fresh(void)
 {
@@ -321,7 +321,8 @@ int sim_host_bench_capture(unsigned milestone)
         m->calculated_state,m->depth_dm,m->ndl_s,m->calculated_tts_s,m->calculated_stop_dm,
         m->calculated_stop_remaining_ms,m->alerts,m->notifications);
     for(int i=0;i<OSTC4_STOPS;++i)fprintf(out,"%s%u",i?",":"",v->result.stop_seconds[i]);
-    fprintf(out,"]}\n");if(fclose(out))return -1;
+    fprintf(out,"],\"recovery\":\"%s\",\"gap\":%s}\n",v->recovery?v->recovery:"Fresh synthetic fixture",
+        v->gap?"true":"false");if(fclose(out))return -1;
     snprintf(path,sizeof(path),"%s-%u.csv",base,milestone);
     out=fopen(path,"w");if(!out)return -1;
     fprintf(out,"timestamp_seconds,absolute_pressure_bar\n");

@@ -13,6 +13,9 @@ static ostc4_sample samples[PC_BENCH_PROFILE];
 /* PC evidence storage; never part of the portable engine or target allocation. */
 static ostc4_sample actual_samples[PC_BENCH_HISTORY];
 static size_t next_sample;
+static unsigned char checkpoint[OSTC4_CHECKPOINT_BYTES];
+static size_t checkpoint_history;
+static bool checkpoint_saved;
 static uint64_t pending_ms;
 static void (*presentation_observer)(const struct bench_view *);
 void pc_bench_set_observer(void (*observer)(const struct bench_view *))
@@ -49,7 +52,7 @@ int pc_bench_fresh(float surface, float density, const ostc4_sample *profile, si
     view.history=history; view.profile=graph; view.exposure=actual_samples; view.history_count=1;
     history[0]=(struct bench_point){0,0,false};
     actual_samples[0]=(ostc4_sample){0,surface};
-    pending_ms=0; next_sample=1;
+    pending_ms=0; next_sample=1; checkpoint_saved=false;
     if (count) {
         memcpy(samples,profile,count*sizeof(*profile));
         view.duration=samples[count-1].timestamp_seconds;
@@ -60,6 +63,46 @@ int pc_bench_fresh(float surface, float density, const ostc4_sample *profile, si
     ostc4_exposure_read(&view.result);
     notify_observer();
     return 0;
+}
+int pc_bench_checkpoint(void)
+{
+    if(!view.history_count || view.error ||
+        ostc4_exposure_checkpoint(checkpoint,sizeof(checkpoint))!=OSTC4_OK)return -1;
+    checkpoint_saved=true;checkpoint_history=view.history_count;
+    view.recovery="Checkpoint saved (PC memory)";return 0;
+}
+ostc4_restart_status pc_bench_restart(enum pc_restart_mode mode)
+{
+    unsigned char bytes[OSTC4_CHECKPOINT_BYTES];memcpy(bytes,checkpoint,sizeof(bytes));
+    ostc4_recovery recovery={mode!=PC_RESTART_CLOCK,view.seconds,86400,NULL,0};
+    if(checkpoint_saved && view.history_count>=checkpoint_history && !view.gap) {
+        recovery.history=actual_samples+checkpoint_history;
+        recovery.count=view.history_count-checkpoint_history;
+    }
+    if(mode==PC_RESTART_GAP || view.gap) {recovery.history=NULL;recovery.count=1;}
+    if(mode==PC_RESTART_STALE)recovery.max_age_seconds=0;
+    if(mode==PC_RESTART_CORRUPT)bytes[50]^=1;
+    if(mode==PC_RESTART_INCOMPATIBLE) {
+        /* Synthetic valid-CRC schema fault. CRC delta for flipping byte 4 bit 0
+         * of a 289-byte message, independently generated with Python zlib. */
+        bytes[4]^=1;
+        const uint32_t delta=UINT32_C(0x7cccaa8f);
+        for(unsigned i=0;i<4;++i)bytes[sizeof(bytes)-4+i]^=(unsigned char)(delta>>(8*i));
+    }
+    ostc4_restart_status status=ostc4_exposure_restore(checkpoint_saved?bytes:NULL,
+        checkpoint_saved?sizeof(bytes):0,&recovery);
+    view.recovery=ostc4_restart_status_name(status);
+    view.paused=true;view.replay=false;view.automatic=false;view.ended=false;
+    view.rate_m_min=0;pending_ms=0;view.duration=view.seconds;
+    ostc4_exposure_read(&view.result);
+    if(status==OSTC4_RESTORED) {
+        view.error=NULL;view.gap=false;
+        view.depth_m=pressure_to_depth(view.result.absolute_pressure_bar);
+    } else {
+        view.error=view.recovery;view.gap=true;
+        if(view.history_count)history[view.history_count-1].gap=true;
+    }
+    notify_observer();return status;
 }
 void pc_bench_pause(bool paused) { view.paused=paused; }
 void pc_bench_speed(unsigned speed)

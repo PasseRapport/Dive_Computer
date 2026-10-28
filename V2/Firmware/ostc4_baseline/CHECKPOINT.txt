@@ -1,0 +1,117 @@
+OSTC4 exposure checkpoint v1 — experimental PC continuity evidence
+================================================================
+
+Public boundary: ostc4_exposure_checkpoint / ostc4_exposure_restore in
+include/ostc4_exposure.h. The caller owns all storage, clocks and the evidence
+that supplied pressure segments really cover exposure. This code accesses
+neither files nor RTC/flash. ostc4_exposure_initialize explicitly starts a fresh
+SYNTHETIC fixture; recovery never uses fresh equilibrium as missing exposure.
+
+Format: exactly 293 bytes; unsigned little-endian integers, IEEE binary32 float
+bits, no native padding or upstream structs. Offsets (bytes):
+  0  magic EXC1 (4)
+  4  schema version 1 (u32)
+  8  numerical-policy fingerprint (u32)
+ 12  total length 293 (u32)
+ 16  timestamp seconds (u32)
+ 20  accumulated dive/transition seconds (u32)
+ 24  surface pressure bar (f32)
+ 28  ambient pressure bar (f32)
+ 32  maximum depth metres (f32)
+ 36  persistent GF anchor ambient bar (f32)
+ 40  persistent GF-low depth bar (f32)
+ 44  current calculated ceiling metres (f32)
+ 48  nitrogen tissues, 16*f32
+112  helium tissues, 16*f32 (zero in this air-only policy)
+176  last NDL seconds (u32)
+180  last TTS seconds (u32)
+184  mandatory stop seconds, 50*u16
+284  tissues, NDL, TTS, ceiling, stops availability (5*u8)
+289  CRC-32/ISO-HDLC of bytes [0,289), polynomial 0xedb88320 reflected,
+     init/xorout 0xffffffff (u32); matches Python zlib.crc32.
+
+The policy fingerprint uses the same CRC over the newline-separated revision,
+OSTC4_POLICY, correction set, continuous-exposure policy and literal
+ieee-binary32-binary64-no-fast-math-no-contract-checkpoint-v1, without final NUL.
+These identifiers MUST change whenever numerical/settings semantics change.
+CRC and fingerprint detect accidental corruption/compatibility mismatch; neither
+provides cryptographic authenticity. Schema v1 is new OSTC4-specific work and
+inherits no independent BMAD engine checkpoint layout.
+
+Persistent state audit: initialize reconstructs fixed air/GF/ascent/stop settings,
+then recovery replaces all persisted tissue/time/pressure/max-depth/anchor state
+before allowing an exposure calculation. Cached current results/availability
+support immediate read at an unchanged checkpoint timestamp without running a
+planner that could mutate the anchor. They are retained for that reason.
+In pinned buehlmann_calc_deco, surface, pressure, gas id, tissues, GF and CNS
+are assigned each call. Backup scratch is written before read; stop scratch is
+assigned before use. Ceiling follows that call. Only gGF_low_depth_bar carries
+planner state across accepted samples; it is persisted with the settings anchor.
+Prediction still snapshots/restores all mutable scratch. No raw SLifeData,
+SDiveSettings or scratch-struct binary layout is a persistence contract.
+
+Recovery contract
+-----------------
+A known restart timestamp in the checkpoint's monotonic seconds domain and a
+caller-declared maximum checkpoint age are mandatory. Age is a freshness gate,
+not evidence of the pressure that occurred. Backward/unknown time is rejected.
+The maximum age is caller policy (bench: 86400 seconds); zero permits only a
+same-timestamp restore. Timestamp wrap is not inferred.
+
+For positive elapsed time, history must supply every complete linear segment
+starting at the checkpoint's pressure/time, with increasing times <=3600 seconds
+apart, ending EXACTLY at restart time. Supplied segments are assertions of known
+exposure, not sparse measurements that magically fill an unobserved gap.
+Use the same sample cadence as the uninterrupted control: planner anchors and
+binary32 rounding may depend on segmentation. A surface-only history is accepted
+only when that pressure exposure is explicitly established by the caller.
+At exactly the saved timestamp, known time plus an empty history asserts zero
+elapsed exposure. An old checkpoint and elapsed time alone never suffice.
+
+Integrity, schema/policy, numerical bounds, age, clock and coverage failures each
+return a named status and latch all observable validity fields INVALID. This is
+also true in a fresh process. Advance/predict/save cannot clear that condition.
+A later complete proven recovery or deliberate synthetic initialize is required.
+No healthy state is saved from an invalid scenario. Output bytes are unchanged
+when checkpoint creation fails. All operations remain serialized, like the engine.
+
+PC bench
+--------
+Save checkpoint stores bytes and a position in the exact accepted-input buffer,
+in PC memory only. The mode selector cycles known recorded history, missing
+exposure, unknown clock, corrupt checkpoint, incompatible schema, stale checkpoint.
+Restart deliberately releases automatic/replay commands, clears pending host time
+and pauses. Resume/manual/auto is then explicit. No elapsed host time is integrated
+as a surface assumption. Known mode uses every accepted sample after Save; it
+simulates recovery from a separately retained complete pressure log. The graph
+continues to show that real synthetic history. Missing/failed history stays red
+and guidance is INVALID on the virtual watch. Once a gap has been declared, that
+buffer is not offered as complete proof; Fresh replay is a separate explicit
+synthetic action and discards the saved checkpoint.
+
+Fault controls are PC demonstrations. Corrupt flips a payload bit. Incompatible
+flips version bit 0 and adjusts the CRC using an independently generated zlib
+CRC delta for that fixed message length. Stale applies a zero-age limit; advance
+at least one simulation second after Save to demonstrate it. Save before Restart.
+They neither change the core's numerical policy nor test hardware persistence.
+
+Evidence and future hardware requirements
+-----------------------------------------
+Headless tests compare tissues/ceiling within absolute 1e-6 bar/metres, anchor
+and pressure exactly, NDL/TTS/each stop/validity exactly. They compare identical
+sample sequences, including descent, loaded checkpoint, surface interval and
+second dive. A separate OS process restores without prior engine execution.
+Equality proves serialization/continuation equivalence, NOT numerical correctness;
+the existing independently authored analytical/repetitive/schedule references
+remain the numerical oracle and are run separately. UI checks exercise every
+restart reason and unavailable/invalid presentation; no scripted fallback.
+
+A future hardware adapter must establish: durable complete checkpoint writes
+with corruption/torn-write detection; policy identity; trustworthy monotonic
+elapsed time across power/reset and clock loss/wrap; and complete pressure/time
+coverage from checkpoint through restart, including while the main processor was
+stopped. Retaining a timestamp alone or assuming the watch stayed at the surface
+is insufficient. If that evidence is absent, report unknown history and withhold
+guidance. Storage endurance, atomicity, recovery after actual power interruption,
+RTC behavior, full-target resources, timing and stack remain hardware/adapter
+work. PC memory/files and process tests prove none of these physical properties.

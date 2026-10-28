@@ -13,7 +13,7 @@ struct bench_view {
     float depth_m, rate_m_min, surface_bar, density_kg_m3;
     unsigned speed;
     bool paused, replay, automatic, ended, gap;
-    const char *error;
+    const char *error, *recovery;
     const struct bench_point *history, *profile;
     /* Host-only buffer of exact accepted pressure/time inputs; history_count
      * entries, including fresh surface initialization, never reconstructed depth. */
@@ -27,6 +27,14 @@ struct bench_view {
  */
 int pc_bench_fresh(float surface_bar, float density_kg_m3,
                    const ostc4_sample *profile, size_t count);
+/* PC-only in-memory checkpoint and explicit restart/fault controls. The known
+ * mode supplies every exact accepted input since save, never elapsed time alone.
+ * Restarts pause and release replay/auto; Fresh discards the saved checkpoint.
+ */
+enum pc_restart_mode { PC_RESTART_KNOWN, PC_RESTART_GAP, PC_RESTART_CLOCK,
+    PC_RESTART_CORRUPT, PC_RESTART_INCOMPATIBLE, PC_RESTART_STALE };
+int pc_bench_checkpoint(void);
+ostc4_restart_status pc_bench_restart(enum pc_restart_mode mode);
 void pc_bench_poll(uint32_t elapsed_ms);
 void pc_bench_pause(bool paused);
 /* Report unknown exposure of any duration; invalid until an explicit fresh fixture. */
