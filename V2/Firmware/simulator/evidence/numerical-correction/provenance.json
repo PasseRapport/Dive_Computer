@@ -1,0 +1,15 @@
+{
+  "identity": "corrected-stop-grid-travel-production-evidence-v1",
+  "source_sha256": {
+    "V2/Firmware/ostc4_baseline/upstream/Discovery/Src/buehlmann.c": "a977c190d1b3cc2c820a38d849cd8bc9c0b445759e92a5101f4aa747ff484dc7",
+    "V2/Firmware/ostc4_baseline/corrections/correct_planner_timing.py": "98266ee2cb8e3aeec44b0aa6d27c36912058ade8c5d0d76684346a05efdc9c49",
+    "V2/Firmware/ostc4_baseline/corrections/planner-timing-corrections.json": "3c3dd01e97a5ac8c1460f679a8eacb435cd778117988c2a84a2d300447cf76e6",
+    "V2/Firmware/simulator/tests/bench/gf-reference/comparison-policy-gf.json": "dfe67f6bcd70a7fd4bda9df48b2587104f96aabef5a3219583959116beb4a55e",
+    "V2/Firmware/simulator/tests/bench/gf-reference/configurable_reference.py": "c34c137314a8cc1c12ee8b71b71ae4be5205258be7407001a0c3b43bce2e2dc6",
+    "V2/Firmware/simulator/tests/bench/gf-reference/gf-vectors.json": "4bdfd620fe0232e4e58414506831398c6fa32499d0cb906c4bb0082fa9f0814c"
+  },
+  "generated_planner_sha256": "7e87310a3730a7013c06c4bbb3f785cb28e4856cfbdbb7a820a16173f97e0f79",
+  "frozen_reference_modified": false,
+  "tolerances_modified": false,
+  "scope": "synthetic PC only"
+}

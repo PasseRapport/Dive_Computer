@@ -17,7 +17,8 @@ for index in range(6):
     assert len(samples) == state['history_count']
     assert int(samples[-1]['timestamp_seconds']) == state['seconds']
     gf = state['gf']
-    assert 'configurable-gf-retained-anchor-v2' in gf['policy']
+    assert gf['policy'] in ('ostc4-continuous-air-configurable-gf-retained-anchor-v2',
+                            'ostc4-continuous-air-configurable-gf-retained-anchor-grid-time-v3')
     assert 'gf30-70-v1' in gf['legacy_comparison_policy']
     assert gf['locked'] == state['recording']['active']
     states.append(state)

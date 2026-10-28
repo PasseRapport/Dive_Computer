@@ -299,7 +299,7 @@ static uint32_t checkpoint_crc(const unsigned char *bytes, size_t size)
 static uint32_t checkpoint_policy(void)
 {
     static const unsigned char policy[]=OSTC4_REVISION "\n" OSTC4_POLICY "\n"
-        OSTC4_CORRECTION_SET "\n" OSTC4_CONFIGURABLE_GF_POLICY
+        OSTC4_CORRECTION_SET "\n" OSTC4_PLANNER_CORRECTION_SET "\n" OSTC4_CONFIGURABLE_GF_POLICY
         "\nieee-binary32-binary64-no-fast-math-no-contract-checkpoint-v2";
     return checkpoint_crc(policy,sizeof(policy)-1);
 }

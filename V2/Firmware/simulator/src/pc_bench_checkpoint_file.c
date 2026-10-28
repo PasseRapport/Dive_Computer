@@ -25,7 +25,7 @@ static uint32_t fingerprint(bool legacy)
     static const unsigned char old[]=OSTC4_REVISION "\n" OSTC4_POLICY "\n" OSTC4_CORRECTION_SET "\n"
         OSTC4_EXPOSURE_POLICY "\nieee-binary32-binary64-no-fast-math-no-contract-checkpoint-v1";
     static const unsigned char current[]=OSTC4_REVISION "\n" OSTC4_POLICY "\n" OSTC4_CORRECTION_SET "\n"
-        OSTC4_CONFIGURABLE_GF_POLICY "\nieee-binary32-binary64-no-fast-math-no-contract-checkpoint-v2";
+        OSTC4_PLANNER_CORRECTION_SET "\n" OSTC4_CONFIGURABLE_GF_POLICY "\nieee-binary32-binary64-no-fast-math-no-contract-checkpoint-v2";
     return legacy?crc(old,sizeof(old)-1):crc(current,sizeof(current)-1);
 }
 const char *pc_bench_checkpoint_file_default_path(void)

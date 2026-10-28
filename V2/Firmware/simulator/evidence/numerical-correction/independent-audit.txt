@@ -1,0 +1,73 @@
+Independent stress-oracle audit, configurable GF tickets 12/13
+
+Conclusion: the frozen oracle is trustworthy for the reported extreme traces.
+No mathematical policy bug was found in cap, anchor, sample cadence, stop-grid,
+GF interpolation or endpoint conventions. No expected value, frozen implementation
+or tolerance has been changed. The rejected production results must remain visible.
+
+Evidence added: highprecision_audit.py and highprecision-audit.json. The same frozen
+route/decision policy was run with 65-digit Decimal tissue integration and65-digit
+coefficient/ceiling arithmetic (route pressures/control stay binary64). For all five
+cases below, every mandatory-stop slot and total TTS is identical to the original
+binary64 reference. Tracked tissue differences are <=1.78e-15bar.
+
+Pair    Depth / bottom hold   Binary64 TTS = 65-digit TTS
+1/1      60m /3600s           170472s
+1/100    60m /3600s            21402s
+100/100  60m /3600s            16272s
+1/100    60m /1800s             6682s
+1/100    30m /3600s             3472s
+
+The input events remain fresh surface 1.01325bar, linear descent 120s to the depth,
+then one flat hold. Both 120s and 3600s intervals satisfy the public maximum 3600s.
+Integration computes the linear descent, not a 120s constant-depth exposure.
+Observations are made only at these declared instants; extra samples would change
+persistent planner-anchor evolution and are not interchangeable evidence.
+
+Policy inspection, pinned buehlmann.c:
+- Lines 133-135 select use of the prior maximum first-stop anchor when it is at least
+  actual ambient minus 0.15bar. Lines 223-230 then grow the maximum and choose either
+  that maximum gauge depth or the newly projected first stop. The reference uses
+  the prior anchor for the same decision and preserves it between accepted events.
+- GF High ascent feasibility precedes the full schedule, matching requires_decompression.
+  Fixed endpoint ceilings use the independent analytical pressure inequality and
+  never substitute for the operational interpolated ceiling.
+- The first stop uses the 0.3bar grid; 50 slots cap the grid at 15bar gauge. The stress
+  cases need only 4.5bar or 2.4bar first stops, so the grid cap is not reached.
+- 59940s is a PER-STOP cap in lines 242-245. It forces the next leg to commit after
+  the cap even if the projected ceiling remains above target; the reference does
+  the same. Source total-TTS checks in lines 172/185 occur only during initial
+  approach, not during accumulated stop waits. A 170472s total with two 59940s
+  slots is therefore consistent and correctly LIMITED, not an oracle cap defect.
+- Ten-second waits and projected next-stop-ascent check order match lines 236-257.
+  Endpoint availability and schedule validity stay distinct; the capped case's
+  LIMITED state must not become guidance approval.
+
+Narrow root-cause diagnosis is supported independently by isolated source arithmetic:
+timing-arithmetic-audit.json computes representative binary32 leg subtraction and
+ceil without emulating the full engine. For a nominal 3m leg at 45m gauge:
+  bottom=5.51324987411499bar, top=5.213249683380127bar,
+  represented delta=0.3000001907348633bar,
+  binary32 delta*(600/9)=20.000011444091797s, ceil=21s.
+The exact declared decimal 3m leg is 20s. A 42m example also produces 21s.
+The oracle's exact rational timing on nine-decimal pressures was already frozen
+before GF production comparisons and explicitly self-checks nominal 3m=20s.
+It is a matched ideal timing policy, not emulation of erroneous binary32 ceil.
+
+An extra second is integrated as additional offgassing before the next ceiling
+check. Consequently this defect can reduce a later ten-second wait or move a wait
+between adjacent stop slots; it is not merely a cosmetic TTS accumulation error.
+This explains why simply accepting larger TTS differences would conceal mandatory
+stop discrepancies. Exact NDL/stop/validity and total-TTS +/-3s policy remain intact.
+
+Production author reports a temporary single-variable duration correction makes
+all original plus stress comparisons pass. That probe is independently consistent
+with the source-arithmetic mechanism; this audit did not run the probe itself.
+A production correction must remain an explicitly identified correction variant,
+preserve pinned upstream and original rejected evidence, and derive any integer
+snapping bound from floating-operation error rather than arbitrary epsilon. Include
+rounded grid operand uncertainties, not only ULP of their small difference. Avoid
+snapping a genuinely fractional duration whose mathematical ceil is next second.
+
+No production repository edits were performed. These are PC/synthetic audit findings,
+not target execution or physical validation.

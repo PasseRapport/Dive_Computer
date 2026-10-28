@@ -1,0 +1,11 @@
+GF 1/100, 60m, t=1920: TTS 6688 vs 6682 (+6s; allowed ±3s)
+GF 1/100, 30m, t=3720: exact mandatory-stop slots differ
+GF 1/100, 60m, t=3720: exact mandatory-stop slots differ
+GF 1/100, 60m, t=3720: TTS 21388 vs 21402 (-14s; allowed ±3s)
+GF 1/1, 60m, t=3720: exact mandatory-stop slots differ
+GF 1/1, 60m, t=3720: TTS 170448 vs 170472 (-24s; allowed ±3s)
+GF 1/100, 60m, t=1920: actual TTS=6688, expected=6682, delta=+6s
+GF 1/100, 30m, t=3720: actual TTS=3473, expected=3472, delta=+1s
+GF 1/100, 60m, t=3720: actual TTS=21388, expected=21402, delta=-14s
+GF 1/1, 60m, t=3720: actual TTS=170448, expected=170472, delta=-24s
+GF 100/100, 60m, t=3720: actual TTS=16274, expected=16272, delta=+2s

@@ -20,7 +20,14 @@ add_custom_command(OUTPUT "${contained_planner}"
         ${ostc4_root}/upstream/Discovery/Src/buehlmann.c "${contained_planner}"
     DEPENDS "${ostc4_root}/corrections/contain_planner.py" "${ostc4_root}/upstream/Discovery/Src/buehlmann.c" "${ostc4_root}/src/ostc4_scratch.h" "${ostc4_root}/upstream-manifest.json"
     VERBATIM)
-add_library(ostc4_upstream_contained STATIC "${corrected_decom}" "${contained_planner}")
+set(grid_timed_planner "${CMAKE_CURRENT_BINARY_DIR}/corrected/buehlmann-grid-timed.c")
+add_custom_command(OUTPUT "${grid_timed_planner}"
+    COMMAND ${Python3_EXECUTABLE} ${ostc4_root}/corrections/correct_planner_timing.py
+        "${contained_planner}" "${grid_timed_planner}"
+    DEPENDS "${contained_planner}" "${ostc4_root}/corrections/correct_planner_timing.py"
+        "${ostc4_root}/corrections/planner-timing-corrections.json"
+    VERBATIM)
+add_library(ostc4_upstream_contained STATIC "${corrected_decom}" "${grid_timed_planner}")
 add_dependencies(ostc4_upstream_contained ostc4_corrected_source)
 target_include_directories(ostc4_upstream_contained SYSTEM PUBLIC "${ostc4_root}/compat" "${ostc4_root}/upstream/Common/Inc" "${ostc4_root}/upstream/Discovery/Inc")
 target_include_directories(ostc4_upstream_contained PRIVATE "${ostc4_root}/src")

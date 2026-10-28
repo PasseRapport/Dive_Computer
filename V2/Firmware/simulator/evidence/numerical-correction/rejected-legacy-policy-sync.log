@@ -1,0 +1,70 @@
+Test project /tmp/gf-numerics-final-bench
+      Start  1: pc_bench_controls_time_graph
+ 1/25 Test  #1: pc_bench_controls_time_graph ........................   Passed    1.19 sec
+      Start  2: calculated_watch_mapping_session_alerts
+ 2/25 Test  #2: calculated_watch_mapping_session_alerts .............   Passed    0.00 sec
+      Start  3: restart_watch_diagnostics
+ 3/25 Test  #3: restart_watch_diagnostics ...........................   Passed    0.78 sec
+      Start  4: configurable_gf_public_behavior
+ 4/25 Test  #4: configurable_gf_public_behavior .....................   Passed    0.02 sec
+      Start  5: configurable_gf_independent_acceptance
+ 5/25 Test  #5: configurable_gf_independent_acceptance ..............   Passed    1.54 sec
+      Start  6: disk_checkpoint_save
+ 6/25 Test  #6: disk_checkpoint_save ................................   Passed    0.00 sec
+      Start  7: disk_checkpoint_fresh_process
+ 7/25 Test  #7: disk_checkpoint_fresh_process .......................   Passed    0.00 sec
+      Start  8: disk_checkpoint_complete_later_exposure
+ 8/25 Test  #8: disk_checkpoint_complete_later_exposure .............   Passed    0.00 sec
+      Start  9: disk_checkpoint_requires_configuration_evidence
+ 9/25 Test  #9: disk_checkpoint_requires_configuration_evidence .....   Passed    0.00 sec
+      Start 10: disk_checkpoint_process_continuity_and_faults
+10/25 Test #10: disk_checkpoint_process_continuity_and_faults .......***Failed    0.20 sec
+Traceback (most recent call last):
+  File "/tmp/dive-gf-numerics/V2/Firmware/simulator/tests/bench/check_checkpoint_disk.py", line 49, in <module>
+    run("legacy", legacy)
+    ~~~^^^^^^^^^^^^^^^^^^
+  File "/tmp/dive-gf-numerics/V2/Firmware/simulator/tests/bench/check_checkpoint_disk.py", line 12, in run
+    return subprocess.run([str(exe), *map(str, args)], check=True, text=True, capture_output=True).stdout
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/tmp/gf-numerics-final-bench/test_checkpoint_file', 'legacy', '/tmp/dive-gf-numerics/V2/Firmware/simulator/tests/bench/fixtures/legacy-fixed30-70-v1.bin']' returned non-zero exit status 1.
+
+      Start 11: durable_preferences_logs_separate_processes
+11/25 Test #11: durable_preferences_logs_separate_processes .........   Passed    0.12 sec
+      Start 12: independent_exact_stop_grid_travel
+12/25 Test #12: independent_exact_stop_grid_travel ..................   Passed    1.26 sec
+      Start 13: upstream_source_identity
+13/25 Test #13: upstream_source_identity ............................   Passed    0.05 sec
+      Start 14: synthetic_replay_contracts
+14/25 Test #14: synthetic_replay_contracts ..........................   Passed    0.10 sec
+      Start 15: public_pressure_time_contract
+15/25 Test #15: public_pressure_time_contract .......................   Passed    0.00 sec
+      Start 16: corrected_public_pressure_time_contract
+16/25 Test #16: corrected_public_pressure_time_contract .............   Passed    0.00 sec
+      Start 17: corrected_synthetic_replay_contracts
+17/25 Test #17: corrected_synthetic_replay_contracts ................   Passed    0.10 sec
+      Start 18: independently_verified_tissues
+18/25 Test #18: independently_verified_tissues ......................   Passed    0.67 sec
+      Start 19: continuous_exposure_contract
+19/25 Test #19: continuous_exposure_contract ........................   Passed    0.02 sec
+      Start 20: independent_repetitive_exposure
+20/25 Test #20: independent_repetitive_exposure .....................   Passed    0.13 sec
+      Start 21: continuity_replay_faults
+21/25 Test #21: continuity_replay_faults ............................   Passed    0.10 sec
+      Start 22: independent_schedule_analytical_checks
+22/25 Test #22: independent_schedule_analytical_checks ..............   Passed    0.14 sec
+      Start 23: independent_schedule_comparator_rejects_mutations
+23/25 Test #23: independent_schedule_comparator_rejects_mutations ...   Passed    0.12 sec
+      Start 24: checkpoint_restart_continuity
+24/25 Test #24: checkpoint_restart_continuity .......................   Passed    0.00 sec
+      Start 25: checkpoint_fresh_process
+25/25 Test #25: checkpoint_fresh_process ............................   Passed    0.07 sec
+
+96% tests passed, 1 tests failed out of 25
+
+Total Test time (real) =   6.64 sec
+
+The following tests FAILED:
+	 10 - disk_checkpoint_process_continuity_and_faults (Failed)
