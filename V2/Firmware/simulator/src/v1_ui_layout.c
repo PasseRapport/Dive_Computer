@@ -1,3 +1,4 @@
+#include "apnea_settings.h"
 /* V1 layout rendered at native V2 pixel sizes, retaining Montserrat and colours.
  * Do not scale whole pages: that interpolates text and makes it blurry. */
 #include "v1_ui_layout.h"
@@ -453,9 +454,5 @@ void ui_slide_pages(lv_obj_t * page_out, lv_obj_t * page_in, int direction) {
 }
 
 bool ui_water_selection_within_page(void) {
-    lv_obj_update_layout(water_screen);
-    lv_area_t box, page;
-    lv_obj_get_coords(cursor_box, &box);
-    lv_obj_get_coords(water_screen, &page);
-    return box.x1 >= page.x1 && box.x2 <= page.x2;
+    return apnea_settings_selection_within_page();
 }

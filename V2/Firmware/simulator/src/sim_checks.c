@@ -10,7 +10,7 @@
 #include <stdio.h>
 
 enum operation { WHEEL, OUTSIDE, SINGLE_DOWN, SINGLE_UP, DOUBLE_DOWN, DOUBLE_UP,
-                 ZOOM_DOWN, ZOOM_UP, ZOOM, VIEW, MODE, DIVE_MODE, OPTION, PAGE, WATER, BRIGHTNESS, SLEEPING, PROGRESS, BLUETOOTH, DESCEND_DOWN, DESCEND_UP, ASCEND_DOWN, ASCEND_UP, SURFACE_DOWN, SURFACE_UP, DEPTH, LEAVE_PROGRESS, LIGHT_OPTION, LIGHT_MODE, SENSITIVITY, BT_OPTION, BT_DFU, FACE, CLOCK_STYLE, HEADING, ROTATE, HAPTIC_ON, HAPTIC_ROW, PULSE, CAPTURE, DONE };
+                 ZOOM_DOWN, ZOOM_UP, ZOOM, VIEW, MODE, DIVE_MODE, OPTION, PAGE, WATER, BRIGHTNESS, SLEEPING, PROGRESS, BLUETOOTH, DESCEND_DOWN, DESCEND_UP, ASCEND_DOWN, ASCEND_UP, SURFACE_DOWN, SURFACE_UP, DEPTH, LEAVE_PROGRESS, LIGHT_OPTION, LIGHT_MODE, SENSITIVITY, BT_OPTION, BT_DFU, FACE, CLOCK_STYLE, HEADING, ROTATE, APNEA_WATER_OPEN, APNEA_WATER_EXIT, HAPTIC_ON, HAPTIC_ROW, PULSE, CAPTURE, DONE };
 struct step { int ms; enum operation op; int value; const char *name; };
 static const struct step ui_steps[] = {
     {40, VIEW, WATCH_BOOT},
@@ -121,10 +121,11 @@ static const struct step ui_steps[] = {
     {16800, CAPTURE, 0, "08-transition-forward"},
     {16865, CAPTURE, 0, "09-transition-forward"},
     {17085, PAGE, WATCH_WATER},
+    {17100, APNEA_WATER_OPEN, 0},
     {17150, CAPTURE, 0, "19-water-fresh"},
-    {17215, SINGLE_DOWN, 0},
-    {17305, SINGLE_UP, 0},
+    {17215, WHEEL, -1},
     {17815, CAPTURE, 0, "20-water-marine"},
+    {17820, APNEA_WATER_EXIT, 0},
     {17880, WHEEL, -1},
     {18190, WHEEL, -23},
     {18500, VIEW, WATCH_DIVE_VIEW},
@@ -389,7 +390,7 @@ static const struct step dive_steps[] = {
 
 void sim_checks_poll(void)
 {
-    if(sim_host_apnea_check_enabled())return;
+    if(sim_host_apnea_check_enabled()||sim_host_apnea_settings_check_enabled())return;
     if(sim_host_appearance_check_enabled())return;
     if(sim_host_scuba_check_enabled()) return;
     const char *directory = sim_host_gallery_path();
@@ -402,13 +403,14 @@ void sim_checks_poll(void)
             watch_ui_input(WATCH_CROWN, 1);
             watch_ui_input(WATCH_SINGLE_TAP, 0);
             watch_ui_input(WATCH_CROWN, 2);
+            watch_ui_input(WATCH_SINGLE_TAP,0);watch_ui_input(WATCH_SINGLE_TAP,0);
             stage = 1;
         }
         if (k_uptime_get() > 400 && stage == 1) {
-            watch_ui_input(WATCH_SINGLE_TAP, 0); stage++;
+            watch_ui_input(WATCH_CROWN, 1); stage++;
         }
         if (k_uptime_get() > 800 && stage == 2) {
-            watch_ui_input(WATCH_SINGLE_TAP, 0); stage++;
+            watch_ui_input(WATCH_CROWN, -1); stage++;
         }
         __ASSERT(ui_water_selection_within_page(), "Water capsule overflows during resize");
         if (k_uptime_get() > 1200 && stage == 3) {
@@ -471,6 +473,10 @@ void sim_checks_poll(void)
         __ASSERT((int)watch_ui_page() == step->value, "Wrong page at %d ms", step->ms);
         printk("PAGE CHECK: %s\n", watch_ui_page_name());
         break;
+    case APNEA_WATER_OPEN:
+        watch_ui_input(WATCH_SINGLE_TAP,0);watch_ui_input(WATCH_SINGLE_TAP,0);break;
+    case APNEA_WATER_EXIT:
+        watch_ui_input(WATCH_SINGLE_TAP,0);watch_ui_input(WATCH_DOUBLE_TAP,0);break;
     case WATER:
         __ASSERT(watch_ui_salt_water() == step->value, "Water setting lost"); break;
     case BRIGHTNESS:

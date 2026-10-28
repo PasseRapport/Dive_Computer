@@ -1,5 +1,6 @@
 #include "watch_ui.h"
 #include "apnea_main.h"
+#include "apnea_settings.h"
 #include "v1_ui_layout.h"
 #include "selection.h"
 #include "native_fonts.h"
@@ -21,7 +22,7 @@ static enum watch_view current_view;
 static enum watch_view leave_origin;
 static enum watch_mode selected_mode = WATCH_WATCH;
 static enum watch_dive_mode dive_mode = DIVE_SCUBA;
-static bool salt_water, sleeping, bluetooth, bluetooth_dfu;
+static bool sleeping, bluetooth, bluetooth_dfu;
 static uint8_t brightness = 3;
 static enum watch_backlight_mode backlight_mode = BACKLIGHT_AUTO;
 static uint16_t sensitivity = 10;
@@ -342,6 +343,7 @@ static void show_page(enum watch_page next, int direction, bool animate)
         ui_slide_pages(out, in, direction);
     } else lv_obj_set_x(in, (320-lv_obj_get_width(in))/2);
     if(next==WATCH_BRIGHTNESS||next==WATCH_SENSITIVITY)lv_obj_set_pos(in,0,0);
+    if(next!=WATCH_WATER)apnea_settings_leave();
     current_page = next;
     refresh_confirmation();
     refresh_recovery_visibility();
@@ -366,7 +368,8 @@ void watch_ui_create(lv_obj_t *parent)
     ui_skip_boot();
     pages[WATCH_MAIN] = main_screen;
     pages[WATCH_STATS] = stats_screen;
-    pages[WATCH_WATER] = water_screen;
+    lv_obj_add_flag(water_screen,LV_OBJ_FLAG_HIDDEN);
+    pages[WATCH_WATER] = apnea_settings_create(app_screen);
     pages[WATCH_DIVE_MODE] = ui_create_dive_mode_page();
     lv_obj_add_flag(brightness_screen,LV_OBJ_FLAG_HIDDEN);
     pages[WATCH_BRIGHTNESS]=light_editor_create(app_screen,"BRIGHTNESS",10);
@@ -573,6 +576,7 @@ void watch_ui_input(enum watch_input input, int steps)
         }
         return;
     }
+    if (current_view==WATCH_DIVE_VIEW && current_page==WATCH_WATER && apnea_settings_input(input,steps)) return;
     if (current_view == WATCH_SCUBA_VIEW) {
         if (scuba_ui_input(input,steps)) {refresh_mode_menu(false);set_view(WATCH_MODE_MENU);}
         return;
@@ -665,9 +669,7 @@ void watch_ui_input(enum watch_input input, int steps)
                 set_view(WATCH_DIVE_VIEW);
                 show_page(WATCH_MAIN,1,false);
             }
-        } else if (current_view == WATCH_DIVE_VIEW && current_page == WATCH_WATER) {
-            salt_water = !salt_water;
-            ui_refresh_water_selection(salt_water);
+
         } else if (current_view == WATCH_OPTION_VIEW) {
             if (selected_option == OPTION_BACKLIGHT) {
                 selected_backlight=0;refresh_backlight(false);
@@ -726,6 +728,7 @@ void watch_ui_update(const struct watch_data *data)
     battery_icon_update(digital_battery,data->battery_percent);battery_icon_update(analog_battery,data->battery_percent);
     battery_icon_update(free_battery,data->battery_percent);
     compass_ui_update(data->heading_degrees);
+    apnea_settings_update(data->apnea_active);
     apnea_main_update(pages[WATCH_MAIN],data);
     ui_refresh_stats(data->max_dive_s, data->max_depth_dm / 10.0f, data->total_dives);
     ui_refresh_runtime_display(data->runtime_s / 3600, data->runtime_s / 60 % 60);
@@ -741,7 +744,7 @@ void watch_ui_update(const struct watch_data *data)
 
 enum watch_page watch_ui_page(void) { return current_view==WATCH_SCUBA_VIEW ? (scuba_ui_screen()==SCUBA_LEAVE?WATCH_LEAVE:WATCH_SCUBA) : current_page; }
 bool watch_ui_is_sleeping(void) { return sleeping; }
-bool watch_ui_salt_water(void) { return salt_water; }
+bool watch_ui_salt_water(void) { return apnea_settings_salt_water(); }
 void watch_ui_set_brightness(uint8_t value) { brightness=LV_MIN(value,10);ui_refresh_brightness_bar(brightness);
     if(pages[WATCH_BRIGHTNESS])light_editor_set_value(pages[WATCH_BRIGHTNESS],brightness); }
 uint8_t watch_ui_brightness(void) { return brightness; }
@@ -774,7 +777,7 @@ const char *watch_ui_page_name(void)
     if (current_view == WATCH_OPTION_VIEW) return "OPTIONS";
     if (current_view == WATCH_BACKLIGHT_VIEW) return "BACKLIGHT";
     if (current_view == WATCH_FACE_SELECT) return "WATCH";
-    static const char *const names[] = {"MAIN", "STATS", "WATER TYPE", "MODE", "BRIGHTNESS", "SLEEP", "SCUBADIVING", "BLUETOOTH", "LEAVE", "SENSITIVITY", "HAPTICS"};
+    static const char *const names[] = {"MAIN", "STATS", "SETTINGS", "MODE", "BRIGHTNESS", "SLEEP", "SCUBADIVING", "BLUETOOTH", "LEAVE", "SENSITIVITY", "HAPTICS"};
     return names[current_page];
 }
 

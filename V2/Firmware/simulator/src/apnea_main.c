@@ -1,4 +1,5 @@
 #include "apnea_main.h"
+#include "apnea_settings.h"
 #include "dive_layout.h"
 #include "native_fonts.h"
 #include <stdio.h>
@@ -70,7 +71,13 @@ void apnea_main_update(lv_obj_t *view,const struct watch_data *data)
     lv_obj_set_style_text_font(m->time,seconds>=6000?&lv_font_montserrat_22:&lv_font_montserrat_34,0);
     centred(m->time,text,219,157);
     lv_obj_set_style_text_color(m->time,lv_color_hex(data->show_recovery?(data->recovery_red?0xff0000:0x00ff00):0xffffff),0);
-    centred(m->bottom_title,"TEMPERATURE",160,219);
-    snprintf(text,sizeof(text),"%d°C",data->temperature_c);centred(m->bottom,text,160,239);
+    enum apnea_bottom_field field=apnea_settings_bottom_field();
+    centred(m->bottom_title,field==APNEA_SESSION_DEPTH?"SESSION DEPTH":field==APNEA_SESSION_TIME?"SESSION APNEA":"TEMPERATURE",160,219);
+    if(field!=APNEA_TEMPERATURE&&!data->total_dives)snprintf(text,sizeof(text),"--");
+    else if(field==APNEA_SESSION_DEPTH)snprintf(text,sizeof(text),"%u.%u m",data->max_depth_dm/10,data->max_depth_dm%10);
+    else if(field==APNEA_SESSION_TIME)snprintf(text,sizeof(text),"%u:%02u",data->max_dive_s/60,data->max_dive_s%60);
+    else snprintf(text,sizeof(text),"%d°C",data->temperature_c);
+    lv_obj_set_style_text_font(m->bottom,field==APNEA_SESSION_TIME&&data->max_dive_s>=6000?&lv_font_montserrat_22:&lv_font_montserrat_34,0);
+    centred(m->bottom,text,160,239);
     m->heading=data->apnea_active?data->apnea_direction:0;lv_obj_invalidate(m->direction);
 }
