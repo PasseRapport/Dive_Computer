@@ -245,6 +245,7 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
     }
     centred(d->zone,text,160,107);
     hidden(d->left_box,true);hidden(d->left_seconds,true);
+    lv_obj_set_pos(d->left_box,52,127);lv_obj_set_size(d->left_box,94,77);
     lv_obj_set_style_text_font(d->left_value,&lv_font_montserrat_48,0);
     color(d->left_title,0xffffff);color(d->left_value,0xffffff);color(d->left_seconds,0xffffff);
     centred(d->left_note,"",101,197);
@@ -252,6 +253,7 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
     if(!guidance && m->calculated_state==SCUBA_CALCULATED_INVALID) {
         hidden(d->left_box,false);
         lv_obj_set_style_bg_color(d->left_box,lv_color_hex(RED),0);
+        lv_obj_set_pos(d->left_box,52,146);lv_obj_set_size(d->left_box,94,58);
         centred(d->left_title,"DECO",101,127);
         lv_obj_set_style_text_font(d->left_value,&lv_font_montserrat_22,0);
         lv_obj_set_style_text_align(d->left_value,LV_TEXT_ALIGN_CENTER,0);
