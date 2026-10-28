@@ -239,8 +239,8 @@ ceilings round upward to0.1m, while ceiling alerts compare raw depths. Stop zone
 use millimetre resolution to avoid pressure-conversion flicker at exact stops.
 Unavailable/invalid calculation states show explicitly with blank calculated
 values and an empty grey ring, retaining last known obligations. Limited results
-show capped values with an explicit LIMITED marker (including the existing>99
-NDL display); the automatic diver holds if a required ascent result is limited.
+keep capped values on the watch (including the existing>99 NDL display),
+without an extra LIMITED label; diagnostics retain the limited state; the automatic diver holds if a required ascent result is limited.
 TTS remains raw upstream output; zero-TTS in NDL mode is labelled travel excluded
 on the watch footer too. The optional180s safety stop remains a separate session
 policy, is omitted after mandatory deco, and is never included in raw TTS.
