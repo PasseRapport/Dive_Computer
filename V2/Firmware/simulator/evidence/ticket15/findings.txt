@@ -1,0 +1,53 @@
+Ticket15: disk recovery and native integration evidence, 2026-10-28
+
+Base52fb825 ancestry confirmed; merged ticket14 and integrationbb7094f
+(ticket13+14) before delivery. Source and canonical tracker were not edited.
+Portable numerical checkpoint remains296bytes/schema2. PC envelope364bytes:
+64byte explicit lifecycle/preference/density header + core + envelopeCRC.
+Policy fingerprints are computed from current public macros, including configurable
+policy identity; no prior configurable-policy identity is hardcoded for recovery.
+Recognized fixed30/70 legacy fingerprint is distinct and original293bytes retained.
+
+Public PC tests use no internal mocks: configure pair, exact timestamped exposure,
+public observation, explicit disk save/load. Separate OS processes compare loaded
+continuation with uninterrupted matched-cadence control, including all16 nitrogen/
+helium compartments, pressures, anchor/GF-low depth, endpoints/operational ceiling,
+NDL/TTS, every stop slot, availability, GF pair/lock and recording lifecycle.
+Comparison is exact continuity equality, not an independently authored numerical
+oracle. Brief surface, manual/automatic unlock, next-dive preference independence,
+clock/exposure/configuration assertions, stale/corrupt/schema/policy/GF/lifecycle
+faults, repeated failed imports, and atomic write failures are covered.
+Readonly parent prevents tempfile creation with an existing checkpoint; its bytes
+remain exact. Failed rename over an existing directory leaves it untouched and
+removes temporary files. Save failures retain live valid exposure. Rejected loads
+retain accepted diagnostic numbers/pair/lock, latch INVALID and pause; repeat
+rejection cannot erase the last accepted diagnostics.
+
+TDD red: missing disk module/API; later missing configuration assertion API; a
+fresh-process rejection initially failed to latch INVALID before first fixture;
+repeated failed core import initially erased diagnostic tissues. Each failed public
+behavior was followed by the minimal implementation and green targeted tests.
+Initial18tests before implementation passed;24combined tests at ticket14+15 passed
+before13 merge. After13 merge the full combined run has23/24passing: the existing
+configurable_gf_independent_acceptance stress gate remains failing and is preserved
+in combined-before-numeric-fix.log. No exclusion or tolerance widening was made.
+The parent is delivering the separate exposure travel-grid numerical correction.
+
+Native check: actual SDL clicks Save disk, Load disk with unknown clock (INVALID),
+two-stage explicit saved simulation instant / zero elapsed assertion, locked40/85
+recovery retaining preferred20/90, surface manual completion,20/90edit and savedlog.
+Four screenshots/JSON/exact accepted traces plus render check are preserved. Visual
+inspection verified readable buttons, diagnostics and graph legend without overlap.
+All fixtures use isolated temporary state directories; normal user preferences untouched.
+
+An incremental native crash after13merge is preserved, diagnosed and fixed:
+copy2 imported old checkout modification times, causing make to reuse sim_host.o
+with the old observation layout. GDB shows sim_host storage at view+288 with bogus
+0x300000003, while pc_bench storage is at view+304 and valid. A pristine native
+build passed. Restoring the original stale build then applying content-aware source
+copy with one-time destination timestamp refresh also passed. Unchanged source
+files remain untouched on later launches; no blanket SDK/cache deletion is used.
+The final further incremental native run passed. Rejected logs/backtrace are retained.
+
+PC/synthetic evidence only. No Nordic target build, physical persistence, RTC,
+sensor coverage, power-cut durability, operational dive safety or hardware claim.

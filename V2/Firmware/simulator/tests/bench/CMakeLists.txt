@@ -34,6 +34,22 @@ target_compile_options(gf_bench_replay PRIVATE -Wall -Wextra -Wpedantic -Werror)
 add_test(NAME configurable_gf_independent_acceptance COMMAND ${Python3_EXECUTABLE}
     ${CMAKE_CURRENT_SOURCE_DIR}/compare_gf_reference.py $<TARGET_FILE:gf_bench_replay>)
 
+add_executable(test_checkpoint_file test_checkpoint_file.c ../../src/pc_bench.c ../../src/pc_bench_checkpoint_file.c ../../src/pc_bench_storage.c)
+target_include_directories(test_checkpoint_file PRIVATE ../../src)
+target_link_libraries(test_checkpoint_file PRIVATE ostc4_exposure m)
+target_compile_options(test_checkpoint_file PRIVATE -Wall -Wextra -Wpedantic -Werror)
+add_test(NAME disk_checkpoint_save COMMAND test_checkpoint_file save ${CMAKE_CURRENT_BINARY_DIR}/locked.checkpoint)
+set_tests_properties(disk_checkpoint_save PROPERTIES FIXTURES_SETUP locked_checkpoint)
+add_test(NAME disk_checkpoint_fresh_process COMMAND test_checkpoint_file load ${CMAKE_CURRENT_BINARY_DIR}/locked.checkpoint)
+set_tests_properties(disk_checkpoint_fresh_process PROPERTIES FIXTURES_REQUIRED locked_checkpoint)
+add_test(NAME disk_checkpoint_complete_later_exposure COMMAND test_checkpoint_file continued ${CMAKE_CURRENT_BINARY_DIR}/locked.checkpoint)
+set_tests_properties(disk_checkpoint_complete_later_exposure PROPERTIES FIXTURES_REQUIRED locked_checkpoint)
+add_test(NAME disk_checkpoint_requires_configuration_evidence COMMAND test_checkpoint_file configuration-unknown ${CMAKE_CURRENT_BINARY_DIR}/locked.checkpoint)
+set_tests_properties(disk_checkpoint_requires_configuration_evidence PROPERTIES FIXTURES_REQUIRED locked_checkpoint)
+add_test(NAME disk_checkpoint_process_continuity_and_faults COMMAND ${Python3_EXECUTABLE}
+    ${CMAKE_CURRENT_SOURCE_DIR}/check_checkpoint_disk.py $<TARGET_FILE:test_checkpoint_file>
+    ${CMAKE_CURRENT_SOURCE_DIR}/fixtures/legacy-fixed30-70-v1.bin)
+
 add_executable(test_storage_bench test_storage_bench.c ../../src/pc_bench.c ../../src/pc_bench_storage.c)
 target_include_directories(test_storage_bench PRIVATE ../../src)
 target_link_libraries(test_storage_bench PRIVATE ostc4_exposure m)

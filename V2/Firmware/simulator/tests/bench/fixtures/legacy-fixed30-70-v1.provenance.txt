@@ -1,0 +1,10 @@
+Immutable recognized legacy fixture, generated from commit9d2853f (86ebdde^).
+Original source/headers copied with git archive; upstream sources unmodified.
+Build: GCC16.2.1 CMake Release, corrected contained ostc4_exposure archive,
+OSTC4_TISSUE_CORRECTIONS=1, no-fast-math, no-contract.
+Public inputs: initialize(0,1bar), advance(60,4bar), advance(1260,4bar), checkpoint.
+Original format:293bytes EXC1 schema1 fixed30/70 fingerprint +CRC.
+SHA256:7c1286376c92dce9d2f524946fd72b26e844267e9eec1c0b2f10d6663f548c6a
+No recorded-dive lifecycle evidence was stored by v1. It must not become valid
+or unlocked merely because30/70 policy is recognized. Tests never rewrite it.
+Synthetic PC continuity input; not an independent numerical oracle or hardware evidence.
