@@ -17,6 +17,8 @@ static enum scuba_calculated_state state(const ostc4_observation *r)
 void scuba_calculated_apply(struct scuba_model *m,const ostc4_observation *r,
     uint32_t seconds,float depth,int16_t temperature,uint8_t battery)
 {
+    bool previously_valid=m->calculated && (m->calculated_state==SCUBA_CALCULATED_AVAILABLE ||
+        m->calculated_state==SCUBA_CALCULATED_LIMITED);
     m->calculated=true;m->scenario=SCUBA_MANUAL;m->speed=1;
     m->calculated_state=state(r);
     if(!isfinite(depth)||depth<0||depth>61||!isfinite(r->ceiling_meters)||
@@ -27,16 +29,29 @@ void scuba_calculated_apply(struct scuba_model *m,const ostc4_observation *r,
         for(int i=OSTC4_STOPS-1;i>=0;--i) if(r->stop_seconds[i]) {
             stop=(i+1)*30;remaining=(uint32_t)r->stop_seconds[i]*1000;break;
         }
+        long mm=lroundf(depth*1000);
+        bool in_stop=stop && mm>=stop*100 && mm<=(stop+30)*100;
+        uint32_t display_remaining=remaining;
+        if(previously_valid && stop==m->calculated_stop_dm && remaining &&
+           remaining==m->calculated_stop_raw_ms && in_stop && m->calculated_stop_zone) {
+            uint64_t now=(uint64_t)seconds*1000;
+            uint64_t elapsed=now>=m->last_ms?now-m->last_ms:0;
+            /* Interpolate the planner's ten-second slots on the exposure clock.
+             * Only the planner can clear a stop: retain at least one second. */
+            display_remaining=elapsed<m->calculated_stop_remaining_ms ?
+                m->calculated_stop_remaining_ms-(uint32_t)elapsed:1000;
+            if(display_remaining<1000)display_remaining=1000;
+        }
         if(stop!=m->calculated_stop_dm)m->calculated_stop_total_ms=remaining;
         if(remaining>m->calculated_stop_total_ms)m->calculated_stop_total_ms=remaining;
-        m->calculated_stop_dm=stop;m->calculated_stop_remaining_ms=remaining;
+        m->calculated_stop_dm=stop;m->calculated_stop_remaining_ms=display_remaining;
+        m->calculated_stop_raw_ms=remaining;
         m->calculated_ceiling_dm=(uint16_t)ceilf(r->ceiling_meters*10);
         m->calculated_ceiling_violation=depth<r->ceiling_meters;
         /* Stop-zone geometry follows the same millimetre sensor resolution as
          * measured depth; this avoids binary32 pressure conversion flicker at
          * an exact3m stop. Ceiling violation still compares raw depths. */
-        long mm=lroundf(depth*1000);
-        m->calculated_stop_zone=stop && mm>=stop*100 && mm<=(stop+30)*100;
+        m->calculated_stop_zone=in_stop;
         m->calculated_tts_s=r->tts_seconds;m->ndl_s=r->ndl_seconds;
     }
     /* Sensor-resolution millimetres first, then the established decimal-depth

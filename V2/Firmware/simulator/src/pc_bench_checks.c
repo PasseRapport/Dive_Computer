@@ -2,6 +2,7 @@
 #include "pc_bench.h"
 #include "pc_bench_ui.h"
 #include "sim_host.h"
+#include "sim_controls.h"
 #include "scuba_ui.h"
 #include <lvgl.h>
 #include <zephyr/kernel.h>
@@ -99,11 +100,40 @@ static void calculated_checks(void)
             __ASSERT(scuba_ui_screen()==battery_screen && v->seconds==battery_seconds && v->paused,
                 "battery wheel changed the watch page or exposure");
             printk("BATTERY WHEEL PASS: real SDL events, one-percent steps, 0/100 bounds, paused updates, crown isolation\n");break;
+        case 20:
+            __ASSERT(pc_bench_fresh(1.01325f,1025,NULL,0)==0,"apnea fixture failed");
+            pc_bench_manual(5,0);pc_bench_pause(false);pc_bench_poll(1000);
+            /* Return to the mode selector at the surface, then select apnea. */
+            pc_bench_manual(0,0);pc_bench_poll(1000);
+            watch_ui_input(WATCH_CROWN,100);watch_ui_input(WATCH_CROWN,24);
+            __ASSERT(watch_ui_view()==WATCH_MODE_MENU,"cannot leave scuba fixture");
+            watch_ui_input(WATCH_CROWN,-100);watch_ui_input(WATCH_CROWN,WATCH_DIVING);
+            watch_ui_input(WATCH_SINGLE_TAP,0);watch_ui_input(WATCH_CROWN,1);
+            watch_ui_input(WATCH_SINGLE_TAP,0);
+            __ASSERT(watch_ui_view()==WATCH_DIVE_VIEW && watch_ui_dive_mode()==DIVE_FREE,"apnea selection failed");
+            pc_bench_manual(5,0);pc_bench_poll(1000);pc_bench_pause(true);
+            sim_host_push_button(420,744,1);break;
+        case 21:sim_host_push_button(420,744,0);break;
+        case 22:
+            __ASSERT(v->rate_m_min==1 && !v->replay,"apnea Rate +1 control failed");
+            pc_bench_pause(false);pc_bench_poll(60000);pc_bench_pause(true);
+            __ASSERT(sim_controls_depth_dm()==60 && sim_controls_depth_rate()==1,"apnea depth did not follow rate");
+            sim_host_push_button(860,744,1);break;
+        case 23:sim_host_push_button(860,744,0);break;
+        case 24:
+            __ASSERT(v->depth_m>6.99f && v->depth_m<7.01f && v->rate_m_min==0,"apnea Depth +1 control failed");
+            pc_bench_pause(false);pc_bench_poll(1000);pc_bench_pause(true);
+            __ASSERT(sim_controls_depth_dm()==70 && sim_controls_depth_rate()==0,"apnea depth input disconnected");break;
+        case 25:
+            __ASSERT(watch_ui_view()==WATCH_DIVE_VIEW,"bench controls navigated away from apnea");
+            __ASSERT(sim_host_bench_capture(11)==0,"apnea depth capture failed");
+            printk("APNEA BENCH PASS: real Rate/Depth clicks drive the shared depth, paused exposure and watch view preserved\n");break;
         default:return;
         }
         if(stage/2<10)pc_bench_pause(true);
         after=now+300;++stage;
     } else {
+        if(stage/2==22) __ASSERT(sim_host_bench_capture(10)==0,"apnea rate capture failed");
         if(stage/2<10) {
             /* Render the observer's current model, then finish any fade. */
             struct watch_data data={.temperature_c=18,.battery_percent=87};

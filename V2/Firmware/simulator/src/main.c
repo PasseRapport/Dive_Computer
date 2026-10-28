@@ -12,6 +12,7 @@
 #include "appearance_checks.h"
 #ifdef DIVE_PC_BENCH
 #include "pc_bench_ui.h"
+#include "pc_bench.h"
 #endif
 
 int main(void)
@@ -49,6 +50,9 @@ int main(void)
     printk("LVGL UI ready: 320x300, RGB565, simulated data\n");
     uint64_t last_update = UINT64_MAX;
     struct sim_dive dive = {0};
+#ifdef DIVE_PC_BENCH
+    uint64_t last_exposure_ms=0;
+#endif
     int check_stage=0,scale_stage=0,stress_stage=0;
     bool check_done = false;
     bool was_animating = false;
@@ -116,9 +120,29 @@ int main(void)
             data.depth_dm != sim_controls_depth_dm() ||
             data.heading_degrees != sim_controls_heading_degrees()) {
             data.heading_degrees = sim_controls_heading_degrees();
+#ifdef DIVE_PC_BENCH
+            uint64_t exposure_ms=(uint64_t)pc_bench_read()->seconds*1000;
+            if(exposure_ms<last_exposure_ms) {
+                dive=(struct sim_dive){0};
+                data.elapsed_s=data.recovery_s=data.recovery_elapsed_ms=data.recovery_target_ms=0;
+                data.show_recovery=data.recovery_ring_visible=false;
+            }
+#endif
             if(watch_ui_view()==WATCH_SCUBA_VIEW) {data.depth_dm=sim_controls_depth_dm();data.depth_mm=sim_controls_depth_mm();data.depth_mm_valid=true;}
-            else sim_dive_update(&dive, &data, now_ms, sim_controls_depth_dm());
+            else {
+#ifdef DIVE_PC_BENCH
+                data.depth_mm=sim_controls_depth_mm();data.depth_mm_valid=true;
+                sim_dive_update(&dive,&data,exposure_ms,sim_controls_depth_dm());
+#else
+                sim_dive_update(&dive, &data, now_ms, sim_controls_depth_dm());
+#endif
+            }
+#ifdef DIVE_PC_BENCH
+            last_exposure_ms=(uint64_t)pc_bench_read()->seconds*1000;
+            data.runtime_s=pc_bench_read()->seconds;
+#else
             data.runtime_s = now_ms / 1000;
+#endif
             sim_host_get_clock(&hour, &minute);
             data.clock_hour = hour;
             data.clock_minute=minute;

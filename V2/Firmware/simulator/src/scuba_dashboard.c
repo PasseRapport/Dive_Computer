@@ -236,7 +236,7 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
     if(stop)snprintf(text,sizeof(text),stop_depth?"STOP %u-%u m":"STOP 3-6 m",stop_depth/10,stop_depth/10+3);
     else if(stop_depth&&m->depth_dm<stop_depth)snprintf(text,sizeof(text),"DESCEND TO %u m",stop_depth/10);
     else text[0]=0;
-    if(!guidance)snprintf(text,sizeof(text),"%s",m->calculated_state==SCUBA_CALCULATED_INVALID?"INVALID":"UNAVAILABLE");
+    if(!guidance)snprintf(text,sizeof(text),"%s",m->calculated_state==SCUBA_CALCULATED_INVALID?"INVALID":"");
     if(!guidance && m->data_gap.present) {
         if(m->data_gap.time_known)
             snprintf(text,sizeof(text),"INVALID | %s %u:%02u",m->data_gap.ongoing?"LOST":"GAP",

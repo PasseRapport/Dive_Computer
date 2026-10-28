@@ -5,6 +5,7 @@
 #include "scuba_ui.h"
 #ifdef DIVE_PC_BENCH
 #include "pc_bench.h"
+#include <math.h>
 #endif
 #include <zephyr/sys/printk.h>
 #include <zephyr/kernel.h>
@@ -86,11 +87,30 @@ static void surface(lv_event_t *event)
     (void)event;sim_controls_set_depth_dm(0);
     if(watch_ui_view()==WATCH_SCUBA_VIEW)scuba_ui_manual();
 }
-uint16_t sim_controls_depth_dm(void) { return depth_dm; }
-int sim_controls_depth_rate(void) { return depth_rate; }
+uint16_t sim_controls_depth_dm(void)
+{
+#ifdef DIVE_PC_BENCH
+    return sim_controls_depth_mm()/100;
+#else
+    return depth_dm;
+#endif
+}
+int sim_controls_depth_rate(void)
+{
+#ifdef DIVE_PC_BENCH
+    return lroundf(pc_bench_read()->rate_m_min);
+#else
+    return depth_rate;
+#endif
+}
 uint32_t sim_controls_depth_mm(void)
 {
+#ifdef DIVE_PC_BENCH
+    const struct bench_view *v=pc_bench_read();
+    return v->history_count ? (uint32_t)lroundf(v->history[v->history_count-1].depth_m*1000):0;
+#else
     return LV_CLAMP(0,(int64_t)depth_dm*100+rate_fraction/60,100000);
+#endif
 }
 
 static void change_zoom(lv_event_t *event)
@@ -271,7 +291,7 @@ void sim_controls_poll(void)
         depth_dm=LV_CLAMP(0,(int)depth_dm+delta,1000);
         if((!depth_dm&&depth_rate<0)||(depth_dm==1000&&depth_rate>0))rate_fraction=0;
     }
-    lv_label_set_text_fmt(depth_label,"Depth: %u.%u m | Rate: %+d m/min",depth_dm/10,depth_dm%10,depth_rate);
+    lv_label_set_text_fmt(depth_label,"Depth: %u.%u m | Rate: %+d m/min",sim_controls_depth_dm()/10,sim_controls_depth_dm()%10,sim_controls_depth_rate());
     int battery_steps=sim_host_take_battery_wheel();
     if(scuba) {
         const struct scuba_model *s=scuba_ui_model();
@@ -293,7 +313,7 @@ void sim_controls_poll(void)
         lv_label_set_text_fmt(battery_label,"Battery: %u%% (wheel)",s->battery);lv_obj_center(battery_label);
         lv_label_set_text(haptic_label,scuba_ui_haptic_active()?"VIBRATION":s->calculated?"CALCULATED":"DEMO VALUES");
         lv_obj_set_style_text_color(haptic_label,lv_color_hex(scuba_ui_haptic_active()?0xffaa66:0xaaaaaa),0);
-        lv_label_set_text_fmt(depth_label,"Depth: %u.%u m | Rate: %+d m/min",s->depth_dm/10,s->depth_dm%10,depth_rate);
+        lv_label_set_text_fmt(depth_label,"Depth: %u.%u m | Rate: %+d m/min",s->depth_dm/10,s->depth_dm%10,sim_controls_depth_rate());
     } else {
         sim_host_set_battery_y(-1);
         lv_obj_add_flag(scuba_panel,LV_OBJ_FLAG_HIDDEN);
