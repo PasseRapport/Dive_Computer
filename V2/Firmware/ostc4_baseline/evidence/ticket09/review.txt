@@ -1,0 +1,17 @@
+Ticket09 review, 2026-10-28
+Fixed point: 1ef4be7ef33d8024dcaee5e50f1bd0ea98c7a486, staged implementation delta.
+Reviewers: independent Standards and Spec subagents, inherited Sol 6.1.
+
+Standards: two initial P2 findings: repeated packaging could destroy evidence;
+README referenced missing final SHA256SUMS.json.
+Spec: one initial P2 finding: missing promised SHA256SUMS.json.
+
+Corrections: package.py refuses existing archive/index and verifies every new
+archive member before deleting raw inputs. Repeated-run manual check returned
+nonzero and preserved the existing archive hash. The final SHA256SUMS.json is
+included, covers all evidence files except itself, and includes packaged raw
+archive plus exact canonical-document snapshots. raw-evidence-index.json
+separately authenticates every raw archive member. Final follow-up: Standards zero remaining actionable findings; Spec zero remaining actionable findings. Both reviewers verified manifest coverage and hashes.
+
+Review independently confirmed banner retention and license restriction,
+source/dependency counts, raw hashes, 14/14 tests, and correct evidence limits.

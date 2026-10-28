@@ -1,0 +1,231 @@
+{
+  "audit_bundle_sha256": "ef211bb667e20e7401be0354c8621d8783f985a72bf7d45880e6d318d0c665b2",
+  "snapshots": {
+    "master": {
+      "git_revision": "920151ae83c3cc39a6d1f3517ba3d854863e92c3",
+      "archive_sha256": "cc60fc4e38677bb7f74c8777aad0eaf47810a7df070d30a94ec77d6f87201221",
+      "selected_file_sha256": {
+        "Common/Src/decom.c": "c6e996242628c16adc583d6be617e324b7941264125a7b4ccc1d3f8c195f652e",
+        "Discovery/Src/buehlmann.c": "99bff5b2f2f12ef7eaa1ae4a296f01fd073b3ddc99a3541e0ed32d239a236602",
+        "Discovery/Inc/buehlmann.h": "99f64423f708181fab47cc7c47a09e6cf1dbf60cc053e1e0b3c6f78280533636",
+        "Discovery/Inc/firmwareEraseProgram.h": "76a267f2103488236357843775c3946f0677bc8481945bc6f6fbb8427994280b",
+        "Common/Inc/decom.h": "eebe08dfa3e89c23fb3bb36ada56fd1fb840019ea0a59d60cca359040779574f",
+        "Common/Inc/data_central.h": "376365cef6b8a5f069d043a8928d37145282fa8f6215e6a7d984cc17be8b15d7",
+        "Common/Inc/settings.h": "e989a8a94ce17b1445db9deb1fa6bc3becc636a5513fa5d298f9b6b5ee66df8e",
+        "Common/Inc/FirmwareData.h": "bac757962b81ae4269999fba368d3ce48e09aa975af89946c741315c7e7ab938",
+        "Common/Inc/global_constants.h": "0a3bb502fb36b611cafba61d72996a45bd1394ae7447c25bd24b236f6b962989",
+        "Common/Inc/configuration.h": "ee00228ce6105514d29c3f033ac042d8d2a20ae4fe45bf25661ac50214a7fce1",
+        "Common/Inc/calc_crush.h": "e28c2b4456c5f5943fd7674d09b76e2eb3cb0cfc093dc46705acfbfa5d4c9d5d"
+      },
+      "settings_sha256": "81ada0d1f0b55516521a0329fee5d775291061f7ee3ac22261d06c0dd2fbb6d8",
+      "stable_manufacturer_correspondence_verified": false
+    },
+    "beta": {
+      "git_revision": "7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
+      "archive_sha256": "1246153d41973d6dec4035f49439b550db66747fc62cfa6b5c541f5265e8f481",
+      "selected_file_sha256": {
+        "Common/Src/decom.c": "f7c95aa71598f05905f6a2737eb8ca3a4346b4563d5404f66f3c167e9a71c6cd",
+        "Discovery/Src/buehlmann.c": "a977c190d1b3cc2c820a38d849cd8bc9c0b445759e92a5101f4aa747ff484dc7",
+        "Discovery/Inc/buehlmann.h": "99f64423f708181fab47cc7c47a09e6cf1dbf60cc053e1e0b3c6f78280533636",
+        "Discovery/Inc/firmwareEraseProgram.h": "4151cf2affd6c469d9539d5b60fb3248e2f2d42e6f9378f6aa31a9490f20fd2d",
+        "Common/Inc/decom.h": "e5b26f940ae860e4b881a02b44752685b12e2367c46fa43f83fb353f824eb570",
+        "Common/Inc/data_central.h": "931e386253d3f80c5af83174cef94bcb28d87cf15d1e880458627be0142b6dab",
+        "Common/Inc/settings.h": "ff9d0e1fa812193480e197d3ca2e1e4767a6ffcf1aa814fed6a621789aa8993d",
+        "Common/Inc/FirmwareData.h": "bac757962b81ae4269999fba368d3ce48e09aa975af89946c741315c7e7ab938",
+        "Common/Inc/global_constants.h": "0a3bb502fb36b611cafba61d72996a45bd1394ae7447c25bd24b236f6b962989",
+        "Common/Inc/configuration.h": "d8ed91dc5b0841c109dc33ed64b7f9d9472807c395ca5d6f21f3cc64c29d02d7",
+        "Common/Inc/calc_crush.h": "e28c2b4456c5f5943fd7674d09b76e2eb3cb0cfc093dc46705acfbfa5d4c9d5d"
+      },
+      "settings_sha256": "f837059ab3504f34d1a3449058ca1dc4ca8db5676c60658db2b351922a3db607",
+      "stable_manufacturer_correspondence_verified": false
+    }
+  },
+  "selected_revision": "7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
+  "retained_files": [
+    {
+      "path": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Src/decom.c",
+      "sha256": "f7c95aa71598f05905f6a2737eb8ca3a4346b4563d5404f66f3c167e9a71c6cd",
+      "bytes": 49640,
+      "spdx_identifiers_as_found": [],
+      "explicit_gpl3_or_later_notice": true,
+      "copyright_lines": [
+        "/// \\par Copyright (c) 2014-2018 Heinrichs Weikamp gmbh"
+      ],
+      "notice_excerpt": "///////////////////////////////////////////////////////////////////////////////\n/// -*- coding: UTF-8 -*-\n///\n/// \\file   Common/Src/decom.c\n/// \\brief  This code is used to calculate desat, calculated by RTE and send to Firmware\n/// \\author heinrichs weikamp gmbh\n/// \\date   22-Feb-2016\n///\n/// $Id$\n///////////////////////////////////////////////////////////////////////////////\n/// \\par Copyright (c) 2014-2018 Heinrichs Weikamp gmbh\n///\n///     This program is free software: you can redistribute it and/or modify\n///     it under the terms of the GNU General Public License as published by\n///     the Free Software Foundation, either version 3 of the License, or\n///     (at your option) any later version.\n///\n///     This program is distributed in the hope that it will be useful,\n///     but WITHOUT ANY WARRANTY; without even the implied warranty of\n///     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n///     GNU General Public License for more details.\n///\n///     You should have received a copy of the GNU General Public License\n///     along with this program.  If not, see <http://www.gnu.org/licenses/>.\n//////////////////////////////////////////////////////////////////////////////\n/**\n\t@verbatim\n\t==============================================================================\n\t\t\t\t\t\t\t##### Changes\t#####\n\t==============================================================================\n\tV1.0.2\t1602220x\tdecom_oxygen_calculate_cns() changed to hwOS version\n\n\t@endverbatim\n\t******************************************************************************\n\t*/\n\n#include \"decom.h\"\n\n#include <math.h>\n#include <string.h>\n#include \"settings.h\"\n#include \"calc_crush.h\"\n\n\nconst float helium_time_constant[16] = {\n\t\t\t\t\t\t\t\t\t\t3.68695308808482E-001,\n\t\t\t\t\t\t\t\t\t\t2.29518933960247E-001,\n\t\t\t\t\t\t\t\t\t\t1.46853216220327E-001,\n\t\t\t\t\t\t\t\t\t\t9.91626867753856E-002,\n\t\t\t\t\t\t\t\t\t\t6.78890480470074E-002,\n\t\t\t\t\t\t\t\t\t\t4.78692804254106E-002,\n\t\t\t\t\t\t\t\t\t\t3.37626488338989E-002,\n\t\t\t\t\t\t\t\t\t\t2.38113081607676E-002,\n\t\t\t\t\t\t\t\t\t\t1.68239606932026E-002,\n\t\t\t\t\t\t\t\t\t\t1.25592893741610E-002,\n\t\t\t\t\t\t\t\t\t\t9.80544886914621E-003,\n\t\t\t\t\t\t\t\t\t\t7.67264977374303E-003,\n\t\t\t\t\t\t\t\t\t\t6.01220557342307E-003,\n\t\t\t\t\t\t\t\t\t\t4.70185307665137E-003,\n\t\t\t\t\t\t\t\t\t\t3.68225234041620E-003,\n\t\t\t\t\t\t\t\t\t\t2.88775228329769E-003};\n\n const float nitrogen_time_constant[16] = {\n\t\t\t\t\t\t\t\t\t\t1.38629436111989E-001,\n\t\t\t\t\t\t\t\t\t\t8.66433975699932E-002,\n\t\t\t\t\t\t\t\t\t\t5.54517744447956E-002,\n\t\t\t\t\t\t\t\t\t\t3.74674151654024E-002,\n\t\t\t\t\t\t\t\t\t\t2.56721177985165E-002,\n\t\t\t\t\t\t\t\t\t\t1.80978376125312E-002,\n\t\t\t\t\t\t\t\t\t\t1.27651414467762E-002,\n\t\t\t\t\t\t\t\t\t\t9.00191143584345E-003,\n\t\t\t\t\t\t\t\t\t\t6.35914844550409E-003,\n\t\t\t\t\t\t\t\t\t\t4.74758342849278E-003,\n\t\t\t\t\t\t\t\t\t\t3.70666941475907E-003,\n\t\t\t\t\t\t\t\t\t\t2.90019740820061E-003,\n\t\t\t\t\t\t\t\t\t\t2.27261370675392E-003,\n\t\t\t\t\t\t\t\t\t\t1.77730046297422E-003,\n\t\t\t\t\t\t\t\t\t\t1.39186180835330E-003,\n\t\t\t\t\t\t\t\t\t\t1.09157036308653E-003};\n",
+      "review": "explicit GPL-3.0-or-later grant",
+      "upstream_path": "Common/Src/decom.c",
+      "archive_match": true,
+      "manifest_match": true,
+      "license_conclusion": "GPL-3.0-or-later explicit notice"
+    },
+    {
+      "path": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Src/buehlmann.c",
+      "sha256": "a977c190d1b3cc2c820a38d849cd8bc9c0b445759e92a5101f4aa747ff484dc7",
+      "bytes": 22193,
+      "spdx_identifiers_as_found": [],
+      "explicit_gpl3_or_later_notice": false,
+      "copyright_lines": [],
+      "notice_excerpt": "/*\tgetrennte Gase f\ufffdr die verschiedenen Modi\n\t\tum Gaswechsel Eintr\ufffdge zu vereinfachen\n\t\tdas heisst:\n\t\toc == bailout in cc mode\n*/\n\n/* Konvention:\nfloat extExample_variable_can_be_used_with_extern;\n*/\n\n#include <string.h>\n#include <math.h>\n#include <stdbool.h>\n#include \"buehlmann.h\"\n#include \"decom.h\"\n\nextern const float buehlmann_N2_a[];\nextern const float buehlmann_N2_b[];\nextern const float buehlmann_He_a[];\nextern const float buehlmann_He_b[];\n\ntypedef struct\n{\n\tfloat depth;\n\tint id;\n} SStop;\n\n#define DECO_STOPS_MAX_TTS_CALCULATON_IN_SECONDS 59940 // 999 minuten; before: 18000 // 5(h) * 60(min) * 60 sec = 18000 sec\n#define DECO_STOPS_MAX_TTS_FOR_EVERY_SECOND_CALC_IN_SECONDS 7200\n#define NINETY_NINE_MINUTES_IN_SECONDS 59940\n\n# define PRESSURE_TEN_METER 1.0f\n# define PRESSURE_THREE_METER 0.333334f\n# define PRESSURE_150_CM 0.15f\n# define PRESSURE_HALF_METER 0.05f\n\nstatic void buehlmann_backup_and_restore(_Bool backup_restore_otherwise);\nstatic float tissue_tolerance(void);\nstatic void ambient_bar_to_deco_stop_depth_bar(SDiveSettings *pDiveSettings, float ceiling);\nstatic int ascend_with_all_gaschanges(SDiveSettings *pDiveSettings, float pressure_decrease);\nstatic float next_stop_depth_input_is_actual_stop_id(SDiveSettings *pDiveSettings, int actual_id);\nstatic float get_gf_at_pressure(SDiveSettings *pDiveSettings, float pressure);\nstatic int buehlmann_calc_ndl(SDiveSettings *pDiveSettings);\nstatic _Bool dive1_check_deco(SDiveSettings *pDiveSettings);\n\nstatic float gSurface_pressure_bar;\nstatic float gPressure;\nstatic int gGas_id;\nstatic float gTissue_nitrogen_bar[16];\nstatic float gTissue_helium_bar[16];\nstatic float gGF_value;\nstatic float gCNS;\n\nfloat gGF_low_depth_bar;\nSStop gStop;\n\nvoid buehlmann_init(void)\n{\n}\n\nstatic void buehlmann_backup_and_restore(_Bool backup_restore_otherwise)\n{\n\tstatic float pressure;\n\tstatic float gas_id;\n\tstatic float tissue_nitrogen_bar[16];\n\tstatic float tissue_helium_bar[16];\n\tstatic float gf_value;\n\tstatic float cns;\n\n\tif(backup_restore_otherwise)\n\t{\n\t\tpressure = gPressure;\n\t\tgas_id = gGas_id;\n\t\tgf_value = gGF_value;\n\t\tcns = gCNS;\n\t\tmemcpy(tissue_nitrogen_bar, gTissue_nitrogen_bar, (4*16));\n\t\tmemcpy(tissue_helium_bar, gTissue_helium_bar, (4*16));\n\t}\n\telse\n\t{",
+      "review": "manual scope review required; see dossier",
+      "upstream_path": "Discovery/Src/buehlmann.c",
+      "archive_match": true,
+      "manifest_match": true,
+      "license_conclusion": "NO FILE-LOCAL GRANT: companion header context only; upstream confirmation required"
+    },
+    {
+      "path": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc/buehlmann.h",
+      "sha256": "99f64423f708181fab47cc7c47a09e6cf1dbf60cc053e1e0b3c6f78280533636",
+      "bytes": 1595,
+      "spdx_identifiers_as_found": [],
+      "explicit_gpl3_or_later_notice": true,
+      "copyright_lines": [
+        "/// \\par Copyright (c) 2014-2018 Heinrichs Weikamp gmbh"
+      ],
+      "notice_excerpt": "///////////////////////////////////////////////////////////////////////////////\n/// -*- coding: UTF-8 -*-\n///\n/// \\file   Discovery/Inc/buehlmann.h\n/// \\brief\tZHL16+GF decompression algorithm.\n/// \\author Heinrichs Weikamp\n/// \\date   2018\n///\n/// $Id$\n///////////////////////////////////////////////////////////////////////////////\n/// \\par Copyright (c) 2014-2018 Heinrichs Weikamp gmbh\n///\n///     This program is free software: you can redistribute it and/or modify\n///     it under the terms of the GNU General Public License as published by\n///     the Free Software Foundation, either version 3 of the License, or\n///     (at your option) any later version.\n///\n///     This program is distributed in the hope that it will be useful,\n///     but WITHOUT ANY WARRANTY; without even the implied warranty of\n///     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n///     GNU General Public License for more details.\n///\n///     You should have received a copy of the GNU General Public License\n///     along with this program.  If not, see <http://www.gnu.org/licenses/>.\n//////////////////////////////////////////////////////////////////////////////\n\n#ifndef BUEHLMANN_H\n#define BUEHLMANN_H\n\n#include \"data_central.h\"\n\nvoid buehlmann_init(void);\nvoid buehlmann_calc_deco(SLifeData* pLifeData, SDiveSettings * pDiveSettings, SDecoinfo * pDecoInfo);\nvoid buehlmann_ceiling_calculator(SLifeData* pLifeData, SDecoinfo * pDecoInfo);\nvoid buehlmann_super_saturation_calculator(SLifeData* pLifeData, SDecoinfo * pDecoInfo);\nfloat buehlmann_get_gCNS(void);\n\n#endif /* BUEHLMANN_H */",
+      "review": "explicit GPL-3.0-or-later grant",
+      "upstream_path": "Discovery/Inc/buehlmann.h",
+      "archive_match": true,
+      "manifest_match": true,
+      "license_conclusion": "GPL-3.0-or-later explicit notice"
+    },
+    {
+      "path": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Discovery/Inc/firmwareEraseProgram.h",
+      "sha256": "4151cf2affd6c469d9539d5b60fb3248e2f2d42e6f9378f6aa31a9490f20fd2d",
+      "bytes": 6253,
+      "spdx_identifiers_as_found": [],
+      "explicit_gpl3_or_later_notice": true,
+      "copyright_lines": [
+        "/// \\par Copyright (c) 2014-2018 Heinrichs Weikamp gmbh"
+      ],
+      "notice_excerpt": "///////////////////////////////////////////////////////////////////////////////\n/// -*- coding: UTF-8 -*-\n///\n/// \\file   Discovery/Inc/firmwareEraseProgram.h\n/// \\brief  erase and program the STM32F4xx internal FLASH memory\n/// \\author heinrichs weikamp gmbh\n/// \\date   05-May-2015\n///\n/// $Id$\n///////////////////////////////////////////////////////////////////////////////\n/// \\par Copyright (c) 2014-2018 Heinrichs Weikamp gmbh\n///\n///     This program is free software: you can redistribute it and/or modify\n///     it under the terms of the GNU General Public License as published by\n///     the Free Software Foundation, either version 3 of the License, or\n///     (at your option) any later version.\n///\n///     This program is distributed in the hope that it will be useful,\n///     but WITHOUT ANY WARRANTY; without even the implied warranty of\n///     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n///     GNU General Public License for more details.\n///\n///     You should have received a copy of the GNU General Public License\n///     along with this program.  If not, see <http://www.gnu.org/licenses/>.\n//////////////////////////////////////////////////////////////////////////////\n\n/* Define to prevent recursive inclusion -------------------------------------*/\n#ifndef FIRMWARE_ERASE_PROGRAM_H\n#define FIRMWARE_ERASE_PROGRAM_H\n\n#ifdef __cplusplus\n extern \"C\" {\n#endif\n\n/* Includes ------------------------------------------------------------------*/\n#include \"stm32f4xx_hal.h\"\n\n/* Exported variables --------------------------------------------------------*/\n/* Exported types ------------------------------------------------------------*/\n\n#define HARDWAREDATA_ADDRESS\t(0x08000000 + 0x0000A040)\n\n/* Flash memory layout - Base address of Flash sectors Bank 1 */\n#define ADDR_FLASH_SECTOR_0     ((uint32_t)0x08000000) /* Base @ of Sector 0, 16 Kbytes */\n#define ADDR_FLASH_SECTOR_1     ((uint32_t)0x08004000) /* Base @ of Sector 1, 16 Kbytes */\n#define ADDR_FLASH_SECTOR_2     ((uint32_t)0x08008000) /* Base @ of Sector 2, 16 Kbytes */\n#define ADDR_FLASH_SECTOR_3     ((uint32_t)0x0800C000) /* Base @ of Sector 3, 16 Kbytes */\n#define ADDR_FLASH_SECTOR_4     ((uint32_t)0x08010000) /* Base @ of Sector 4, 64 Kbytes */\n#define ADDR_FLASH_SECTOR_5     ((uint32_t)0x08020000) /* Base @ of Sector 5, 128 Kbytes */\n#define ADDR_FLASH_SECTOR_6     ((uint32_t)0x08040000) /* Base @ of Sector 6, 128 Kbytes */\n#define ADDR_FLASH_SECTOR_7     ((uint32_t)0x08060000) /* Base @ of Sector 7, 128 Kbytes */\n#define ADDR_FLASH_SECTOR_8     ((uint32_t)0x08080000) /* Base @ of Sector 8, 128 Kbytes */\n#define ADDR_FLASH_SECTOR_9     ((uint32_t)0x080A0000) /* Base @ of Sector 9, 128 Kbytes */\n#define ADDR_FLASH_SECTOR_10    ((uint32_t)0x080C0000) /* Base @ of Sector 10, 128 Kbytes */\n#define ADDR_FLASH_SECTOR_11    ((uint32_t)0x080E0000) /* Base @ of Sector 11, 128 Kbytes */\n\n/* Base address of Flash sectors Bank 2 */\n#define ADDR_FLASH_SECTOR_12     ((uint32_t)0x08100000) /* Base @ of Sector 12, 16 Kbytes */\n#define ADDR_FLASH_SECTOR_13     ((uint32_t)0x08104000) /* Base @ of Sector 13, 16 Kbytes */\n#define ADDR_FLASH_SECTOR_14     ((uint32_t)0x08108000) /* Base @ of Sector 14, 16 Kbytes */\n#define ADDR_FLASH_SECTOR_15     ((uint32_t)0x0810C000) /* Base @ of Sector 15, 16 Kbytes */\n#define ADDR_FLASH_SECTOR_16     ((uint32_t)0x08110000) /* Base @ of Sector 16, 64 Kbytes */\n#define ADDR_FLASH_SECTOR_17     ((uint32_t)0x08120000) /* Base @ of Sector 17, 128 Kbytes */\n#define ADDR_FLASH_SECTOR_18     ((uint32_t)0x08140000) /* Base @ of Sector 18, 128 Kbytes */\n#define ADDR_FLASH_SECTOR_19     ((uint32_t)0x08160000) /* Base @ of Sector 19, 128 Kbytes */\n#define ADDR_FLASH_SECTOR_20     ((uint32_t)0x08180000) /* Base @ of Sector 20, 128 Kbytes  */\n#define ADDR_FLASH_SECTOR_21     ((uint32_t)0x081A0000) /* Base @ of Sector 21, 128 Kbytes  */\n#define ADDR_FLASH_SECTOR_22     ((uint32_t)0x081C0000) /* Base @ of Sector 22, 128 Kbytes */\n#define ADDR_FLASH_SECTOR_23     ((uint32_t)0x081E0000) /* Base @ of Sector 23, 128 Kbytes */\n\n#define SECTOR_SIZE_128KB     ((uint32_t)0x00020000)\n\n/* Flash memory regions */\n#define FLASH_BOOT_START_ADDR   ADDR_FLASH_SECTOR_0\n#define FLASH_BOOT_END_ADDR     (ADDR_FLASH_SECTOR_5 - 1)\n\n#define FLASH_FW_START_ADDR     ADDR_FLASH_SECTOR_6\n#define FLASH_FW_END_ADDR       (ADDR_FLASH_SECTOR_12 - 1)\n\n#define FLASH_FW2_START_ADDR    ADDR_FLASH_SECTOR_12",
+      "review": "explicit GPL-3.0-or-later grant",
+      "upstream_path": "Discovery/Inc/firmwareEraseProgram.h",
+      "archive_match": true,
+      "manifest_match": true,
+      "license_conclusion": "GPL-3.0-or-later explicit notice"
+    },
+    {
+      "path": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc/decom.h",
+      "sha256": "e5b26f940ae860e4b881a02b44752685b12e2367c46fa43f83fb353f824eb570",
+      "bytes": 4097,
+      "spdx_identifiers_as_found": [],
+      "explicit_gpl3_or_later_notice": true,
+      "copyright_lines": [
+        "/// \\par Copyright (c) 2014-2018 Heinrichs Weikamp gmbh"
+      ],
+      "notice_excerpt": "///////////////////////////////////////////////////////////////////////////////\n/// -*- coding: UTF-8 -*-\n///\n/// \\file   Common/Inc/decom.h\n/// \\brief  This code is used to calculate desat, calculated by RTE and send to Firmware\n/// \\author Heinrichs Weikamp\n/// \\date   22-Feb-2016\n///\n/// $Id$\n///////////////////////////////////////////////////////////////////////////////\n/// \\par Copyright (c) 2014-2018 Heinrichs Weikamp gmbh\n///\n///     This program is free software: you can redistribute it and/or modify\n///     it under the terms of the GNU General Public License as published by\n///     the Free Software Foundation, either version 3 of the License, or\n///     (at your option) any later version.\n///\n///     This program is distributed in the hope that it will be useful,\n///     but WITHOUT ANY WARRANTY; without even the implied warranty of\n///     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n///     GNU General Public License for more details.\n///\n///     You should have received a copy of the GNU General Public License\n///     along with this program.  If not, see <http://www.gnu.org/licenses/>.\n//////////////////////////////////////////////////////////////////////////////\n\n#ifndef DECOM_H\n#define DECOM_H\n\n#include \"data_central.h\"\n\n#define\tWATER_VAPOUR_PRESSURE\t(0.0493f) // Schreiner 1971\n#define\tFRACTION_N2_AIR\t\t\t0.7902\n\nextern const float helium_time_constant[];\nextern const float nitrogen_time_constant[];\n\nextern const float buehlmann_N2_a[];\nextern const float buehlmann_N2_b[];\n\nextern const float buehlmann_He_a[];\nextern const float buehlmann_He_b[];\n\nextern const float buehlmann_N2_t_halflife[];\nextern const float buehlmann_He_t_halflife[];\n\n\nvoid decom_get_inert_gases(const float ambient_pressure_bar,const SGas* pGas, float* fraction_nitrogen, float* fraction_helium );\nvoid decom_tissues_exposure(int period_in_seconds, SLifeData* pLifeData);\nvoid decom_tissues_exposure2(int period_in_seconds, SGas* pActualGas, float pressure_ambient_bar, float *tissue_N2_selected_stage, float *tissue_He_selected_stage);\nfloat decom_schreiner_equation(float initial_inspired_gas_pressure, float rate_change_insp_gas_pressure, float interval_time_minutes, const float gas_time_constant, float initial_gas_pressure);\nvoid decom_reset_with_1000mbar(SLifeData * pLifeData);\nvoid decom_reset_with_ambientmbar(float ambient, SLifeData * pLifeData);\n\nvoid decom_tissues_exposure_stage_schreiner(int period_in_seconds, SGas* pGas, float  starting_ambient_pressure_bar, float ending_ambient_pressure_bar,\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t float* pTissue_nitrogen_bar, float* pTissue_helium_bar);\nvoid decom_CreateGasChangeList(SDiveSettings* pInput, const SLifeData* lifeData);\nuint8_t decom_tissue_test_tolerance(float* Tissue_nitrogen_bar, float* Tissue_helium_bar, float GF_value, float depth_in_bar_absolute);\nvoid decom_tissues_desaturation_time(const SLifeData* pLifeData, SLifeData2* pOutput);\nvoid test_decom_CreateGasChangeList(void);\n\nfloat decom_calc_ppO2(const float ambiant_pressure_bar, const SGas* pGas);\nfloat decom_calc_SimppO2(float ambiant_pressure_bar, const SGas* pGas);\nfloat decom_calc_SimppO2_O2based(float ambiant_pressure_bar, uint8_t O2PerCent, float factor);\nvoid decom_oxygen_calculate_otu(float* oxygen_otu, float pressure_oxygen_real);\nvoid decom_oxygen_calculate_otu_degrade(float* oxygen_otu, long seconds_since_last_dive);\nvoid decom_oxygen_calculate_cns_degrade(float* oxygen_cns, long seconds_since_last_dive);\nvoid decom_oxygen_calculate_cns(float* oxygen_cns, float pressure_oxygen_real);\nvoid decom_oxygen_calculate_cns_stage_SchreinerStyle(int period_in_seconds, SGas* pGas, float  starting_ambient_pressure_bar, float ending_ambient_pressure_bar, float* oxygen_cns);\nvoid decom_oxygen_calculate_cns_exposure(int period_in_seconds, SGas* pActualGas, float pressure_ambient_bar, float* oxygen_cns);\nuint8_t decom_get_actual_deco_stop(SDiveState* pDiveState);\n\n// wird nur in smallCPU verwendet:\nint decom_calc_desaturation_time(float* Tissue_nitrogen_bar, float* Tissue_helium_bar, float surface_pressure_bar);\n\n#endif /* DECOM_H */\n",
+      "review": "explicit GPL-3.0-or-later grant",
+      "upstream_path": "Common/Inc/decom.h",
+      "archive_match": true,
+      "manifest_match": true,
+      "license_conclusion": "GPL-3.0-or-later explicit notice"
+    },
+    {
+      "path": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc/data_central.h",
+      "sha256": "931e386253d3f80c5af83174cef94bcb28d87cf15d1e880458627be0142b6dab",
+      "bytes": 17684,
+      "spdx_identifiers_as_found": [],
+      "explicit_gpl3_or_later_notice": true,
+      "copyright_lines": [
+        "/// \\par Copyright (c) 2014-2018 Heinrichs Weikamp gmbh"
+      ],
+      "notice_excerpt": "///////////////////////////////////////////////////////////////////////////////\n/// -*- coding: UTF-8 -*-\n///\n/// \\file   Common/Inc/data_central.h\n/// \\brief\tCommon Dadatypes Declarations\n/// \\author Heinrichs Weikamp\n/// \\date   2018\n///\n/// $Id$\n///////////////////////////////////////////////////////////////////////////////\n/// \\par Copyright (c) 2014-2018 Heinrichs Weikamp gmbh\n///\n///     This program is free software: you can redistribute it and/or modify\n///     it under the terms of the GNU General Public License as published by\n///     the Free Software Foundation, either version 3 of the License, or\n///     (at your option) any later version.\n///\n///     This program is distributed in the hope that it will be useful,\n///     but WITHOUT ANY WARRANTY; without even the implied warranty of\n///     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n///     GNU General Public License for more details.\n///\n///     You should have received a copy of the GNU General Public License\n///     along with this program.  If not, see <http://www.gnu.org/licenses/>.\n//////////////////////////////////////////////////////////////////////////////\n\n#ifndef DATA_CENTRAL_H\n#define DATA_CENTRAL_H\n\n#include <stdint.h>\n#include <stdbool.h>\n\n#include \"settings.h\"\n#include \"stm32f4xx_hal.h\"\n#include \"configuration.h\"\n\n#define BUEHLMANN_STRUCT_MAX_GASES 11\n#define BUEHLMANN_STRUCT_MAX_ASCENDRATES 3\n#define DECOINFO_STRUCT_MAX_STOPS 50\n\n#define false  0\n#define true 1\n\n#define EXT_INTERFACE_SENSOR_CNT\t(8u)\t\t/* 1 MUX + 7 sensors may be connected to the external interface (1 MUX + 3 ADC + 4 UART) */\n#define EXT_INTERFACE_MUX_OFFSET\t(3u)\t\t/* the sensor struct starts with 3 ADC sensors */\n\n#define EXT_INTERFACE_BUZZER_ON_TIME_MS (2000u)\t\t/* max time the buzzer should be active without break (continuous Operation) */\n#define EXT_INTERFACE_BUZZER_PING_TIME_MS (1000u)\t/* max time the buzzer should be active for single ping */\n#define EXT_INTERFACE_BUZZER_STABLE_TIME_MS (500u)\t/* min time a state (ON / OFF) should be stable before it may be changed */\n\n#define EXT_INTERFACE_HUD_LED_MAX\t(16u)\t\t\t/* max number of supported LED for HUD operation */\n#define EXT_INTERFACE_TEMPSTICK_MAX\t(8u)\t\t\t/* max number of temperature sensors located on a tempstick */\n\n#define BOTTLE_SENSOR_TIMEOUT\t\t(6000u)     /* signal pressure budget as not received after 10 minutes (6000 * 100ms) */\n\n/* Helper structs ------------------------------------------------------------*/\n\n//struct SGas\n//contains gasinfos of single gas for deco calculation\ntypedef struct\n{\n\tuint8_t nitrogen_percentage;\n\tuint8_t helium_percentage;\n\tuint8_t setPoint_cbar;\n\tuint8_t change_during_ascent_depth_meter_otherwise_zero;\n\tuint8_t GasIdInSettings;\n\tuint8_t AppliedDiveMode;\n\tfloat pscr_factor;\n} \tSGas;\n\ntypedef struct\n{\n\tfloat use_from_depth_bar;\n\tfloat rate_bar_per_minute;\n} \tSAscentrate;\n\n\ntypedef struct{\n\tuint32_t date_rtc_dr;\n\tuint32_t time_rtc_tr;",
+      "review": "explicit GPL-3.0-or-later grant",
+      "upstream_path": "Common/Inc/data_central.h",
+      "archive_match": true,
+      "manifest_match": true,
+      "license_conclusion": "GPL-3.0-or-later explicit notice"
+    },
+    {
+      "path": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc/settings.h",
+      "sha256": "ff9d0e1fa812193480e197d3ca2e1e4767a6ffcf1aa814fed6a621789aa8993d",
+      "bytes": 12249,
+      "spdx_identifiers_as_found": [],
+      "explicit_gpl3_or_later_notice": true,
+      "copyright_lines": [
+        "/// \\par Copyright (c) 2014-2018 Heinrichs Weikamp gmbh"
+      ],
+      "notice_excerpt": "///////////////////////////////////////////////////////////////////////////////\n/// -*- coding: UTF-8 -*-\n///\n/// \\file   Common/Inc/settings.h\n/// \\brief\n/// \\author Heinrichs Weikamp\n/// \\date   2018\n///\n/// $Id$\n///////////////////////////////////////////////////////////////////////////////\n/// \\par Copyright (c) 2014-2018 Heinrichs Weikamp gmbh\n///\n///     This program is free software: you can redistribute it and/or modify\n///     it under the terms of the GNU General Public License as published by\n///     the Free Software Foundation, either version 3 of the License, or\n///     (at your option) any later version.\n///\n///     This program is distributed in the hope that it will be useful,\n///     but WITHOUT ANY WARRANTY; without even the implied warranty of\n///     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n///     GNU General Public License for more details.\n///\n///     You should have received a copy of the GNU General Public License\n///     along with this program.  If not, see <http://www.gnu.org/licenses/>.\n//////////////////////////////////////////////////////////////////////////////\n\n#ifndef SETTINGS_H\n#define SETTINGS_H\n\n#ifdef __cplusplus\n extern \"C\" {\n#endif\n\n#include <stdint.h>\n#include <stdbool.h>\n\n// From Common/Inc:\n#include \"FirmwareData.h\"\n#include \"firmwareEraseProgram.h\"\n\n#include \"global_constants.h\"\n// From Common/Drivers/\n#include \"stm32f4xx_hal.h\"\n#include \"stm32f4xx_hal_rtc.h\"\n\n#include \"configuration.h\"\n\n\n#define NUM_GASES 5\n#define NUM_OFFSET_DILUENT 5\n#define SPECIAL_GAS_ID 0\n#define NO_GAS_ID 255\n\n#define ERROR_ 0xFF\n\n#define CCRMODE_FixedSetpoint 0\n#define CCRMODE_Sensors 1\n#define CCRMODE_Simulation 2\n\n#define DIVEMODE_OC 0\n#define DIVEMODE_CCR 1\n#define DIVEMODE_Gauge 2\n#define DIVEMODE_Apnea 3\n#define DIVEMODE_PSCR 4\n\n#define GF_MODE 1\n#define VPM_MODE 2\n\n#define VPM_FROM_FORTRAN 0\n#define VPM_BACHELORWORK 1\n\n#define BUEHLMANN_OSTC4\t0\n#define BUEHLMANN_hwOS\t1\n\n#define MMDDYY 0\n#define DDMMYY 1\n#define YYMMDD 2\n\n#define PRESSURE_OFFSET_LIMIT_MBAR\t50\n",
+      "review": "explicit GPL-3.0-or-later grant",
+      "upstream_path": "Common/Inc/settings.h",
+      "archive_match": true,
+      "manifest_match": true,
+      "license_conclusion": "GPL-3.0-or-later explicit notice"
+    },
+    {
+      "path": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc/FirmwareData.h",
+      "sha256": "bac757962b81ae4269999fba368d3ce48e09aa975af89946c741315c7e7ab938",
+      "bytes": 2153,
+      "spdx_identifiers_as_found": [],
+      "explicit_gpl3_or_later_notice": true,
+      "copyright_lines": [
+        "/// \\par Copyright (c) 2014-2018 Heinrichs Weikamp gmbh"
+      ],
+      "notice_excerpt": "///////////////////////////////////////////////////////////////////////////////\n/// -*- coding: UTF-8 -*-\n///\n/// \\file   Common/Inc/FirmwareData.h\n/// \\brief  Firmware Signature (version, makers, date, etc.)\n/// \\author Heinrichs Weikamp, jDG\n/// \\date   2017-12-31\n///\n/// $Id$\n///////////////////////////////////////////////////////////////////////////////\n/// \\par Copyright (c) 2014-2018 Heinrichs Weikamp gmbh\n///\n///     This program is free software: you can redistribute it and/or modify\n///     it under the terms of the GNU General Public License as published by\n///     the Free Software Foundation, either version 3 of the License, or\n///     (at your option) any later version.\n///\n///     This program is distributed in the hope that it will be useful,\n///     but WITHOUT ANY WARRANTY; without even the implied warranty of\n///     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n///     GNU General Public License for more details.\n///\n///     You should have received a copy of the GNU General Public License\n///     along with this program.  If not, see <http://www.gnu.org/licenses/>.\n//////////////////////////////////////////////////////////////////////////////\n\n#ifndef FIRMWARE_DATA_H\n#define FIRMWARE_DATA_H\n\n#include <stdint.h>\n\n/// @brief Firmware Signature\n///\n/// Contains\ntypedef struct {\n\tuint8_t versionFirst;\t\t\t\t///< Major version number\n\tuint8_t versionSecond;\t\t\t\t///< Minor version number\n\tuint8_t versionThird;\n\tuint8_t versionBeta;\n\tuint8_t signature[4];\n\tuint8_t release_year;\n\tuint8_t release_month;\n\tuint8_t release_day;\n\tuint8_t release_sub;\n\tchar release_info[48];\n\tchar magic[4];\n} SFirmwareData;\n\nenum FirmwareMagic {\n\t\tFIRMWARE_MAGIC_FIRST     = 0x00, ///< type[0]\n\t\tFIRMWARE_MAGIC_SECOND    = 0x00, ///< type[1]\n\t\tFIRMWARE_MAGIC_FIRMWARE  = 0xEE,\n\t\tFIRMWARE_MAGIC_CPU2_RTE  = 0xE2,\n\t\tFIRMWARE_MAGIC_FONT      = 0xF0,\n\t\tFIRMWARE_MAGIC_END       = 0xFF  ///< type[2]\n};\n\nextern const SFirmwareData font_FirmwareData;\nextern const SFirmwareData bootloader_FirmwareData;\nextern const SFirmwareData firmware_FirmwareData;\n\nextern const SFirmwareData cpu2_FirmwareData;\n\n#endif /* FIRMWARE_DATA_H */",
+      "review": "explicit GPL-3.0-or-later grant",
+      "upstream_path": "Common/Inc/FirmwareData.h",
+      "archive_match": true,
+      "manifest_match": true,
+      "license_conclusion": "GPL-3.0-or-later explicit notice"
+    },
+    {
+      "path": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc/global_constants.h",
+      "sha256": "0a3bb502fb36b611cafba61d72996a45bd1394ae7447c25bd24b236f6b962989",
+      "bytes": 2173,
+      "spdx_identifiers_as_found": [],
+      "explicit_gpl3_or_later_notice": true,
+      "copyright_lines": [
+        "/// \\par Copyright (c) 2014-2018 Heinrichs Weikamp gmbh"
+      ],
+      "notice_excerpt": "///////////////////////////////////////////////////////////////////////////////\n/// -*- coding: UTF-8 -*-\n///\n/// \\file   Common/Inc/global_constants.h\n/// \\brief\n/// \\author Dmitry Romanov<kitt@bk.ru>\n/// \\date   11.2018\n///\n/// $Id$\n///////////////////////////////////////////////////////////////////////////////\n/// \\par Copyright (c) 2014-2018 Heinrichs Weikamp gmbh\n///\n///     This program is free software: you can redistribute it and/or modify\n///     it under the terms of the GNU General Public License as published by\n///     the Free Software Foundation, either version 3 of the License, or\n///     (at your option) any later version.\n///\n///     This program is distributed in the hope that it will be useful,\n///     but WITHOUT ANY WARRANTY; without even the implied warranty of\n///     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n///     GNU General Public License for more details.\n///\n///     You should have received a copy of the GNU General Public License\n///     along with this program.  If not, see <http://www.gnu.org/licenses/>.\n//////////////////////////////////////////////////////////////////////////////\n\n#ifndef GLOBAL_CONSTANTS_H\n#define GLOBAL_CONSTANTS_H\n//Rename it ahead.\n//Buttons section\n#define DEFAULT_BUTTONRESPONSIVENESS_GUI 100\n#define MIN_BUTTONRESPONSIVENESS_GUI 30 //50 (-10correction)\n#define MAX_BUTTONRESPONSIVENESS_GUI 110//100 (+10correction)\n#define MIN_BUTTONRESPONSIVENESS MIN_BUTTONRESPONSIVENESS_GUI-20 //MIN_BUTTONRESPONSIVENESS_GUI-20 correction\n#define MAX_BUTTONRESPONSIVENESS MAX_BUTTONRESPONSIVENESS_GUI+20//MIN_BUTTONRESPONSIVENESS_GUI+20correction\n#define BUTTON_DEBOUNCE_DELAY 50 //Delay for debounce filter for piezo buttons\n\n\n// Spi sync data debug\n#define SPI_SHOW_SYNC_STATS 0\n#define SPI_MIN_ERROR_SHOW 10\n\n/* Define INDEX for information exchanged within the header */\n#define SPI_HEADER_INDEX_RX_STATE  (1)\n#define SPI_HEADER_INDEX_TX_TICK   (2)\n\n#define SPI_RX_STATE_OK \t\t(0)\n#define SPI_RX_STATE_SHIFTED\t(1)\n#define SPI_RX_STATE_OFFLINE\t(2)\n#define SPI_RX_STATE_INVALID\t(3)\n\n//Text data\n#define TEXT_PRESSURE_UNIT \"hPa\"\n#endif",
+      "review": "explicit GPL-3.0-or-later grant",
+      "upstream_path": "Common/Inc/global_constants.h",
+      "archive_match": true,
+      "manifest_match": true,
+      "license_conclusion": "GPL-3.0-or-later explicit notice"
+    },
+    {
+      "path": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc/configuration.h",
+      "sha256": "d8ed91dc5b0841c109dc33ed64b7f9d9472807c395ca5d6f21f3cc64c29d02d7",
+      "bytes": 5052,
+      "spdx_identifiers_as_found": [],
+      "explicit_gpl3_or_later_notice": true,
+      "copyright_lines": [
+        "/// \\par Copyright (c) 2014-2020 Heinrichs Weikamp gmbh"
+      ],
+      "notice_excerpt": "///////////////////////////////////////////////////////////////////////////////\n/// -*- coding: UTF-8 -*-\n///\n/// \\file   Discovery/Inc/configuration.h\n/// \\brief  Header file for variant specific firmware adaptations at compile time\n/// \\author heinrichs weikamp gmbh\n/// \\date   29-February-2020\n///\n/// $Id$\n///////////////////////////////////////////////////////////////////////////////\n/// \\par Copyright (c) 2014-2020 Heinrichs Weikamp gmbh\n///\n///     This program is free software: you can redistribute it and/or modify\n///     it under the terms of the GNU General Public License as published by\n///     the Free Software Foundation, either version 3 of the License, or\n///     (at your option) any later version.\n///\n///     This program is distributed in the hope that it will be useful,\n///     but WITHOUT ANY WARRANTY; without even the implied warranty of\n///     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n///     GNU General Public License for more details.\n///\n///     You should have received a copy of the GNU General Public License\n///     along with this program.  If not, see <http://www.gnu.org/licenses/>.\n//////////////////////////////////////////////////////////////////////////////\n\n#ifndef CONFIGURATION_HEADER\n#define CONFIGURATION_HEADER\n\n/* Enable this to make the simulator write a logbook entry */\n//#define SIM_WRITES_LOGBOOK 1\n\n/* Enable this for support of optical bottle pressure interface */\n/* #define ENABLE_BOTTLE_SENSOR */\n\n/* Enable this to show voltage in parallel to charge state */\n#define ALWAYS_SHOW_VOLTAGE\n\n/* Enable this to skip coplete scan of dive log during startup */\n#define TRUST_LOG_CONSISTENCY\n\n/* Enable this to transfer additional data list last dive ID and last sample index during raw data requests */\n/* define SEND_DATA_DETAILS */\n\n/* Enable to activate a menu item in reset menu which provide sample ring analysis / repair functionality */\n/* #define ENABLE_ANALYSE_SAMPLES */\n\n/* Enable to have access to the debug view options (turn on / off via menu instead of compile switch) */\n#define HAVE_DEBUG_VIEW\n\n/* Enable to have runtime information displayed in t7 debug view */\n/* #define T7_DEBUG_RUNTIME */\n\n/* Enable to have event based warnings being displayed as warning messages when they occur */\n/* #define HAVE_DEBUG_WARNINGS */\n\n/* Enable to have access to the motion control selection menu */\n/* #define ENABLE_MOTION_CONTROL */\n\n/* Enable to have option to hide not needed gases from dive views */\n/* #define ENABLE_UNUSED_GAS_HIDING */\n\n/* Enable to have the new T3 profile view available */\n#define ENABLE_T3_PROFILE_VIEW\n\n/* Enable to have PPO2 adjustments in T3 sensor view during dive simulation */\n/* #define ENABLE_T3_PPO_SIM */\n\n/* Enable to have PSCR functionality available */\n#define ENABLE_PSCR_MODE\n\n/* Enable to have CO2 sensor functionality available */\n#define ENABLE_CO2_SUPPORT\n\n/* Enable to have external GPS sensor functionality available */\n/*#define ENABLE_GNSS_EXTERN*/\n\n/* Enable to have internal (OSTC5) GPS sensor functionality available */\n/*#define ENABLE_GNSS_INTERN*/\n",
+      "review": "explicit GPL-3.0-or-later grant",
+      "upstream_path": "Common/Inc/configuration.h",
+      "archive_match": true,
+      "manifest_match": true,
+      "license_conclusion": "GPL-3.0-or-later explicit notice"
+    },
+    {
+      "path": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/ostc4_baseline/upstream/Common/Inc/calc_crush.h",
+      "sha256": "e28c2b4456c5f5943fd7674d09b76e2eb3cb0cfc093dc46705acfbfa5d4c9d5d",
+      "bytes": 1598,
+      "spdx_identifiers_as_found": [],
+      "explicit_gpl3_or_later_notice": true,
+      "copyright_lines": [
+        "/// \\par Copyright (c) 2014-2018 Heinrichs Weikamp gmbh"
+      ],
+      "notice_excerpt": "///////////////////////////////////////////////////////////////////////////////\n/// -*- coding: UTF-8 -*-\n///\n/// \\file   Common/Inc/calc_crush.h\n/// \\brief  VPM Desaturation code\n/// \\author Heinrichs Weikamp\n/// \\date   2018\n///\n/// $Id$\n///////////////////////////////////////////////////////////////////////////////\n/// \\par Copyright (c) 2014-2018 Heinrichs Weikamp gmbh\n///\n///     This program is free software: you can redistribute it and/or modify\n///     it under the terms of the GNU General Public License as published by\n///     the Free Software Foundation, either version 3 of the License, or\n///     (at your option) any later version.\n///\n///     This program is distributed in the hope that it will be useful,\n///     but WITHOUT ANY WARRANTY; without even the implied warranty of\n///     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n///     GNU General Public License for more details.\n///\n///     You should have received a copy of the GNU General Public License\n///     along with this program.  If not, see <http://www.gnu.org/licenses/>.\n//////////////////////////////////////////////////////////////////////////////\n\n#ifndef CALC_CRUSH_H\n#define CALC_CRUSH_H\n\n#include \"data_central.h\"\n\nvoid vpm_init(SVpm* pVpm,\n\t\t\t\t\t\t\tshort conservatism, short repetitive_dive,\n\t\t\t\t\t\t\tlong seconds_since_last_dive);\n\nint calc_crushing_pressure(SLifeData* lifeData,  SVpm* vpm,\n\t\t\t\t\t\t\t\t\t\t\t\t\t float * initial_helium_pressure,\n\t\t\t\t\t\t\t\t\t\t\t\t\t float * initial_nitrogen_pressure,\n\t\t\t\t\t\t\t\t\t\t\t\t\t float starting_ambient_pressure,\n\t\t\t\t\t\t\t\t\t\t\t\t\t float rate );\n\n#endif // CALC_CRUSH_H",
+      "review": "explicit GPL-3.0-or-later grant",
+      "upstream_path": "Common/Inc/calc_crush.h",
+      "archive_match": true,
+      "manifest_match": true,
+      "license_conclusion": "GPL-3.0-or-later explicit notice"
+    }
+  ],
+  "different_between_candidates": [
+    "Common/Src/decom.c",
+    "Discovery/Src/buehlmann.c",
+    "Discovery/Inc/firmwareEraseProgram.h",
+    "Common/Inc/decom.h",
+    "Common/Inc/data_central.h",
+    "Common/Inc/settings.h",
+    "Common/Inc/configuration.h"
+  ],
+  "manufacturer_stable_gate": "OPEN",
+  "mercurial_mapping_verified": false
+}

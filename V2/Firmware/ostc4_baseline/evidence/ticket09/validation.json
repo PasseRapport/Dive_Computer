@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-28",
+  "firmware_host_ctests": {
+    "passed": 14,
+    "failed": 0,
+    "log": "raw-evidence.tar.gz:host-tests.log"
+  },
+  "target_build": {
+    "board": "dc_v2_1/nrf52833",
+    "result": "compile/link pass",
+    "log": "raw-evidence.tar.gz:target-build.log",
+    "execution": false
+  },
+  "checks": [
+    "11 upstream files match both manifest and selected archive",
+    "All JSON parses",
+    "Python collectors parse",
+    "23 archived raw member hashes match",
+    "Repeated packaging rejected and existing archive hash unchanged"
+  ],
+  "new_behavioral_tests": false,
+  "new_numerical_acceptance_claim": false
+}

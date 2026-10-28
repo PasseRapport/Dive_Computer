@@ -1,0 +1,32 @@
+[
+  {
+    "path": "/home/Bilal/ncs/v3.4.1/nrf",
+    "revision": "b20f8619ba9a5530f8c34b0a130d829947cfe55d",
+    "tracked_modifications": []
+  },
+  {
+    "path": "/home/Bilal/ncs/v3.4.1/zephyr",
+    "revision": "33fa6a7aac6a4401d16a67cb9f27a3483fa02dd6",
+    "tracked_modifications": []
+  },
+  {
+    "path": "/home/Bilal/ncs/v3.4.1/modules/hal/nordic",
+    "revision": "69865c20dc4afbdd27060ad1e81af1b62d31f7af",
+    "tracked_modifications": []
+  },
+  {
+    "path": "/home/Bilal/ncs/v3.4.1/modules/hal/cmsis_6",
+    "revision": "30a859f44ef8ab4dc8f84b03ed586fd16ccf9d74",
+    "tracked_modifications": []
+  },
+  {
+    "path": "/home/Bilal/ncs/v3.4.1/modules/debug/segger",
+    "revision": "50892fdbcf2f570e67baa72b8894a66b16946f72",
+    "tracked_modifications": []
+  },
+  {
+    "path": "/home/Bilal/ncs/v3.4.1/nrfxlib",
+    "revision": "bb715183a57ac501907b63df2079c3fbcd067641",
+    "tracked_modifications": []
+  }
+]

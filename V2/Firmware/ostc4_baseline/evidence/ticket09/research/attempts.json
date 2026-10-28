@@ -1,0 +1,50 @@
+[
+  {
+    "id": "official-root",
+    "url": "https://code.heinrichsweikamp.com/public/ostc4/",
+    "attempted_at_utc": "2026-10-28T11:44:57.236755+00:00",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "official-revision",
+    "url": "https://code.heinrichsweikamp.com/public/ostc4/rev/0a915a789873",
+    "attempted_at_utc": "2026-10-28T11:44:57.261765+00:00",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "official-raw-settings",
+    "url": "https://code.heinrichsweikamp.com/public/ostc4/raw-file/0a915a789873/Discovery/Src/settings.c",
+    "attempted_at_utc": "2026-10-28T11:44:57.262882+00:00",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "github-selected",
+    "url": "https://api.github.com/repos/mikeller/ostc4/commits/7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
+    "attempted_at_utc": "2026-10-28T11:44:57.263843+00:00",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "github-old",
+    "url": "https://api.github.com/repos/mikeller/ostc4/commits/920151ae83c3cc39a6d1f3517ba3d854863e92c3",
+    "attempted_at_utc": "2026-10-28T11:44:57.267360+00:00",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "official-165",
+    "url": "https://forum.heinrichsweikamp.com/viewtopic.php?t=22469",
+    "attempted_at_utc": "2026-10-28T11:44:57.277593+00:00",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "official-169",
+    "url": "https://forum.heinrichsweikamp.com/viewtopic.php?t=22571",
+    "attempted_at_utc": "2026-10-28T11:44:57.279338+00:00",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  {
+    "id": "official-176-beta",
+    "url": "https://forum.heinrichsweikamp.com/viewtopic.php?t=22728",
+    "attempted_at_utc": "2026-10-28T11:44:57.280281+00:00",
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  }
+]

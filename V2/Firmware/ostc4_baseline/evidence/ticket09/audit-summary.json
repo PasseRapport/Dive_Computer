@@ -1,0 +1,19 @@
+{
+  "inspected_repository_head": "1ef4be7ef33d8024dcaee5e50f1bd0ea98c7a486",
+  "compiled_entries": 132,
+  "unique_compiled_sources": 130,
+  "dependency_entries": 578,
+  "dependency_missing": [],
+  "support_inputs": 79,
+  "elf_sha256": "8e37ad853051c7b6ffdd33f7ec87e9e63021d315dd960d82496d335158fef2cf",
+  "target_execution": false,
+  "release_approved": false,
+  "restrictions": [
+    "Manufacturer stable correspondence unverified",
+    "Nordic-5-Clause boot banner linked",
+    "buehlmann.c has no file-local grant",
+    "Generated modification dates missing",
+    "Toolchain runtime exact member license mapping pending",
+    "No installable release or installation information"
+  ]
+}
