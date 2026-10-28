@@ -1,0 +1,12 @@
+WARNING: Using a test - not safe - entropy source
+*** Booting nRF Connect SDK v3.4.1-b20f8619ba9a ***
+*** Using Zephyr OS v4.4.2-33fa6a7aac6a ***
+LVGL UI ready: 320x300, RGB565, simulated data
+PC BENCH milestone 0: time=1920 tissues=available
+PC BENCH milestone 1: time=3600 tissues=available
+PC BENCH milestone 2: time=4920 tissues=available
+PC BENCH milestone 3: time=5040 tissues=available
+PC BENCH VISIBLE PASS: SDL pause, x60, two dives, retained tissues, synchronized graph
+PC BENCH CONTROLS PASS: manual hold retained loading, gap invalidation, explicit fresh replay
+
+Stopped at 90.010s

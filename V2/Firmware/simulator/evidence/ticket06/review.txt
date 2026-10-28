@@ -1,0 +1,9 @@
+Independent two-axis Sol6.1 review
+Base:7f9fad4; initial target:06de530; fixes:a4f0ecc.
+Standards:2 findings (actual ceiling vs first stop; assertions lost in Release).
+Spec:1 finding (zero-TTS qualification when NDL limited).
+All3 fixed. Both independent reviewers rechecked06de530..a4f0ecc and
+reported no remaining actionable findings. Standards reviewer independently
+rebuilt Release mapping test and confirmed checks stay compiled under NDEBUG.
+Later changes: indentation cleanup, calculated-check stop time90->15s,
+render checker and evidence packaging. No numerical production/reference edits.

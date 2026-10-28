@@ -261,7 +261,8 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
     } else if(stop_depth&&!complete) {
         centred(d->left_title,"DECO",101,127);snprintf(text,sizeof(text),"%u'",(scuba_model_tts(m)+59)/60);centred(d->left_value,text,101,150);
         if(m->calculated)snprintf(text,sizeof(text),"CEIL %u.%u m",ceiling/10,ceiling%10);
-        else snprintf(text,sizeof(text),"CEIL %u m",ceiling/10);centred(d->left_note,text,101,197);
+        else snprintf(text,sizeof(text),"CEIL %u m",ceiling/10);
+        centred(d->left_note,text,101,197);
         ring_color=ORANGE;progress=scuba_ring_tts(scuba_model_tts(m));
         color(d->left_title,ORANGE);
     } else {

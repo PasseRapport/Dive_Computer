@@ -1,0 +1,13 @@
+WARNING: Using a test - not safe - entropy source
+*** Booting nRF Connect SDK v3.4.1-b20f8619ba9a ***
+*** Using Zephyr OS v4.4.2-33fa6a7aac6a ***
+LVGL UI ready: 320x300, RGB565, simulated data
+APPEARANCE CHECK PASS: date, battery thresholds, analog hands, dive icons, Dive Settings Back, Options double tap
+POLISH UI PASS: compass rotation, menu Back fallbacks, shared light editors and watch layout
+WAVE UI PASS: reordered menus, shared backlight, real rate buttons, Surface reset and remaining stop ring
+WAVE SUMMARY PASS: live surface interval after automatic dive completion
+RING RULE FIXTURES PASS: NDL 60, above 60, five minutes, below five and zero
+PRECISE ASCENT UI PASS: actual SDL buttons, fractional depth and stable ascent through the full UI at x10
+ASCENT REFERENCE UI PASS: no arrows below 1, 2 m/min levels, colour boundaries and five-second highlight
+
+Stopped at 27.010s

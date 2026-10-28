@@ -1,0 +1,31 @@
+Test project /tmp/ostc4-ticket06-release
+      Start  1: pc_bench_controls_time_graph
+ 1/13 Test  #1: pc_bench_controls_time_graph ........................   Passed    0.97 sec
+      Start  2: calculated_watch_mapping_session_alerts
+ 2/13 Test  #2: calculated_watch_mapping_session_alerts .............   Passed    0.00 sec
+      Start  3: upstream_source_identity
+ 3/13 Test  #3: upstream_source_identity ............................   Passed    0.05 sec
+      Start  4: synthetic_replay_contracts
+ 4/13 Test  #4: synthetic_replay_contracts ..........................   Passed    0.10 sec
+      Start  5: public_pressure_time_contract
+ 5/13 Test  #5: public_pressure_time_contract .......................   Passed    0.00 sec
+      Start  6: corrected_public_pressure_time_contract
+ 6/13 Test  #6: corrected_public_pressure_time_contract .............   Passed    0.00 sec
+      Start  7: corrected_synthetic_replay_contracts
+ 7/13 Test  #7: corrected_synthetic_replay_contracts ................   Passed    0.10 sec
+      Start  8: independently_verified_tissues
+ 8/13 Test  #8: independently_verified_tissues ......................   Passed    0.65 sec
+      Start  9: continuous_exposure_contract
+ 9/13 Test  #9: continuous_exposure_contract ........................   Passed    0.02 sec
+      Start 10: independent_repetitive_exposure
+10/13 Test #10: independent_repetitive_exposure .....................   Passed    0.12 sec
+      Start 11: continuity_replay_faults
+11/13 Test #11: continuity_replay_faults ............................   Passed    0.09 sec
+      Start 12: independent_schedule_analytical_checks
+12/13 Test #12: independent_schedule_analytical_checks ..............   Passed    0.14 sec
+      Start 13: independent_schedule_comparator_rejects_mutations
+13/13 Test #13: independent_schedule_comparator_rejects_mutations ...   Passed    0.11 sec
+
+100% tests passed, 0 tests failed out of 13
+
+Total Test time (real) =   2.36 sec

@@ -317,6 +317,7 @@ and haptics only. Menus and recording transitions do not reset exposure.
 
 ```sh
 python3 V2/Firmware/simulator/launch.py --calculated-check --capture /tmp/calculated
+python3 V2/Firmware/simulator/tests/check_calculated_render.py /tmp/calculated
 ```
 
 This deterministic native recipe captures unavailable output, shallow NDL,
