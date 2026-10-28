@@ -1,0 +1,9 @@
+Standards review
+
+Scope: git diff a483e0c...HEAD, HEAD aafaccaf2452ded817e0b08cc2e9e6c5c48c1124. Baseline resolves to a483e0c4f2fa076789b90014c07b16daa51244ec; nonempty diff. Reviewed commits 7e55172, fff61a6, 1e61b07, 27c00c4, d9f4e01, aafacca, including production tracker, navigation, presentation, host persistence and launcher changes.
+
+Documented-standard breaches: none found. Original AGENTS.md requires local tracker, its issue-tracker/triage/domain documents prescribe canonical scope and evidence boundaries; the implementation keeps those boundaries. Historical BMAD routing is superseded by the user's instructions. No tooling-enforced style issues counted. Presentation, tracker and host storage remain distinct, and shared scuba geometry is reused without adding a second simulator.
+
+Judgment call — possible Duplicated Code (maintenance only, not a release blocker): src/apnea_preferences_host.c:61–80 reproduces the existing pc_bench_storage.c:40–72 durable-write transaction, including its backup/rollback protocol. Representative added hunk: `if(!result){if(!link(target,backup))backed_up=true;else if(errno!=ENOENT)result=-1;}` followed by `if(committed&&fsync(dir)){ ... if(backed_up){if(!rename(backup,target))backed_up=false;else keep_backup=true;} ... }`. Future corrections to crash/error handling now need both copies updated. A narrow host file-publication helper could own those bytes-only operations while retaining separate preference schemas and state; do not couple apnea to pc_bench initialization or build a generic storage framework. This is optional consolidation, not a documented-standard violation or an observed functional defect.
+
+Result: 0 hard findings; 1 optional smell. No edits or tests performed; worktree remains clean.

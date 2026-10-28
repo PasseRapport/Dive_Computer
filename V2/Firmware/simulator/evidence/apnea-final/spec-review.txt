@@ -1,0 +1,13 @@
+Spec review: a483e0c...aafacca (fixed point resolves; nonempty diff). Commits: 7e55172, fff61a6, 1e61b07, 27c00c4, d9f4e01, aafacca.
+
+(a) Missing/partial requirements: no actionable findings.
+(b) Scope creep: no actionable findings. Shared scuba depth/separator extraction preserves the prior positioning/arithmetic; the new host adapter stores only the two freediving preferences.
+(c) Wrong implementation: no actionable findings.
+
+Reviewed the canonical specification and all four apnea tickets against production navigation, session tracking, Main/Statistics rendering, pending/applied phase gating, startup restore, file validation/replacement and automated-storage isolation. Reviewed the native journeys and rendering/process-test assertions rather than relying only on evidence summaries.
+
+The combined persistence load journey now explicitly covers Main → Statistics → Main with live 12.3m/1:00 records, all six preference combinations, fresh post-restart/session state and cancelled/underwater confirmations. Supporting tests preserve unrelated GF/log/checkpoint bytes. Native Settings/Scuba checks and existing two baseline pixel failures remain separately documented.
+
+Limits: independent static review; no new execution performed during this review. Existing evidence covers PC/native simulation only and makes no physical-watch claim. No finding inferred from unsupported extreme durations or hypothetical filesystem faults.
+
+Spec findings: 0; worst issue: none identified.

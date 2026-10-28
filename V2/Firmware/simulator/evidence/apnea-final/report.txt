@@ -1,0 +1,21 @@
+Freediving interface: final integration verification
+Date: 2026-10-29
+Branch: codex/interface-apnee
+Implementation baseline: a483e0c; reviewed implementation: aafacca.
+
+All four canonical apnea tickets implemented. Per-ticket native/control/render
+and separate-process evidence is preserved in sibling apnea-* directories.
+Final independent Spec review: 0 actionable findings.
+Final Standards review: 0 documented-standard violations; 1 optional duplication
+observation in independent host durable writes. Accepted without consolidation:
+keeping existing host adapters independent avoids expanding this UI feature into
+a shared storage refactor; both current error paths are exercised.
+Final existing scuba/OSTC4 bench CTests: 26/26 PASS.
+
+Known pre-existing image-check failures were reproduced on baseline a483e0c:
+check_scuba_render.py orange DECO caption; check_watch_faces.py retention image.
+Assertions remain unchanged. Native scuba, navigation and new apnea checks pass.
+
+Original checkout tracked patch and untracked names match pre-work snapshots.
+No remote push, no merge into main. Implementation delivered on integration branch.
+PC/native simulation only; no Nordic/physical-watch validation.
