@@ -1,5 +1,6 @@
 #include "scuba_presentation.h"
 #include <stdio.h>
+#include <math.h>
 struct scuba_ascent_display scuba_ascent_display(int32_t speed, uint32_t fast_ms)
 {
     unsigned levels=speed<10?0:speed<20?1:(unsigned)speed/20;
@@ -25,3 +26,16 @@ unsigned scuba_ring_ndl(uint32_t seconds) {return seconds>=3600?1000:(uint64_t)s
 unsigned scuba_ring_tts(uint32_t seconds) {return seconds>=3000?1000:(uint64_t)seconds*1000/3000;}
 unsigned scuba_ring_stop(uint32_t elapsed_ms,uint32_t target_ms)
 {return !target_ms||elapsed_ms>=target_ms?0:(uint64_t)(target_ms-elapsed_ms)*1000/target_ms;}
+
+static void ceiling_text(char *out,size_t size,float value,bool valid)
+{
+    if(!valid || !isfinite(value) || value>160) {snprintf(out,size,"--");return;}
+    unsigned dm=value>0?(unsigned)lroundf(value*10):0;
+    snprintf(out,size,"%u.%u",dm/10,dm%10);
+}
+void scuba_ceiling_pair_text(char *out,size_t size,float low,bool low_valid,float high,bool high_valid)
+{
+    char a[16],b[16];
+    ceiling_text(a,sizeof(a),low,low_valid);ceiling_text(b,sizeof(b),high,high_valid);
+    snprintf(out,size,"%s / %s m",a,b);
+}

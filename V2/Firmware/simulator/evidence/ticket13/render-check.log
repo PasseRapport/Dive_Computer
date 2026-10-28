@@ -1,0 +1,5 @@
+/tmp/dive-gf-ticket13/V2/Firmware/simulator/tests/check_gf_ceilings_render.py:24: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  assert sum(min(pixel)>180 for pixel in footer.getdata())>150
+/tmp/dive-gf-ticket13/V2/Firmware/simulator/tests/check_gf_ceilings_render.py:47: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  assert sum(max(pixel)>50 for pixel in difference.getdata())>100
+PAIRED CEILINGS RENDER PASS: simultaneous Low/High, units/rounding, zero, equality, large values, mandatory depth/countdown, alerts/acknowledgement and explicit invalidity; native text/glyph geometry assertions also passed
