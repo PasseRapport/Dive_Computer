@@ -31,7 +31,16 @@ assert count(pixels('scuba-06-ring-options'),teal)>200,'Missing ring selector ca
 assert count(pixels('scuba-07-brightness'),teal,(60,130,260,158))>40,'Missing brightness bar'
 assert count(pixels('scuba-10-safety-stop'),yellow,(48,145,147,202))>100,'Missing stop countdown at left'
 assert count(pixels('scuba-11-stop-complete'),green)<50,'Completed countdown ring is not empty'
-assert count(pixels('scuba-13-deco'),orange,(55,125,145,146))>10,'Missing decompression indicator'
+deco=pixels('scuba-13-deco')
+# DECO and TTS are white, the stop-depth note is cyan; orange belongs to
+# the perimeter progress arc, not the DECO title.
+assert count(deco,white,(55,125,145,146))>30,'Missing DECO title'
+assert count(deco,white,(48,149,147,195))>100,'Missing decompression TTS'
+assert count(deco,teal,(48,194,155,212))>50,'Missing mandatory-stop depth note'
+deco_arc=sum(orange(*deco.getpixel((x,y)))
+             for y in range(300) for x in range(320)
+             if 130**2 < (x-160)**2+(y-150)**2 < 149**2)
+assert deco_arc>300,'Missing orange decompression perimeter arc'
 assert count(pixels('scuba-14-ceiling-alert'),red,(40,25,280,52))>20,'Missing ceiling alert'
 assert count(pixels('scuba-15-alert-acknowledged'),red,(90,34,230,46))<5,'Acknowledged alert message remains visible'
 if (root/'scuba-19-fast-ascent.bmp').exists():
