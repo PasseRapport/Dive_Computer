@@ -23,6 +23,7 @@ for index, (surface, density, depth, watch_dm) in enumerate((
     frame = Image.open(f"{prefix}-{index}.bmp").convert("RGB")
     assert frame.size == (1200, 800)
     # Both watch and bench are present and contain rendered text/graphics.
-    assert len(frame.crop((0, 0, 320, 300)).getcolors(100000) or []) > 10
-    assert len(frame.crop((350, 0, 1200, 450)).getcolors(100000) or []) > 10
+    white = lambda rgb: min(rgb) > 220
+    assert sum(white(pixel) for pixel in frame.crop((40, 50, 320, 315)).getdata()) > 500, "Watch frame is blank"
+    assert sum(white(pixel) for pixel in frame.crop((630, 35, 1175, 145)).getdata()) > 300, "Bench summary is blank"
 print("WATER DENSITY PASS: two explicit surfaces, both densities, physical bench/watch depths and paired frames")
