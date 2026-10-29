@@ -110,8 +110,10 @@ Bottom Field (Temperature/Max Depth/Underwater Time/Clock/Dives).
 Underwater Time sums every apnea in the session, including the active one,
 excludes surface pauses and uses total minutes and seconds (M:SS), without an hour field. Clock shows the current HH:MM.
 Count and underwater time start at zero; session depth starts as a placeholder. Rotation is bounded;
-tap opens or confirms and double tap cancels. Changes are surface-only, including
-confirmation of an editor opened before immersion. The applied choices survive
+tap opens or confirms and double tap cancels. Bottom-field changes are surface-only, including
+confirmation of an editor opened before immersion. Water stays locked for the complete
+freediving session, including initial surface time and recovery; set it in unlocked
+scuba preparation before entering freediving. The applied choices survive
 session changes and simulator restarts; session records always start fresh.
 **Scuba Diving** has preparation/settings, depth with its metre unit, dive time,
 NDL, display customization, stop displays, alerts and the last completed summary.
@@ -506,12 +508,16 @@ existing independently authored numerical acceptance remains a separate gate.
 
 ### Durable PC preferences and completed-dive logs
 
-Freediving uses a separate versioned `apnea-preferences.txt` in the same state
-directory convention described below. It contains only applied water type and
-bottom field; missing or invalid files use Fresh/Temperature. Loading it never
-restores session records, last-apnea data or recovery. Confirmed surface changes
-are flushed and atomically replaced; cancelled, browsed or underwater edits do
-not save. Failed writes retain the previous file and report a host diagnostic.
+Both activities share versioned `water-preferences.txt` in the state directory
+convention described below. A confirmed unlocked Fresh/Marine choice survives
+process restarts; missing or invalid shared data selects Marine. Conflicting
+legacy mode-local water values are ignored rather than guessed or migrated.
+Freediving still reads and writes its bottom field in `apnea-preferences.txt`,
+preserving the existing format and its unused legacy water field on load.
+Missing or invalid freediving data selects Temperature. Loading either file never
+restores session records, last-apnea data, tissues or recovery. Confirmed changes
+are flushed and atomically replaced; cancelled, browsed or locked edits do not
+save. Failed writes retain the previous file and report a host diagnostic.
 Scuba GF preferences, logs and checkpoints remain separate files and are not
 read or rewritten by the freediving adapter.
 

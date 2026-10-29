@@ -73,8 +73,8 @@ bool apnea_settings_input(enum watch_input input,int steps)
   else if(editor==1 && water_settings_locked())return true;
   else if(editor){
    bool changed=editor==1?water_settings_salt()!=(bool)pending:bottom!=(enum apnea_bottom_field)pending;
-   if(editor==1)water_settings_select(pending);else bottom=pending;
-   if(changed)(void)sim_host_apnea_preferences_save(water_settings_salt(),bottom);
+   if(editor==1){water_settings_select(pending);(void)sim_host_water_preferences_save(pending);}else bottom=pending;
+   if(changed&&editor==2)(void)sim_host_apnea_preferences_save(water_settings_salt(),bottom);
    editor=0;
   }
   else {editor=entry+1;pending=entry?bottom:water_settings_salt();}
