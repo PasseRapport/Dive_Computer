@@ -475,6 +475,48 @@ static void water_select(int row, bool commit)
     scuba_ui_input(commit?WATCH_SINGLE_TAP:WATCH_DOUBLE_TAP,0);
     scuba_ui_input(WATCH_DOUBLE_TAP,0);
 }
+/* Independent pressure literals: physical millimetre neighbours of the 2 m
+ * start, 10 m alarm and .5 m surface boundaries; velocities use 11 m after
+ * ten seconds and 10.9 m one second later. No conversion helper is the oracle. */
+static void water_recording_checks(unsigned *capture)
+{
+    const float pressures[2][8]={
+        {1.1960349335f,1.196133f,1.9805669335f,1.980665f,
+         2.0787315f,2.06892485f,1.04903325f,1.0489351835f},
+        {1.2009358068375f,1.201036325f,2.0050811068375f,2.005181625f,
+         2.1056997875f,2.09564797125f,1.05025908125f,1.0501585630875f}};
+    const unsigned seconds[]={1,2,3,4,14,15,16,17};
+    const struct bench_view *v=pc_bench_read();
+    const struct scuba_model *m=scuba_ui_model();
+    struct watch_data data={.temperature_c=18,.battery_percent=87};
+    for(unsigned salt=0;salt<2;++salt) {
+        __ASSERT(!pc_bench_fresh(1,salt?1025:1000,NULL,0),"Threshold fixture rejected");
+        __ASSERT(!pc_bench_start_depth(20),"Start threshold rejected");
+        scuba_ui_enter(0);scuba_ui_input(WATCH_SINGLE_TAP,0);
+        scuba_ui_input(WATCH_CROWN,-100);scuba_ui_input(WATCH_CROWN,1);
+        scuba_ui_input(WATCH_SINGLE_TAP,0);scuba_ui_input(WATCH_CROWN,-100);
+        scuba_ui_input(WATCH_CROWN,10);scuba_ui_input(WATCH_DOUBLE_TAP,0);
+        scuba_ui_input(WATCH_DOUBLE_TAP,0);
+        __ASSERT(m->depth_alarm_dm==100,"Public 10 m depth alarm edit failed");
+        for(unsigned i=0;i<8;++i) {
+            __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){seconds[i],pressures[salt][i]}),"Threshold sample rejected");
+            if(i==0)__ASSERT(!v->recording.active && !m->active,"1.999 m started recording");
+            if(i==1)__ASSERT(v->recording.active && m->active && m->depth_dm==20,"2.000 m failed inclusive start");
+            if(i==2)__ASSERT(m->depth_dm==99 && !(m->alerts&SCUBA_DEPTH),"9.999 m triggered 10 m alarm");
+            if(i==3)__ASSERT(m->depth_dm==100 && (m->alerts&SCUBA_DEPTH),"10.000 m missed inclusive alarm");
+            if(i==4)__ASSERT(m->depth_dm==110 && m->ascent_dm_min==-60,"Physical descent rate differs from 6 m/min");
+            if(i==5)__ASSERT(m->depth_dm==109 && m->ascent_dm_min==60,"Physical ascent rate differs from 6 m/min");
+            if(i==6)__ASSERT(!v->recording.surface_seconds && pc_bench_recording_finish()==-1,".500 m treated as surface");
+            if(i==7)__ASSERT(v->recording.surface_seconds==1 && v->recording.active,".499 m missed surface or completed early");
+            if(i==1 || i==3 || i==4 || i==5 || i==7) {
+                pc_bench_pause(true);pc_bench_ui_poll();scuba_ui_update(&data,seconds[i]*1000,true);
+                lv_refr_now(NULL);__ASSERT(!sim_host_bench_capture((*capture)++),"Threshold capture failed");
+            }
+        }
+        __ASSERT(!pc_bench_recording_finish(),"Physical surface finish failed");
+    }
+    printk("WATER RECORDING PASS: physical start/alarm/surface millimetre boundaries, watch/graph agreement, +/-6 m/min rates in both waters\n");
+}
 static void water_checks(void)
 {
     static bool done;
@@ -527,6 +569,7 @@ static void water_checks(void)
             __ASSERT(salt?v->depth_m<21:v->depth_m==60,"Manual command bypassed density-dependent pressure envelope");
         }
     }
+    water_recording_checks(&capture);
     __ASSERT(pc_bench_fresh(1,1010,NULL,0)==-1,"Unsupported third density accepted");
     __ASSERT(!pc_bench_fresh(1,1025,NULL,0),"apnea fixture rejected");
     water_select(0,true);

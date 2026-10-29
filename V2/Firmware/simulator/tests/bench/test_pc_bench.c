@@ -112,6 +112,30 @@ static void automatic_stop_progression_and_violation(void)
     pc_bench_poll(10000);
     CHECK(fabsf(v->depth_m-2)<1e-5f && v->rate_m_min==0);
 }
+/* Independently worked pressure deltas for 1.999/2.000 and .499/.500 m,
+ * using spec densities and g=9.80665. Samples are 1 mm apart; sensor
+ * millimetre rounding and inclusive start/underwater boundaries stay exact. */
+static void physical_recording_boundaries(void)
+{
+    const float pressure[2][4]={
+        {1.1960349335f,1.196133f,1.0489351835f,1.04903325f},
+        {1.2009358068375f,1.201036325f,1.0501585630875f,1.05025908125f}};
+    for(unsigned salt=0;salt<2;++salt) {
+        CHECK(pc_bench_fresh(1,salt?1025:1000,NULL,0)==0);
+        CHECK(pc_bench_start_depth(20)==0);
+        const struct bench_view *v=pc_bench_read();
+        CHECK(pc_bench_accept_sample(&(ostc4_sample){1,pressure[salt][0]})==0);
+        CHECK(!v->recording.active);
+        CHECK(pc_bench_accept_sample(&(ostc4_sample){2,pressure[salt][1]})==0);
+        CHECK(v->recording.active && v->recording.started_seconds==2);
+        CHECK(pc_bench_accept_sample(&(ostc4_sample){3,pressure[salt][3]})==0);
+        CHECK(v->recording.dive_seconds==1 && !v->recording.surface_seconds);
+        CHECK(pc_bench_recording_finish()==-1);
+        CHECK(pc_bench_accept_sample(&(ostc4_sample){4,pressure[salt][2]})==0);
+        CHECK(v->recording.surface_seconds==1 && v->recording.dive_seconds==1);
+        CHECK(pc_bench_recording_finish()==0 && !v->recording.active);
+    }
+}
 static void recording_start_threshold(void)
 {
     CHECK(pc_bench_fresh(1,1000,NULL,0)==0);
@@ -136,7 +160,7 @@ static struct scuba_model recorded_watch;
 static void recording_observer(const struct bench_view *v)
 {
     scuba_calculated_apply_recorded(&recorded_watch,&v->recording,&v->result,v->seconds,
-        (v->result.absolute_pressure_bar-v->surface_bar)*10,18,87);
+        v->depth_m,18,87);
     CHECK(recorded_watch.active==v->recording.active);
     CHECK(recorded_watch.armed==v->recording.armed);
     CHECK(recorded_watch.dive_ms==(uint64_t)v->recording.dive_seconds*1000);
@@ -153,10 +177,10 @@ static void recording_surface_completion_and_second_dive(void)
     pc_bench_manual(3,0);pc_bench_poll(11000);
     CHECK(v->recording.active && v->recording.dive_seconds==10);
     CHECK(pc_bench_recording_finish()==-1);
-    /* Hydrostatic .51m becomes .500m on the watch: exactly .5 is underwater. */
-    pc_bench_manual(.51f,0);pc_bench_poll(1000);
+    /* Exactly physical .500 m remains underwater after millimetre rounding. */
+    pc_bench_manual(.500f,0);pc_bench_poll(1000);
     CHECK(v->recording.surface_seconds==0 && v->recording.dive_seconds==11);
-    pc_bench_manual(.50f,0);pc_bench_poll(299000);
+    pc_bench_manual(.499f,0);pc_bench_poll(299000);
     CHECK(v->recording.active && v->recording.surface_seconds==299);
     pc_bench_manual(3,0);pc_bench_poll(1000);
     CHECK(v->recording.active && v->recording.dives_started==1 &&
@@ -185,6 +209,7 @@ static void recording_surface_completion_and_second_dive(void)
 }
 int main(void)
 {
+    physical_recording_boundaries();
     recording_surface_completion_and_second_dive();
     recording_start_threshold();
     automatic_takeover();
