@@ -24,7 +24,7 @@ extern lv_obj_t *app_screen;
 void v1_ui_build(lv_obj_t *parent);
 void ui_skip_boot(void);
 lv_obj_t *ui_create_dive_mode_page(void);
-void ui_refresh_dive_mode(bool freediving);
+void ui_refresh_dive_mode(int selected);
 
 // --- Fonctions d'accès pour modifier l'affichage (Setters) ---
 void ui_refresh_brightness_bar(uint8_t level);

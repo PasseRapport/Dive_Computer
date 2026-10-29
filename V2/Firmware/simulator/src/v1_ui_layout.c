@@ -28,7 +28,7 @@ lv_obj_t * brightness_screen;
 lv_obj_t * sleep_screen;
 static lv_obj_t * brightness_bar;
 static lv_obj_t *dive_mode_cursor;
-static lv_obj_t *dive_mode_labels[2], *dive_mode_icons[2];
+static lv_obj_t *dive_mode_labels[3], *dive_mode_icons[3];
 
 // --- Pointeurs internes pour la mise à jour ---
 static lv_obj_t * label_clear;
@@ -52,48 +52,29 @@ static void format_as_page(lv_obj_t * page) {
 
 lv_obj_t *ui_create_dive_mode_page(void)
 {
-    lv_obj_t *page = lv_obj_create(app_screen);
-    format_as_page(page);
-    /* Native icons plus the unbroken mode names need a wider menu canvas. */
-    lv_obj_set_width(page, 280);
-    lv_obj_set_x(page, 20 + V1_PAGE_TRAVEL);
-    lv_obj_t *title = lv_label_create(page);
-    lv_label_set_text(title, "MODE");
-    lv_obj_set_style_text_font(title, &lv_font_montserrat_22, 0);
-    lv_obj_set_style_text_color(title, lv_color_white(), 0);
-    lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 0);
-
-    dive_mode_cursor = lv_obj_create(page);
-    lv_obj_remove_style_all(dive_mode_cursor);
-    lv_obj_set_size(dive_mode_cursor, 203, 52);
-    lv_obj_set_style_radius(dive_mode_cursor, 15, 0);
-    lv_obj_set_style_bg_color(dive_mode_cursor, lv_color_hex(0x008b8b), 0);
-    lv_obj_set_style_bg_opa(dive_mode_cursor, LV_OPA_COVER, 0);
-    lv_obj_set_style_border_width(dive_mode_cursor, 2, 0);
-    lv_obj_set_style_border_color(dive_mode_cursor, lv_color_white(), 0);
-    lv_obj_remove_flag(dive_mode_cursor, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_pos(dive_mode_cursor, 10, 32);
-
-    static const char *const names[] = {"SCUBADIVING", "FREEDIVING"};
-    const lv_image_dsc_t *icons[] = {&icon_tank, &icon_apnea};
-    for (int i = 0; i < 2; i++) {
-        dive_mode_labels[i] = lv_label_create(page);
-        lv_label_set_text(dive_mode_labels[i], names[i]);
-        lv_obj_set_style_text_font(dive_mode_labels[i], &lv_font_montserrat_24, 0);
-        dive_mode_icons[i] = selection_place_row(dive_mode_labels[i], icons[i], 67 + 63 * i);
-        selection_row_color(dive_mode_labels[i], dive_mode_icons[i], i == 0);
+    lv_obj_t *page=lv_obj_create(app_screen);lv_obj_remove_style_all(page);
+    lv_obj_set_size(page,320,300);lv_obj_set_pos(page,V1_PAGE_TRAVEL,0);
+    lv_obj_set_style_bg_color(page,lv_color_black(),0);lv_obj_set_style_bg_opa(page,255,0);
+    lv_obj_remove_flag(page,LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_t *title=lv_label_create(page);lv_label_set_text(title,"MODE");
+    lv_obj_set_style_text_font(title,&lv_font_montserrat_22,0);lv_obj_align(title,LV_ALIGN_TOP_MID,0,43);
+    lv_obj_t *pane=lv_obj_create(page);lv_obj_remove_style_all(pane);lv_obj_set_size(pane,320,155);
+    lv_obj_set_pos(pane,0,73);lv_obj_remove_flag(pane,LV_OBJ_FLAG_SCROLLABLE);
+    dive_mode_cursor=lv_obj_create(pane);lv_obj_remove_style_all(dive_mode_cursor);
+    lv_obj_set_style_bg_color(dive_mode_cursor,lv_color_hex(0x008b8b),0);lv_obj_set_style_bg_opa(dive_mode_cursor,255,0);
+    static const char *const names[]={"SCUBADIVING","FREEDIVING","BACK"};
+    const lv_image_dsc_t *icons[]={&icon_tank,&icon_apnea,NULL};
+    for(int i=0;i<3;i++) {
+        dive_mode_labels[i]=lv_label_create(pane);lv_label_set_text(dive_mode_labels[i],names[i]);
+        lv_obj_set_style_text_font(dive_mode_labels[i],&lv_font_montserrat_24,0);
+        dive_mode_icons[i]=selection_place_row(dive_mode_labels[i],icons[i],77+52*i);
     }
-    selection_fit(dive_mode_cursor, dive_mode_labels[0], dive_mode_icons[0], false);
+    selection_scroll(dive_mode_cursor,dive_mode_labels,dive_mode_icons,3,0,77,52,false);
     return page;
 }
-
-void ui_refresh_dive_mode(bool freediving)
+void ui_refresh_dive_mode(int selected)
 {
-    selection_fit(dive_mode_cursor, dive_mode_labels[freediving ? 1 : 0],
-                  dive_mode_icons[freediving ? 1 : 0], true);
-    for (int i = 0; i < 2; i++) {
-        selection_row_color(dive_mode_labels[i], dive_mode_icons[i], i == (int)freediving);
-    }
+    selection_scroll(dive_mode_cursor,dive_mode_labels,dive_mode_icons,3,selected,77,52,true);
 }
 
 /* Boot stays inside the watch, preserving the desktop control panel. */

@@ -51,6 +51,15 @@ what is outside the aperture. It is a UI preview, not a hardware geometry test.
 Startup animates the octopus logo into the watch face, then stays on the clock.
 No dive or depth replay starts automatically. Turn the
 crown and fill the exit ring to reach **Watch / Diving / Compass / Options**.
+The four-entry main mode menu keeps its moving selection capsule. Other list
+menus scroll their text and icons through a fixed central selection, within a
+clipped viewport clear of headings and hints. Options, Watch, Backlight,
+Bluetooth, Haptics and dive-mode selection end with **BACK**. Existing scuba
+and apnea menus retain their Back items and use the same fixed-focus behaviour,
+including Water Type. Back has the same destination as double tap and never
+applies an unconfirmed selector choice. The full-screen face carousel ends
+with a Back card; the twelve actual faces remain full-screen without captions.
+
 Options contains **Bluetooth / Watch / Backlight / Haptics / Sleep**.
 Watch has two rows: **ANALOG / DIGITAL** and **WATCH FACE**.
 Tap ANALOG/DIGITAL to switch without leaving Watch. WATCH FACE opens the corresponding full-screen live
@@ -593,3 +602,16 @@ python3 tests/check_watch_dials.py /tmp/watch-catalog
 A second process with the same state, `DIVE_SIM_WATCH_RESTART=read` and
 `--stop_at=4` checks actual restart retention and switching to the other saved face.
 These are desktop rendering and navigation checks, not Nordic/hardware validation.
+
+### Scrolling menus and explicit Back
+
+Native PC journey (use an empty state directory):
+```sh
+SDL_VIDEODRIVER=dummy DIVE_SIM_APPEARANCE_CHECK=1 DIVE_SIM_MENU_CHECK=1 \
+  DIVE_SIM_GALLERY=/tmp/menu-gallery DIVE_WATCH_STATE_DIR=/tmp/menu-state \
+  <build>/zephyr/zephyr.exe --stop_at=21 --no-rt
+python3 tests/check_scroll_menus.py /tmp/menu-gallery
+```
+This checks general/watch/dive menus, water selectors, Back without applying
+pending changes, rapid input, and x2 rendering. Watch catalog checks also cover
+the final Back card for both analog and digital faces.

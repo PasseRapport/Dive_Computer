@@ -11,7 +11,7 @@ static uint64_t clock_ms=100000;
 static void click(void){watch_ui_input(WATCH_SINGLE_TAP,0);}
 static void turn(int n){watch_ui_input(WATCH_CROWN,n);}
 static void back(void){watch_ui_input(WATCH_DOUBLE_TAP,0);}
-static void enter(void){turn(1);turn(24);turn(-100);turn(WATCH_DIVING);click();turn(100);click();}
+static void enter(void){turn(1);turn(24);turn(-100);turn(WATCH_DIVING);click();turn(-100);turn(1);click();}
 static void editor(bool bottom){turn(2);click();turn(-100);if(bottom)turn(1);click();}
 static void main_page(void){back();back();turn(-100);}
 static bool visible(lv_obj_t *o,const char *text)

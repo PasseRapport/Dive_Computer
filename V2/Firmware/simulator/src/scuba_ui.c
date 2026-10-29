@@ -138,26 +138,18 @@ static void refresh_options_menu(bool animate)
 {
     message(menu_title,screen==SCUBA_RING_SELECT?"RING":screen==SCUBA_FIELD_SELECT?"BOTTOM FIELD":screen==SCUBA_OPTIONS?"OPTIONS":screen==SCUBA_SETTINGS?"DIVE SETTINGS":screen==SCUBA_WATER?"WATER TYPE":"BACKLIGHT",43);
     message(menu_help,"Tap to select",257);
-    hide(choice_view,!carousel());
-    hide(pill,carousel());
-    for(int i=0;i<3;i++)hide(rows[i],carousel());
+    hide(choice_view,!(carousel()||screen==SCUBA_WATER));
+    hide(pill,screen!=SCUBA_WATER);hide(choice_pill,!carousel());
+    for(int i=0;i<3;i++)hide(rows[i],screen!=SCUBA_WATER);
     for(int i=0;i<2;i++)hide(water_icons[i],screen!=SCUBA_WATER);
-    if(carousel()) {refresh_choices(animate);return;}
+    if(carousel()){refresh_choices(animate);return;}
     if(screen==SCUBA_WATER) {
-        static const char *const names[]={"FRESH","MARINE","Back"};
-        for(int i=0;i<3;i++){
-            lv_label_set_text(rows[i],names[i]);
-            lv_obj_set_align(rows[i],LV_ALIGN_TOP_LEFT);lv_obj_set_pos(rows[i],i<2?130:133,100+56*i);
-            selection_row_color(rows[i],i<2?water_icons[i]:NULL,i==water_row);
-        }
-        selection_fit(pill,rows[water_row],water_row<2?water_icons[water_row]:NULL,animate);return;
+        static const char *const names[]={"FRESH","MARINE","BACK"};
+        for(int i=0;i<SCUBA_FIELD_COUNT+1;i++)hide(choices[i],true);
+        for(int i=0;i<3;i++)lv_label_set_text(rows[i],names[i]);
+        lv_obj_t *icons[]={water_icons[0],water_icons[1],NULL};
+        selection_scroll(pill,rows,icons,3,water_row,77,52,animate);
     }
-    static const char *const modes[]={"ON","OFF","AUTO"};
-    for(int i=0;i<3;i++) {
-        message(rows[i],i==1?"Brightness":i==0?modes[watch_ui_backlight_mode()]:"Sensitivity",102+52*i);
-        selection_row_color(rows[i],NULL,i==backlight_row);
-    }
-    selection_fit(pill,rows[backlight_row],NULL,animate);
 }
 static void render(void)
 {
@@ -314,6 +306,9 @@ lv_obj_t *scuba_ui_create(lv_obj_t *parent)
     choice_anchor=label(choice_view,64,&lv_font_montserrat_22);
     lv_obj_set_style_opa(choice_anchor,LV_OPA_TRANSP,0);
     for(int i=0;i<SCUBA_FIELD_COUNT+1;i++)choices[i]=label(choice_view,64,&lv_font_montserrat_22);
+    lv_obj_set_parent(pill,choice_view);
+    for(int i=0;i<3;i++)lv_obj_set_parent(rows[i],choice_view);
+    for(int i=0;i<2;i++)lv_obj_set_parent(water_icons[i],choice_view);
     hide(choice_view,true);
     dashboard=scuba_dashboard_create(root);
     brightness_editor=light_editor_create(root,"BRIGHTNESS",10);

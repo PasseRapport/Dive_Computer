@@ -1,5 +1,6 @@
 #include "appearance_checks.h"
 #include "watch_catalog_checks.h"
+#include "menu_checks.h"
 #include "sim_host.h"
 #include "sim_controls.h"
 #include "watch_ui.h"
@@ -67,6 +68,7 @@ static void rate_button_examples(void)
 
 void appearance_checks_poll(struct watch_data *data)
 {
+    if(getenv("DIVE_SIM_MENU_CHECK")){menu_checks_poll();return;}
     if(getenv("DIVE_SIM_WATCH_FACE_CHECK")){watch_catalog_checks_poll(data);return;}
     if(getenv("DIVE_SIM_RATE_CHECK")){rate_button_examples();return;}
     if(getenv("DIVE_SIM_TIMER_CHECK")){timer_examples(data);return;}

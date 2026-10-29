@@ -1,0 +1,8 @@
+Native PC validation only, no hardware claim.
+PASS: eleven menu groups keep the selection centre at y=150 (+/-3px), including icons and x2.
+PASS: main Watch/Diving/Compass/Options menu retains moving selection.
+PASS: Back on Options, Watch, Bluetooth, Haptics, Backlight, dive-mode and face carousels.
+PASS: Back in water/bottom-field selectors leaves applied preferences untouched.
+PASS: 58-second SDL navigation, capsule geometry, watch rendering, compass and sleep.
+PASS: full apnea settings journey (phase lock, cancellation, reentry).
+PASS: calculated bench GF edit/commit/lock and paired-ceiling UI.

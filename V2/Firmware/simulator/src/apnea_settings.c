@@ -29,7 +29,7 @@ static void refresh(bool animate)
   lv_obj_remove_flag(rows[i],LV_OBJ_FLAG_HIDDEN);
   lv_label_set_text(rows[i],i==count-1?"BACK":editor==1?(i?"MARINE":"FRESH"):editor==2?fields[i]:(i?"BOTTOM FIELD":"WATER TYPE"));
   lv_obj_set_style_text_font(rows[i],&lv_font_montserrat_22,0);
-  lv_obj_set_parent(rows[i],editor==1?view:choices);
+  lv_obj_set_parent(rows[i],choices);
   lv_anim_delete(rows[i],row_y);
   if(editor!=1){
    lv_obj_set_align(rows[i],LV_ALIGN_TOP_MID);lv_obj_set_x(rows[i],0);
@@ -37,13 +37,12 @@ static void refresh(bool animate)
    if(animate){lv_anim_t a;lv_anim_init(&a);lv_anim_set_var(&a,rows[i]);lv_anim_set_values(&a,lv_obj_get_y(rows[i]),target);lv_anim_set_duration(&a,250);lv_anim_set_path_cb(&a,lv_anim_path_ease_in_out);lv_anim_set_exec_cb(&a,row_y);lv_anim_start(&a);}
    else lv_obj_set_y(rows[i],target);
   }
-  if(editor==1){lv_obj_set_align(rows[i],LV_ALIGN_TOP_LEFT);lv_obj_set_pos(rows[i],130,100+56*i);}
   selection_row_color(rows[i],editor==1&&i<2?icons[i]:NULL,i==selected);
   lv_obj_set_style_text_opa(rows[i],underwater&&i!=count-1?LV_OPA_50:LV_OPA_COVER,0);
  }
  for(int i=0;i<2;i++){if(editor==1)lv_obj_remove_flag(icons[i],LV_OBJ_FLAG_HIDDEN);else lv_obj_add_flag(icons[i],LV_OBJ_FLAG_HIDDEN);}
- if(editor==1){lv_obj_add_flag(choices,LV_OBJ_FLAG_HIDDEN);lv_obj_remove_flag(pill,LV_OBJ_FLAG_HIDDEN);selection_fit(pill,rows[selected],selected<2?icons[selected]:NULL,animate);}
- else {lv_obj_remove_flag(choices,LV_OBJ_FLAG_HIDDEN);lv_obj_add_flag(pill,LV_OBJ_FLAG_HIDDEN);lv_label_set_text(anchor,lv_label_get_text(rows[selected]));lv_obj_align(anchor,LV_ALIGN_TOP_MID,0,64);selection_fit(choice_pill,anchor,NULL,animate);}
+ if(editor==1){lv_obj_remove_flag(choices,LV_OBJ_FLAG_HIDDEN);lv_obj_remove_flag(pill,LV_OBJ_FLAG_HIDDEN);lv_obj_add_flag(choice_pill,LV_OBJ_FLAG_HIDDEN);lv_obj_t *row_icons[]={icons[0],icons[1],NULL};selection_scroll(pill,rows,row_icons,3,selected,77,52,animate);}
+ else {lv_obj_remove_flag(choices,LV_OBJ_FLAG_HIDDEN);lv_obj_remove_flag(choice_pill,LV_OBJ_FLAG_HIDDEN);lv_obj_add_flag(pill,LV_OBJ_FLAG_HIDDEN);lv_label_set_text(anchor,lv_label_get_text(rows[selected]));lv_obj_align(anchor,LV_ALIGN_TOP_MID,0,64);selection_fit(choice_pill,anchor,NULL,animate);}
 }
 static lv_obj_t *label(const char *s,int y,const lv_font_t *font){lv_obj_t *o=lv_label_create(view);lv_label_set_text(o,s);lv_obj_set_style_text_font(o,font,0);lv_obj_set_style_text_color(o,lv_color_white(),0);lv_obj_align(o,LV_ALIGN_TOP_MID,0,y);return o;}
 lv_obj_t *apnea_settings_create(lv_obj_t *parent)
@@ -56,6 +55,8 @@ lv_obj_t *apnea_settings_create(lv_obj_t *parent)
  anchor=lv_label_create(choices);lv_obj_set_style_text_font(anchor,&lv_font_montserrat_22,0);lv_obj_set_style_opa(anchor,LV_OPA_TRANSP,0);
  for(int i=0;i<APNEA_BOTTOM_COUNT+1;i++)rows[i]=label("",100,&lv_font_montserrat_22);
  for(int i=0;i<2;i++){icons[i]=lv_image_create(view);lv_image_set_src(icons[i],i?&icon_wave:&icon_drop);lv_obj_set_pos(icons[i],76,90+56*i);lv_obj_set_style_image_recolor_opa(icons[i],LV_OPA_COVER,0);}
+ lv_obj_set_parent(pill,choices);
+ for(int i=0;i<2;i++)lv_obj_set_parent(icons[i],choices);
  help=label("Tap to edit",257,&lv_font_montserrat_14);refresh(false);return view;
 }
 void apnea_settings_update(bool active){if(underwater!=active){underwater=active;refresh(false);}}

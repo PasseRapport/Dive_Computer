@@ -24,15 +24,16 @@ static enum watch_view current_view;
 static enum watch_view leave_origin;
 static enum watch_mode selected_mode = WATCH_WATCH;
 static enum watch_dive_mode dive_mode = DIVE_SCUBA;
+static int dive_choice;
 static bool sleeping, bluetooth, bluetooth_dfu;
 static uint8_t brightness = 3;
 static enum watch_backlight_mode backlight_mode = BACKLIGHT_AUTO;
 static uint16_t sensitivity = 10;
-enum option_item { OPTION_BLUETOOTH, OPTION_WATCH, OPTION_BACKLIGHT, OPTION_HAPTICS, OPTION_SLEEP, OPTION_COUNT };
+enum option_item { OPTION_BLUETOOTH, OPTION_WATCH, OPTION_BACKLIGHT, OPTION_HAPTICS, OPTION_SLEEP, OPTION_BACK, OPTION_COUNT };
 static bool haptics = true;
 static enum watch_pulse pulse = PULSE_MEDIUM;
 static int selected_haptics;
-static lv_obj_t *haptics_cursor, *haptics_labels[2];
+static lv_obj_t *haptics_cursor, *haptics_labels[3];
 static int selected_option, selected_backlight, selected_bluetooth, selected_face, selected_dial;
 static enum watch_dial clock_dial=DIAL_MINIMALIST;
 static int digital_dial=DIGITAL_EMBLEM;
@@ -47,11 +48,11 @@ static lv_obj_t *backlight_view, *logo_view, *scuba_view;
 static lv_timer_t *logo_timer, *sleep_timer;
 static lv_obj_t *mode_cursor, *mode_labels[WATCH_MODE_COUNT], *mode_icons[WATCH_MODE_COUNT];
 static lv_obj_t *option_cursor, *option_labels[OPTION_COUNT];
-static lv_obj_t *backlight_cursor, *backlight_labels[3];
-static lv_obj_t *face_view, *face_cursor, *face_labels[2], *dial_view;
+static lv_obj_t *backlight_cursor, *backlight_labels[4];
+static lv_obj_t *face_view, *face_cursor, *face_labels[3], *dial_view;
 static lv_obj_t *free_battery, *logo_image;
 static enum watch_clock_style clock_style = CLOCK_DIGITAL;
-static lv_obj_t *bluetooth_cursor, *bluetooth_labels[2];
+static lv_obj_t *bluetooth_cursor, *bluetooth_labels[3];
 static const enum watch_page free_pages[] = {WATCH_MAIN, WATCH_STATS, WATCH_WATER, WATCH_LEAVE};
 static const enum watch_page scuba_pages[] = {WATCH_SCUBA, WATCH_LEAVE};
 
@@ -104,15 +105,13 @@ static void logo_opacity(void *object, int32_t opacity)
 
 static void fit_rows(lv_obj_t *pill, lv_obj_t **labels, int count, int selected, bool animate)
 {
-    selection_fit(pill, labels[selected], NULL, animate);
-    for (int i = 0; i < count; i++) selection_row_color(labels[i], NULL, i == selected);
+    selection_scroll(pill,labels,NULL,count,selected,77,52,animate);
 }
 
 static void refresh_watch_menu(bool animate)
 {
     lv_label_set_text(face_labels[0],clock_style==CLOCK_ANALOG?"ANALOG":"DIGITAL");
-    lv_obj_align(face_labels[0],LV_ALIGN_TOP_MID,0,105);
-    fit_rows(face_cursor,face_labels,2,selected_face,animate);
+    fit_rows(face_cursor,face_labels,3,selected_face,animate);
 }
 static void save_watch(void)
 {
@@ -136,8 +135,14 @@ static void clear_preview(void)
 static void show_preview(int direction)
 {
     finish_slides();outgoing=preview;
-    preview=watch_face_create(dial_view,clock_style,selected_dial);preview_face=preview;
-    watch_face_update(preview_face,&clock_data);
+    if(selected_dial==watch_face_count(clock_style)) {
+        preview=make_view(dial_view);preview_face=NULL;
+        lv_obj_t *label=text(preview,"BACK",&lv_font_montserrat_24,136);
+        lv_obj_t *pill=cursor(preview);lv_obj_move_background(pill);selection_fit(pill,label,NULL,false);
+    } else {
+        preview=watch_face_create(dial_view,clock_style,selected_dial);preview_face=preview;
+        watch_face_update(preview_face,&clock_data);
+    }
     lv_obj_set_pos(preview,direction?direction*320:0,0);
     if(!direction){if(outgoing){lv_obj_delete(outgoing);outgoing=NULL;}return;}
     lv_anim_t a;lv_anim_init(&a);lv_anim_set_exec_cb(&a,slide_x);lv_anim_set_duration(&a,220);lv_anim_set_path_cb(&a,lv_anim_path_ease_in_out);
@@ -161,8 +166,7 @@ static void refresh_backlight(bool animate)
 {
     const char *names[] = {"ON", "OFF", "AUTO"};
     lv_label_set_text(backlight_labels[0], names[backlight_mode]);
-    lv_obj_align(backlight_labels[0], LV_ALIGN_TOP_MID, 0, 105);
-    fit_rows(backlight_cursor, backlight_labels, 3, selected_backlight, animate);
+    fit_rows(backlight_cursor, backlight_labels, 4, selected_backlight, animate);
 }
 
 static void refresh_haptics(bool animate)
@@ -170,16 +174,14 @@ static void refresh_haptics(bool animate)
     static const char *const pulses[] = {"SHORT", "MEDIUM", "LONG"};
     lv_label_set_text(haptics_labels[0], haptics ? "ON" : "OFF");
     lv_label_set_text(haptics_labels[1], pulses[pulse]);
-    for (int i = 0; i < 2; i++) selection_place_row(haptics_labels[i], NULL, 68 + 56*i);
-    fit_rows(haptics_cursor, haptics_labels, 2, selected_haptics, animate);
+    fit_rows(haptics_cursor, haptics_labels, 3, selected_haptics, animate);
 }
 
 static void refresh_bluetooth(bool animate)
 {
     lv_label_set_text(bluetooth_labels[0], bluetooth ? LV_SYMBOL_POWER "  ON" : LV_SYMBOL_POWER "  OFF");
     lv_label_set_text(bluetooth_labels[1], bluetooth_dfu ? "DFU" : "DATA");
-    for (int i = 0; i < 2; i++) selection_place_row(bluetooth_labels[i], NULL, 68 + 56*i);
-    fit_rows(bluetooth_cursor, bluetooth_labels, 2, selected_bluetooth, animate);
+    fit_rows(bluetooth_cursor, bluetooth_labels, 3, selected_bluetooth, animate);
 }
 
 static void refresh_sensitivity(void)
@@ -327,12 +329,13 @@ static void show_page(enum watch_page next, int direction, bool animate)
 static void build_menu(lv_obj_t *view, const char *title, const char *const names[],
                        lv_obj_t **labels, lv_obj_t **pill, int count)
 {
-    lv_obj_t *heading = text(view, title, &lv_font_montserrat_24, count == 5 ? 32 : 48);
-    lv_obj_set_style_text_color(heading, lv_color_white(), 0);
-    *pill = cursor(view);
-    for (int i = 0; i < count; i++)
-        labels[i] = text(view, names[i], count == 5 ? &lv_font_montserrat_22 : &lv_font_montserrat_24,
-                         count == 5 ? 78 + 40*i : count == 4 ? 92 + 44*i : 105 + 48*i);
+    lv_obj_t *heading=text(view,title,&lv_font_montserrat_24,43);
+    lv_obj_set_style_text_color(heading,lv_color_white(),0);
+    lv_obj_t *pane=lv_obj_create(view);lv_obj_remove_style_all(pane);
+    lv_obj_set_size(pane,320,155);lv_obj_set_pos(pane,0,73);lv_obj_remove_flag(pane,LV_OBJ_FLAG_SCROLLABLE);
+    *pill=cursor(pane);
+    for(int i=0;i<count;i++)labels[i]=text(pane,names[i],&lv_font_montserrat_24,62+52*i);
+
 }
 
 void watch_ui_create(lv_obj_t *parent)
@@ -361,19 +364,16 @@ void watch_ui_create(lv_obj_t *parent)
     pages[WATCH_SLEEP] = sleep_screen;
     pages[WATCH_LEAVE] = detail_page("LEAVE", "Turn the crown to leave");
     pages[WATCH_SCUBA] = detail_page("SCUBADIVING", "Interface coming soon\n\nDepth: -- m\nTime: --:--");
-    pages[WATCH_BLUETOOTH] = detail_page("BLUETOOTH", "");
-    bluetooth_cursor = cursor(pages[WATCH_BLUETOOTH]);
-    for (int i = 0; i < 2; i++) bluetooth_labels[i] = text(pages[WATCH_BLUETOOTH], "", &lv_font_montserrat_24, 0);
-    hint = text(pages[WATCH_BLUETOOTH], "Tap to change", &lv_font_montserrat_14, 153);
-    lv_obj_set_style_text_color(hint, lv_color_hex(0xaaaaaa), 0);
-    refresh_bluetooth(false);
-
-    pages[WATCH_HAPTICS] = detail_page("HAPTICS", "");
-    haptics_cursor = cursor(pages[WATCH_HAPTICS]);
-    for (int i = 0; i < 2; i++) haptics_labels[i] = text(pages[WATCH_HAPTICS], "", &lv_font_montserrat_24, 0);
-    hint = text(pages[WATCH_HAPTICS], "Tap to change", &lv_font_montserrat_14, 153);
-    lv_obj_set_style_text_color(hint, lv_color_hex(0xaaaaaa), 0);
-    refresh_haptics(false);
+    pages[WATCH_BLUETOOTH]=make_view(app_screen);
+    const char *bluetooth_options[]={"OFF","DATA","BACK"};
+    build_menu(pages[WATCH_BLUETOOTH],"BLUETOOTH",bluetooth_options,bluetooth_labels,&bluetooth_cursor,3);
+    hint=text(pages[WATCH_BLUETOOTH],"Tap to select",&lv_font_montserrat_14,257);
+    lv_obj_set_style_text_color(hint,lv_color_hex(0xaaaaaa),0);refresh_bluetooth(false);
+    pages[WATCH_HAPTICS]=make_view(app_screen);
+    const char *haptics_options[]={"ON","MEDIUM","BACK"};
+    build_menu(pages[WATCH_HAPTICS],"HAPTICS",haptics_options,haptics_labels,&haptics_cursor,3);
+    hint=text(pages[WATCH_HAPTICS],"Tap to select",&lv_font_montserrat_14,257);
+    lv_obj_set_style_text_color(hint,lv_color_hex(0xaaaaaa),0);refresh_haptics(false);
 
     pages[WATCH_SENSITIVITY]=light_editor_create(app_screen,"SENSITIVITY",100);
     refresh_sensitivity();
@@ -398,16 +398,16 @@ void watch_ui_create(lv_obj_t *parent)
     scuba_view = scuba_ui_create(parent);
     compass_view = compass_ui_create(parent);
     option_view = make_view(parent);
-    const char *options[] = {"BLUETOOTH", "WATCH", "BACKLIGHT", "HAPTICS", "SLEEP"};
+    const char *options[] = {"BLUETOOTH", "WATCH", "BACKLIGHT", "HAPTICS", "SLEEP", "BACK"};
     build_menu(option_view, "OPTIONS", options, option_labels, &option_cursor, OPTION_COUNT);
     refresh_options(false);
     backlight_view = make_view(parent);
-    const char *light_options[] = {"AUTO", "BRIGHTNESS", "SENSITIVITY"};
-    build_menu(backlight_view, "BACKLIGHT", light_options, backlight_labels, &backlight_cursor, 3);
+    const char *light_options[] = {"AUTO", "BRIGHTNESS", "SENSITIVITY", "BACK"};
+    build_menu(backlight_view, "BACKLIGHT", light_options, backlight_labels, &backlight_cursor, 4);
     refresh_backlight(false);
     face_view = make_view(parent);
-    const char *face_options[]={"DIGITAL","WATCH FACE"};
-    build_menu(face_view,"WATCH",face_options,face_labels,&face_cursor,2);
+    const char *face_options[]={"DIGITAL","WATCH FACE","BACK"};
+    build_menu(face_view,"WATCH",face_options,face_labels,&face_cursor,3);
     save_status=text(face_view,"",&lv_font_montserrat_12,220);
     refresh_watch_menu(false);
     dial_view=make_view(parent);
@@ -486,8 +486,8 @@ static int bounded_selection(int value, int steps, int count)
 
 static void open_dive_selection(void)
 {
-    leave_progress = 0;
-    set_view(WATCH_DIVE_SELECT);
+    leave_progress = 0;dive_choice=dive_mode;
+    ui_refresh_dive_mode(dive_choice);set_view(WATCH_DIVE_SELECT);
     show_page(WATCH_DIVE_MODE, 1, false);
 }
 
@@ -566,22 +566,22 @@ void watch_ui_input(enum watch_input input, int steps)
             selected_mode = bounded_selection(selected_mode, steps, WATCH_MODE_COUNT);
             refresh_mode_menu(true);
         } else if (current_view == WATCH_FACE_SELECT) {
-            selected_face = bounded_selection(selected_face, steps, 2);
+            selected_face = bounded_selection(selected_face, steps, 3);
             refresh_watch_menu(true);
         } else if (current_view == WATCH_DIAL_SELECT) {
-            int count=watch_face_count(clock_style);
+            int count=watch_face_count(clock_style)+1;
             selected_dial=((selected_dial+(int64_t)steps)%count+count)%count;
             show_preview(steps>0?1:-1);
         } else if (current_view == WATCH_DIVE_SELECT) {
-            dive_mode = bounded_selection(dive_mode, steps, 2);
-            ui_refresh_dive_mode(dive_mode == DIVE_FREE);
+            dive_choice=bounded_selection(dive_choice,steps,3);
+            ui_refresh_dive_mode(dive_choice);
         } else if (current_view == WATCH_DIVE_VIEW) {
             scroll_dive(steps);
         } else if (current_view == WATCH_OPTION_VIEW) {
             selected_option = bounded_selection(selected_option, steps, OPTION_COUNT);
             refresh_options(true);
         } else if (current_view == WATCH_BACKLIGHT_VIEW) {
-            selected_backlight = bounded_selection(selected_backlight, steps, 3);
+            selected_backlight = bounded_selection(selected_backlight, steps, 4);
             refresh_backlight(true);
         } else if (current_view == WATCH_OPTION_DETAIL) {
             if (current_page == WATCH_BRIGHTNESS) {
@@ -593,10 +593,10 @@ void watch_ui_input(enum watch_input input, int steps)
                 refresh_sensitivity();
 
             } else if (current_page == WATCH_BLUETOOTH) {
-                selected_bluetooth = bounded_selection(selected_bluetooth, steps, 2);
+                selected_bluetooth = bounded_selection(selected_bluetooth, steps, 3);
                 refresh_bluetooth(true);
             } else if (current_page == WATCH_HAPTICS) {
-                selected_haptics = bounded_selection(selected_haptics, steps, 2);
+                selected_haptics = bounded_selection(selected_haptics, steps, 3);
                 refresh_haptics(true);
             } else if (current_page == WATCH_SLEEP) {
                 sleep_progress = LV_CLAMP(0, (int64_t)sleep_progress + steps, 24);
@@ -643,14 +643,18 @@ void watch_ui_input(enum watch_input input, int steps)
             if(selected_face==1) {
                 selected_dial=clock_style==CLOCK_ANALOG?clock_dial:digital_dial;
                 show_preview(0);set_view(WATCH_DIAL_SELECT);
+            } else if(selected_face==2) {watch_ui_input(WATCH_DOUBLE_TAP,0);
             } else {
                 clock_style=clock_style==CLOCK_ANALOG?CLOCK_DIGITAL:CLOCK_ANALOG;
                 clock_face_dirty=true;refresh_clock_style();refresh_watch_menu(false);save_watch();
             }
         } else if (current_view == WATCH_DIAL_SELECT) {
+            if(selected_dial==watch_face_count(clock_style)){watch_ui_input(WATCH_DOUBLE_TAP,0);return;}
             if(clock_style==CLOCK_ANALOG)clock_dial=selected_dial;else digital_dial=selected_dial;
             clear_preview();clock_face_dirty=true;refresh_clock_style();refresh_watch_menu(false);save_watch();set_view(WATCH_FACE_SELECT);
         } else if (current_view == WATCH_DIVE_SELECT) {
+            if(dive_choice==2){watch_ui_input(WATCH_DOUBLE_TAP,0);return;}
+            dive_mode=dive_choice;
             if(dive_mode == DIVE_SCUBA) {
                 set_view(WATCH_SCUBA_VIEW);
                 scuba_ui_enter(k_uptime_get());
@@ -660,6 +664,7 @@ void watch_ui_input(enum watch_input input, int steps)
             }
 
         } else if (current_view == WATCH_OPTION_VIEW) {
+            if(selected_option==OPTION_BACK){watch_ui_input(WATCH_DOUBLE_TAP,0);return;}
             if (selected_option == OPTION_BACKLIGHT) {
                 selected_backlight=0;refresh_backlight(false);
                 set_view(WATCH_BACKLIGHT_VIEW);
@@ -676,6 +681,7 @@ void watch_ui_input(enum watch_input input, int steps)
                           selected_option == OPTION_HAPTICS ? WATCH_HAPTICS : WATCH_BLUETOOTH, 1, false);
             }
         } else if (current_view == WATCH_BACKLIGHT_VIEW) {
+            if(selected_backlight==3){watch_ui_input(WATCH_DOUBLE_TAP,0);return;}
             if (selected_backlight == 0) {
                 backlight_mode = (backlight_mode + 1) % 3;
                 refresh_backlight(true);
@@ -688,10 +694,12 @@ void watch_ui_input(enum watch_input input, int steps)
                 refresh_backlight(false);
                 set_view(WATCH_BACKLIGHT_VIEW);
             } else if (current_page == WATCH_BLUETOOTH) {
+                if(selected_bluetooth==2){watch_ui_input(WATCH_DOUBLE_TAP,0);return;}
                 if (selected_bluetooth == 0) bluetooth = !bluetooth;
                 else bluetooth_dfu = !bluetooth_dfu;
                 refresh_bluetooth(true);
             } else if (current_page == WATCH_HAPTICS) {
+                if(selected_haptics==2){watch_ui_input(WATCH_DOUBLE_TAP,0);return;}
                 if (selected_haptics == 0) haptics = !haptics;
                 else pulse = (pulse + 1) % 3;
                 refresh_haptics(true);
@@ -729,7 +737,7 @@ void watch_ui_set_brightness(uint8_t value) { brightness=LV_MIN(value,10);ui_ref
 uint8_t watch_ui_brightness(void) { return brightness; }
 enum watch_view watch_ui_view(void) { return current_view; }
 enum watch_mode watch_ui_mode(void) { return selected_mode; }
-enum watch_dive_mode watch_ui_dive_mode(void) { return dive_mode; }
+enum watch_dive_mode watch_ui_dive_mode(void) { return current_view==WATCH_DIVE_SELECT&&dive_choice<2?(enum watch_dive_mode)dive_choice:dive_mode; }
 enum watch_clock_style watch_ui_clock_style(void) { return clock_style; }
 int watch_ui_face_option(void) { return selected_face; }
 enum watch_dial watch_ui_dial(void){return clock_dial;}

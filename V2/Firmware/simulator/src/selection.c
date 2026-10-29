@@ -83,3 +83,38 @@ void selection_row_color(lv_obj_t *label, lv_obj_t *icon, bool selected)
     lv_obj_set_style_text_color(label, color, 0);
     if (icon) lv_obj_set_style_image_recolor(icon, color, 0);
 }
+
+void selection_scroll(lv_obj_t *cursor,lv_obj_t **labels,lv_obj_t **icons,
+                      int count,int selected,int center_y,int spacing,bool animate)
+{
+    lv_obj_t *parent=lv_obj_get_parent(cursor);
+    lv_obj_update_layout(parent);
+    for(int i=0;i<count;i++) {
+        lv_obj_t *icon=icons?icons[i]:NULL;
+        int iw=icon?lv_obj_get_width(icon):0,gap=icon?10:0;
+        int x=(lv_obj_get_width(parent)-lv_obj_get_width(labels[i])-iw-gap)/2;
+        int y=center_y+(i-selected)*spacing;
+        lv_anim_delete(labels[i],NULL);
+        lv_obj_set_align(labels[i],LV_ALIGN_TOP_LEFT);lv_obj_set_x(labels[i],x+iw+gap);
+        if(animate)move(labels[i],lv_obj_get_y(labels[i]),y-lv_obj_get_height(labels[i])/2,set_y);
+        else lv_obj_set_y(labels[i],y-lv_obj_get_height(labels[i])/2);
+        if(icon) {
+            lv_anim_delete(icon,NULL);lv_obj_set_x(icon,x);
+            if(animate)move(icon,lv_obj_get_y(icon),y-lv_obj_get_height(icon)/2,set_y);
+            else lv_obj_set_y(icon,y-lv_obj_get_height(icon)/2);
+        }
+        selection_row_color(labels[i],icon,i==selected);
+    }
+    lv_obj_t *label=labels[selected],*icon=icons?icons[selected]:NULL;
+    int pad=icon?24:14;
+    int width=lv_obj_get_width(label)+(icon?lv_obj_get_width(icon)+10:0)+pad*2;
+    int height=LV_MAX(lv_obj_get_height(label),icon?lv_obj_get_height(icon):0)+16;
+    int x=(lv_obj_get_width(parent)-width)/2,y=center_y-height/2;
+    lv_obj_set_style_border_color(cursor,lv_color_white(),0);lv_obj_set_style_border_width(cursor,2,0);
+    lv_obj_set_style_radius(cursor,LV_RADIUS_CIRCLE,0);lv_obj_set_align(cursor,LV_ALIGN_TOP_LEFT);
+    lv_anim_delete(cursor,NULL);
+    if(animate) {
+        move(cursor,lv_obj_get_x(cursor),x,set_x);move(cursor,lv_obj_get_y(cursor),y,set_y);
+        move(cursor,lv_obj_get_width(cursor),width,set_width);move(cursor,lv_obj_get_height(cursor),height,set_height);
+    } else {lv_obj_set_pos(cursor,x,y);lv_obj_set_size(cursor,width,height);}
+}

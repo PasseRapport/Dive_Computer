@@ -57,10 +57,14 @@ void watch_catalog_checks_poll(struct watch_data *data)
         __ASSERT(watch_ui_clock_style()==CLOCK_DIGITAL,"Default type");
         open_watch();tap();__ASSERT(watch_ui_clock_style()==CLOCK_ANALOG,"Type did not toggle");
         shot("watch-menu-analog");crown(1);tap();crown(-1);
+        __ASSERT(watch_ui_dial_option()==7,"Missing final analog Back");
+        crown(-1);
         __ASSERT(watch_ui_dial_option()==6&&watch_ui_dial_animating(),"Negative wrap or animation failed");
     } else if(step==1) {
         __ASSERT(!watch_ui_dial_animating(),"Animation did not finish");shot("carousel-solar");
-        crown(1);__ASSERT(watch_ui_dial_option()==0,"Positive wrap failed");
+        crown(1);shot("analog-face-back");tap();
+        __ASSERT(watch_ui_view()==WATCH_FACE_SELECT&&watch_ui_dial()==DIAL_MINIMALIST,"Analog Back changed face");
+        tap();crown(-1);crown(1);__ASSERT(watch_ui_dial_option()==0,"Positive wrap failed");
         crown(100);crown(-100);__ASSERT(watch_ui_dial_option()==0,"Rapid multi-step crown failed");
         back();__ASSERT(watch_ui_dial()==DIAL_MINIMALIST&&watch_ui_view()==WATCH_FACE_SELECT&&!watch_ui_dial_animating(),"Cancel applied draft or retained animation");clock();
     } else if(step>=2&&step<26) {
@@ -68,7 +72,9 @@ void watch_catalog_checks_poll(struct watch_data *data)
         if(!(step%2))apply(type,dial);
         else {char name[64];snprintf(name,sizeof(name),"%s-%d-x1",type==CLOCK_ANALOG?"analog":"digital",dial);shot(name);}
     } else if(step==26) {
-        open_watch();shot("watch-menu-digital");crown(1);tap();crown(1);__ASSERT(watch_ui_dial_option()==0,"Digital wrap failed");
+        open_watch();shot("watch-menu-digital");crown(1);tap();crown(1);__ASSERT(watch_ui_dial_option()==DIGITAL_COUNT,"Digital Back missing");shot("digital-face-back");tap();
+        __ASSERT(watch_ui_view()==WATCH_FACE_SELECT&&watch_ui_digital_dial()==DIGITAL_SEAL,"Digital Back changed face");
+        tap();crown(2);__ASSERT(watch_ui_dial_option()==0,"Digital wrap failed");
         back();__ASSERT(watch_ui_digital_dial()==DIGITAL_SEAL,"Cancel changed digital face");clock();
         __ASSERT(!sim_host_set_zoom(2),"Scale x2 failed");
     } else if(step>=27&&step<39) {

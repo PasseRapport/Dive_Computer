@@ -33,7 +33,7 @@ bool apnea_checks_inputs(uint64_t *sample_ms)
     case 0:
         watch_ui_input(WATCH_CROWN,1);watch_ui_input(WATCH_CROWN,24);
         watch_ui_input(WATCH_CROWN,-100);watch_ui_input(WATCH_CROWN,WATCH_DIVING);
-        watch_ui_input(WATCH_SINGLE_TAP,0);watch_ui_input(WATCH_CROWN,100);
+        watch_ui_input(WATCH_SINGLE_TAP,0);watch_ui_input(WATCH_CROWN,-100);watch_ui_input(WATCH_CROWN,1);
         watch_ui_input(WATCH_SINGLE_TAP,0);break;
     case 1:break;
     case 2:clock_ms=101000;sim_controls_set_depth_dm(10);break;

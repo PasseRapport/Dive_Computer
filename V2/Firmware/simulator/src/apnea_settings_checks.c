@@ -37,7 +37,7 @@ bool apnea_settings_checks_inputs(uint64_t *sample_ms)
  *sample_ms=clock_ms;
  if(step>=54||k_uptime_get()<500+(uint64_t)step*400)return false;
  switch(step){
- case 0:scuba_salt=scuba_ui_model()->salt_water;scuba_bottom=scuba_ui_field();scuba_ring=scuba_ui_ring();scuba_saved_summary=scuba_ui_model()->summary;turn(1);turn(24);turn(-100);turn(WATCH_DIVING);click();turn(100);click();break;
+ case 0:scuba_salt=scuba_ui_model()->salt_water;scuba_bottom=scuba_ui_field();scuba_ring=scuba_ui_ring();scuba_saved_summary=scuba_ui_model()->summary;turn(1);turn(24);turn(-100);turn(WATCH_DIVING);click();turn(-100);turn(1);click();break;
  case 2:open_bottom();turn(-100);turn(2);click();main_page();break;
  case 4:open_bottom();turn(-100);turn(1);click();main_page();break;
  case 6:clock_ms=101000;sim_controls_set_depth_dm(123);break;

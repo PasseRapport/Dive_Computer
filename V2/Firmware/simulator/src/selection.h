@@ -7,3 +7,8 @@ void selection_fit(lv_obj_t *cursor, lv_obj_t *label, lv_obj_t *icon, bool anima
 /* Centre a label and optional native-size icon as a single menu row. */
 lv_obj_t *selection_place_row(lv_obj_t *label, const lv_image_dsc_t *source, int center_y);
 void selection_row_color(lv_obj_t *label, lv_obj_t *icon, bool selected);
+
+/* Scroll rows through a fixed selection centre. Icons move with their labels.
+ * Put the rows in a clipped container to keep them clear of heading and help. */
+void selection_scroll(lv_obj_t *cursor,lv_obj_t **labels,lv_obj_t **icons,
+                      int count,int selected,int center_y,int spacing,bool animate);
