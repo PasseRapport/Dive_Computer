@@ -1,5 +1,7 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "pc_bench.h"
+#include "water.h"
+#include "water_settings.h"
 #include "pc_bench_checkpoint_file.h"
 #include <math.h>
 #include <string.h>
@@ -40,11 +42,11 @@ static void notify_observer(void)
 }
 static float depth_to_pressure(float depth)
 {
-    return view.surface_bar + depth * view.density_kg_m3 * 9.80665f / 100000.0f;
+    return water_pressure(depth,view.surface_bar,view.density_kg_m3);
 }
 static float pressure_to_depth(float pressure)
 {
-    return (pressure-view.surface_bar)*100000.0f/(view.density_kg_m3*9.80665f);
+    return water_depth(pressure,view.surface_bar,view.density_kg_m3);
 }
 int pc_bench_storage_configure(const char *directory)
 {
@@ -59,7 +61,7 @@ int pc_bench_log_read(size_t index,struct pc_bench_log *record)
 int pc_bench_fresh(float surface, float density, const ostc4_sample *profile, size_t count)
 {
     /* Validate before replacing any live fixture. */
-    if (!isfinite(surface)||surface<0.8f||surface>1.2f||!isfinite(density)||density<990||density>1040||
+    if (!isfinite(surface)||surface<0.8f||surface>1.2f||(density!=1000 && density!=1025)||
         count>PC_BENCH_PROFILE||(count && (!profile||count<2))) return -1;
     for (size_t i=0;i<count;++i) {
         if (!isfinite(profile[i].absolute_pressure_bar)||profile[i].absolute_pressure_bar<surface||
@@ -79,6 +81,7 @@ int pc_bench_fresh(float surface, float density, const ostc4_sample *profile, si
         view.storage->saved_preference:(ostc4_gf_pair){30,70};
     ostc4_exposure_set_gf_pair(view.preferred_gf.low,view.preferred_gf.high);
     view.surface_bar=surface; view.density_kg_m3=density; view.speed=1;
+    water_settings_lock_scuba(false);water_settings_restore(density==1025);
     view.replay=count!=0; view.profile_count=count;
     view.history=history; view.profile=graph; view.exposure=actual_samples; view.history_count=1;
     history[0]=(struct bench_point){0,0,false};
@@ -94,6 +97,18 @@ int pc_bench_fresh(float surface, float density, const ostc4_sample *profile, si
     ostc4_exposure_read(&view.result);
     notify_observer();
     return 0;
+}
+int pc_bench_set_water(bool salt)
+{
+    if(!view.history_count || view.recording.active || water_settings_select(salt))return -1;
+    invalidate_checkpoint_configuration();
+    view.density_kg_m3=water_density(salt);
+    view.depth_m=pressure_to_depth(view.result.absolute_pressure_bar);
+    for(size_t i=0;i<view.history_count;++i)
+        history[i].depth_m=pressure_to_depth(actual_samples[i].absolute_pressure_bar);
+    for(size_t i=0;i<view.profile_count;++i)
+        graph[i].depth_m=pressure_to_depth(samples[i].absolute_pressure_bar);
+    notify_observer();return 0;
 }
 int pc_bench_set_gf_pair(int low,int high)
 {
@@ -131,6 +146,7 @@ void pc_bench_gf_edit_cancel(void)
 static void sync_gf_lock(void)
 {
     view.gf_locked=view.recording.active;
+    water_settings_lock_scuba(view.recording.active);
     /* Recovered active pair remains independent of next-dive preference. */
     ostc4_exposure_set_gf_lock(view.gf_locked);
 }

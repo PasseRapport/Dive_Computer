@@ -47,6 +47,8 @@ int pc_bench_checkpoint(void);
 ostc4_restart_status pc_bench_restart(enum pc_restart_mode mode);
 void pc_bench_poll(uint32_t elapsed_ms);
 void pc_bench_pause(bool paused);
+/* Commit shared water preference without advancing/resetting exposure. */
+int pc_bench_set_water(bool salt);
 int pc_bench_set_gf_pair(int low, int high);
 int pc_bench_gf_edit_begin(void);
 int pc_bench_gf_edit_adjust(bool high_endpoint, int steps);

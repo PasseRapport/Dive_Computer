@@ -8,6 +8,7 @@
 #include <lvgl.h>
 #include <zephyr/kernel.h>
 #include <string.h>
+#include <math.h>
 
 /* Public bench inputs plus real watch menu commands share one recording. */
 static void recording_checks(void)
@@ -460,9 +461,94 @@ static void startup_checks(void)
     if(stage<=4)__ASSERT(!sim_host_bench_capture(stage),"Startup capture failed");
 }
 
+/* Independent hydrostatic examples from SPEC-densite-eau A05-A08.
+ * Pressure tolerance 1e-6 bar accounts for binary32 input; physical depth
+ * tolerance 1e-4 m precedes existing decimetre display truncation. */
+static void water_select(int row, bool commit)
+{
+    scuba_ui_enter(0);
+    scuba_ui_input(WATCH_SINGLE_TAP,0);
+    scuba_ui_input(WATCH_CROWN,-100);
+    scuba_ui_input(WATCH_SINGLE_TAP,0);
+    scuba_ui_input(WATCH_CROWN,-100);
+    scuba_ui_input(WATCH_CROWN,row);
+    scuba_ui_input(commit?WATCH_SINGLE_TAP:WATCH_DOUBLE_TAP,0);
+    scuba_ui_input(WATCH_DOUBLE_TAP,0);
+}
+static void water_checks(void)
+{
+    static bool done;
+    if(done)return;
+    done=true;
+    watch_ui_open_calculated_scuba();
+    const struct bench_view *v=pc_bench_read();
+    const struct scuba_model *m=scuba_ui_model();
+    struct watch_data data={.temperature_c=18,.battery_percent=87};
+    __ASSERT(v->density_kg_m3==1025 && watch_ui_salt_water(),"Marine must be the shared initial choice");
+    unsigned capture=0;
+    for(unsigned surface_case=0;surface_case<2;++surface_case) {
+        float surface=surface_case?0.9f:1.01325f;
+        for(int salt=0;salt<2;++salt) {
+            __ASSERT(!pc_bench_fresh(surface,1025,NULL,0),"surface fixture rejected");
+            water_select(salt,true);
+            __ASSERT(v->density_kg_m3==(salt?1025:1000) && watch_ui_salt_water()==(bool)salt,
+                "Confirmed choice must configure bench and both modes");
+            water_select(!salt,false);
+            __ASSERT(watch_ui_salt_water()==(bool)salt,"Cancelled draft changed water");
+            __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){1,surface}),"surface input rejected");
+            __ASSERT(v->depth_m==0 && m->depth_dm==0,"Explicit surface must map to zero");
+            __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){2,surface+1.96133f}),"pressure rejected");
+            __ASSERT(fabsf(v->depth_m-(salt?19.51219512f:20.0f))<0.0001f &&
+                m->depth_dm==(salt?195:200),"Physical watch and bench depths disagree");
+            pc_bench_pause(true);pc_bench_ui_poll();
+            scuba_ui_update(&data,2000,true);lv_refr_now(NULL);
+            __ASSERT(!sim_host_bench_capture(capture++),"Water pressure capture failed");
+            pc_bench_pause(false);
+            __ASSERT(pc_bench_set_water(!salt)==-1,"Water changed during scuba recording");
+            __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){3,surface}),"return rejected");
+            __ASSERT(v->recording.active && pc_bench_set_water(!salt)==-1,
+                "Brief surface return unlocked unfinished scuba dive");
+            __ASSERT(!pc_bench_recording_finish(),"surface completion failed");
+            ostc4_observation before=v->result;
+            ostc4_sample trace[4];memcpy(trace,v->exposure,sizeof(trace));
+            size_t accepted=v->history_count;
+            water_select(!salt,true);
+            __ASSERT(v->density_kg_m3==(salt?1000:1025),"Finished dive kept water locked");
+            __ASSERT(!memcmp(&before,&v->result,sizeof(before)) && accepted==v->history_count &&
+                !memcmp(trace,v->exposure,sizeof(trace)),"Preference changed exposure history");
+            water_select(salt,true);
+            pc_bench_manual(20,0);pc_bench_poll(1000);
+            __ASSERT(fabsf(v->depth_m-20)<0.0001f && m->depth_dm==200 &&
+                fabsf(v->result.absolute_pressure_bar-(surface+(salt?2.01036325f:1.96133f)))<0.000001f,
+                "Commanded physical 20 m changed meaning");
+            pc_bench_manual(20,6);pc_bench_poll(1000);
+            __ASSERT(fabsf(v->depth_m-20.1f)<0.0001f,"Manual physical rate changed meaning");
+            pc_bench_manual(60,0);
+            __ASSERT(salt?v->depth_m<21:v->depth_m==60,"Manual command bypassed density-dependent pressure envelope");
+        }
+    }
+    __ASSERT(pc_bench_fresh(1,1010,NULL,0)==-1,"Unsupported third density accepted");
+    __ASSERT(!pc_bench_fresh(1,1025,NULL,0),"apnea fixture rejected");
+    water_select(0,true);
+    watch_ui_input(WATCH_CROWN,2);watch_ui_input(WATCH_CROWN,24);
+    watch_ui_input(WATCH_CROWN,-100);watch_ui_input(WATCH_CROWN,WATCH_DIVING);
+    watch_ui_input(WATCH_SINGLE_TAP,0);watch_ui_input(WATCH_CROWN,-100);
+    watch_ui_input(WATCH_CROWN,1);watch_ui_input(WATCH_SINGLE_TAP,0);
+    __ASSERT(watch_ui_view()==WATCH_DIVE_VIEW && !watch_ui_salt_water(),"Shared Fresh missing on apnea entry");
+    watch_ui_input(WATCH_CROWN,2);watch_ui_input(WATCH_SINGLE_TAP,0);
+    watch_ui_input(WATCH_CROWN,-100);watch_ui_input(WATCH_SINGLE_TAP,0);
+    watch_ui_input(WATCH_CROWN,1);watch_ui_input(WATCH_SINGLE_TAP,0);
+    __ASSERT(!watch_ui_salt_water() && pc_bench_set_water(true)==-1,"Initial apnea surface unlocked water");
+    watch_ui_input(WATCH_DOUBLE_TAP,0);watch_ui_input(WATCH_DOUBLE_TAP,0);
+    watch_ui_input(WATCH_CROWN,1);watch_ui_input(WATCH_CROWN,24);
+    __ASSERT(watch_ui_view()==WATCH_MODE_MENU && !pc_bench_set_water(true),"Finished apnea kept preference locked");
+    printk("WATER SHARED CHOICE PASS: two surfaces, hydrostatic examples, UI commit/cancel, physical manual commands, scuba and entire apnea session locks, unchanged exposure\n");
+}
+
 void pc_bench_checks_poll(void)
 {
     int mode=sim_host_bench_check_enabled();
+    if(mode==7){water_checks();return;}
     if(mode==6){startup_checks();return;}
     /* Scripted checks explicitly start their fixtures; normal startup stays idle. */
     static bool fixture_started;

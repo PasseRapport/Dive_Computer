@@ -1,4 +1,6 @@
 #include "scuba_ui.h"
+#include "water.h"
+#include "water_settings.h"
 #include "scuba_dashboard.h"
 #include "selection.h"
 #include "native_fonts.h"
@@ -274,7 +276,7 @@ static void show(enum scuba_screen next)
 }
 lv_obj_t *scuba_ui_create(lv_obj_t *parent)
 {
-    scuba_model_init(&model);
+    scuba_model_init(&model);model.salt_water=water_settings_salt();
     root=lv_obj_create(parent); lv_obj_remove_style_all(root); lv_obj_set_size(root,320,300);
     lv_obj_set_style_bg_color(root,lv_color_black(),0); lv_obj_set_style_bg_opa(root,LV_OPA_COVER,0);
     lv_obj_remove_flag(root,LV_OBJ_FLAG_SCROLLABLE);
@@ -327,6 +329,7 @@ void scuba_ui_enter(uint64_t now_ms)
         now_ms=(uint64_t)pc_bench_read()->seconds*1000;
     }
 #endif
+    model.salt_water=water_settings_salt();
     scuba_model_arm(&model,now_ms);leave_progress=0;
     show(model.active?SCUBA_MAIN:SCUBA_PREP);
 }
@@ -339,6 +342,7 @@ void scuba_ui_update(const struct watch_data *data, uint64_t now_ms, bool visibl
     if(!model.active&&last_active) show(SCUBA_SUMMARY);
     if(model.active&&!scuba_model_surface(&model)&&(screen==SCUBA_LEAVE||screen==SCUBA_SETTINGS||screen==SCUBA_SETTING||screen==SCUBA_WATER)) {leave_progress=0;show(SCUBA_MAIN);}
     last_active=model.active;
+    water_settings_lock_scuba(model.active);
     uint32_t fresh=model.notifications & ~previous_notifications;
     if(fresh&&watch_ui_haptics()) {haptic_count++;last_haptic_ms=now_ms;}
     previous_notifications=model.notifications;
@@ -365,7 +369,17 @@ bool scuba_ui_input(enum watch_input input, int steps)
             else if(!pc_bench_gf_edit_commit())show(SCUBA_SETTINGS);
             else {gf_rejected=true;gf_endpoint=0;}
 #endif
-        } else if(screen==SCUBA_WATER) {if(water_row<2)model.salt_water=water_row==1;show(SCUBA_SETTINGS);}
+        } else if(screen==SCUBA_WATER) {
+            if(water_row<2 && !model.active) {
+#ifdef DIVE_PC_BENCH
+                if(model.calculated)pc_bench_set_water(water_row==1);
+                else
+#endif
+                water_settings_select(water_row==1);
+                model.salt_water=water_settings_salt();
+            }
+            show(SCUBA_SETTINGS);
+        }
         else if(screen==SCUBA_SETTING) show(SCUBA_SETTINGS);
         else if(screen==SCUBA_BRIGHTNESS) {watch_ui_set_brightness(brightness);show(brightness_origin);}
         else if(screen==SCUBA_OPTIONS_GATE) {options_row=0;show(SCUBA_OPTIONS);}
@@ -443,6 +457,7 @@ bool scuba_ui_input(enum watch_input input, int steps)
                     } else
 #endif
                     {scuba_model_finish(&model);model.armed=false;}
+                    water_settings_lock_scuba(false);
                     last_active=false;leave_progress=0;return true;
                 }
             }
@@ -494,8 +509,9 @@ void scuba_ui_calculated(const struct bench_view *v)
         last_active=false;previous_notifications=0;
         show(SCUBA_PREP);
     }
+    model.salt_water=v->density_kg_m3==1025;
     model.data_gap=v->data_gap;
-    float depth=(v->result.absolute_pressure_bar-v->surface_bar)*10;
+    float depth=water_depth(v->result.absolute_pressure_bar,v->surface_bar,v->density_kg_m3);
     scuba_calculated_apply_recorded(&model,&v->recording,&v->result,v->seconds,depth,18,test_battery);
     if(screen==SCUBA_GF_EDIT && (!v->gf_editing || v->gf_locked))
         show(v->recording.active?SCUBA_MAIN:SCUBA_PREP);
