@@ -478,14 +478,32 @@ static void water_select(int row, bool commit)
 static void water_checks(void)
 {
     static bool done;
-    if(done)return;
+    static unsigned frame;
+    static uint64_t capture_after;
+    uint64_t now=k_uptime_get();
+    if(done) {
+        if(frame>=4)return;
+        struct watch_data data={.temperature_c=18,.battery_percent=87};
+        if(!capture_after) {
+            float surface=frame<2?1.01325f:0.9f;
+            __ASSERT(!pc_bench_fresh(surface,1025,NULL,0),"capture fixture rejected");
+            watch_ui_open_calculated_scuba();water_select(frame%2,true);
+            __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){2,surface+1.96133f}),"capture sample rejected");
+            pc_bench_pause(true);scuba_ui_update(&data,2000,true);
+            capture_after=now+350;return;
+        }
+        if(now<capture_after)return;
+        pc_bench_ui_poll();scuba_ui_update(&data,2000,true);lv_refr_now(NULL);
+        __ASSERT(!sim_host_bench_capture(frame++),"Water pressure capture failed");
+        capture_after=0;return;
+    }
+    if(now<500)return;
     done=true;
     watch_ui_open_calculated_scuba();
     const struct bench_view *v=pc_bench_read();
     const struct scuba_model *m=scuba_ui_model();
     struct watch_data data={.temperature_c=18,.battery_percent=87};
     __ASSERT(v->density_kg_m3==1025 && watch_ui_salt_water(),"Marine must be the shared initial choice");
-    unsigned capture=0;
     for(unsigned surface_case=0;surface_case<2;++surface_case) {
         float surface=surface_case?0.9f:1.01325f;
         for(int salt=0;salt<2;++salt) {
@@ -500,10 +518,7 @@ static void water_checks(void)
             __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){2,surface+1.96133f}),"pressure rejected");
             __ASSERT(fabsf(v->depth_m-(salt?19.51219512f:20.0f))<0.0001f &&
                 m->depth_dm==(salt?195:200),"Physical watch and bench depths disagree");
-            pc_bench_pause(true);pc_bench_ui_poll();
-            scuba_ui_update(&data,2000,true);lv_refr_now(NULL);
-            __ASSERT(!sim_host_bench_capture(capture++),"Water pressure capture failed");
-            pc_bench_pause(false);
+            scuba_ui_update(&data,2000,true);
             __ASSERT(pc_bench_set_water(!salt)==-1,"Water changed during scuba recording");
             __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){3,surface}),"return rejected");
             __ASSERT(v->recording.active && pc_bench_set_water(!salt)==-1,
