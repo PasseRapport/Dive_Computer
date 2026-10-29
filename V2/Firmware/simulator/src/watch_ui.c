@@ -37,7 +37,7 @@ static int selected_option, selected_backlight, selected_bluetooth, selected_fac
 static enum watch_dial clock_dial=DIAL_MINIMALIST;
 static int digital_dial=DIGITAL_EMBLEM;
 static struct watch_data clock_data;
-static lv_obj_t *clock_face,*preview,*preview_face,*outgoing,*dial_caption,*save_status;
+static lv_obj_t *clock_face,*preview,*preview_face,*outgoing,*save_status;
 static bool clock_face_dirty=true;
 static int sleep_progress, leave_progress;
 static bool recovery_active;
@@ -110,7 +110,7 @@ static void fit_rows(lv_obj_t *pill, lv_obj_t **labels, int count, int selected,
 
 static void refresh_watch_menu(bool animate)
 {
-    lv_label_set_text(face_labels[0],clock_style==CLOCK_ANALOG?"TYPE : ANALOGIQUE":"TYPE : NUMERIQUE");
+    lv_label_set_text(face_labels[0],clock_style==CLOCK_ANALOG?"ANALOG":"DIGITAL");
     lv_obj_align(face_labels[0],LV_ALIGN_TOP_MID,0,105);
     fit_rows(face_cursor,face_labels,2,selected_face,animate);
 }
@@ -127,7 +127,7 @@ static void slide_finished(lv_anim_t *a)
 static void finish_slides(void)
 {
     if(outgoing){lv_anim_delete(outgoing,NULL);lv_obj_delete(outgoing);outgoing=NULL;}
-    if(preview){lv_anim_delete(preview,NULL);lv_obj_set_x(preview,40);}
+    if(preview){lv_anim_delete(preview,NULL);lv_obj_set_x(preview,0);}
 }
 static void clear_preview(void)
 {
@@ -136,20 +136,13 @@ static void clear_preview(void)
 static void show_preview(int direction)
 {
     finish_slides();outgoing=preview;
-    preview=lv_obj_create(dial_view);lv_obj_remove_style_all(preview);lv_obj_set_size(preview,300,300);
-    lv_obj_set_style_radius(preview,LV_RADIUS_CIRCLE,0);lv_obj_set_style_clip_corner(preview,true,0);
-    lv_obj_remove_flag(preview,LV_OBJ_FLAG_SCROLLABLE);
-    preview_face=watch_face_create(preview,clock_style,selected_dial);lv_obj_set_x(preview_face,-10);
+    preview=watch_face_create(dial_view,clock_style,selected_dial);preview_face=preview;
     watch_face_update(preview_face,&clock_data);
-    lv_obj_set_style_transform_pivot_x(preview,0,0);lv_obj_set_style_transform_pivot_y(preview,0,0);
-    lv_obj_set_style_transform_scale(preview,205,0);lv_obj_set_pos(preview,direction?40+direction*320:40,8);
-    lv_obj_move_background(preview);
-    lv_label_set_text_fmt(dial_caption,"%d/%d  %s",selected_dial+1,watch_face_count(clock_style),watch_face_name(clock_style,selected_dial));
-    lv_obj_align(dial_caption,LV_ALIGN_TOP_MID,0,262);
+    lv_obj_set_pos(preview,direction?direction*320:0,0);
     if(!direction){if(outgoing){lv_obj_delete(outgoing);outgoing=NULL;}return;}
     lv_anim_t a;lv_anim_init(&a);lv_anim_set_exec_cb(&a,slide_x);lv_anim_set_duration(&a,220);lv_anim_set_path_cb(&a,lv_anim_path_ease_in_out);
-    lv_anim_set_var(&a,preview);lv_anim_set_values(&a,40+direction*320,40);lv_anim_start(&a);
-    lv_anim_set_var(&a,outgoing);lv_anim_set_values(&a,40,40-direction*320);lv_anim_set_completed_cb(&a,slide_finished);lv_anim_start(&a);
+    lv_anim_set_var(&a,preview);lv_anim_set_values(&a,direction*320,0);lv_anim_start(&a);
+    lv_anim_set_var(&a,outgoing);lv_anim_set_values(&a,0,-direction*320);lv_anim_set_completed_cb(&a,slide_finished);lv_anim_start(&a);
 }
 
 static void refresh_mode_menu(bool animate)
@@ -413,12 +406,11 @@ void watch_ui_create(lv_obj_t *parent)
     build_menu(backlight_view, "BACKLIGHT", light_options, backlight_labels, &backlight_cursor, 3);
     refresh_backlight(false);
     face_view = make_view(parent);
-    const char *face_options[]={"TYPE : NUMERIQUE","CADRAN"};
+    const char *face_options[]={"DIGITAL","WATCH FACE"};
     build_menu(face_view,"WATCH",face_options,face_labels,&face_cursor,2);
     save_status=text(face_view,"",&lv_font_montserrat_12,220);
     refresh_watch_menu(false);
     dial_view=make_view(parent);
-    dial_caption=text(dial_view,"",&lv_font_montserrat_14,262);
     logo_view = make_view(parent);
     logo_image = lv_image_create(logo_view);
     lv_image_set_src(logo_image, &project_logo);
@@ -768,7 +760,7 @@ const char *watch_ui_page_name(void)
     if (current_view == WATCH_OPTION_VIEW) return "OPTIONS";
     if (current_view == WATCH_BACKLIGHT_VIEW) return "BACKLIGHT";
     if (current_view == WATCH_FACE_SELECT) return "WATCH";
-    if (current_view == WATCH_DIAL_SELECT) return "CADRAN";
+    if (current_view == WATCH_DIAL_SELECT) return "WATCH FACE";
     static const char *const names[] = {"MAIN", "STATS", "SETTINGS", "MODE", "BRIGHTNESS", "SLEEP", "SCUBADIVING", "BLUETOOTH", "LEAVE", "SENSITIVITY", "HAPTICS"};
     return names[current_page];
 }

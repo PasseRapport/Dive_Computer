@@ -11,8 +11,8 @@ struct face {
     lv_obj_t *root,*legacy,*logo,*art;
     struct watch_data data;
 };
-static const char *const analog_names[]={"MINIMALISTE","DAUPHINE","AUTOMATIQUE","RADAR","BLEU POLAIRE","CLASSIQUE IVOIRE","SOLAIRE"};
-static const char *const digital_names[]={"EMBLEME","TERMINAL","TOTEM","SPORT","SCEAU"};
+static const char *const analog_names[]={"MINIMALIST","DAUPHINE","AUTOMATIC","RADAR","POLAR BLUE","CLASSIC IVORY","SOLAR"};
+static const char *const digital_names[]={"EMBLEM","TERMINAL","TOTEM","SPORT","SEAL"};
 static const char *const days[]={"SUN","MON","TUE","WED","THU","FRI","SAT"};
 static const char *const months[]={"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
 int watch_face_count(enum watch_clock_style type){return type==CLOCK_ANALOG?DIAL_COUNT:DIGITAL_COUNT;}

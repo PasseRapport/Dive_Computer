@@ -38,3 +38,6 @@ for normal,changed in [('digital-0-x1','emblem-2359'),('digital-1-x1','terminal-
 roman=[image('solar-roman-'+s).crop((105,237,215,260)) for s in ('87','zero','100')]
 assert all(ImageChops.difference(roman[i],roman[j]).getbbox() for i,j in [(0,1),(0,2),(1,2)]),'Roman battery frozen'
 print('WATCH IMAGES PASS: twelve distinct live faces, minute ticks, LCD theme, radar direction/clearance, Roman battery and x1/x2 geometry')
+
+assert ImageChops.difference(image('carousel-solar'),faces['analog',6]).getbbox() is None,'Preview is scaled, cropped or captioned instead of full-screen'
+print('FULLSCREEN PREVIEW PASS: selector matches active face pixel for pixel')

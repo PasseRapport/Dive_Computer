@@ -52,23 +52,23 @@ Startup animates the octopus logo into the watch face, then stays on the clock.
 No dive or depth replay starts automatically. Turn the
 crown and fill the exit ring to reach **Watch / Diving / Compass / Options**.
 Options contains **Bluetooth / Watch / Backlight / Haptics / Sleep**.
-Watch has two rows: **TYPE : ANALOGIQUE / NUMERIQUE** and **CADRAN**.
-Tap TYPE to switch without leaving Watch. CADRAN opens the corresponding live
-face preview: turn the crown to slide between faces, wrapping at either end;
+Watch has two rows: **ANALOG / DIGITAL** and **WATCH FACE**.
+Tap ANALOG/DIGITAL to switch without leaving Watch. WATCH FACE opens the corresponding full-screen live
+face preview, at exactly the active face size with no title or counter below it: turn the crown to slide between faces, wrapping at either end;
 tap to apply and return to Watch, or double tap to cancel. Scrolling an unconfirmed
 preview never changes the active face. Rapid crown input replaces the pending
 animation without queuing slides.
 
-Analog: **Minimaliste**, **Dauphine**, **Automatique**, **Radar** (R5),
-**Bleu polaire** (A10), **Classique ivoire** (A1), **Solaire** (A5).
-Digital: **Embleme** (D7), **Terminal** (D3), **Totem** (D6), **Sport** (1990 LCD),
-**Sceau** (D8). The old digital face is removed. D7 has a 20% larger background
+Analog: **Minimalist**, **Dauphine**, **Automatic**, **Radar** (R5),
+**Polar blue** (A10), **Classic ivory** (A1), **Solar** (A5).
+Digital: **Emblem** (D7), **Terminal** (D3), **Totem** (D6), **Sport** (1990 LCD),
+**Seal** (D8). The old digital face is removed. D7 has a 20% larger background
 logo and larger hour digits. Sport fills the aperture with LCD colour, without
 a logo, and uses a five-segment LCD battery. Terminal uses a text battery bar.
-Solaire uses Liberation Serif for the date and Roman battery level (87 → LXXXVII,
+Solar uses Liberation Serif for the date and Roman battery level (87 → LXXXVII,
 100 → C, zero → N). Radar's left gauge loses segments from the top downward.
 All faces use the PC's live time, date and battery control; analog faces have no
-seconds hand. Automatique is a face name, not automatic mode switching.
+seconds hand. Automatic is a face name, not automatic mode switching.
 
 The selected type and one face per type survive process restarts in
 `watch-preferences.txt`, alongside apnea preferences under `DIVE_WATCH_STATE_DIR`

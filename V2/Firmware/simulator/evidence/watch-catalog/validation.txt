@@ -8,3 +8,4 @@ PASS: Solar Roman battery at zero, 87 and 100. Zero is represented by N (nulla).
 PASS: full 58-second SDL navigation regression, selection geometry, compass, sleep, exit rings and transitions.
 PASS: bench boot animation, clock idle, prep idle and explicit SDL Start.
 No Nordic build or hardware validation performed.
+PASS: English Watch labels, ANALOG/DIGITAL without TYPE, full-screen preview without caption or counter; Solar selector equals active face pixel for pixel.
