@@ -3,7 +3,7 @@
 #include <lvgl.h>
 
 #include "watch_data.h"
-#include "analog_clock.h"
+#include "watch_faces.h"
 
 /* Physical input events: simulator controls and future board inputs use these. */
 enum watch_input { WATCH_CROWN, WATCH_SINGLE_TAP, WATCH_DOUBLE_TAP };
@@ -38,11 +38,12 @@ int watch_ui_leave_progress(void);
 int watch_ui_bluetooth_option(void);
 bool watch_ui_bluetooth_dfu(void);
 
-enum watch_clock_style { CLOCK_DIGITAL, CLOCK_ANALOG };
 enum watch_clock_style watch_ui_clock_style(void);
 int watch_ui_face_option(void);
 enum watch_dial watch_ui_dial(void);
 int watch_ui_dial_option(void);
+int watch_ui_digital_dial(void);
+bool watch_ui_dial_animating(void);
 
 enum watch_pulse { PULSE_SHORT, PULSE_MEDIUM, PULSE_LONG };
 bool watch_ui_haptics(void);

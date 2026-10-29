@@ -1,0 +1,10 @@
+Native PC validation only.
+7 analog and 5 digital live faces.
+PASS: type toggle stays in Watch; cyclic preview with 220 ms slide; rapid crown steps; cancel and confirm.
+PASS: independent saved choices, actual process restart, malformed preference fallback and failed-write preservation.
+PASS: 12 face captures x1/x2; six clock faces require sparse image-edge antialias allowance (<=192 changed pixels out of 96000, <=24 above 32 RGB levels); other geometry fixed.
+PASS: Radar left battery empties from top; zero/full/half battery and restored 6 clear of gauge.
+PASS: Solar Roman battery at zero, 87 and 100. Zero is represented by N (nulla).
+PASS: full 58-second SDL navigation regression, selection geometry, compass, sleep, exit rings and transitions.
+PASS: bench boot animation, clock idle, prep idle and explicit SDL Start.
+No Nordic build or hardware validation performed.

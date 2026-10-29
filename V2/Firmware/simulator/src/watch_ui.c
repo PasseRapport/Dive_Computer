@@ -35,17 +35,21 @@ static int selected_haptics;
 static lv_obj_t *haptics_cursor, *haptics_labels[2];
 static int selected_option, selected_backlight, selected_bluetooth, selected_face, selected_dial;
 static enum watch_dial clock_dial=DIAL_MINIMALIST;
+static int digital_dial=DIGITAL_EMBLEM;
+static struct watch_data clock_data;
+static lv_obj_t *clock_face,*preview,*preview_face,*outgoing,*dial_caption,*save_status;
+static bool clock_face_dirty=true;
 static int sleep_progress, leave_progress;
 static bool recovery_active;
 static lv_obj_t *confirm_arc, *recovery_arc;
-static lv_obj_t *clock_view, *clock_label, *mode_view, *compass_view, *option_view;
+static lv_obj_t *clock_view, *mode_view, *compass_view, *option_view;
 static lv_obj_t *backlight_view, *logo_view, *scuba_view;
 static lv_timer_t *logo_timer, *sleep_timer;
 static lv_obj_t *mode_cursor, *mode_labels[WATCH_MODE_COUNT], *mode_icons[WATCH_MODE_COUNT];
 static lv_obj_t *option_cursor, *option_labels[OPTION_COUNT];
 static lv_obj_t *backlight_cursor, *backlight_labels[3];
-static lv_obj_t *face_view, *face_cursor, *face_labels[3], *analog_view, *dial_view, *dial_cursor, *dial_labels[DIAL_COUNT];
-static lv_obj_t *digital_date,*digital_battery,*free_battery, *logo_image, *digital_logo, *analog_logo;
+static lv_obj_t *face_view, *face_cursor, *face_labels[2], *dial_view;
+static lv_obj_t *free_battery, *logo_image;
 static enum watch_clock_style clock_style = CLOCK_DIGITAL;
 static lv_obj_t *bluetooth_cursor, *bluetooth_labels[2];
 static const enum watch_page free_pages[] = {WATCH_MAIN, WATCH_STATS, WATCH_WATER, WATCH_LEAVE};
@@ -82,35 +86,15 @@ static lv_obj_t *cursor(lv_obj_t *parent)
     return object;
 }
 
-static lv_obj_t *clock_logo(lv_obj_t *parent, int scale, int center_y)
-{
-    lv_obj_t *image = lv_image_create(parent);
-    lv_image_set_src(image, &project_logo);
-    lv_image_set_scale(image, scale);
-    lv_obj_set_pos(image, (320 - project_logo.header.w)/2, center_y - project_logo.header.h/2);
-    return image;
-}
-
-static void build_analog_clock(lv_obj_t *parent)
-{
-    analog_view=analog_clock_create(parent);analog_logo=analog_clock_logo();
-}
-
 static void refresh_clock_style(void)
 {
-    lv_obj_set_style_opa(clock_label, LV_OPA_COVER, 0);
-    if (clock_style == CLOCK_ANALOG) {
-        lv_obj_add_flag(clock_label, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_add_flag(digital_logo,LV_OBJ_FLAG_HIDDEN);
-        lv_obj_add_flag(digital_date,LV_OBJ_FLAG_HIDDEN);lv_obj_add_flag(digital_battery,LV_OBJ_FLAG_HIDDEN);
-        lv_obj_remove_flag(analog_logo, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_remove_flag(analog_view, LV_OBJ_FLAG_HIDDEN);
-    } else {
-        lv_obj_remove_flag(clock_label, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_remove_flag(digital_logo,LV_OBJ_FLAG_HIDDEN);
-        lv_obj_remove_flag(digital_date,LV_OBJ_FLAG_HIDDEN);lv_obj_remove_flag(digital_battery,LV_OBJ_FLAG_HIDDEN);
-        lv_obj_add_flag(analog_view, LV_OBJ_FLAG_HIDDEN);
+    if(clock_face_dirty) {
+        if(clock_face)lv_obj_delete(clock_face);
+        clock_face=watch_face_create(clock_view,clock_style,clock_style==CLOCK_ANALOG?clock_dial:digital_dial);
+        watch_face_update(clock_face,&clock_data);clock_face_dirty=false;
     }
+    lv_obj_set_style_opa(clock_face,255,0);
+    lv_obj_t *logo=watch_face_logo(clock_face);if(logo)lv_obj_remove_flag(logo,LV_OBJ_FLAG_HIDDEN);
 }
 
 static void logo_opacity(void *object, int32_t opacity)
@@ -122,6 +106,50 @@ static void fit_rows(lv_obj_t *pill, lv_obj_t **labels, int count, int selected,
 {
     selection_fit(pill, labels[selected], NULL, animate);
     for (int i = 0; i < count; i++) selection_row_color(labels[i], NULL, i == selected);
+}
+
+static void refresh_watch_menu(bool animate)
+{
+    lv_label_set_text(face_labels[0],clock_style==CLOCK_ANALOG?"TYPE : ANALOGIQUE":"TYPE : NUMERIQUE");
+    lv_obj_align(face_labels[0],LV_ALIGN_TOP_MID,0,105);
+    fit_rows(face_cursor,face_labels,2,selected_face,animate);
+}
+static void save_watch(void)
+{
+    int result=sim_host_watch_preferences_save(clock_style,clock_dial,digital_dial);
+    lv_label_set_text(save_status,result?"SAVE FAILED":"");
+}
+static void slide_x(void *object,int32_t x){lv_obj_set_x(object,x);}
+static void slide_finished(lv_anim_t *a)
+{
+    lv_obj_delete(a->var);outgoing=NULL;
+}
+static void finish_slides(void)
+{
+    if(outgoing){lv_anim_delete(outgoing,NULL);lv_obj_delete(outgoing);outgoing=NULL;}
+    if(preview){lv_anim_delete(preview,NULL);lv_obj_set_x(preview,40);}
+}
+static void clear_preview(void)
+{
+    finish_slides();if(preview){lv_obj_delete(preview);preview=NULL;preview_face=NULL;}
+}
+static void show_preview(int direction)
+{
+    finish_slides();outgoing=preview;
+    preview=lv_obj_create(dial_view);lv_obj_remove_style_all(preview);lv_obj_set_size(preview,300,300);
+    lv_obj_set_style_radius(preview,LV_RADIUS_CIRCLE,0);lv_obj_set_style_clip_corner(preview,true,0);
+    lv_obj_remove_flag(preview,LV_OBJ_FLAG_SCROLLABLE);
+    preview_face=watch_face_create(preview,clock_style,selected_dial);lv_obj_set_x(preview_face,-10);
+    watch_face_update(preview_face,&clock_data);
+    lv_obj_set_style_transform_pivot_x(preview,0,0);lv_obj_set_style_transform_pivot_y(preview,0,0);
+    lv_obj_set_style_transform_scale(preview,205,0);lv_obj_set_pos(preview,direction?40+direction*320:40,8);
+    lv_obj_move_background(preview);
+    lv_label_set_text_fmt(dial_caption,"%d/%d  %s",selected_dial+1,watch_face_count(clock_style),watch_face_name(clock_style,selected_dial));
+    lv_obj_align(dial_caption,LV_ALIGN_TOP_MID,0,262);
+    if(!direction){if(outgoing){lv_obj_delete(outgoing);outgoing=NULL;}return;}
+    lv_anim_t a;lv_anim_init(&a);lv_anim_set_exec_cb(&a,slide_x);lv_anim_set_duration(&a,220);lv_anim_set_path_cb(&a,lv_anim_path_ease_in_out);
+    lv_anim_set_var(&a,preview);lv_anim_set_values(&a,40+direction*320,40);lv_anim_start(&a);
+    lv_anim_set_var(&a,outgoing);lv_anim_set_values(&a,40,40-direction*320);lv_anim_set_completed_cb(&a,slide_finished);lv_anim_start(&a);
 }
 
 static void refresh_mode_menu(bool animate)
@@ -234,12 +262,11 @@ static void logo_shrink(void *object, int32_t progress)
     /* Show the live face behind the moving logo; keep only one octopus visible. */
     lv_obj_set_style_bg_opa(logo_view, LV_OPA_TRANSP, 0);
     lv_obj_remove_flag(clock_view, LV_OBJ_FLAG_HIDDEN);
-    lv_obj_add_flag(digital_logo, LV_OBJ_FLAG_HIDDEN);
-    lv_obj_add_flag(analog_logo, LV_OBJ_FLAG_HIDDEN);
-    /* Reveal the digits once the shrinking logo has cleared their area. */
-    lv_obj_set_style_opa(clock_label, LV_CLAMP(0, (progress - 850)*255/150, 255), 0);
-    int scale = clock_style==CLOCK_ANALOG?analog_clock_logo_scale():60;
-    int center_y = clock_style == CLOCK_ANALOG ? analog_clock_logo_y() : 73;
+    lv_obj_t *logo=watch_face_logo(clock_face);if(logo)lv_obj_add_flag(logo,LV_OBJ_FLAG_HIDDEN);
+    lv_obj_set_style_opa(clock_face,LV_CLAMP(0,(progress-850)*255/150,255),0);
+    int scale=logo?watch_face_logo_scale(clock_face):0;
+    int center_y=logo?watch_face_logo_y(clock_face):150;
+    lv_obj_set_x(object,60+(watch_face_logo_x(clock_face)-160)*progress/1000);
     lv_image_set_scale(object, 256 + (scale - 256)*progress/1000);
     lv_obj_set_y(object, 150 + (center_y - 150)*progress/1000 - project_logo.header.h/2);
 }
@@ -319,6 +346,9 @@ void watch_ui_create(lv_obj_t *parent)
 {
     lv_obj_set_style_bg_color(parent, lv_color_black(), 0);
     lv_obj_set_style_text_color(parent, lv_color_white(), 0);
+    int type=CLOCK_DIGITAL,analog=DIAL_MINIMALIST,digital=DIGITAL_EMBLEM;
+    (void)sim_host_watch_preferences_load(&type,&analog,&digital);
+    clock_style=type;clock_dial=analog;digital_dial=digital;
     int water=0,field=0;
     (void)sim_host_apnea_preferences_load(&water,&field);
     apnea_settings_restore(water,(enum apnea_bottom_field)field);
@@ -361,12 +391,8 @@ void watch_ui_create(lv_obj_t *parent)
     if(pages[WATCH_BRIGHTNESS])light_editor_set_value(pages[WATCH_BRIGHTNESS],brightness);
 
     clock_view = make_view(parent);
-    clock_label = text(clock_view, "00:00", &watch_montserrat_84, 0);
-    digital_logo=clock_logo(clock_view,60,73);
-    digital_date=text(clock_view,"",&lv_font_montserrat_18,202);
-    digital_battery=battery_icon_create(clock_view,142,238);
     free_battery=battery_icon_create(app_screen,142,16);
-    build_analog_clock(clock_view);
+    refresh_clock_style();
     mode_view = make_view(parent);
     mode_cursor = cursor(mode_view);
     const char *names[] = {"WATCH", "DIVING", "COMPASS", "OPTIONS"};
@@ -387,14 +413,12 @@ void watch_ui_create(lv_obj_t *parent)
     build_menu(backlight_view, "BACKLIGHT", light_options, backlight_labels, &backlight_cursor, 3);
     refresh_backlight(false);
     face_view = make_view(parent);
-    const char *face_options[]={"DIGITAL","ANALOG","CADRAN"};
-    build_menu(face_view,"WATCH",face_options,face_labels,&face_cursor,3);
-    fit_rows(face_cursor,face_labels,3,selected_face,false);
+    const char *face_options[]={"TYPE : NUMERIQUE","CADRAN"};
+    build_menu(face_view,"WATCH",face_options,face_labels,&face_cursor,2);
+    save_status=text(face_view,"",&lv_font_montserrat_12,220);
+    refresh_watch_menu(false);
     dial_view=make_view(parent);
-    const char *dial_options[]={"MINIMALISTE","DAUPHINE","AUTOMATIQUE"};
-    build_menu(dial_view,"CADRAN",dial_options,dial_labels,&dial_cursor,DIAL_COUNT);
-    fit_rows(dial_cursor,dial_labels,DIAL_COUNT,selected_dial,false);
-    refresh_clock_style();
+    dial_caption=text(dial_view,"",&lv_font_montserrat_14,262);
     logo_view = make_view(parent);
     logo_image = lv_image_create(logo_view);
     lv_image_set_src(logo_image, &project_logo);
@@ -550,11 +574,12 @@ void watch_ui_input(enum watch_input input, int steps)
             selected_mode = bounded_selection(selected_mode, steps, WATCH_MODE_COUNT);
             refresh_mode_menu(true);
         } else if (current_view == WATCH_FACE_SELECT) {
-            selected_face = bounded_selection(selected_face, steps, 3);
-            fit_rows(face_cursor, face_labels, 3, selected_face, true);
+            selected_face = bounded_selection(selected_face, steps, 2);
+            refresh_watch_menu(true);
         } else if (current_view == WATCH_DIAL_SELECT) {
-            selected_dial=bounded_selection(selected_dial,steps,DIAL_COUNT);
-            fit_rows(dial_cursor,dial_labels,DIAL_COUNT,selected_dial,true);
+            int count=watch_face_count(clock_style);
+            selected_dial=((selected_dial+(int64_t)steps)%count+count)%count;
+            show_preview(steps>0?1:-1);
         } else if (current_view == WATCH_DIVE_SELECT) {
             dive_mode = bounded_selection(dive_mode, steps, 2);
             ui_refresh_dive_mode(dive_mode == DIVE_FREE);
@@ -602,7 +627,7 @@ void watch_ui_input(enum watch_input input, int steps)
                 set_view(WATCH_OPTION_VIEW);
             }
         } else if (current_view == WATCH_DIAL_SELECT) {
-            fit_rows(face_cursor,face_labels,3,selected_face,false);
+            clear_preview();refresh_watch_menu(false);
             set_view(WATCH_FACE_SELECT);
         } else if (current_view == WATCH_FACE_SELECT) {
             refresh_options(false);
@@ -623,15 +648,16 @@ void watch_ui_input(enum watch_input input, int steps)
                 set_view(WATCH_OPTION_VIEW);
             } else open_dive_selection();
         } else if (current_view == WATCH_FACE_SELECT) {
-            if(selected_face==2) {
-                selected_dial=clock_dial;fit_rows(dial_cursor,dial_labels,DIAL_COUNT,selected_dial,false);
-                set_view(WATCH_DIAL_SELECT);
+            if(selected_face==1) {
+                selected_dial=clock_style==CLOCK_ANALOG?clock_dial:digital_dial;
+                show_preview(0);set_view(WATCH_DIAL_SELECT);
             } else {
-                clock_style=selected_face;refresh_clock_style();refresh_options(false);set_view(WATCH_OPTION_VIEW);
+                clock_style=clock_style==CLOCK_ANALOG?CLOCK_DIGITAL:CLOCK_ANALOG;
+                clock_face_dirty=true;refresh_clock_style();refresh_watch_menu(false);save_watch();
             }
         } else if (current_view == WATCH_DIAL_SELECT) {
-            clock_dial=selected_dial;analog_clock_set_dial(clock_dial);analog_logo=analog_clock_logo();
-            refresh_clock_style();fit_rows(face_cursor,face_labels,3,selected_face,false);set_view(WATCH_FACE_SELECT);
+            if(clock_style==CLOCK_ANALOG)clock_dial=selected_dial;else digital_dial=selected_dial;
+            clear_preview();clock_face_dirty=true;refresh_clock_style();refresh_watch_menu(false);save_watch();set_view(WATCH_FACE_SELECT);
         } else if (current_view == WATCH_DIVE_SELECT) {
             if(dive_mode == DIVE_SCUBA) {
                 set_view(WATCH_SCUBA_VIEW);
@@ -646,8 +672,8 @@ void watch_ui_input(enum watch_input input, int steps)
                 selected_backlight=0;refresh_backlight(false);
                 set_view(WATCH_BACKLIGHT_VIEW);
             } else if (selected_option == OPTION_WATCH) {
-                selected_face = clock_style;
-                fit_rows(face_cursor, face_labels, 3, selected_face, false);
+                selected_face = 0;
+                refresh_watch_menu(false);
                 set_view(WATCH_FACE_SELECT);
             } else {
                 sleep_progress = 0;
@@ -685,16 +711,9 @@ void watch_ui_input(enum watch_input input, int steps)
 void watch_ui_update(const struct watch_data *data)
 {
     scuba_ui_update(data,k_uptime_get(),current_view==WATCH_SCUBA_VIEW);
-    lv_label_set_text_fmt(clock_label, "%02u:%02u", data->clock_hour, data->clock_minute);
-    lv_obj_update_layout(clock_label);
-    lv_obj_set_style_transform_pivot_x(clock_label, lv_obj_get_width(clock_label) / 2, 0);
-    lv_obj_set_style_transform_pivot_y(clock_label, lv_obj_get_height(clock_label) / 2, 0);
-    lv_obj_align(clock_label, LV_ALIGN_CENTER, 0, 0);
-    analog_clock_update(data);
-    static const char *const days[]={"SUN","MON","TUE","WED","THU","FRI","SAT"};
-    const char *day=days[data->clock_weekday%7];
-    lv_label_set_text_fmt(digital_date,"%s %02u",day,data->clock_day);lv_obj_align(digital_date,LV_ALIGN_TOP_MID,0,202);
-    battery_icon_update(digital_battery,data->battery_percent);
+    clock_data=*data;
+    watch_face_update(clock_face,data);
+    if(preview_face)watch_face_update(preview_face,data);
     battery_icon_update(free_battery,data->battery_percent);
     compass_ui_update(data->heading_degrees);
     apnea_settings_update(data->apnea_active);
@@ -722,6 +741,8 @@ enum watch_dive_mode watch_ui_dive_mode(void) { return dive_mode; }
 enum watch_clock_style watch_ui_clock_style(void) { return clock_style; }
 int watch_ui_face_option(void) { return selected_face; }
 enum watch_dial watch_ui_dial(void){return clock_dial;}
+int watch_ui_digital_dial(void){return digital_dial;}
+bool watch_ui_dial_animating(void){return outgoing!=NULL;}
 int watch_ui_dial_option(void){return selected_dial;}
 int watch_ui_sleep_progress(void) { return sleep_progress; }
 int watch_ui_leave_progress(void) { return leave_progress; }

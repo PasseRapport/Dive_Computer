@@ -52,14 +52,30 @@ Startup animates the octopus logo into the watch face, then stays on the clock.
 No dive or depth replay starts automatically. Turn the
 crown and fill the exit ring to reach **Watch / Diving / Compass / Options**.
 Options contains **Bluetooth / Watch / Backlight / Haptics / Sleep**.
-Watch offers **Digital / Analog / Cadran**. Cadran selects **Minimaliste**
-(thin flat-ended hands, no numbers), **Dauphine** (faceted hands, large bold 12/3/6/9, smaller five-minute numbers
-between them, and sixty perimeter minute ticks), or **Automatique** (the approved blue dual-scale
-dial, project logo, luminous-insert hands, day/date window and battery above the inner 6). Automatique
-is a face name; it never switches modes automatically. There is no seconds hand.
-Selecting a face preserves Digital/Analog; tap applies and returns to Watch,
-while double tap cancels and returns one level. Choices survive navigation
-and switching between Digital and Analog, as with the existing clock mode.
+Watch has two rows: **TYPE : ANALOGIQUE / NUMERIQUE** and **CADRAN**.
+Tap TYPE to switch without leaving Watch. CADRAN opens the corresponding live
+face preview: turn the crown to slide between faces, wrapping at either end;
+tap to apply and return to Watch, or double tap to cancel. Scrolling an unconfirmed
+preview never changes the active face. Rapid crown input replaces the pending
+animation without queuing slides.
+
+Analog: **Minimaliste**, **Dauphine**, **Automatique**, **Radar** (R5),
+**Bleu polaire** (A10), **Classique ivoire** (A1), **Solaire** (A5).
+Digital: **Embleme** (D7), **Terminal** (D3), **Totem** (D6), **Sport** (1990 LCD),
+**Sceau** (D8). The old digital face is removed. D7 has a 20% larger background
+logo and larger hour digits. Sport fills the aperture with LCD colour, without
+a logo, and uses a five-segment LCD battery. Terminal uses a text battery bar.
+Solaire uses Liberation Serif for the date and Roman battery level (87 → LXXXVII,
+100 → C, zero → N). Radar's left gauge loses segments from the top downward.
+All faces use the PC's live time, date and battery control; analog faces have no
+seconds hand. Automatique is a face name, not automatic mode switching.
+
+The selected type and one face per type survive process restarts in
+`watch-preferences.txt`, alongside apnea preferences under `DIVE_WATCH_STATE_DIR`
+(or `$XDG_STATE_HOME/dive-watch-simulator`, otherwise
+`~/.local/state/dive-watch-simulator`). Preferences are versioned, range checked
+and atomically replaced; malformed files preserve defaults. A write failure
+shows **SAVE FAILED** in Watch and leaves the prior disk file intact.
  Bluetooth
 and haptics are previews; they do not drive physical hardware.
 
@@ -176,9 +192,7 @@ The parent firmware's `CMakeLists.txt` remains the independent MCU application.
 
 Scuba Options double tap returns directly to the live dashboard. Dive Settings
 includes Back. All battery icons use a proportional fill with red at 0–10%,
-yellow at 11–50%, and white above 50%. Digital watch: battery above centred
-time, date below and octopus at the bottom. Analog watch: white outlined hands,
-octopus above centre, day/weekday and battery below. Local PC date and seconds
+yellow at 11–50%, and white above 50%. Watch faces use their own themed battery presentations. Local PC date and seconds
 are used in normal runs; galleries use fixed values for reproducibility.
 
 Focused checks after building (create the gallery directory first):
@@ -193,7 +207,7 @@ scale state and synchronizing the labels in both desktop panels.
 
 The native simulator reserves 1 MiB for LVGL objects and temporary animation
 layers. This is a desktop-only configuration, not the embedded watch RAM budget.
-Watch faces have no seconds hand; the analog day/date sits at 3 o'clock.
+Watch faces have no seconds hand; the day/date position depends on the face.
 Brightness and sensitivity share the same blue-bar editor in both contexts.
 Ring, Bottom field and Backlight menus provide an explicit Back item.
 The optional Compass ring rotates its perimeter scale around the live dive data.
@@ -566,3 +580,16 @@ A schema-2 recovery does not silently deduplicate against an identity-free old l
 The `recovery_pair_lifecycle_log_integration` host check covers memory/disk recovery,
 second-dive pair selection, exact uninterrupted results, replayed completion logs,
 separate-process idempotence, identical fresh sessions and immutable schema-1 logs.
+
+### Watch catalog acceptance (native PC)
+
+After building, create an empty gallery and state directory, then run:
+```sh
+SDL_VIDEODRIVER=dummy DIVE_SIM_APPEARANCE_CHECK=1 DIVE_SIM_WATCH_FACE_CHECK=1 \
+  DIVE_SIM_GALLERY=/tmp/watch-catalog DIVE_WATCH_STATE_DIR=/tmp/watch-state \
+  <build>/zephyr/zephyr.exe --stop_at=21 --no-rt
+python3 tests/check_watch_dials.py /tmp/watch-catalog
+```
+A second process with the same state, `DIVE_SIM_WATCH_RESTART=read` and
+`--stop_at=4` checks actual restart retention and switching to the other saved face.
+These are desktop rendering and navigation checks, not Nordic/hardware validation.

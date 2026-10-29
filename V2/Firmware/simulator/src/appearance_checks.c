@@ -1,4 +1,5 @@
 #include "appearance_checks.h"
+#include "watch_catalog_checks.h"
 #include "sim_host.h"
 #include "sim_controls.h"
 #include "watch_ui.h"
@@ -63,74 +64,10 @@ static void rate_button_examples(void)
     }
     step++;
 }
-static void open_watch_options(void)
-{
-    crown(1);crown(24);crown(-100);crown(WATCH_OPTION);tap();
-    crown(-100);crown(1);tap();
-    __ASSERT(watch_ui_view()==WATCH_FACE_SELECT,"Watch options missing");
-}
-static void return_to_clock(void)
-{
-    watch_ui_input(WATCH_DOUBLE_TAP,0);
-    if(watch_ui_view()==WATCH_OPTION_VIEW)watch_ui_input(WATCH_DOUBLE_TAP,0);
-    crown(-100);tap();__ASSERT(watch_ui_view()==WATCH_CLOCK,"Clock return failed");
-}
-static void choose_dial(enum watch_dial dial)
-{
-    open_watch_options();crown(100);tap();
-    __ASSERT(watch_ui_view()==WATCH_DIAL_SELECT,"Cadran submenu missing");
-    crown(-100);crown(dial);tap();
-    __ASSERT(watch_ui_view()==WATCH_FACE_SELECT && watch_ui_dial()==dial,"Dial apply failed");
-    return_to_clock();
-}
-static void watch_face_checks(void)
-{
-    static unsigned step;
-    if(step>17 || k_uptime_get()<2300+step*600)return;
-    switch(step++) {
-    case 0:
-        __ASSERT(watch_ui_view()==WATCH_CLOCK && watch_ui_clock_style()==CLOCK_DIGITAL,"Clock startup changed");
-        open_watch_options();break;
-    case 1:
-        shot("watch-menu");crown(100);__ASSERT(watch_ui_face_option()==2,"Watch menu upper bound");tap();break;
-    case 2:
-        shot("dial-menu");crown(100);__ASSERT(watch_ui_dial_option()==DIAL_AUTOMATIC,"Dial menu upper bound");
-        watch_ui_input(WATCH_DOUBLE_TAP,0);
-        __ASSERT(watch_ui_dial()==DIAL_MINIMALIST && watch_ui_view()==WATCH_FACE_SELECT,"Cancel changed dial");
-        tap();crown(-100);__ASSERT(watch_ui_dial_option()==0,"Dial menu lower bound");tap();
-        __ASSERT(watch_ui_clock_style()==CLOCK_DIGITAL,"Dial choice must not switch digital to analog");
-        crown(-100);crown(1);tap();return_to_clock();break;
-    case 3:shot("minimaliste-x1");choose_dial(DIAL_DAUPHINE);break;
-    case 4:shot("dauphine-x1");choose_dial(DIAL_AUTOMATIC);break;
-    case 5:shot("automatique-x1");
-        open_watch_options();crown(100);tap();crown(-100);watch_ui_input(WATCH_DOUBLE_TAP,0);
-        __ASSERT(watch_ui_dial()==DIAL_AUTOMATIC,"Pending dial changed applied face");return_to_clock();break;
-    case 6:
-        __ASSERT(watch_ui_dial()==DIAL_AUTOMATIC && watch_ui_clock_style()==CLOCK_ANALOG,"Analog style lost");
-        __ASSERT(!sim_host_set_zoom(2),"Scale x2 failed");break;
-    case 7:shot("automatique-x2");choose_dial(DIAL_DAUPHINE);break;
-    case 8:shot("dauphine-x2");choose_dial(DIAL_MINIMALIST);break;
-    case 9:shot("minimaliste-x2");open_watch_options();crown(-100);tap();return_to_clock();break;
-    case 10:
-        __ASSERT(watch_ui_clock_style()==CLOCK_DIGITAL && watch_ui_dial()==DIAL_MINIMALIST,"Digital toggle lost dial");
-        shot("digital-x2");open_watch_options();crown(1);tap();return_to_clock();break;
-    case 11:
-        __ASSERT(watch_ui_clock_style()==CLOCK_ANALOG && watch_ui_dial()==DIAL_MINIMALIST,"Analog toggle lost dial");
-        choose_dial(DIAL_AUTOMATIC);break;
-    case 12:shot("automatique-retained-x2");choose_dial(DIAL_DAUPHINE);break;
-    case 13:shot("dauphine-retained-x2");break;
-    case 14:open_watch_options();crown(100);tap();watch_ui_input(WATCH_DOUBLE_TAP,0);
-        __ASSERT(watch_ui_view()==WATCH_FACE_SELECT,"Cadran double tap failed");
-        watch_ui_input(WATCH_DOUBLE_TAP,0);__ASSERT(watch_ui_view()==WATCH_OPTION_VIEW,"Watch double tap failed");break;
-    case 15:return_to_clock();break;
-    case 16:__ASSERT(watch_ui_view()==WATCH_CLOCK && watch_ui_dial()==DIAL_DAUPHINE,"Menu exit lost face");break;
-    case 17:printk("WATCH DIALS PASS: bounded menus, cancel/apply, independent digital/analog, three faces x1/x2 and retention\n");break;
-    }
-}
 
 void appearance_checks_poll(struct watch_data *data)
 {
-    if(getenv("DIVE_SIM_WATCH_FACE_CHECK")){watch_face_checks();return;}
+    if(getenv("DIVE_SIM_WATCH_FACE_CHECK")){watch_catalog_checks_poll(data);return;}
     if(getenv("DIVE_SIM_RATE_CHECK")){rate_button_examples();return;}
     if(getenv("DIVE_SIM_TIMER_CHECK")){timer_examples(data);return;}
     ascent_examples(data);
@@ -150,7 +87,7 @@ void appearance_checks_poll(struct watch_data *data)
     case 9:shot("digital-51");break;
     case 10:data->battery_percent=0;break;
     case 11:shot("digital-0");break;
-    case 12:data->battery_percent=87;crown(1);crown(24);crown(3);tap();crown(1);tap();crown(1);tap();watch_ui_input(WATCH_DOUBLE_TAP,0);crown(-100);tap();__ASSERT(watch_ui_clock_style()==CLOCK_ANALOG&&watch_ui_view()==WATCH_CLOCK,"Analog face missing");break;
+    case 12:data->battery_percent=87;crown(1);crown(24);crown(-100);crown(WATCH_OPTION);tap();crown(-100);crown(1);tap();tap();watch_ui_input(WATCH_DOUBLE_TAP,0);watch_ui_input(WATCH_DOUBLE_TAP,0);crown(-100);tap();__ASSERT(watch_ui_clock_style()==CLOCK_ANALOG&&watch_ui_view()==WATCH_CLOCK,"Analog face missing");break;
     case 13:shot("analog-87");break;
     case 14:crown(1);crown(24);crown(-100);crown(WATCH_DIVING);tap();crown(1);tap();__ASSERT(watch_ui_view()==WATCH_DIVE_VIEW,"Freedive missing");break;
     case 15:shot("freedive-87");break;

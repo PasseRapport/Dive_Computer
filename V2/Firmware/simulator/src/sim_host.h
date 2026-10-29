@@ -55,3 +55,7 @@ int sim_host_apnea_persistence_choice(void);
 /* Host state adapter; returns 0 on success, 1 if absent, -1 for invalid/error. */
 int sim_host_apnea_preferences_load(int *salt,int *field);
 int sim_host_apnea_preferences_save(int salt,int field);
+
+/* Stable watch type and per-type face preferences; native host storage only. */
+int sim_host_watch_preferences_load(int *type,int *analog,int *digital);
+int sim_host_watch_preferences_save(int type,int analog,int digital);

@@ -34,3 +34,7 @@ endif()
 target_sources(app PRIVATE src/analog_clock.c src/assets/project_logo_alpha.c)
 
 target_sources(app PRIVATE src/assets/montserrat_bold_28.c)
+
+# Live watch faces and native preference adapter.
+target_sources(app PRIVATE src/watch_faces.c src/watch_catalog_checks.c src/assets/serif_14.c src/assets/serif_18.c)
+target_sources(native_simulator INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/watch_preferences_host.c)
