@@ -1,4 +1,5 @@
 #include "watch_ui.h"
+#include "water_settings.h"
 #include "sim_host.h"
 #include "apnea_main.h"
 #include "apnea_settings.h"
@@ -229,6 +230,7 @@ static void set_view(enum watch_view next)
                         next == WATCH_FACE_SELECT ? face_view :
                         next == WATCH_DIAL_SELECT ? dial_view :
                         next == WATCH_SCUBA_VIEW ? scuba_view : app_screen;
+    water_settings_lock_apnea(next==WATCH_DIVE_VIEW && dive_mode==DIVE_FREE);
     current_view = next;
     sleeping = false;
     lv_obj_remove_flag(visible, LV_OBJ_FLAG_HIDDEN);

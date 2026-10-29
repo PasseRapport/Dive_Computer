@@ -1,10 +1,11 @@
 #include "apnea_settings.h"
+#include "water_settings.h"
 #include "selection.h"
 #include "sim_host.h"
 LV_IMAGE_DECLARE(icon_drop);
 LV_IMAGE_DECLARE(icon_wave);
 static lv_obj_t *view,*heading,*pill,*rows[APNEA_BOTTOM_COUNT+1],*icons[2],*help,*choices,*anchor,*choice_pill;
-static bool salt_water,underwater,engaged;
+static bool underwater,engaged;
 static enum apnea_bottom_field bottom;
 static int entry,pending,editor;
 static const char *const fields[]={"TEMPERATURE","MAX DEPTH","UNDERWATER TIME","CLOCK","DIVES"};
@@ -38,7 +39,7 @@ static void refresh(bool animate)
    else lv_obj_set_y(rows[i],target);
   }
   selection_row_color(rows[i],editor==1&&i<2?icons[i]:NULL,i==selected);
-  lv_obj_set_style_text_opa(rows[i],underwater&&i!=count-1?LV_OPA_50:LV_OPA_COVER,0);
+  lv_obj_set_style_text_opa(rows[i],(underwater||(editor==1&&water_settings_locked()))&&i!=count-1?LV_OPA_50:LV_OPA_COVER,0);
  }
  for(int i=0;i<2;i++){if(editor==1)lv_obj_remove_flag(icons[i],LV_OBJ_FLAG_HIDDEN);else lv_obj_add_flag(icons[i],LV_OBJ_FLAG_HIDDEN);}
  if(editor==1){lv_obj_remove_flag(choices,LV_OBJ_FLAG_HIDDEN);lv_obj_remove_flag(pill,LV_OBJ_FLAG_HIDDEN);lv_obj_add_flag(choice_pill,LV_OBJ_FLAG_HIDDEN);lv_obj_t *row_icons[]={icons[0],icons[1],NULL};selection_scroll(pill,rows,row_icons,3,selected,77,52,animate);}
@@ -69,21 +70,22 @@ bool apnea_settings_input(enum watch_input input,int steps)
   bool go_back=editor?pending==(editor==2?APNEA_BOTTOM_COUNT:2):entry==2;
   if(go_back){if(editor)editor=0;else {engaged=false;entry=0;}}
   else if(underwater)return true;
+  else if(editor==1 && water_settings_locked())return true;
   else if(editor){
-   bool changed=editor==1?salt_water!=(bool)pending:bottom!=(enum apnea_bottom_field)pending;
-   if(editor==1)salt_water=pending;else bottom=pending;
-   if(changed)(void)sim_host_apnea_preferences_save(salt_water,bottom);
+   bool changed=editor==1?water_settings_salt()!=(bool)pending:bottom!=(enum apnea_bottom_field)pending;
+   if(editor==1)water_settings_select(pending);else bottom=pending;
+   if(changed)(void)sim_host_apnea_preferences_save(water_settings_salt(),bottom);
    editor=0;
   }
-  else {editor=entry+1;pending=entry?bottom:salt_water;}
+  else {editor=entry+1;pending=entry?bottom:water_settings_salt();}
   refresh(false);
  }
  return true;
 }
 void apnea_settings_leave(void){engaged=false;editor=0;entry=0;refresh(false);}
-bool apnea_settings_salt_water(void){return salt_water;}
+bool apnea_settings_salt_water(void){return water_settings_salt();}
 enum apnea_bottom_field apnea_settings_bottom_field(void){return bottom;}
-void apnea_settings_restore(bool salt,enum apnea_bottom_field field){salt_water=salt;bottom=field>=0&&field<APNEA_BOTTOM_COUNT?field:APNEA_TEMPERATURE;}
+void apnea_settings_restore(bool salt,enum apnea_bottom_field field){(void)salt;bottom=field>=0&&field<APNEA_BOTTOM_COUNT?field:APNEA_TEMPERATURE;}
 
 bool apnea_settings_selection_within_page(void)
 {

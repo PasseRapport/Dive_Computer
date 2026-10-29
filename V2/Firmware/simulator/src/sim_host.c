@@ -284,13 +284,15 @@ int sim_host_take_redraw(void) {return atomic_exchange(&redraw_requested,false);
 
 #ifdef DIVE_PC_BENCH
 #include "pc_bench.h"
+#include "water.h"
+#include "water_settings.h"
 #include "scuba_model.h"
 static const struct scuba_model *calculated_watch;
 void sim_host_bench_watch(const struct scuba_model *model) {calculated_watch=model;}
 #include <stdio.h>
 int sim_host_bench_check_enabled(void) {
     const char *mode=getenv("DIVE_SIM_BENCH_CHECK");
-    return !mode?0:!strcmp(mode,"startup")?6:!strcmp(mode,"checkpoint")?5:!strcmp(mode,"gf")?4:!strcmp(mode,"restart")?3:!strcmp(mode,"calculated")?2:1;
+    return !mode?0:!strcmp(mode,"water")?7:!strcmp(mode,"startup")?6:!strcmp(mode,"checkpoint")?5:!strcmp(mode,"gf")?4:!strcmp(mode,"restart")?3:!strcmp(mode,"calculated")?2:1;
 }
 static void configure_bench_storage(void)
 {
@@ -317,7 +319,7 @@ int sim_host_bench_fresh(void)
 {
     configure_bench_storage();
     const char *path=getenv("DIVE_SIM_BENCH_PROFILE");
-    if(!path)return pc_bench_fresh(1.01325f,1025,pc_bench_two_dives,8);
+    if(!path)return pc_bench_fresh(1.01325f,water_density(water_settings_salt()),pc_bench_two_dives,8);
     FILE *file=fopen(path,"r");
     if(!file){fprintf(stderr,"Cannot open bench profile: %s\n",path);return -1;}
     ostc4_sample profile[PC_BENCH_PROFILE]; size_t count=0; char row[256];
@@ -333,7 +335,7 @@ int sim_host_bench_fresh(void)
         }
         profile[count++]=(ostc4_sample){(uint32_t)seconds,pressure};
     }
-    int result=ferror(file)?-1:pc_bench_fresh(count?profile[0].absolute_pressure_bar:0,1025,profile,count);
+    int result=ferror(file)?-1:pc_bench_fresh(count?profile[0].absolute_pressure_bar:0,water_density(water_settings_salt()),profile,count);
     fclose(file);
     if(result)fprintf(stderr,"Invalid bench pressure/time profile\n");
     return result;
@@ -351,7 +353,7 @@ int sim_host_bench_capture(unsigned milestone)
     snprintf(path,sizeof(path),"%s-%u.json",base,milestone);
     FILE *out=fopen(path,"w");if(!out)return -1;
     const struct bench_view *v=pc_bench_read();
-    fprintf(out,"{\"seconds\":%u,\"duration\":%u,\"depth_m\":%.9g,\"tissues\":[",v->seconds,v->duration,(double)v->depth_m);
+    fprintf(out,"{\"seconds\":%u,\"duration\":%u,\"depth_m\":%.9g,\"surface_bar\":%.9g,\"density_kg_m3\":%.9g,\"tissues\":[",v->seconds,v->duration,(double)v->depth_m,(double)v->surface_bar,(double)v->density_kg_m3);
     for(int i=0;i<16;++i)fprintf(out,"%s%.9g",i?",":"",(double)v->result.nitrogen_bar[i]);
     const struct recorded_dive *recording=&v->recording;
     const struct scuba_model *m=calculated_watch;

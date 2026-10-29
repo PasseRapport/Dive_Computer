@@ -6,7 +6,7 @@ target_sources(app PRIVATE src/light_editor.c src/compass_ring.c src/appearance_
     src/assets/icon_drop.c src/assets/icon_wave.c src/assets/icon_sun.c src/assets/turn_fish.c
     src/assets/icon_tank.c src/assets/icon_apnea.c src/assets/icon_scuba.c
     src/assets/icon_compass.c src/assets/icon_options.c src/assets/icon_watch.c)
-target_sources(native_simulator INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/sim_host.c ${CMAKE_CURRENT_SOURCE_DIR}/src/apnea_preferences_host.c)
+target_sources(native_simulator INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/sim_host.c ${CMAKE_CURRENT_SOURCE_DIR}/src/apnea_preferences_host.c ${CMAKE_CURRENT_SOURCE_DIR}/src/water_settings.c)
 # NCS 3.4.1 lists the GIF decoder but omits LVGL 9.5's moved GIF widget.
 # Include that widget locally rather than modifying the installed SDK.
 target_sources(app PRIVATE ${ZEPHYR_LVGL_MODULE_DIR}/src/widgets/gif/lv_gif.c)
