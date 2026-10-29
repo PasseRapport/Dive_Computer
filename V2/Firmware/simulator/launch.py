@@ -114,7 +114,7 @@ if not args.build_only:
     if args.water_density_check or args.bench_check or args.calculated_check or args.restart_check or args.gf_check or args.checkpoint_check:
         env["DIVE_SIM_BENCH_CHECK"] = "water" if args.water_density_check else "checkpoint" if args.checkpoint_check else "gf" if args.gf_check else "restart" if args.restart_check else "calculated" if args.calculated_check else "1"
         env["SDL_VIDEODRIVER"] = "dummy"
-        command += ["--stop_at=4" if args.water_density_check else "--stop_at=10" if args.checkpoint_check or args.gf_check else "--stop_at=20" if args.calculated_check else "--stop_at=15" if args.restart_check else "--stop_at=90", "--no-rt"]
+        command += ["--stop_at=21" if args.water_density_check else "--stop_at=10" if args.checkpoint_check or args.gf_check else "--stop_at=20" if args.calculated_check else "--stop_at=15" if args.restart_check else "--stop_at=90", "--no-rt"]
     if args.scale_check:
         env["DIVE_SIM_SCALE_CHECK"] = "1"
     if args.scuba_check:

@@ -24,8 +24,88 @@ static void capture(const char *name)
     char path[512];snprintf(path,sizeof(path),"%s/%s.bmp",sim_host_gallery_path(),name);
     lv_refr_now(NULL);__ASSERT(sim_host_capture(path)==0,"Apnea capture failed");
 }
+#ifdef DIVE_PC_BENCH
+#include "pc_bench.h"
+/* Public pressure commands pass through main's ordinary freediving sampling.
+ * Literal deltas are independently worked for 1.099/1.100, 12.3, 9.9,
+ * .300/.299 and 5 m, retaining the existing decimal threshold truncation. */
+static bool water_apnea_inputs(uint64_t *sample_ms)
+{
+    *sample_ms=clock_ms;
+    if(step>=24 || k_uptime_get()<10000+(uint64_t)step*400)return false;
+    unsigned stage=step%12,salt=step/12;
+    /* Capture the preceding observation after LVGL/display timers have painted
+     * it, before this step sends another input or changes the pressure. */
+    if(stage==4 || stage==7 || stage==11) {
+        const char *prefix=sim_host_capture_path();
+        if(prefix) {
+            char path[512];snprintf(path,sizeof(path),"%s-apnea-%u.bmp",prefix,step-1);
+            lv_refr_now(NULL);__ASSERT(!sim_host_capture(path),"Water apnea capture failed");
+        }
+    }
+    static const float pressure[2][10]={
+        {1.1077750835f,1.10787315f,2.20621795f,1.97085835f,1.02941995f,1.0293218835f,
+         1.0293218835f,1.10787315f,1.4903325f,1},
+        {1.1104694605875f,1.11056997875f,2.23637339875f,1.99512980875f,1.03015544875f,1.0300549305875f,
+         1.0300549305875f,1.11056997875f,1.5025908125f,1}};
+    if(stage==0) {
+        __ASSERT(!pc_bench_fresh(1,salt?1025:1000,NULL,0),"Apnea water fixture rejected");
+        __ASSERT(!pc_bench_recording_finish(),"Apnea fixture did not disarm scuba recording");
+        pc_bench_pause(true);
+        watch_ui_input(WATCH_CROWN,-100);watch_ui_input(WATCH_CROWN,WATCH_DIVING);
+        watch_ui_input(WATCH_SINGLE_TAP,0);watch_ui_input(WATCH_CROWN,-100);
+        watch_ui_input(WATCH_CROWN,1);watch_ui_input(WATCH_SINGLE_TAP,0);
+        __ASSERT(watch_ui_view()==WATCH_DIVE_VIEW,"Apnea water journey entry failed");
+    } else if(stage==11) {
+        watch_ui_input(WATCH_CROWN,3);watch_ui_input(WATCH_CROWN,24);
+        __ASSERT(watch_ui_view()==WATCH_MODE_MENU && !pc_bench_set_water(!salt),"Completed apnea session kept water locked");
+    } else {
+        __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){stage,pressure[salt][stage-1]}),"Apnea physical pressure rejected");
+        if(stage==3 || stage==7) {
+            watch_ui_input(WATCH_CROWN,2);watch_ui_input(WATCH_SINGLE_TAP,0);
+            watch_ui_input(WATCH_CROWN,-100);watch_ui_input(WATCH_SINGLE_TAP,0);
+            watch_ui_input(WATCH_CROWN,salt?0:1);watch_ui_input(WATCH_SINGLE_TAP,0);
+            __ASSERT(watch_ui_salt_water()==(bool)salt && pc_bench_set_water(!salt)==-1,
+                "Underwater or recovery editor changed active water");
+            watch_ui_input(WATCH_DOUBLE_TAP,0);watch_ui_input(WATCH_DOUBLE_TAP,0);
+            watch_ui_input(WATCH_CROWN,-100);
+        }
+    }
+    clock_ms=100000+(uint64_t)step*1000;*sample_ms=clock_ms;
+    return true;
+}
+static void water_apnea_observe(const struct watch_data *data)
+{
+    unsigned stage=step%12,salt=step/12;
+    if(stage==0)__ASSERT(!data->total_dives && !data->max_depth_dm,"New apnea session retained statistics");
+    if(stage==1)__ASSERT(data->depth_dm==10 && !data->apnea_active && !data->total_dives,"Physical 1.099 m started apnea");
+    if(stage==2)__ASSERT(data->depth_dm==11 && data->apnea_active && data->total_dives==1,"Physical 1.100 m missed apnea start");
+    if(stage==3)__ASSERT(data->depth_dm==123 && data->current_max_depth_dm==123 && data->max_depth_dm==123 && data->apnea_direction==1,"Apnea physical maximum/descent disagreed");
+    if(stage==4)__ASSERT(data->depth_dm==99 && data->apnea_direction==-1 && data->max_depth_dm==123,"Apnea physical ascent changed maximum");
+    if(stage==5)__ASSERT(data->depth_dm==3 && data->apnea_active,"Physical .300 m ended apnea");
+    if(stage==6 || stage==7)__ASSERT(data->depth_dm==2 && !data->apnea_active && data->show_recovery && data->last_depth_dm==123 && data->total_dives==1,"Physical .299 m failed apnea recovery statistics");
+    if(stage==8)__ASSERT(data->apnea_active && data->total_dives==2 && data->max_depth_dm==123,"Second immersion lost session state");
+    if(stage==9)__ASSERT(data->depth_dm==50 && data->current_max_depth_dm==50 && data->max_depth_dm==123,"Second immersion changed physical session record");
+    if(stage==10)__ASSERT(!data->apnea_active && data->last_depth_dm==50 && data->max_depth_dm==123 && data->total_dives==2 && data->total_underwater_s==6,"Surface recovery lost apnea totals");
+    if(stage==3 || stage==6 || stage==10) {
+        const char *prefix=sim_host_capture_path();
+        if(prefix) {
+            char path[512];snprintf(path,sizeof(path),"%s-apnea-%u.json",prefix,step);
+            FILE *out=fopen(path,"w");__ASSERT(out,"Water apnea observation failed");
+            fprintf(out,"{\"density_kg_m3\":%u,\"depth_dm\":%u,\"current_max_depth_dm\":%u,\"max_depth_dm\":%u,\"last_depth_dm\":%u,\"total_dives\":%u,\"total_underwater_s\":%u,\"elapsed_s\":%u,\"max_dive_s\":%u,\"active\":%s}\n",
+                salt?1025:1000,data->depth_dm,data->current_max_depth_dm,data->max_depth_dm,data->last_depth_dm,data->total_dives,data->total_underwater_s,data->elapsed_s,data->max_dive_s,data->apnea_active?"true":"false");
+            __ASSERT(!fclose(out),"Water apnea observation close failed");
+        }
+    }
+    if(step==23)printk("WATER APNEA PASS: both densities, physical start/surface thresholds, depth/max/session statistics, two immersions, underwater/recovery water locks, BACK and post-session unlock\n");
+    ++step;
+}
+#endif
 bool apnea_checks_inputs(uint64_t *sample_ms)
 {
+#ifdef DIVE_PC_BENCH
+    if(sim_host_bench_check_enabled()==7)return water_apnea_inputs(sample_ms);
+#endif
     if(!sim_host_apnea_check_enabled())return false;
     *sample_ms=clock_ms;
     if(step>=47||k_uptime_get()<500+(uint64_t)step*450)return false;
@@ -90,6 +170,9 @@ bool apnea_checks_inputs(uint64_t *sample_ms)
 }
 void apnea_checks_observe(const struct watch_data *data)
 {
+#ifdef DIVE_PC_BENCH
+    if(sim_host_bench_check_enabled()==7){water_apnea_observe(data);return;}
+#endif
     switch(step) {
     case 1:expect("--");expect("TEMPERATURE");capture("apnea-01-fresh");break;
     case 2:__ASSERT(data->total_dives==0,"1.0 m started apnea");break;

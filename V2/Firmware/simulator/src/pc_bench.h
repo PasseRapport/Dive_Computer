@@ -59,7 +59,7 @@ void pc_bench_gf_edit_cancel(void);
  * Rejected adapter inputs leave the fixture unchanged. Accepted commands release
  * replay/automatic control; no host time or intermediate tissue sample is added. */
 int pc_bench_accept_sample(const ostc4_sample *sample);
-/* Recording uses the watch/engine 10 m/bar depth convention at millimetre
+/* Recording uses the active water density and physical depth at millimetre
  * sensor resolution. Start at 0.5..10 m in 0.5 m steps (default 2 m).
  * Recording commands never initialize tissues or advance exposure. */
 int pc_bench_start_depth(uint16_t decimetres);
