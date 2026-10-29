@@ -37,13 +37,13 @@ for index in range(10):
     if index != 6:
         assert marker>150, (index, marker)
     if index == 0: assert watch["state"] == 0
-    if index == 3: assert state["automatic"] and watch["stop_depth_dm"] == watch["depth_dm"] == 120
+    if index == 3: assert state["automatic"] and watch["stop_depth_dm"] == watch["depth_dm"] == 119
     if index == 4: assert not state["automatic"] and watch["alerts"] & 1 and watch["notifications"] & 1
     if index == 5: assert watch["alerts"] & 1 and not watch["notifications"] & 1 and watch["stop_depth_dm"]>0
     if index == 6: assert watch["state"] == 3 and all(v==3 for v in state["validity"])
     if index == 7: assert state["tissues"][5]>.9
     if index == 9:
-        assert state["ceiling_meters"] < watch["depth_dm"]/10 < watch["stop_depth_dm"]/10
+        assert state["physical"]["ceiling_m"] < watch["depth_dm"]/10 < watch["stop_depth_dm"]/10
         assert not watch["alerts"] & 1
 # The ceiling warning track must not use the deeper first mandatory stop.
 def red_track(frame):

@@ -204,8 +204,12 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
     hidden(d->stop_mark,!(guidance&&stop&&!complete));
     depth_group(d,m->depth_dm);
     char text[48];
-    if(stop)snprintf(text,sizeof(text),stop_depth?"STOP %u-%u m":"STOP 3-6 m",stop_depth/10,stop_depth/10+3);
-    else if(stop_depth&&m->depth_dm<stop_depth)snprintf(text,sizeof(text),"DESCEND TO %u m",stop_depth/10);
+    if(stop && stop_depth && m->calculated)snprintf(text,sizeof(text),"STOP %.1f-%.1f m",
+        (double)m->calculated_stop_lower_m,(double)m->calculated_stop_upper_m);
+    else if(stop)snprintf(text,sizeof(text),stop_depth?"STOP %u-%u m":"STOP 3-6 m",stop_depth/10,stop_depth/10+3);
+    else if(stop_depth && m->calculated && m->depth_dm*0.1f<m->calculated_stop_lower_m)
+        snprintf(text,sizeof(text),"DESCEND TO %u.%u m",stop_depth/10,stop_depth%10);
+    else if(stop_depth && !m->calculated && m->depth_dm<stop_depth)snprintf(text,sizeof(text),"DESCEND TO %u m",stop_depth/10);
     else text[0]=0;
     if(!guidance)snprintf(text,sizeof(text),"%s",m->calculated_state==SCUBA_CALCULATED_INVALID?"INVALID":"");
     if(!guidance && m->data_gap.present) {
@@ -241,7 +245,8 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
         if(!scuba_model_in_stop(m))centred(d->left_note,"PAUSED",101,197);
     } else if(stop_depth&&!complete) {
         centred(d->left_title,"DECO",101,127);snprintf(text,sizeof(text),"%u'",(scuba_model_tts(m)+59)/60);centred(d->left_value,text,101,150);
-        snprintf(text,sizeof(text),"STOP %u m",stop_depth/10);
+        if(m->calculated)snprintf(text,sizeof(text),"STOP %u.%u m",stop_depth/10,stop_depth%10);
+        else snprintf(text,sizeof(text),"STOP %u m",stop_depth/10);
         centred(d->left_note,text,101,197);
         ring_color=ORANGE;progress=scuba_ring_tts(scuba_model_tts(m));
     } else {

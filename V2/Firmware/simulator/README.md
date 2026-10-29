@@ -291,19 +291,21 @@ with surface pressure shown explicitly and water density 1025 kg/m3 by default.
 No display rounding feeds calculations. Depth commands hold or change depth;
 rate buttons change signed m/min, positive downward. Inputs are limited to 60 m,
 60 m/min and the engine's +6 bar envelope. Initial surface pressure is limited
-to 0.8..1.2 bar. The standalone controller also accepts densities 990..1040 kg/m3.
-The planner's ceiling/stop depths retain the upstream **10 m/bar convention**,
-shown separately from the hydrostatic graph. GF30/70 is the initial preference; the preparation editor commits an integer
+to 0.8..1.2 bar. Fresh uses exactly1000 kg/m3 and Marine1025 kg/m3.
+The planner retains its upstream **10 m/bar reference convention** and +0.3bar
+stop grid. The presentation adapter converts operational/GF ceilings and pressure
+stop slots into the active water's physical metres for watch, bench and graph. GF30/70 is the initial preference; the preparation editor commits an integer
 GF pair atomically and locks it for the complete recorded dive. Ascent 9 m/min
-and last stop/increments of 3 m remain fixed test settings. TTS=0 in upstream NDL mode
+and last stop/increments of0.3bar remain fixed test settings. TTS=0 in upstream NDL mode
 **excludes ascent travel**, and is explicitly qualified in the diagnostics.
 Unavailable, limited and invalid result flags are shown, including for every
 nitrogen tissue. Mandatory stops can be scrolled if the full list exceeds its box.
-The watch and engine use10m/bar so gauge depth, ceiling and stop labels share
-one coordinate convention. The graph and manual controls use hydrostatic metres,
-as labelled. Depth displays truncate millimetre samples to0.1m; calculated
-ceilings round upward to0.1m, while ceiling alerts compare raw depths. Stop zones
-use millimetre resolution to avoid pressure-conversion flicker at exact stops.
+Watch, bench and graphs share physical metres. Depth displays truncate
+millimetre samples to0.1m; operational ceilings round upward to0.1m and GF
+endpoints/mandatory stop labels round to the nearest tenth. Ceiling alerts compare
+physical depths before display rounding. Both stop-zone pressure boundaries
+convert independently, using millimetre resolution to avoid binary32 flicker at
+exact targets; an upper boundary is not the rounded lower label plus3m.
 Unavailable/invalid calculation states show explicitly with blank calculated
 values and an empty grey ring, retaining last known obligations. Limited results
 keep capped values on the watch (including the existing>99 NDL display),
@@ -323,7 +325,8 @@ python3 V2/Firmware/simulator/launch.py --bench-profile /absolute/path/profile.c
 CSV header: `timestamp_seconds,absolute_pressure_bar`. Start at second zero and
 surface pressure. Use strictly increasing integer seconds, finite absolute bar,
 2..1024 rows, ending before 21601 s. The first pressure supplies surface pressure;
-water density remains 1025 kg/m3. Segments assert complete, linearly changing
+the confirmed shared Fresh/Marine choice interprets physical depth without changing
+any supplied pressure or timestamp. Segments assert complete, linearly changing
 exposure. A separation over 3600 s denotes missing exposure: its graph segment is
 marked red, no line is interpolated through it, and reaching it latches INVALID
 until explicit fresh initialization. **Mark gap** explicitly reports unknown exposure of any duration, latches all
@@ -568,7 +571,8 @@ Operational ceiling violation alerts and the automatic diver keep their existing
 interpolation/anchor policy. The old main-screen CEIL note now identifies the
 mandatory STOP depth explicitly.
 
-`--gf-check` additionally captures seven paired-ceiling scenarios (frames 6–12).
+`--gf-check` additionally captures seven paired-ceiling scenarios (frames 6–12)
+and the same pressure trace in Fresh/Marine (frames13–14).
 Check them with `tests/check_gf_ceilings_render.py CAPTURE_PREFIX`; native LVGL
 assertions also check literal rounded text and glyph bounds on the 320×300 watch.
 PC/synthetic endpoint evidence is stored in `evidence/ticket13`. The additional
@@ -615,3 +619,20 @@ python3 tests/check_scroll_menus.py /tmp/menu-gallery
 This checks general/watch/dive menus, water selectors, Back without applying
 pending changes, rapid input, and x2 rendering. Watch catalog checks also cover
 the final Back card for both analog and digital faces.
+
+Water-density presentation checks preserve raw exported engine values and label
+those units as `reference_10m_per_bar`; `physical` observations separately expose
+watch ceilings and both stop boundaries. The same accepted pressure trace in the
+two waters must retain identical tissues, GF anchors, availability, NDL, TTS and
+stop durations. Equal physical-depth trajectories instead generate different
+pressures and need not produce identical decompression results. No upstream
+arithmetic, independent reference,0.006m GF bound or total-TTS-only3s allowance
+changes. Physical GF expectations intentionally change: the preserved Marine
+fixture13.3620968/7.24907494 reference metres displays13.3/7.2 physical metres;
+the44.3239403 reference-metre fixture displays44.1 physical metres.
+
+Ticket04 native verification (2026-10-29): all26 bench/reference CTests passed;
+GF/calculated-watch and disk-checkpoint rendered journeys passed. The GF journey
+also checks inclusive pressure-stop edges and automatic target/watch agreement
+in both waters. Evidence is PC/native only, with no target build or physical
+sensor/watch validation claimed. Superseded reference evidence is retained.

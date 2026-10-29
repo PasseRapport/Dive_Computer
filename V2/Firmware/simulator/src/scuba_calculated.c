@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "scuba_calculated.h"
 #include <math.h>
+#include "water.h"
 static enum scuba_calculated_state state(const ostc4_observation *r)
 {
     ostc4_availability fields[]={r->tissues,r->ndl,r->tts,r->ceiling,r->stops};
@@ -21,22 +22,27 @@ void scuba_calculated_apply(struct scuba_model *m,const ostc4_observation *r,
         m->calculated_state==SCUBA_CALCULATED_LIMITED);
     m->calculated=true;m->scenario=SCUBA_MANUAL;m->speed=1;
     m->calculated_state=state(r);
-    m->calculated_gf_low_ceiling_m=r->gf_low_ceiling_meters;
-    m->calculated_gf_high_ceiling_m=r->gf_high_ceiling_meters;
+    float density=water_density(m->salt_water);
+    float ceiling=water_depth(r->ceiling_meters/10.0f,0,density);
+    m->calculated_gf_low_ceiling_m=water_depth(r->gf_low_ceiling_meters/10.0f,0,density);
+    m->calculated_gf_high_ceiling_m=water_depth(r->gf_high_ceiling_meters/10.0f,0,density);
     m->calculated_gf_low_ceiling_valid=r->tissues==OSTC4_AVAILABLE && r->gf_low_ceiling==OSTC4_AVAILABLE;
     m->calculated_gf_high_ceiling_valid=r->tissues==OSTC4_AVAILABLE && r->gf_high_ceiling==OSTC4_AVAILABLE;
     if(!isfinite(depth)||depth<0||depth>61||!isfinite(r->ceiling_meters)||
         r->ceiling_meters<0||r->ceiling_meters>160||r->ndl_seconds<0||r->tts_seconds<0)
         m->calculated_state=SCUBA_CALCULATED_INVALID;
     if(m->calculated_state==SCUBA_CALCULATED_AVAILABLE||m->calculated_state==SCUBA_CALCULATED_LIMITED) {
-        uint16_t stop=0;uint32_t remaining=0;
+        uint16_t stop=0;uint32_t remaining=0;unsigned slot=0;
+        float lower=0,upper=0;
         for(int i=OSTC4_STOPS-1;i>=0;--i) if(r->stop_seconds[i]) {
-            stop=(i+1)*30;remaining=(uint32_t)r->stop_seconds[i]*1000;break;
+            slot=i+1;lower=water_depth(0.3f*slot,0,density);
+            upper=water_depth(0.3f*(slot+1),0,density);
+            stop=(uint16_t)lroundf(lower*10);remaining=(uint32_t)r->stop_seconds[i]*1000;break;
         }
         long mm=lroundf(depth*1000);
-        bool in_stop=stop && mm>=stop*100 && mm<=(stop+30)*100;
+        bool in_stop=slot && mm>=lroundf(lower*1000) && mm<=lroundf(upper*1000);
         uint32_t display_remaining=remaining;
-        if(previously_valid && stop==m->calculated_stop_dm && remaining &&
+        if(previously_valid && slot==m->calculated_stop_slot && remaining &&
            remaining==m->calculated_stop_raw_ms && in_stop && m->calculated_stop_zone) {
             uint64_t now=(uint64_t)seconds*1000;
             uint64_t elapsed=now>=m->last_ms?now-m->last_ms:0;
@@ -46,15 +52,17 @@ void scuba_calculated_apply(struct scuba_model *m,const ostc4_observation *r,
                 m->calculated_stop_remaining_ms-(uint32_t)elapsed:1000;
             if(display_remaining<1000)display_remaining=1000;
         }
-        if(stop!=m->calculated_stop_dm)m->calculated_stop_total_ms=remaining;
+        if(slot!=m->calculated_stop_slot)m->calculated_stop_total_ms=remaining;
         if(remaining>m->calculated_stop_total_ms)m->calculated_stop_total_ms=remaining;
+        m->calculated_stop_slot=slot;
+        m->calculated_stop_lower_m=lower;m->calculated_stop_upper_m=upper;
         m->calculated_stop_dm=stop;m->calculated_stop_remaining_ms=display_remaining;
         m->calculated_stop_raw_ms=remaining;
-        m->calculated_ceiling_dm=(uint16_t)ceilf(r->ceiling_meters*10);
-        m->calculated_ceiling_violation=depth<r->ceiling_meters;
+        m->calculated_ceiling_dm=(uint16_t)ceilf(ceiling*10);
+        m->calculated_ceiling_violation=depth<ceiling;
         /* Stop-zone geometry follows the same millimetre sensor resolution as
          * measured depth; this avoids binary32 pressure conversion flicker at
-         * an exact3m stop. Ceiling violation still compares raw depths. */
+         * an exact pressure stop. Ceiling violation still compares raw depths. */
         m->calculated_stop_zone=in_stop;
         m->calculated_tts_s=r->tts_seconds;m->ndl_s=r->ndl_seconds;
     }
