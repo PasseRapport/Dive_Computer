@@ -15,3 +15,5 @@ Native appearance journey --stop_at=24 --no-rt: all native assertions pass.
 Legacy tests/check_appearance.py still fails its Freediving battery coordinate check (box 141,34–179,52). Both the existing tracked apnea-refinement/surface-ring.png and current Freediving capture have zero white pixels in that stale box. This check predates the dial changes; no unrelated layout changed.
 
 The dial choice changes analog presentation only; no automatic mode switching or seconds hand. Preferences retain the existing in-process clock-mode lifetime. No disk persistence was added for clock mode/dial.
+
+Automatic battery refinement: battery icon at (142,198), above inner 6; live battery data and threshold colors retained. Full native watch menu journey and x1/x2 image checks rerun and PASS, including visible battery and unobscured 6.

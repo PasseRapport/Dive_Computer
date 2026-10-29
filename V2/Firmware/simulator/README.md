@@ -55,7 +55,7 @@ Options contains **Bluetooth / Watch / Backlight / Haptics / Sleep**.
 Watch offers **Digital / Analog / Cadran**. Cadran selects **Minimaliste**
 (thin flat-ended hands, no numbers), **Dauphine** (faceted hands, 1–12 and
 sixty perimeter minute ticks), or **Automatique** (the approved blue dual-scale
-dial, project logo, luminous-insert hands and day/date window). Automatique
+dial, project logo, luminous-insert hands, day/date window and battery above the inner 6). Automatique
 is a face name; it never switches modes automatically. There is no seconds hand.
 Selecting a face preserves Digital/Analog; tap applies and returns to Watch,
 while double tap cancels and returns one level. Choices survive navigation

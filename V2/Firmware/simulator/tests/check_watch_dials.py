@@ -21,8 +21,10 @@ for minute in range(60):
     # One-pixel diagonal strokes have anti-aliased gray cores.
     assert any(min(p)>=128 for p in patch.get_flattened_data()),f'Minute tick {minute} missing'
 auto=images['automatique']
-r,g,b=auto.getpixel((160,200))
+r,g,b=auto.getpixel((160,185))
 assert b>g>r and b-r>20,'Automatic dial blue background missing'
+assert sum(min(p)>180 for p in auto.crop((142,198,178,214)).get_flattened_data())>50,'Automatic battery missing above 6'
+assert sum(min(p)>180 for p in auto.crop((153,218,167,237)).get_flattened_data())>15,'Automatic 6 hidden by battery'
 assert not any(max(p)<10 for p in auto.crop((140,83,180,120)).get_flattened_data()),'Logo has a black rectangular background'
 for a,b in (('minimaliste','dauphine'),('dauphine','automatique')):
     assert ImageChops.difference(images[a],images[b]).getbbox(),f'{a}/{b} unexpectedly identical'
