@@ -31,8 +31,18 @@ static void capture(const char *name)
  * .300/.299 and 5 m, retaining the existing decimal threshold truncation. */
 static bool water_apnea_inputs(uint64_t *sample_ms)
 {
-    if(step>=24 || k_uptime_get()<500+(uint64_t)step*100)return false;
+    *sample_ms=clock_ms;
+    if(step>=24 || k_uptime_get()<10000+(uint64_t)step*400)return false;
     unsigned stage=step%12,salt=step/12;
+    /* Capture the preceding observation after LVGL/display timers have painted
+     * it, before this step sends another input or changes the pressure. */
+    if(stage==4 || stage==7 || stage==11) {
+        const char *prefix=sim_host_capture_path();
+        if(prefix) {
+            char path[512];snprintf(path,sizeof(path),"%s-apnea-%u.bmp",prefix,step-1);
+            lv_refr_now(NULL);__ASSERT(!sim_host_capture(path),"Water apnea capture failed");
+        }
+    }
     static const float pressure[2][10]={
         {1.1077750835f,1.10787315f,2.20621795f,1.97085835f,1.02941995f,1.0293218835f,
          1.0293218835f,1.10787315f,1.4903325f,1},
@@ -80,12 +90,10 @@ static void water_apnea_observe(const struct watch_data *data)
     if(stage==3 || stage==6 || stage==10) {
         const char *prefix=sim_host_capture_path();
         if(prefix) {
-            char path[512];snprintf(path,sizeof(path),"%s-apnea-%u.bmp",prefix,step);
-            lv_refr_now(NULL);__ASSERT(!sim_host_capture(path),"Water apnea capture failed");
-            snprintf(path,sizeof(path),"%s-apnea-%u.json",prefix,step);
+            char path[512];snprintf(path,sizeof(path),"%s-apnea-%u.json",prefix,step);
             FILE *out=fopen(path,"w");__ASSERT(out,"Water apnea observation failed");
-            fprintf(out,"{\"density_kg_m3\":%u,\"depth_dm\":%u,\"current_max_depth_dm\":%u,\"max_depth_dm\":%u,\"last_depth_dm\":%u,\"total_dives\":%u,\"total_underwater_s\":%u,\"active\":%s}\n",
-                salt?1025:1000,data->depth_dm,data->current_max_depth_dm,data->max_depth_dm,data->last_depth_dm,data->total_dives,data->total_underwater_s,data->apnea_active?"true":"false");
+            fprintf(out,"{\"density_kg_m3\":%u,\"depth_dm\":%u,\"current_max_depth_dm\":%u,\"max_depth_dm\":%u,\"last_depth_dm\":%u,\"total_dives\":%u,\"total_underwater_s\":%u,\"elapsed_s\":%u,\"max_dive_s\":%u,\"active\":%s}\n",
+                salt?1025:1000,data->depth_dm,data->current_max_depth_dm,data->max_depth_dm,data->last_depth_dm,data->total_dives,data->total_underwater_s,data->elapsed_s,data->max_dive_s,data->apnea_active?"true":"false");
             __ASSERT(!fclose(out),"Water apnea observation close failed");
         }
     }

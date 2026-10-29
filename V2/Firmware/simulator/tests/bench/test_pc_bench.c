@@ -134,6 +134,16 @@ static void physical_recording_boundaries(void)
         CHECK(pc_bench_accept_sample(&(ostc4_sample){4,pressure[salt][2]})==0);
         CHECK(v->recording.surface_seconds==1 && v->recording.dive_seconds==1);
         CHECK(pc_bench_recording_finish()==0 && !v->recording.active);
+        pc_bench_recording_arm();
+        CHECK(pc_bench_accept_sample(&(ostc4_sample){5,pressure[salt][1]})==0);
+        CHECK(pc_bench_accept_sample(&(ostc4_sample){6,pressure[salt][3]})==0);
+        CHECK(v->recording.active && v->recording.surface_seconds==0);
+        CHECK(pc_bench_accept_sample(&(ostc4_sample){7,pressure[salt][2]})==0);
+        pc_bench_poll(298000);
+        CHECK(v->recording.active && v->recording.surface_seconds==299);
+        pc_bench_poll(1000);
+        CHECK(!v->recording.active && v->recording.surface_seconds==300 &&
+              v->recording.dives_started==2 && v->recording.dives_completed==2);
     }
 }
 static void recording_start_threshold(void)
