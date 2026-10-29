@@ -1,5 +1,6 @@
 #include "analog_clock.h"
 #include "battery_icon.h"
+#include "native_fonts.h"
 #include <stdio.h>
 
 LV_IMAGE_DECLARE(project_logo_alpha);
@@ -121,7 +122,7 @@ void analog_clock_set_dial(enum watch_dial dial)
         }
     } else if(dial==DIAL_DAUPHINE) {
         for(int i=0;i<12;i++) {
-            if(i%3==0)number(i*30,121,i?i:12,&lv_font_montserrat_28);
+            if(i%3==0)number(i*30,121,i?i:12,&watch_montserrat_bold_28);
             else number(i*30,123,i*5,&lv_font_montserrat_16);
         }
     }

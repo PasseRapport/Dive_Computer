@@ -32,3 +32,5 @@ if(DIVE_BENCH)
 endif()
 
 target_sources(app PRIVATE src/analog_clock.c src/assets/project_logo_alpha.c)
+
+target_sources(app PRIVATE src/assets/montserrat_bold_28.c)

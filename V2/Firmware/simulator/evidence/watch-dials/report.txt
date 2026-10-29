@@ -19,3 +19,5 @@ The dial choice changes analog presentation only; no automatic mode switching or
 Automatic battery refinement: battery icon at (142,198), above inner 6; live battery data and threshold colors retained. Full native watch menu journey and x1/x2 image checks rerun and PASS, including visible battery and unobscured 6.
 
 Dauphine numbering refinement: large 12/3/6/9 (Montserrat 28), small intermediate minutes 5/10/20/25/35/40/50/55 (Montserrat 16); all sixty perimeter ticks retained. Existing local cardinal-only change was extended. Native menus and image checks PASS; x1/x2 remain pixel-identical after scale normalization.
+
+Dauphine cardinal hours use native-size Montserrat Bold 28 (SDK bundled TTF), with intermediate minute numbers unchanged. No runtime font scaling. Native menu and image checks PASS at x1/x2; verified visually.
