@@ -360,14 +360,14 @@ int sim_host_bench_capture(unsigned milestone)
     if(!m){fclose(out);return -1;}
     fprintf(out,"],\"recording\":{\"armed\":%s,\"active\":%s,\"start_depth_dm\":%u,"
         "\"started_seconds\":%u,\"completed_seconds\":%u,\"dive_seconds\":%u,\"surface_seconds\":%u,"
-        "\"dives_started\":%u,\"dives_completed\":%u},\"automatic\":%s,\"replay\":%s,\"history_count\":%zu,\"absolute_pressure_bar\":%.9g,"
+        "\"dives_started\":%u,\"dives_completed\":%u,\"density_kg_m3\":%u,\"max_depth_dm\":%u},\"automatic\":%s,\"replay\":%s,\"history_count\":%zu,\"absolute_pressure_bar\":%.9g,"
         "\"ndl_seconds\":%d,\"tts_seconds\":%d,\"ceiling_meters\":%.9g,"
         "\"validity\":[%d,%d,%d,%d,%d],\"watch\":{\"active\":%s,\"armed\":%s,"
         "\"dive_seconds\":%u,\"surface_seconds\":%u,\"state\":%d,\"depth_dm\":%u,\"ndl_seconds\":%u,"
         "\"tts_seconds\":%u,\"stop_depth_dm\":%u,\"stop_remaining_ms\":%u,\"alerts\":%u,\"notifications\":%u},\"stop_seconds\":[",
         recording->armed?"true":"false",recording->active?"true":"false",recording->start_depth_dm,
         recording->started_seconds,recording->completed_seconds,recording->dive_seconds,recording->surface_seconds,
-        recording->dives_started,recording->dives_completed,
+        recording->dives_started,recording->dives_completed,recording->density_kg_m3,recording->max_depth_dm,
         v->automatic?"true":"false",v->replay?"true":"false",v->history_count,(double)v->result.absolute_pressure_bar,
         v->result.ndl_seconds,v->result.tts_seconds,(double)v->result.ceiling_meters,
         v->result.tissues,v->result.ndl,v->result.tts,v->result.ceiling,v->result.stops,
@@ -391,9 +391,11 @@ int sim_host_bench_capture(unsigned milestone)
         struct pc_bench_log log;
         if(pc_bench_log_read(i,&log)) {fclose(out);return -1;}
         fprintf(out,"%s{\"id\":%llu,\"active_gf\":[%u,%u],\"policy\":\"%s\","
-            "\"started_seconds\":%u,\"completed_seconds\":%u,\"automatic_completion\":%s}",
+            "\"started_seconds\":%u,\"completed_seconds\":%u,\"automatic_completion\":%s,\"water_type\":\"%s\",\"density_kg_m3\":%u,\"max_depth_dm\":",
             i?",":"",log.id,log.active_gf.low,log.active_gf.high,log.policy,
-            log.started_seconds,log.completed_seconds,log.automatic_completion?"true":"false");
+            log.started_seconds,log.completed_seconds,log.automatic_completion?"true":"false",
+            log.density_kg_m3==1000?"Fresh":log.density_kg_m3==1025?"Marine":"unknown",log.density_kg_m3);
+        if(log.density_kg_m3)fprintf(out,"%u}",log.max_depth_dm);else fprintf(out,"null}");
     }
     fprintf(out,"]}");
 

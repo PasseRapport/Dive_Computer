@@ -626,6 +626,44 @@ This checks general/watch/dive menus, water selectors, Back without applying
 pending changes, rapid input, and x2 rendering. Watch catalog checks also cover
 the final Back card for both analog and digital faces.
 
+
+Water metadata and recovery
+---------------------------
+
+New PC dive logs use immutable schema 3 summaries containing the active reference
+water density (1000 or 1025 kg/m³) and the original physical maximum depth in
+decimetres. Water and peak depth are captured by the recording controller; changing
+the next preference cannot recalculate them. Schema 1/2 logs remain readable and
+byte-preserved. Their missing water and peak depth are unknown; exported log JSON
+uses `water_type: "unknown"`, density 0 and `max_depth_dm: null` for those records.
+The bench graph is a live projection of continuous pressure exposure under the
+current water choice, rather than an archived dive profile. Its original accepted
+pressure/time trace stays unchanged; completed record summaries retain their own
+water and depth interpretation. No new profile archive or logbook screen is added.
+The existing freediving session and last-immersion observations carry the fixed
+session density alongside their original depth statistics; they remain session
+observations, without a new persistent freediving archive.
+
+PC disk checkpoint schema 3 retains the unchanged portable numerical checkpoint
+inside the existing 364-byte envelope. It adds recording water/peak depth and the
+next preferred water reference. Explicit recovery restores active water and its
+lock independently of a later confirmed preference, including brief surface
+returns. Completion releases that active reference and immediately applies the
+next preference. A segment that completes one recording and starts another keeps
+each recording's own metadata. In-memory recovery likewise snapshots the active
+reference before replaying exact accepted pressure segments. Old active schema 2
+PC checkpoints are rejected explicitly: their earlier fixed-depth recording
+lifecycle cannot establish the new physical-depth context. Their bytes remain
+unchanged. Unknown time, missing exposure and incompatible recovery still latch
+INVALID; restoring the water preference cannot establish exposure continuity.
+
+`water_records_recovery_separate_processes` checks new and legacy record
+observations, immutable historical bytes, independently specified 20 m peaks,
+active Fresh versus next Marine, nonzero surface completion, exact next-dive
+pressure, memory replay and disk recovery/rejection through public PC commands.
+The existing rendered water journey also checks actual session/last-immersion
+water metadata in both water references. These are PC/native checks only.
+
 Water-density presentation checks preserve raw exported engine values and label
 those units as `reference_10m_per_bar`; `physical` observations separately expose
 watch ceilings and both stop boundaries. The same accepted pressure trace in the
