@@ -250,7 +250,7 @@ static void save_completed_log(bool automatic)
 }
 int pc_bench_recording_finish(void)
 {
-    long depth_mm=lroundf((view.result.absolute_pressure_bar-view.surface_bar)*10000);
+    long depth_mm=lroundf(pressure_to_depth(view.result.absolute_pressure_bar)*1000);
     if (!view.history_count || view.error || depth_mm>=500) return -1;
     invalidate_checkpoint_configuration();
     if(view.recording.active) {
@@ -267,7 +267,7 @@ int pc_bench_recording_finish(void)
 static void recording_sample(uint32_t seconds,float pressure)
 {
     struct recorded_dive *r=&view.recording;
-    uint32_t depth_mm=(uint32_t)lroundf(fmaxf(0,(pressure-view.surface_bar)*10000));
+    uint32_t depth_mm=(uint32_t)lroundf(fmaxf(0,pressure_to_depth(pressure))*1000);
     if (!r->armed) return;
     if (!r->active && depth_mm/100>=r->start_depth_dm) {
         r->active=true;r->started_seconds=seconds;++r->dives_started;
