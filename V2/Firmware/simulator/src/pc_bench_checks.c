@@ -321,6 +321,11 @@ static void pressure_water_checks(void)
         do {pc_bench_poll(1000);} while((!scuba_model_in_stop(m)||v->rate_m_min!=0) && ++guard<300);
         __ASSERT(guard<300 && fabsf(v->depth_m-m->calculated_stop_lower_m)<0.0001f,
             "Automatic pressure target disagrees with watch stop");
+        __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){v->seconds+1,7.01325f}) &&
+            m->calculated_state!=SCUBA_CALCULATED_INVALID,
+            "Valid +6bar pressure envelope invalidated physical watch");
+        __ASSERT(pc_bench_accept_sample(&(ostc4_sample){v->seconds+1,7.01425f})==-1,
+            "Pressure above +6bar envelope accepted");
     }
     printk("PRESSURE WATER PASS: identical trace/tissues/raw results, physical GF endpoints and inclusive pressure stop edges in Fresh/Marine\n");
 }

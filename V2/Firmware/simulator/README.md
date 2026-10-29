@@ -638,7 +638,9 @@ fixture13.3620968/7.24907494 reference metres displays13.3/7.2 physical metres;
 the44.3239403 reference-metre fixture displays44.1 physical metres.
 
 Ticket04 native verification (2026-10-29): all26 bench/reference CTests passed;
-GF/calculated-watch and disk-checkpoint rendered journeys passed. The GF journey
+GF/calculated-watch, bench and disk-checkpoint rendered journeys passed. The GF journey
 also checks inclusive pressure-stop edges and automatic target/watch agreement
-in both waters. Evidence is PC/native only, with no target build or physical
+in both waters. Valid+6bar remains accepted even above61 physical metres in
+Fresh; pressure above+6bar is still rejected. Descend guidance uses the same
+unrounded sensor boundary as the stop zone. Evidence is PC/native only, with no target build or physical
 sensor/watch validation claimed. Superseded reference evidence is retained.

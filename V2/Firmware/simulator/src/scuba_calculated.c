@@ -23,12 +23,13 @@ void scuba_calculated_apply(struct scuba_model *m,const ostc4_observation *r,
     m->calculated=true;m->scenario=SCUBA_MANUAL;m->speed=1;
     m->calculated_state=state(r);
     float density=water_density(m->salt_water);
+    float maximum_depth=water_depth(6.0f,0,density);
     float ceiling=water_depth(r->ceiling_meters/10.0f,0,density);
     m->calculated_gf_low_ceiling_m=water_depth(r->gf_low_ceiling_meters/10.0f,0,density);
     m->calculated_gf_high_ceiling_m=water_depth(r->gf_high_ceiling_meters/10.0f,0,density);
     m->calculated_gf_low_ceiling_valid=r->tissues==OSTC4_AVAILABLE && r->gf_low_ceiling==OSTC4_AVAILABLE;
     m->calculated_gf_high_ceiling_valid=r->tissues==OSTC4_AVAILABLE && r->gf_high_ceiling==OSTC4_AVAILABLE;
-    if(!isfinite(depth)||depth<0||depth>61||!isfinite(r->ceiling_meters)||
+    if(!isfinite(depth)||depth<0||depth>maximum_depth||!isfinite(r->ceiling_meters)||
         r->ceiling_meters<0||r->ceiling_meters>160||r->ndl_seconds<0||r->tts_seconds<0)
         m->calculated_state=SCUBA_CALCULATED_INVALID;
     if(m->calculated_state==SCUBA_CALCULATED_AVAILABLE||m->calculated_state==SCUBA_CALCULATED_LIMITED) {
@@ -64,11 +65,12 @@ void scuba_calculated_apply(struct scuba_model *m,const ostc4_observation *r,
          * measured depth; this avoids binary32 pressure conversion flicker at
          * an exact pressure stop. Ceiling violation still compares raw depths. */
         m->calculated_stop_zone=in_stop;
+        m->calculated_stop_shallow=slot && mm<lroundf(lower*1000);
         m->calculated_tts_s=r->tts_seconds;m->ndl_s=r->ndl_seconds;
     }
     /* Sensor-resolution millimetres first, then the established decimal-depth
      * display truncation. Raw depth controls the ceiling and stop boundaries. */
-    uint32_t mm=isfinite(depth)&&depth>=0&&depth<=61?(uint32_t)lroundf(depth*1000):m->depth_dm*100u;
+    uint32_t mm=isfinite(depth)&&depth>=0&&depth<=maximum_depth?(uint32_t)lroundf(depth*1000):m->depth_dm*100u;
     scuba_model_update_mm(m,(uint64_t)seconds*1000,mm,temperature,battery);
 }
 

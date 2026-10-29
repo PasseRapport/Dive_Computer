@@ -20,7 +20,7 @@ enum scuba_calculated_state { SCUBA_CALCULATED_UNAVAILABLE, SCUBA_CALCULATED_AVA
 struct scuba_model {
     /* Set only by the calculated presentation adapter. Scripted demos leave
      * this false. Unavailable/invalid samples retain the last known obligation. */
-    bool calculated, calculated_ceiling_violation, calculated_stop_zone;
+    bool calculated, calculated_ceiling_violation, calculated_stop_zone, calculated_stop_shallow;
     enum scuba_calculated_state calculated_state;
     struct exposure_gap data_gap;
     uint16_t calculated_ceiling_dm, calculated_stop_dm;
