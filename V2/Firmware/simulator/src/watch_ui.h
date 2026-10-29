@@ -3,13 +3,14 @@
 #include <lvgl.h>
 
 #include "watch_data.h"
+#include "analog_clock.h"
 
 /* Physical input events: simulator controls and future board inputs use these. */
 enum watch_input { WATCH_CROWN, WATCH_SINGLE_TAP, WATCH_DOUBLE_TAP };
 enum watch_page { WATCH_MAIN, WATCH_STATS, WATCH_WATER, WATCH_DIVE_MODE, WATCH_BRIGHTNESS, WATCH_SLEEP, WATCH_SCUBA, WATCH_BLUETOOTH, WATCH_LEAVE, WATCH_SENSITIVITY, WATCH_HAPTICS,
                   WATCH_PAGE_COUNT };
 enum watch_view { WATCH_CLOCK, WATCH_MODE_MENU, WATCH_DIVE_VIEW, WATCH_COMPASS_VIEW,
-                  WATCH_OPTION_VIEW, WATCH_OPTION_DETAIL, WATCH_DIVE_SELECT, WATCH_BACKLIGHT_VIEW, WATCH_BOOT, WATCH_FACE_SELECT, WATCH_TOOL_LEAVE, WATCH_SLEEP_TRANSITION, WATCH_SCUBA_VIEW };
+                  WATCH_OPTION_VIEW, WATCH_OPTION_DETAIL, WATCH_DIVE_SELECT, WATCH_BACKLIGHT_VIEW, WATCH_BOOT, WATCH_FACE_SELECT, WATCH_TOOL_LEAVE, WATCH_SLEEP_TRANSITION, WATCH_SCUBA_VIEW, WATCH_DIAL_SELECT };
 enum watch_mode { WATCH_WATCH, WATCH_DIVING, WATCH_COMPASS, WATCH_OPTION, WATCH_MODE_COUNT };
 enum watch_dive_mode { DIVE_SCUBA, DIVE_FREE };
 void watch_ui_create(lv_obj_t *parent);
@@ -40,6 +41,8 @@ bool watch_ui_bluetooth_dfu(void);
 enum watch_clock_style { CLOCK_DIGITAL, CLOCK_ANALOG };
 enum watch_clock_style watch_ui_clock_style(void);
 int watch_ui_face_option(void);
+enum watch_dial watch_ui_dial(void);
+int watch_ui_dial_option(void);
 
 enum watch_pulse { PULSE_SHORT, PULSE_MEDIUM, PULSE_LONG };
 bool watch_ui_haptics(void);

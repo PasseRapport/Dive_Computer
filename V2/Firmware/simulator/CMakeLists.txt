@@ -30,3 +30,5 @@ if(DIVE_BENCH)
         "${DIVE_OSTC4_LIBDIR}/libostc4_upstream_contained.a")
     target_link_options(native_simulator INTERFACE -lm)
 endif()
+
+target_sources(app PRIVATE src/analog_clock.c src/assets/project_logo_alpha.c)

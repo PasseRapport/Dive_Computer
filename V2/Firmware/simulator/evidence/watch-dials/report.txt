@@ -1,0 +1,17 @@
+Watch dials: Minimaliste / Dauphine / Automatique
+
+PC native simulation only; no Nordic target or physical watch validation.
+Normal and --bench builds succeed, without compiler warnings.
+
+Native menu journey:
+SDL_VIDEODRIVER=dummy DIVE_SIM_APPEARANCE_CHECK=1 DIVE_SIM_WATCH_FACE_CHECK=1 DIVE_SIM_GALLERY=/tmp/watch-dials-native <normal native executable> --stop_at=14 --no-rt
+WATCH DIALS PASS: both menu bounds, cancel/apply, independent Digital/Analog selection, all three faces at x1/x2, navigation and mode-toggle retention.
+python3 tests/check_watch_dials.py /tmp/watch-dials-native
+WATCH DIAL IMAGE PASS: three distinct dials, sixty minute ticks, central-point rules, transparent logo and exact x1/x2 parity
+
+Native legacy gallery --stop_at=58 --no-rt: NATIVE UI CHECK PASS.
+Calculated startup DIVE_SIM_BENCH_CHECK=startup --stop_at=23 --no-rt: STARTUP PASS; logo/clock preserved, no dive until explicit Start.
+Native appearance journey --stop_at=24 --no-rt: all native assertions pass.
+Legacy tests/check_appearance.py still fails its Freediving battery coordinate check (box 141,34–179,52). Both the existing tracked apnea-refinement/surface-ring.png and current Freediving capture have zero white pixels in that stale box. This check predates the dial changes; no unrelated layout changed.
+
+The dial choice changes analog presentation only; no automatic mode switching or seconds hand. Preferences retain the existing in-process clock-mode lifetime. No disk persistence was added for clock mode/dial.

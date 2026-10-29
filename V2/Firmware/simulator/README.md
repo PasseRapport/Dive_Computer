@@ -51,7 +51,16 @@ what is outside the aperture. It is a UI preview, not a hardware geometry test.
 Startup animates the octopus logo into the watch face, then stays on the clock.
 No dive or depth replay starts automatically. Turn the
 crown and fill the exit ring to reach **Watch / Diving / Compass / Options**.
-Options contains **Bluetooth / Watch / Backlight / Haptics / Sleep**. Bluetooth
+Options contains **Bluetooth / Watch / Backlight / Haptics / Sleep**.
+Watch offers **Digital / Analog / Cadran**. Cadran selects **Minimaliste**
+(thin flat-ended hands, no numbers), **Dauphine** (faceted hands, 1–12 and
+sixty perimeter minute ticks), or **Automatique** (the approved blue dual-scale
+dial, project logo, luminous-insert hands and day/date window). Automatique
+is a face name; it never switches modes automatically. There is no seconds hand.
+Selecting a face preserves Digital/Analog; tap applies and returns to Watch,
+while double tap cancels and returns one level. Choices survive navigation
+and switching between Digital and Analog, as with the existing clock mode.
+ Bluetooth
 and haptics are previews; they do not drive physical hardware.
 
 **Freediving** Main shares scuba's large decimal-anchored depth, two central

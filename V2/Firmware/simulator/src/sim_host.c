@@ -16,6 +16,7 @@ static atomic_bool redraw_requested;
 
 void sim_host_get_clock(unsigned *hour, unsigned *minute)
 {
+    if(getenv("DIVE_SIM_WATCH_FACE_CHECK")){*hour=10;*minute=10;return;}
     /* Keep screenshots reproducible; normal runs use the PC's local clock. */
     if (getenv("DIVE_SIM_GALLERY")) {
         *hour = 14;
