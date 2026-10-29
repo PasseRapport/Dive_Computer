@@ -17,3 +17,5 @@ Legacy tests/check_appearance.py still fails its Freediving battery coordinate c
 The dial choice changes analog presentation only; no automatic mode switching or seconds hand. Preferences retain the existing in-process clock-mode lifetime. No disk persistence was added for clock mode/dial.
 
 Automatic battery refinement: battery icon at (142,198), above inner 6; live battery data and threshold colors retained. Full native watch menu journey and x1/x2 image checks rerun and PASS, including visible battery and unobscured 6.
+
+Dauphine numbering refinement: large 12/3/6/9 (Montserrat 28), small intermediate minutes 5/10/20/25/35/40/50/55 (Montserrat 16); all sixty perimeter ticks retained. Existing local cardinal-only change was extended. Native menus and image checks PASS; x1/x2 remain pixel-identical after scale normalization.

@@ -53,8 +53,8 @@ No dive or depth replay starts automatically. Turn the
 crown and fill the exit ring to reach **Watch / Diving / Compass / Options**.
 Options contains **Bluetooth / Watch / Backlight / Haptics / Sleep**.
 Watch offers **Digital / Analog / Cadran**. Cadran selects **Minimaliste**
-(thin flat-ended hands, no numbers), **Dauphine** (faceted hands, 1–12 and
-sixty perimeter minute ticks), or **Automatique** (the approved blue dual-scale
+(thin flat-ended hands, no numbers), **Dauphine** (faceted hands, large 12/3/6/9, smaller five-minute numbers
+between them, and sixty perimeter minute ticks), or **Automatique** (the approved blue dual-scale
 dial, project logo, luminous-insert hands, day/date window and battery above the inner 6). Automatique
 is a face name; it never switches modes automatically. There is no seconds hand.
 Selecting a face preserves Digital/Analog; tap applies and returns to Watch,

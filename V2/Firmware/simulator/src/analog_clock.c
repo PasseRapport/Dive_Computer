@@ -120,7 +120,10 @@ void analog_clock_set_dial(enum watch_dial dial)
             if(i)number(i*30,113,i*5,&lv_font_montserrat_22);
         }
     } else if(dial==DIAL_DAUPHINE) {
-        for(int i=0;i<12;i++)number(i*30,123,i?i:12,&lv_font_montserrat_20);
+        for(int i=0;i<12;i++) {
+            if(i%3==0)number(i*30,121,i?i:12,&lv_font_montserrat_28);
+            else number(i*30,123,i*5,&lv_font_montserrat_16);
+        }
     }
     logo=lv_image_create(view);lv_image_set_src(logo,&project_logo_alpha);
     lv_image_set_scale(logo,analog_clock_logo_scale());lv_image_set_antialias(logo,true);
