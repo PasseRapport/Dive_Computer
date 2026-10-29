@@ -350,6 +350,9 @@ void watch_ui_create(lv_obj_t *parent)
     int water=0,field=0;
     (void)sim_host_apnea_preferences_load(&water,&field);
     apnea_settings_restore(water,(enum apnea_bottom_field)field);
+    water=1;
+    (void)sim_host_water_preferences_load(&water);
+    water_settings_restore(water);
     v1_ui_build(parent);
     ui_skip_boot();
     pages[WATCH_MAIN] = main_screen;
