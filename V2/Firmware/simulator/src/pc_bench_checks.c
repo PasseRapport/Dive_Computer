@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "pc_bench.h"
 #include "pc_bench_checkpoint_file.h"
+#include "water_settings.h"
 #include "pc_bench_ui.h"
 #include "sim_host.h"
 #include "sim_controls.h"
@@ -270,6 +271,66 @@ static void paired_footer_render(const char *expected)
 }
 
 /* Public watch commands demonstrate atomic preparation editing and start lock. */
+/* Same accepted pressure trace: density changes physical presentation only.
+ * Independent decimal values use g=9.80665; binary32 depth tolerance 1e-4m.
+ * Bounds are checked at existing sensor-millimetre resolution, not rounded dm. */
+static void pressure_water_checks(void)
+{
+    const struct bench_view *v=pc_bench_read();
+    const struct scuba_model *m=scuba_ui_model();
+    ostc4_observation fresh_result;
+    ostc4_sample fresh_trace[3];
+    float fresh_depth=0;
+    for(unsigned salt=0;salt<2;++salt) {
+        __ASSERT(!pc_bench_fresh(1.01325f,salt?1025:1000,NULL,0),"pressure water fixture failed");
+        __ASSERT(!pc_bench_set_gf_pair(30,70),"pressure water pair failed");
+        __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){120,4.01325f}) &&
+            !pc_bench_accept_sample(&(ostc4_sample){2220,4.01325f}),"pressure trace rejected");
+        if(!salt) {
+            fresh_result=v->result;fresh_depth=v->depth_m;
+            memcpy(fresh_trace,v->exposure,sizeof(fresh_trace));
+        } else {
+            __ASSERT(!memcmp(&fresh_result,&v->result,sizeof(fresh_result)) &&
+                !memcmp(fresh_trace,v->exposure,sizeof(fresh_trace)),"Density rewrote accepted trace/tissues/results");
+            __ASSERT(fabsf(fresh_depth-v->depth_m*1.025f)<0.0001f,"Pressure depth density ratio failed");
+        }
+        __ASSERT(fabsf(m->calculated_gf_low_ceiling_m-(salt?13.29321634f:13.62554675f))<0.0001f &&
+            fabsf(m->calculated_gf_high_ceiling_m-(salt?7.21170658f:7.39199925f))<0.0001f,
+            "GF endpoints must be physical metres");
+        __ASSERT(m->calculated_ceiling_dm==(salt?72:74) && m->calculated_stop_dm==(salt?119:122),
+            "Operational ceiling/mandatory stop physical rounding failed");
+        pc_bench_pause(true);pc_bench_ui_poll();
+        struct watch_data data={.temperature_c=18,.battery_percent=87};
+        scuba_ui_update(&data,(uint64_t)v->seconds*1000,true);lv_refr_now(NULL);
+        __ASSERT(!sim_host_bench_capture(13+salt),"Same-pressure capture failed");
+        /* Public replay retains exact supplied pressures, including stop edges. */
+        int slot=OSTC4_STOPS-1;
+        while(slot>=0 && !v->result.stop_seconds[slot])--slot;
+        __ASSERT(slot>=0,"pressure fixture has no stop");
+        float lower=1.01325f+0.3f*(slot+1),upper=1.01325f+0.3f*(slot+2);
+        __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){2221,upper}) &&
+            scuba_model_in_stop(m),"Exact upper pressure edge excluded");
+        __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){2222,upper+0.001f}) &&
+            !scuba_model_in_stop(m),"Above upper pressure edge credited");
+        __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){2223,lower}) &&
+            scuba_model_in_stop(m),"Exact lower pressure edge excluded");
+        __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){2224,lower-0.001f}) &&
+            !scuba_model_in_stop(m),"Below lower pressure edge credited");
+        __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){2225,4.01325f}) && !pc_bench_auto(true),
+            "Physical automatic target setup failed");
+        pc_bench_pause(false);unsigned guard=0;
+        do {pc_bench_poll(1000);} while((!scuba_model_in_stop(m)||v->rate_m_min!=0) && ++guard<300);
+        __ASSERT(guard<300 && fabsf(v->depth_m-m->calculated_stop_lower_m)<0.0001f,
+            "Automatic pressure target disagrees with watch stop");
+        __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){v->seconds+1,7.01325f}) &&
+            m->calculated_state!=SCUBA_CALCULATED_INVALID,
+            "Valid +6bar pressure envelope invalidated physical watch");
+        __ASSERT(pc_bench_accept_sample(&(ostc4_sample){v->seconds+1,7.01425f})==-1,
+            "Pressure above +6bar envelope accepted");
+    }
+    printk("PRESSURE WATER PASS: identical trace/tissues/raw results, physical GF endpoints and inclusive pressure stop edges in Fresh/Marine\n");
+}
+
 static void gf_checks(void)
 {
     static unsigned stage;
@@ -370,9 +431,9 @@ static void gf_checks(void)
         /* Values chosen from independent endpoint fixtures/reference, with
          * decimal expectations written explicitly rather than reformatting C. */
         if(stage/2==6)paired_footer_render("0.0 / 0.0 m");
-        if(stage/2==7)paired_footer_render("13.4 / 7.2 m");
+        if(stage/2==7)paired_footer_render("13.3 / 7.2 m");
         if(stage/2==11)paired_footer_render("-- / -- m");
-        if(stage/2==12)paired_footer_render("44.3 / 44.3 m");
+        if(stage/2==12)paired_footer_render("44.1 / 44.1 m");
         __ASSERT(sim_host_bench_capture(stage/2)==0,"GF demonstration capture failed");
         if(stage==25)printk("PAIRED CEILINGS WATCH PASS: simultaneous fixed Low/High, zero, equality, large values, mandatory stop/countdown, operational alerts and acknowledgement, invalidity\n");
         if(stage==11)printk("CONFIGURABLE GF WATCH PASS: draft, atomic commit, preparation pair, first-sample lock, direct rejection, completion unlock\n");
@@ -433,7 +494,7 @@ static void checkpoint_file_checks(void)
 static void startup_checks(void)
 {
     static unsigned stage;
-    const uint64_t times[]={500,1500,2300,10000,10500,11000,11200,11400,22000};
+    const uint64_t times[]={500,1500,2300,10000,10500,11000,11200,11400,22000,22500,23000};
     uint64_t now=k_uptime_get();
     if(stage>=sizeof(times)/sizeof(times[0]) || now<times[stage])return;
     const struct bench_view *v=pc_bench_read();
@@ -459,6 +520,11 @@ static void startup_checks(void)
         __ASSERT(!v->paused && v->seconds>0 && v->depth_m>0 &&
             v->recording.active && m->active,"Explicit Start did not launch dive");
         printk("STARTUP PASS: logo animation, clock idle, preparation idle, explicit SDL Start\n");break;
+    case 9:pc_bench_pause(true);pc_bench_ui_poll();break;
+    case 10:
+        lv_refr_now(NULL);
+        __ASSERT(!sim_host_bench_capture(10),"settled startup capture failed");
+        printk("STARTUP SETTLED CAPTURE PASS: imported pressure profile observation after explicit Start\n");break;
     }
     if(stage<=4)__ASSERT(!sim_host_bench_capture(stage),"Startup capture failed");
 }
@@ -622,7 +688,7 @@ void pc_bench_checks_poll(void)
         fixture_started=true;watch_ui_open_calculated_scuba();pc_bench_pause(false);
     }
     if(sim_host_bench_check_enabled()==5){checkpoint_file_checks();return;}
-    if(sim_host_bench_check_enabled()==4){gf_checks();return;}
+    if(sim_host_bench_check_enabled()==4){static bool water_done;if(!water_done){water_done=true;pressure_water_checks();}gf_checks();return;}
     if(sim_host_bench_check_enabled()==3){restart_checks();return;}
     if(sim_host_bench_check_enabled()==2){calculated_checks();return;}
     if(!sim_host_bench_check_enabled())return;

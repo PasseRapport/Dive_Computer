@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "pc_bench_ui.h"
 #include "pc_bench.h"
+#include "water.h"
 #include "pc_bench_checkpoint_file.h"
 #include "scuba_ui.h"
 #include "sim_host.h"
@@ -122,7 +123,7 @@ static void draw_graph(lv_event_t *e)
 void pc_bench_ui_create(void)
 {
     label("EXPERIMENTAL OSTC4 / SYNTHETIC EXPOSURE",636,14);
-    label("Virtual watch: CALCULATED / 10 m per bar",22,422);
+    label("Virtual watch: CALCULATED / physical metres",22,422);
     pc_bench_set_observer(scuba_ui_calculated);
     scuba_ui_calculated(pc_bench_read());
     sim_host_bench_watch(scuba_ui_model());
@@ -181,7 +182,7 @@ void pc_bench_ui_poll(void)
         snprintf(tts,sizeof(tts),"0 s (NDL; travel excluded)");
     lv_label_set_text_fmt(summary,"%s | exposure: %s\nNDL: %s | TTS: %s\nCeiling: %.2f m (%s)\n%.5f bar absolute | surface %.5f bar | water %.0f kg/m3\nPreferred GF %u/%u | Applied %u/%u | %s",
         v->error?v->error:v->ended?"REPLAY COMPLETE":v->paused?"PAUSED":v->replay?"PRESSURE REPLAY":v->automatic?"AUTO ASCENT":"MANUAL",
-        ostc4_availability_name(v->result.tissues),ndl,tts,(double)v->result.ceiling_meters,
+        ostc4_availability_name(v->result.tissues),ndl,tts,(double)water_depth(v->result.ceiling_meters/10.0f,0,v->density_kg_m3),
         ostc4_availability_name(v->result.ceiling),(double)v->result.absolute_pressure_bar,
         (double)v->surface_bar,(double)v->density_kg_m3,v->preferred_gf.low,v->preferred_gf.high,
         v->active_gf.low,v->active_gf.high,v->gf_locked?"LOCKED":"UNLOCKED");
@@ -192,7 +193,7 @@ void pc_bench_ui_poll(void)
     if(v->result.stops==OSTC4_AVAILABLE) for(int i=OSTC4_STOPS-1;i>=0;--i) {
         if(!v->result.stop_seconds[i])continue;
         any=true;
-        if(n<(int)sizeof(buffer)-32)n+=snprintf(buffer+n,sizeof(buffer)-n," %dm:%us",(i+1)*3,v->result.stop_seconds[i]);
+        if(n<(int)sizeof(buffer)-32)n+=snprintf(buffer+n,sizeof(buffer)-n," %.1fm:%us",(double)water_depth(0.3f*(i+1),0,v->density_kg_m3),v->result.stop_seconds[i]);
     }
     if(!any&&v->result.stops==OSTC4_AVAILABLE)snprintf(buffer+n,sizeof(buffer)-n," none");
     lv_label_set_text(stops,buffer);
