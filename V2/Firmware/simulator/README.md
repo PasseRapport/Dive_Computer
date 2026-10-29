@@ -690,3 +690,12 @@ accepted pressure/time exports, supplied keyframes and tissues, independent
 physical-depth values, and settled startup/watch/bench captures. The startup
 journey's extra frame10 is taken after the explicit Start and pause; importing
 preferences alone never advances exposure.
+
+
+The calculated watch also derives air ppO₂ directly from the accepted absolute
+pressure times 0.21. Water density and surface reference therefore cannot change
+ppO₂ for identical absolute pressure. The oxygen warning and footer colour use
+the unrounded 1.4/1.6 bar boundaries; only the numeric footer rounds to hundredths.
+The scripted demonstration keeps its existing depth convention. The GF public
+journey checks 6.60/6.66/6.67/6.70 bar in both waters and two surface references,
+including literal footer text, warning transitions and retained INVALID state.

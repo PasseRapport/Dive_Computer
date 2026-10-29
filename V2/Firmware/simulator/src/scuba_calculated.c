@@ -22,6 +22,8 @@ void scuba_calculated_apply(struct scuba_model *m,const ostc4_observation *r,
         m->calculated_state==SCUBA_CALCULATED_LIMITED);
     m->calculated=true;m->scenario=SCUBA_MANUAL;m->speed=1;
     m->calculated_state=state(r);
+    if(isfinite(r->absolute_pressure_bar) && r->absolute_pressure_bar>0)
+        m->calculated_ppo2_bar=r->absolute_pressure_bar*0.21f;
     float density=water_density(m->salt_water);
     float maximum_depth=water_depth(6.0f,0,density);
     float ceiling=water_depth(r->ceiling_meters/10.0f,0,density);
