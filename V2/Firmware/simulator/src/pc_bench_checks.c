@@ -491,7 +491,7 @@ static void checkpoint_file_checks(void)
 static void startup_checks(void)
 {
     static unsigned stage;
-    const uint64_t times[]={500,1500,2300,10000,10500,11000,11200,11400,22000};
+    const uint64_t times[]={500,1500,2300,10000,10500,11000,11200,11400,22000,22500,23000};
     uint64_t now=k_uptime_get();
     if(stage>=sizeof(times)/sizeof(times[0]) || now<times[stage])return;
     const struct bench_view *v=pc_bench_read();
@@ -517,6 +517,11 @@ static void startup_checks(void)
         __ASSERT(!v->paused && v->seconds>0 && v->depth_m>0 &&
             v->recording.active && m->active,"Explicit Start did not launch dive");
         printk("STARTUP PASS: logo animation, clock idle, preparation idle, explicit SDL Start\n");break;
+    case 9:pc_bench_pause(true);pc_bench_ui_poll();break;
+    case 10:
+        lv_refr_now(NULL);
+        __ASSERT(!sim_host_bench_capture(10),"settled startup capture failed");
+        printk("STARTUP SETTLED CAPTURE PASS: imported pressure profile observation after explicit Start\n");break;
     }
     if(stage<=4)__ASSERT(!sim_host_bench_capture(stage),"Startup capture failed");
 }

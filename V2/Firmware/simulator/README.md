@@ -644,3 +644,11 @@ in both waters. Valid+6bar remains accepted even above61 physical metres in
 Fresh; pressure above+6bar is still rejected. Descend guidance uses the same
 unrounded sensor boundary as the stop zone. Evidence is PC/native only, with no target build or physical
 sensor/watch validation claimed. Superseded reference evidence is retained.
+
+`tests/check_water_csv_import.py NATIVE_BENCH_BINARY EVIDENCE_DIRECTORY` runs
+the real CSV file importer in two separate processes with restored Fresh/Marine
+preferences. It preserves a SHA256 of the unchanged input file and checks exact
+accepted pressure/time exports, supplied keyframes and tissues, independent
+physical-depth values, and settled startup/watch/bench captures. The startup
+journey's extra frame10 is taken after the explicit Start and pause; importing
+preferences alone never advances exposure.
