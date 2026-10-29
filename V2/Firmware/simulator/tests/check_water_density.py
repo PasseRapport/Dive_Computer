@@ -37,6 +37,8 @@ for salt, density in enumerate((1000, 1025)):
         assert state["density_kg_m3"] == density, state
         assert abs(state["depth_m"] - depth) < 1e-4, state
         assert state["watch"]["depth_dm"] == dm, state
+        assert state["recording"]["density_kg_m3"] == density, state
+        assert state["recording"]["max_depth_dm"] == (20 if offset==0 else 100 if offset==1 else 110), state
         assert state["recording"]["active"] and state["recording"]["started_seconds"] == 2, state
         assert state["recording"]["surface_seconds"] == (1 if offset == 4 else 0), state
         frame = Image.open(f"{prefix}-{index}.bmp").convert("RGB")
@@ -57,7 +59,7 @@ for salt, density in enumerate((1000, 1025)):
     ):
         index = salt * 12 + stage
         state = json.loads(Path(f"{prefix}-apnea-{index}.json").read_text())
-        assert state == dict(density_kg_m3=density, depth_dm=depth,
+        assert state == dict(density_kg_m3=density, last_density_kg_m3=0 if stage==3 else density, depth_dm=depth,
                              current_max_depth_dm=current_max, max_depth_dm=session_max,
                              last_depth_dm=last, total_dives=dives,
                              total_underwater_s={3: 1, 6: 4, 10: 6}[stage],

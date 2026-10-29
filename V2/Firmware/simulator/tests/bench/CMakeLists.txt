@@ -66,3 +66,11 @@ target_link_libraries(test_recovery_lifecycle PRIVATE ostc4_exposure m)
 target_compile_options(test_recovery_lifecycle PRIVATE -Wall -Wextra -Wpedantic -Werror)
 add_test(NAME recovery_pair_lifecycle_log_integration COMMAND ${Python3_EXECUTABLE}
     ${CMAKE_CURRENT_SOURCE_DIR}/check_recovery_lifecycle.py $<TARGET_FILE:test_recovery_lifecycle>)
+
+add_executable(test_water_records test_water_records.c ../../src/pc_bench.c ../../src/water_settings.c
+    ../../src/pc_bench_storage.c ../../src/pc_bench_checkpoint_file.c ../../src/apnea_preferences_host.c)
+target_include_directories(test_water_records PRIVATE ../../src)
+target_link_libraries(test_water_records PRIVATE ostc4_exposure m)
+target_compile_options(test_water_records PRIVATE -Wall -Wextra -Wpedantic -Werror)
+add_test(NAME water_records_recovery_separate_processes COMMAND ${Python3_EXECUTABLE}
+    ${CMAKE_CURRENT_SOURCE_DIR}/check_water_records.py $<TARGET_FILE:test_water_records>)

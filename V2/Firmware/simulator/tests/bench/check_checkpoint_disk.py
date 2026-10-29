@@ -22,8 +22,8 @@ with tempfile.TemporaryDirectory(prefix="dive-checkpoint-") as d:
     run("fault", saved, 5, "gap")
     run("fault", saved, 3, "stale")
     run("fault", root / "missing", 1, "normal")
-    mutations = [(70, 1, False, 1), (4, 3, True, 2), (64+8, 0, True, 2),
-                 (64+289, 0, True, 6), (19, 0, True, 6), (16, 0, True, 6), (56, 1, True, 2)]
+    mutations = [(70, 1, False, 1), (4, 4, True, 2), (64+8, 0, True, 2),
+                 (64+289, 0, True, 6), (19, 0, True, 6), (16, 0, True, 6), (56, 1, True, 6), (59, 255, True, 6), (60, 1, True, 6)]
     for index, value, repair, expected in mutations:
         data = bytearray(original)
         data[index] = value
@@ -48,7 +48,7 @@ with tempfile.TemporaryDirectory(prefix="dive-checkpoint-") as d:
     run('fault',path,6,'normal')
     previous = bytearray(original)
     struct.pack_into("<I", previous, 4, 1)
-    previous[48:56] = bytes(8)
+    previous[48:64] = bytes(16)
     struct.pack_into("<I", previous, len(previous)-4, zlib.crc32(previous[:-4]))
     old_pc = root / "schema-1.checkpoint"
     old_pc.write_bytes(previous)

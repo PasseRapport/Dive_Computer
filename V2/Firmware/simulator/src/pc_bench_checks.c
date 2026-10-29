@@ -407,7 +407,7 @@ static void checkpoint_file_checks(void)
             strstr(v->recovery,"Unknown restart time"),"disk load invented restart clock");
         lv_refr_now(NULL);__ASSERT(sim_host_bench_capture(0)==0,"disk fault capture failed");break;
     case 5:
-        __ASSERT(pc_bench_fresh(1,1000,NULL,0)==0,"disk preferred fresh failed");
+        __ASSERT(pc_bench_fresh(1,1025,NULL,0)==0,"disk preferred fresh failed");
         __ASSERT(pc_bench_set_gf_pair(20,90)==0,"disk preferred pair failed");
         pc_bench_pause(true);sim_host_push_button(1040,780,1);break;
     case 6:sim_host_push_button(1040,780,0);break;
@@ -417,12 +417,14 @@ static void checkpoint_file_checks(void)
     case 9:
         __ASSERT(v->gf_locked && v->active_gf.low==40 && v->preferred_gf.low==20 &&
             v->seconds==1260 && !v->error,"disk recovered lock/pair failed");
+        __ASSERT(v->density_kg_m3==1000 && v->recording.density_kg_m3==1000 && !water_settings_salt(),"disk active water not restored");
         lv_refr_now(NULL);__ASSERT(sim_host_bench_capture(2)==0,"disk locked capture failed");break;
     case 10:
         __ASSERT(pc_bench_accept_sample(&(ostc4_sample){1440,1})==0,"disk surface failed");
         __ASSERT(v->gf_locked,"brief surface unlocked recovered dive");
         __ASSERT(pc_bench_recording_finish()==0,"disk finish failed");
-        __ASSERT(!v->gf_locked && pc_bench_set_gf_pair(20,90)==0,"disk later unlock failed");break;
+        __ASSERT(!v->gf_locked && pc_bench_set_gf_pair(20,90)==0,"disk later unlock failed");
+        __ASSERT(v->density_kg_m3==1025 && water_settings_salt(),"completion lost next water preference");break;
     case 11:
         lv_refr_now(NULL);__ASSERT(sim_host_bench_capture(3)==0,"disk unlocked capture failed");
         printk("DISK CHECKPOINT UI PASS: visible Save disk/Load disk; default unknown clock invalid; explicit saved-time assertion; recovered40/85 locked with next20/90 preference; surface completion unlock\n");break;

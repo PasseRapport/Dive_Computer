@@ -132,7 +132,7 @@ uint64_t pc_storage_new_session_id(void)
 }
 static int read_log_id(unsigned long long id,struct pc_bench_log *record)
 {
-    char name[64],path[4096],extra;unsigned version,low,high,automatic;
+    char name[64],path[4096],extra;unsigned version,low,high,automatic,density=0,peak=0;
     struct pc_bench_log candidate={0};
     snprintf(name,sizeof(name),"dive-%020llu.log",id);
     if(path_for(path,sizeof(path),name))return -1;
@@ -149,12 +149,16 @@ static int read_log_id(unsigned long long id,struct pc_bench_log *record)
     else if(version==2)fields=sscanf(row,"DIVE_WATCH_LOG %u %llu %llu %u %u %u %u %u %u %191s %c",
         &version,&candidate.id,&recording_id,&candidate.started_seconds,&candidate.completed_seconds,
         &candidate.dive_seconds,&low,&high,&automatic,candidate.policy,&extra);
+    else if(version==3)fields=sscanf(row,"DIVE_WATCH_LOG %u %llu %llu %u %u %u %u %u %u %u %u %191s %c",
+        &version,&candidate.id,&recording_id,&candidate.started_seconds,&candidate.completed_seconds,
+        &candidate.dive_seconds,&low,&high,&automatic,&density,&peak,candidate.policy,&extra);
     else return -1;
-    if(failed || fields!=(version==1?9:10) || candidate.id!=id || (version==2 && !recording_id) ||
-        !valid_pair(low,high) || automatic>1 ||
+    if(failed || fields!=(version==1?9:version==2?10:12) || candidate.id!=id || (version>=2 && !recording_id) ||
+        !valid_pair(low,high) || automatic>1 || (version==3 && (density!=1000 && density!=1025)) || (version==3 && (peak<5 || peak>612)) ||
         candidate.completed_seconds<candidate.started_seconds ||
         candidate.dive_seconds>candidate.completed_seconds-candidate.started_seconds)return -1;
     candidate.recording_id=(uint64_t)recording_id;
+    candidate.density_kg_m3=(uint16_t)density;candidate.max_depth_dm=(uint16_t)peak;
     candidate.active_gf=(ostc4_gf_pair){(uint8_t)low,(uint8_t)high};
     candidate.automatic_completion=automatic!=0;
     if(record)*record=candidate;
@@ -190,11 +194,11 @@ void pc_storage_append_log(const struct pc_bench_log *record)
     if(!state.enabled)return;
     char content[512],name[64];
     unsigned long long id=next_log_id;
-    int length=snprintf(content,sizeof(content),"DIVE_WATCH_LOG 2 %llu %llu %u %u %u %u %u %u %s\n",
+    int length=snprintf(content,sizeof(content),"DIVE_WATCH_LOG 3 %llu %llu %u %u %u %u %u %u %u %u %s\n",
         id,(unsigned long long)record->recording_id,record->started_seconds,record->completed_seconds,record->dive_seconds,
-        record->active_gf.low,record->active_gf.high,record->automatic_completion?1:0,record->policy);
+        record->active_gf.low,record->active_gf.high,record->automatic_completion?1:0,record->density_kg_m3,record->max_depth_dm,record->policy);
     snprintf(name,sizeof(name),"dive-%020llu.log",id);
-    if(!id || !record->recording_id || length<0 || length>=(int)sizeof(content) || atomic_write(name,content,true)) {
+    if(!id || !record->recording_id || (record->density_kg_m3!=1000 && record->density_kg_m3!=1025) || length<0 || length>=(int)sizeof(content) || atomic_write(name,content,true)) {
         ++state.unsaved_logs;state.log_error="Completed dive log write failed; log is NOT saved";return;
     }
     scan_logs();
@@ -212,7 +216,9 @@ void pc_storage_reconcile_log(const struct pc_bench_log *record)
         struct pc_bench_log existing;
         if(pc_storage_log_read(i,&existing)==0 && existing.recording_id==record->recording_id &&
            existing.started_seconds==record->started_seconds && existing.completed_seconds==record->completed_seconds &&
-           existing.dive_seconds==record->dive_seconds && existing.active_gf.low==record->active_gf.low &&
+           existing.dive_seconds==record->dive_seconds && existing.density_kg_m3==record->density_kg_m3 &&
+           existing.max_depth_dm==record->max_depth_dm &&
+           existing.active_gf.low==record->active_gf.low &&
            existing.active_gf.high==record->active_gf.high && existing.automatic_completion==record->automatic_completion &&
            !strcmp(existing.policy,record->policy))return;
     }

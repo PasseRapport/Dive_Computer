@@ -77,6 +77,8 @@ static bool water_apnea_inputs(uint64_t *sample_ms)
 static void water_apnea_observe(const struct watch_data *data)
 {
     unsigned stage=step%12,salt=step/12;
+    if(stage<11)__ASSERT(data->session_density_kg_m3==(salt?1025:1000),"Apnea session water metadata changed");
+    if(stage>=6)__ASSERT(data->last_density_kg_m3==(salt?1025:1000),"Apnea completed record water metadata changed");
     if(stage==0)__ASSERT(!data->total_dives && !data->max_depth_dm,"New apnea session retained statistics");
     if(stage==1)__ASSERT(data->depth_dm==10 && !data->apnea_active && !data->total_dives,"Physical 1.099 m started apnea");
     if(stage==2)__ASSERT(data->depth_dm==11 && data->apnea_active && data->total_dives==1,"Physical 1.100 m missed apnea start");
@@ -92,8 +94,8 @@ static void water_apnea_observe(const struct watch_data *data)
         if(prefix) {
             char path[512];snprintf(path,sizeof(path),"%s-apnea-%u.json",prefix,step);
             FILE *out=fopen(path,"w");__ASSERT(out,"Water apnea observation failed");
-            fprintf(out,"{\"density_kg_m3\":%u,\"depth_dm\":%u,\"current_max_depth_dm\":%u,\"max_depth_dm\":%u,\"last_depth_dm\":%u,\"total_dives\":%u,\"total_underwater_s\":%u,\"elapsed_s\":%u,\"max_dive_s\":%u,\"active\":%s}\n",
-                salt?1025:1000,data->depth_dm,data->current_max_depth_dm,data->max_depth_dm,data->last_depth_dm,data->total_dives,data->total_underwater_s,data->elapsed_s,data->max_dive_s,data->apnea_active?"true":"false");
+            fprintf(out,"{\"density_kg_m3\":%u,\"last_density_kg_m3\":%u,\"depth_dm\":%u,\"current_max_depth_dm\":%u,\"max_depth_dm\":%u,\"last_depth_dm\":%u,\"total_dives\":%u,\"total_underwater_s\":%u,\"elapsed_s\":%u,\"max_dive_s\":%u,\"active\":%s}\n",
+                data->session_density_kg_m3,data->last_density_kg_m3,data->depth_dm,data->current_max_depth_dm,data->max_depth_dm,data->last_depth_dm,data->total_dives,data->total_underwater_s,data->elapsed_s,data->max_dive_s,data->apnea_active?"true":"false");
             __ASSERT(!fclose(out),"Water apnea observation close failed");
         }
     }
