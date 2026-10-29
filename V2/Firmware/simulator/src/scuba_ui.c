@@ -1,4 +1,5 @@
 #include "scuba_ui.h"
+#include "sim_host.h"
 #include "water.h"
 #include "water_settings.h"
 #include "scuba_dashboard.h"
@@ -370,13 +371,14 @@ bool scuba_ui_input(enum watch_input input, int steps)
             else {gf_rejected=true;gf_endpoint=0;}
 #endif
         } else if(screen==SCUBA_WATER) {
-            if(water_row<2 && !model.active) {
+            if(water_row<2 && !model.active && !water_settings_locked()) {
 #ifdef DIVE_PC_BENCH
                 if(model.calculated)pc_bench_set_water(water_row==1);
                 else
 #endif
                 water_settings_select(water_row==1);
                 model.salt_water=water_settings_salt();
+                (void)sim_host_water_preferences_save(model.salt_water);
             }
             show(SCUBA_SETTINGS);
         }
