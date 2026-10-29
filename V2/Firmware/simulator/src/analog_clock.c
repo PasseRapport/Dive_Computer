@@ -137,7 +137,7 @@ void analog_clock_set_dial(enum watch_dial dial)
         lv_obj_set_style_border_width(date,1,0);lv_obj_set_style_border_color(date,lv_color_hex(0x939e9e),0);
         lv_obj_set_style_pad_hor(date,4,0);lv_obj_set_style_pad_ver(date,2,0);
     }
-    battery=battery_icon_create(view,142,dial==DIAL_AUTOMATIC?198:218);
+    battery=battery_icon_create(view,142,dial==DIAL_AUTOMATIC?198:dial==DIAL_DAUPHINE?214:218);
     hands=drawing(draw_hands);analog_clock_update(&last_data);
 }
 lv_obj_t *analog_clock_create(lv_obj_t *parent)
