@@ -427,8 +427,48 @@ static void checkpoint_file_checks(void)
         printk("DISK CHECKPOINT UI PASS: visible Save disk/Load disk; default unknown clock invalid; explicit saved-time assertion; recovered40/85 locked with next20/90 preference; surface completion unlock\n");break;
     }
 }
+static void startup_checks(void)
+{
+    static unsigned stage;
+    const uint64_t times[]={500,1500,2300,10000,10500,11000,11200,11400,22000};
+    uint64_t now=k_uptime_get();
+    if(stage>=sizeof(times)/sizeof(times[0]) || now<times[stage])return;
+    const struct bench_view *v=pc_bench_read();
+    const struct scuba_model *m=scuba_ui_model();
+    if(stage<8)__ASSERT(v->paused && v->seconds==0 && v->depth_m==0 &&
+        !v->recording.active && !m->active,"Startup advanced exposure without Start");
+    switch(stage++) {
+    case 0:case 1:
+        __ASSERT(watch_ui_view()==WATCH_BOOT,"Startup skipped logo animation");break;
+    case 2:case 3:
+        __ASSERT(watch_ui_view()==WATCH_CLOCK,"Startup did not remain on clock");break;
+    case 4:
+        watch_ui_input(WATCH_CROWN,1);watch_ui_input(WATCH_CROWN,24);
+        watch_ui_input(WATCH_CROWN,-100);watch_ui_input(WATCH_CROWN,WATCH_DIVING);
+        watch_ui_input(WATCH_SINGLE_TAP,0);watch_ui_input(WATCH_CROWN,-100);
+        watch_ui_input(WATCH_SINGLE_TAP,0);break;
+    case 5:
+        __ASSERT(watch_ui_view()==WATCH_SCUBA_VIEW && scuba_ui_screen()==SCUBA_PREP,
+            "Selecting scuba should wait at preparation");break;
+    case 6:sim_host_push_button(60,742,1);break;
+    case 7:sim_host_push_button(60,742,0);break;
+    case 8:
+        __ASSERT(!v->paused && v->seconds>0 && v->depth_m>0 &&
+            v->recording.active && m->active,"Explicit Start did not launch dive");
+        printk("STARTUP PASS: logo animation, clock idle, preparation idle, explicit SDL Start\n");break;
+    }
+    if(stage<=4)__ASSERT(!sim_host_bench_capture(stage),"Startup capture failed");
+}
+
 void pc_bench_checks_poll(void)
 {
+    int mode=sim_host_bench_check_enabled();
+    if(mode==6){startup_checks();return;}
+    /* Scripted checks explicitly start their fixtures; normal startup stays idle. */
+    static bool fixture_started;
+    if(mode && !fixture_started) {
+        fixture_started=true;watch_ui_open_calculated_scuba();pc_bench_pause(false);
+    }
     if(sim_host_bench_check_enabled()==5){checkpoint_file_checks();return;}
     if(sim_host_bench_check_enabled()==4){gf_checks();return;}
     if(sim_host_bench_check_enabled()==3){restart_checks();return;}

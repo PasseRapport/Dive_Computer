@@ -1,0 +1,10 @@
+WARNING: Using a test - not safe - entropy source
+*** Booting nRF Connect SDK v3.4.1-b20f8619ba9a ***
+*** Using Zephyr OS v4.4.2-33fa6a7aac6a ***
+LVGL UI ready: 320x300, RGB565, simulated data
+RECORDING LIFECYCLE PASS: watch start setting, main/summary, brief surface, manual/automatic completion, second dive
+CALCULATED WATCH PASS: NDL, deco, automatic stop, manual violation, acknowledgement, invalidity, two dives, SDL auto control
+BATTERY WHEEL PASS: real SDL events, one-percent steps, 0/100 bounds, paused updates, crown isolation
+APNEA BENCH PASS: real Rate/Hold clicks drive the shared depth, paused exposure and watch view preserved
+
+Stopped at 20.010s

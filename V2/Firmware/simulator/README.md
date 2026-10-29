@@ -48,7 +48,8 @@ This is a desktop prototype; integration with the Nordic board is separate.
 The simulated matrix is 320 x 300, with a 300-pixel circular aperture. Grey shows
 what is outside the aperture. It is a UI preview, not a hardware geometry test.
 
-Startup shows the octopus logo, then the digital or analog watch face. Turn the
+Startup animates the octopus logo into the watch face, then stays on the clock.
+No dive or depth replay starts automatically. Turn the
 crown and fill the exit ring to reach **Watch / Diving / Compass / Options**.
 Options contains **Bluetooth / Watch / Backlight / Haptics / Sleep**. Bluetooth
 and haptics are previews; they do not drive physical hardware.
@@ -235,8 +236,11 @@ scripted scenario/speed commands are ignored while the watch is calculated.
 
 The default synthetic replay is the accepted two-dive example: absolute pressure
 1.01325 bar at 0 s, 4.01325 at 120 and 1920 s, 1.01325 at 2100 and 3600 s,
-3.01325 at 3720 and 4920 s, and surface again at 5040 s. Only **FRESH replay**
-(or process startup) initializes equilibrium tissues. Surfacing, holding depth,
+3.01325 at 3720 and 4920 s, and surface again at 5040 s. Startup loads this profile paused at the surface and retains the clock screen.
+Select Diving → Scuba Diving when ready, then press **Start** in the lower bench
+row to run the profile. A custom `--bench-profile` also starts paused.
+Only **FRESH replay** (an explicit action that starts a new replay)
+or process startup initializes equilibrium tissues. Surfacing, holding depth,
 pausing, speed changes, manual takeover and normal menus preserve exposure.
 At replay completion the clock stops; **Hold**, a depth/rate button or **Surface**
 continues manual exposure from the retained state.

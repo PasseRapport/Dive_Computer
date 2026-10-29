@@ -1,0 +1,6 @@
+PC native simulator validation only.
+Build: launch.py --bench --build-only
+Startup: SDL_VIDEODRIVER=dummy DIVE_SIM_BENCH_CHECK=startup DIVE_SIM_CAPTURE=/tmp/dive-startup-check/startup <native executable> --stop_at=23 --no-rt
+PASS: logo at 0.5/1.5 seconds, clock at 2.3/10 seconds, zero exposure time/depth and no active recording until Start. Crown selects scuba preparation without launching the replay. A real SDL Start click advances depth and starts recording.
+Calculated regression: DIVE_SIM_BENCH_CHECK=calculated, --stop_at=20 --no-rt; lifecycle, calculated watch, battery wheel and apnea bench PASS.
+Existing boot fade/zoom animation retained. Normal and custom replay startup paused. Explicit FRESH replay retains its start behavior. No target/hardware validation.

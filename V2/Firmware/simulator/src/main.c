@@ -33,6 +33,7 @@ int main(void)
     sim_host_init();
 #ifdef DIVE_PC_BENCH
     if (sim_host_bench_fresh()!=0) return 1;
+    pc_bench_pause(true);
     pc_bench_ui_create();
 #endif
     unsigned hour,minute,day,month,weekday,second;

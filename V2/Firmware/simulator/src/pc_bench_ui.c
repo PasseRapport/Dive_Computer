@@ -125,7 +125,6 @@ void pc_bench_ui_create(void)
     label("Virtual watch: CALCULATED / 10 m per bar",22,422);
     pc_bench_set_observer(scuba_ui_calculated);
     scuba_ui_calculated(pc_bench_read());
-    watch_ui_open_calculated_scuba();
     sim_host_bench_watch(scuba_ui_model());
     summary=label("",636,44);lv_obj_set_width(summary,548);
     recovery_label=label("",636,132);lv_obj_set_width(recovery_label,548);
@@ -154,7 +153,7 @@ void pc_bench_ui_create(void)
         lv_obj_set_style_text_align(time_ticks[i],i==0?LV_TEXT_ALIGN_LEFT:i==4?LV_TEXT_ALIGN_RIGHT:LV_TEXT_ALIGN_CENTER,0);
     }
     clock_label=label("",22,696);
-    pause_label=button("Pause",22,726,102,BENCH_PAUSE);
+    pause_label=button("Start",22,726,102,BENCH_PAUSE);
     speed_label=button("Time x1",134,726,110,BENCH_SPEED);
     button("Rate -1",254,726,108,BENCH_ASCEND_RATE);button("Rate +1",372,726,108,BENCH_DESCEND_RATE);
     button("Hold",490,726,88,BENCH_HOLD);button("Surface",588,726,100,BENCH_SURFACE);
@@ -228,7 +227,7 @@ void pc_bench_ui_poll(void)
     lv_label_set_text(disk_clock_label,disk_saved_instant_asserted?
         "Assert saved time; elapsed = 0":"Clock UNKNOWN (click to assert)");
     lv_label_set_text(auto_label,v->automatic?"Auto: ON":"Auto ascent");
-    lv_label_set_text(pause_label,v->paused?"Resume":"Pause");
+    lv_label_set_text(pause_label,v->paused?(v->seconds?"Resume":"Start"):"Pause");
     lv_label_set_text_fmt(speed_label,"Time x%u",v->speed);
     lv_obj_invalidate(graph);
 }
