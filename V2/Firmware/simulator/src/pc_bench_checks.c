@@ -278,6 +278,34 @@ static void pressure_water_checks(void)
 {
     const struct bench_view *v=pc_bench_read();
     const struct scuba_model *m=scuba_ui_model();
+    /* Independent air ppO2: 6.60*.21=1.386, 6.66*.21=1.3986,
+     * 6.67*.21=1.4007 and6.70*.21=1.407bar. Same absolute pressures
+     * must produce the same warning in both waters/surface references. */
+    for(unsigned surface=0;surface<2;++surface)for(unsigned salt=0;salt<2;++salt) {
+        __ASSERT(!pc_bench_fresh(surface?.9f:1.0f,salt?1025:1000,NULL,0),"ppO2 fresh failed");
+        const float pressures[]={6.60f,6.66f,6.67f,6.70f};
+        for(unsigned i=0;i<4;++i) {
+            __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){i+1,pressures[i]}),"ppO2 pressure rejected");
+            __ASSERT(!!(m->alerts&SCUBA_OXYGEN)==(i>=2),"Oxygen warning must follow absolute pressure, not water depth");
+            struct watch_data data={.temperature_c=18,.battery_percent=87};
+            scuba_ui_update(&data,(uint64_t)v->seconds*1000,true);
+            if(!i) {
+                scuba_ui_input(WATCH_CROWN,1);scuba_ui_input(WATCH_SINGLE_TAP,0);
+                scuba_ui_input(WATCH_CROWN,-100);scuba_ui_input(WATCH_CROWN,1);scuba_ui_input(WATCH_SINGLE_TAP,0);
+                scuba_ui_input(WATCH_CROWN,-100);scuba_ui_input(WATCH_CROWN,FIELD_PPO2);
+                scuba_ui_input(WATCH_SINGLE_TAP,0);scuba_ui_input(WATCH_DOUBLE_TAP,0);
+            }
+            lv_refr_now(NULL);
+            const char *expected[]={"1.39 bar","1.40 bar","1.40 bar","1.41 bar"};
+            __ASSERT(scuba_ui_field()==FIELD_PPO2 && visible_label(lv_screen_active(),expected[i]),
+                "Air ppO2 footer must display accepted absolute pressure in both waters");
+            __ASSERT(!sim_host_bench_capture(20+surface*8+salt*4+i),"ppO2 capture failed");
+        }
+        pc_bench_mark_missing();
+        __ASSERT(m->calculated_state==SCUBA_CALCULATED_INVALID && v->result.tissues==OSTC4_INVALID,
+            "ppO2 presentation cleared missing-exposure invalidity");
+    }
+    printk("ABSOLUTE PPO2 PASS: both waters/two surface pressures, 1.386/1.3986/1.4007/1.407bar, raw oxygen warning and rounded footer, preserved INVALID\n");
     ostc4_observation fresh_result;
     ostc4_sample fresh_trace[3];
     float fresh_depth=0;

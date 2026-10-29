@@ -26,6 +26,7 @@ struct scuba_model {
     uint16_t calculated_ceiling_dm, calculated_stop_dm;
     unsigned calculated_stop_slot;
     float calculated_stop_lower_m, calculated_stop_upper_m;
+    float calculated_ppo2_bar; /* Air partial pressure from accepted absolute pressure. */
     float calculated_gf_low_ceiling_m, calculated_gf_high_ceiling_m;
     bool calculated_gf_low_ceiling_valid, calculated_gf_high_ceiling_valid;
     uint32_t calculated_tts_s, calculated_stop_remaining_ms, calculated_stop_total_ms;

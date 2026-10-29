@@ -198,7 +198,7 @@ void scuba_model_update_mm(struct scuba_model *s, uint64_t now_ms, uint32_t manu
     if (s->calculated?s->calculated_ceiling_violation:(scuba_model_ceiling(s) && s->depth_dm < scuba_model_ceiling(s))) alerts|=SCUBA_CEILING;
     if (s->scenario_ms < s->fast_until_ms) alerts|=SCUBA_ASCENT;
     if (s->battery <= 15) alerts|=SCUBA_BATTERY;
-    if ((100u+s->depth_dm)*21u > 14000) alerts|=SCUBA_OXYGEN;
+    if (s->calculated?s->calculated_ppo2_bar>1.4f:(100u+s->depth_dm)*21u>14000) alerts|=SCUBA_OXYGEN;
     if (s->deco_started && !s->deco_done) alerts|=SCUBA_DECOMPRESSION;
     if ((!s->calculated||s->calculated_state==SCUBA_CALCULATED_AVAILABLE||s->calculated_state==SCUBA_CALCULATED_LIMITED) && !s->deco_started && s->ndl_s <= 300) alerts|=SCUBA_NDL;
     if (s->depth_alarm_dm && s->depth_dm >= s->depth_alarm_dm) alerts|=SCUBA_DEPTH;

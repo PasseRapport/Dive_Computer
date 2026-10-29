@@ -75,3 +75,18 @@ for state in list(states.values()) + twins:
             assert abs(expected - Decimal(str(state['physical'][field]))) < Decimal('0.0001')
         assert state['watch']['stop_depth_dm'] == int(Decimal(str(state['physical']['stop_lower_m'] * 10)).quantize(Decimal(1), rounding=ROUND_HALF_UP))
 print('WATER PRESSURE PRESENTATION PASS: unchanged accepted CSV/tissues/raw outputs, density ratio, physical endpoints and both pressure stop bounds')
+
+# Air ppO2 is determined by accepted absolute pressure. Independent exact
+# decimal products below use oxygen fraction .21; binary32 tolerance1e-6bar.
+for surface in range(2):
+    for salt in range(2):
+        for offset, (pressure, ppo2, oxygen) in enumerate(((6.60,1.386,False),
+                (6.66,1.3986,False),(6.67,1.4007,True),(6.70,1.407,True))):
+            index=20+surface*8+salt*4+offset
+            state=json.loads(Path(f'{prefix}-{index}.json').read_text())
+            assert abs(state['absolute_pressure_bar']-pressure)<1e-6, state
+            assert abs(state['physical']['ppo2_bar']-ppo2)<1e-6, state
+            assert bool(state['watch']['alerts'] & 64)==oxygen, state
+            assert state['density_kg_m3']==(1025 if salt else 1000), state
+            assert abs(state['surface_bar']-(.9 if surface else 1))<1e-6, state
+print('ABSOLUTE PPO2 RENDER PASS: pressure-driven air value and raw 1.4bar warning in both waters/two surface references; literal rounded footer verified by native public-menu journey')

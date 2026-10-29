@@ -5,6 +5,7 @@
 #include "battery_icon.h"
 #include "compass_ring.h"
 #include <stdio.h>
+#include <math.h>
 
 #define CYAN 0x33dbd4
 #define GREEN 0x43e986
@@ -111,9 +112,10 @@ static void footer(struct dashboard *d,const struct scuba_model *m,const struct 
     case FIELD_SAFETY_STOP:caption="SAFETY STOP";snprintf(value,sizeof(value),m->safety_required?"3.0 m":"-- m");break;
     case FIELD_TTS:caption="TTS";snprintf(value,sizeof(value),"%u min",(scuba_model_tts(m)+59)/60);break;
     case FIELD_PPO2: {
-        unsigned pp=scuba_demo_ppo2(m->depth_dm);caption="ppO2";
+        unsigned pp=m->calculated?(unsigned)lroundf(m->calculated_ppo2_bar*100):scuba_demo_ppo2(m->depth_dm);caption="ppO2";
         snprintf(value,sizeof(value),"%u.%02u bar",pp/100,pp%100);
-        if(pp>160)ink=RED;else if(pp>140)ink=YELLOW;
+        float oxygen=m->calculated?m->calculated_ppo2_bar:pp/100.0f;
+        if(oxygen>1.6f)ink=RED;else if(oxygen>1.4f)ink=YELLOW;
         break;
     }
     case FIELD_HEADING: {
