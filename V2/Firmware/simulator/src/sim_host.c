@@ -397,6 +397,15 @@ int sim_host_bench_capture(unsigned milestone)
     }
     fprintf(out,"]}");
 
+    /* Existing engine values remain reference metres (10m/bar). Publish the
+     * physical presentation alongside them rather than changing their units. */
+    fprintf(out,",\"engine_depth_units\":\"reference_10m_per_bar\",\"physical\":{"
+        "\"ceiling_m\":%.9g,\"ceiling_dm\":%u,\"gf_low_m\":%.9g,\"gf_high_m\":%.9g,"
+        "\"stop_slot\":%u,\"stop_lower_m\":%.9g,\"stop_upper_m\":%.9g,\"in_stop\":%s}",
+        (double)water_depth(v->result.ceiling_meters/10.0f,0,v->density_kg_m3),m->calculated_ceiling_dm,
+        (double)m->calculated_gf_low_ceiling_m,(double)m->calculated_gf_high_ceiling_m,
+        m->calculated_stop_slot,(double)m->calculated_stop_lower_m,(double)m->calculated_stop_upper_m,
+        m->calculated_stop_zone?"true":"false");
     fprintf(out,",\"gf_ceilings\":{\"low_m\":%.9g,\"high_m\":%.9g,\"validity\":[%d,%d]}",
         (double)v->result.gf_low_ceiling_meters,(double)v->result.gf_high_ceiling_meters,
         v->result.gf_low_ceiling,v->result.gf_high_ceiling);
