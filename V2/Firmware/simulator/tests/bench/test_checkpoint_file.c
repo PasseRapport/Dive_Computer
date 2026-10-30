@@ -45,11 +45,13 @@ int main(int argc,char **argv)
         CHECK(pc_bench_checkpoint_file_load(argv[2],&evidence,true)==expected);
         const struct bench_view *v=pc_bench_read();CHECK(v->result.tissues==OSTC4_INVALID && v->result.ndl==OSTC4_INVALID);
         CHECK(v->result.tts==OSTC4_INVALID && v->result.ceiling==OSTC4_INVALID && v->result.stops==OSTC4_INVALID);
+        CHECK(v->result.desaturation==OSTC4_INVALID);
         CHECK(v->gf_locked && v->active_gf.low==40 && v->seconds==1260);
         CHECK(!memcmp(before.nitrogen_bar,v->result.nitrogen_bar,sizeof(before.nitrogen_bar)));
         CHECK(pc_bench_set_gf_pair(20,90)==-1);
         CHECK(pc_bench_checkpoint_file_load(argv[2],&evidence,true)==expected);
         CHECK(!memcmp(before.nitrogen_bar,pc_bench_read()->result.nitrogen_bar,sizeof(before.nitrogen_bar)));
+        CHECK(pc_bench_read()->result.desaturation==OSTC4_INVALID);
         return 0;
     }
     if(!strcmp(argv[1],"legacy")) {

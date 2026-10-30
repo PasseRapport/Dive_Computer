@@ -1,0 +1,14 @@
+{
+  "source_font": "/home/Bilal/ncs/v3.4.1/modules/lib/gui/lvgl/scripts/built_in_font/Montserrat-Medium.ttf",
+  "source_font_sha256": "421f26b23e2be6b98373d32acd3cb2897b154d4bf0a77d26534ce476e4cbed53",
+  "source_license": "/home/Bilal/ncs/v3.4.1/modules/lib/gui/lvgl/scripts/built_in_font/font_license/Montserrat/OFL.txt",
+  "source_license_sha256": "41f82bb4d24b304f30f7136bc47abdd083782e4265c984160f5649d1e78ea49c",
+  "bundled_license": "V2/Firmware/simulator/licenses/Montserrat-OFL.txt",
+  "bundled_license_sha256": "41f82bb4d24b304f30f7136bc47abdd083782e4265c984160f5649d1e78ea49c",
+  "asset_sha256": "6863cabc020edf1c3f5eac87d7ccd1da46cc12e017c849c7ef3d3d6a219e6811",
+  "glyph_payload_sha256": "5d37c2343a548f2b8514424e1fb8b8eaedb5b0a0fe78925fce6ddfdb8b94b2b4",
+  "source_license_exact_copy": true,
+  "glyph_payload_unchanged": true,
+  "two_regenerations_identical": true,
+  "asset_and_generator_preserve_notice": true
+}

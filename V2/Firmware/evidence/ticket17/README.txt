@@ -60,3 +60,23 @@ in lifecycle.log and the final full bench log. No production formula changed.
 
 Host/native compilation and execution only. No target display port, target UI,
 physical board, timing, stack high-water, certification or safe-to-dive claim.
+
+Review fixes (following commit 6b722d0):
+- A corrupt/rejected checkpoint retained old diagnostic numbers and marked older
+  fields invalid, but omitted the new desaturation availability. Added it to the
+  same invalidation cascade. Repeated public rejection now exposes INVALID;
+  tracked time/tissues and retained diagnostic minutes are unchanged, while the
+  summary immediately presents the unavailable placeholder.
+- review-fix-red.log reproduces failures through the public rejection/summary
+  seam and existing disk-recovery fault suite. review-fix-green.log records both
+  passing after the minimal fix. review-fix-bench-regression.log records the full
+  27-test suite after correction.
+- Audited other invalidation paths: missing exposure and ordinary restart feed
+  the existing derived ostc4_read observation (desaturation follows invalid
+  tissues); rejected predictions explicitly mark desaturation invalid. The
+  retained-observation overwrite in checkpoint rejection was the missing path.
+- Bundled the exact source Montserrat copyright/OFL license at
+  simulator/licenses/Montserrat-OFL.txt and preserved its notice/provenance in
+  the generated acute-glyph asset and generator. review-font-license.json records
+  source/font/license hashes, exact license-copy integrity, identical output
+  across two regenerations and unchanged glyph payload. No visual change.

@@ -1,0 +1,55 @@
+[  4%] Built target ostc4_upstream
+[  5%] Built target ostc4_corrected_source
+[ 10%] Built target ostc4_upstream_corrected
+[ 13%] Built target ostc4_baseline
+[ 21%] Built target ostc4_upstream_contained
+[ 24%] Built target ostc4_exposure
+[ 27%] Built target ostc4_corrected
+[ 30%] Built target ostc4_replay
+[ 32%] Built target test_ostc4_contract
+[ 41%] Built target test_pc_bench
+[ 52%] Built target test_gf_pair
+[ 52%] Built target test_calculated_watch
+[ 53%] Building C object CMakeFiles/test_restart_bench.dir/test_restart_bench.c.o
+[ 54%] Building C object CMakeFiles/test_restart_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/scuba_presentation.c.o
+[ 56%] Building C object CMakeFiles/test_checkpoint_file.dir/test_checkpoint_file.c.o
+[ 61%] Built target gf_bench_replay
+[ 67%] Built target test_storage_bench
+[ 68%] Linking C executable test_restart_bench
+[ 75%] Built target test_recovery_lifecycle
+[ 78%] Built target ostc4_replay_corrected
+[ 80%] Built target test_ostc4_corrected_contract
+[ 82%] Linking C executable test_checkpoint_file
+[ 84%] Built target test_ostc4_exposure
+[ 90%] Built target test_restart_bench
+[ 93%] Built target ostc4_continuity_replay
+[ 95%] Built target test_ostc4_restart
+[100%] Built target test_checkpoint_file
+Test project /tmp/desaturation17-bench
+    Start  3: restart_watch_diagnostics
+1/2 Test  #3: restart_watch_diagnostics .......................***Failed    0.00 sec
+29: v->result.desaturation==OSTC4_INVALID && v->result.tissues==OSTC4_INVALID
+
+    Start 10: disk_checkpoint_process_continuity_and_faults
+2/2 Test #10: disk_checkpoint_process_continuity_and_faults ...***Failed    0.13 sec
+Traceback (most recent call last):
+  File "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/check_checkpoint_disk.py", line 21, in <module>
+    run("fault", saved, 4, "clock")
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/check_checkpoint_disk.py", line 12, in run
+    return subprocess.run([str(exe), *map(str, args)], check=True, text=True, capture_output=True).stdout
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/tmp/desaturation17-bench/test_checkpoint_file', 'fault', '/tmp/dive-checkpoint-rtapo2gy/locked.checkpoint', '4', 'clock']' returned non-zero exit status 1.
+
+
+0% tests passed, 2 tests failed out of 2
+
+Total Test time (real) =   0.13 sec
+
+The following tests FAILED:
+	  3 - restart_watch_diagnostics (Failed)
+	 10 - disk_checkpoint_process_continuity_and_faults (Failed)
+Errors while running CTest

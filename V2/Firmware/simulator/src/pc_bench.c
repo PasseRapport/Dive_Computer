@@ -463,7 +463,7 @@ ostc4_restart_status pc_bench_checkpoint_reject(ostc4_restart_status status)
         /* A second failed import cannot erase previously accepted diagnostics,
          * even when the already-invalid core cannot export a backup checkpoint. */
         retained.tissues=retained.ndl=retained.tts=retained.ceiling=retained.stops=OSTC4_INVALID;
-        retained.gf_low_ceiling=retained.gf_high_ceiling=OSTC4_INVALID;
+        retained.gf_low_ceiling=retained.gf_high_ceiling=retained.desaturation=OSTC4_INVALID;
         view.result=retained;
     }
     view.error=view.recovery=ostc4_restart_status_name(status);

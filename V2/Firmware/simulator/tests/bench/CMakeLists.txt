@@ -15,7 +15,7 @@ target_link_libraries(test_calculated_watch PRIVATE ostc4_exposure m)
 target_compile_options(test_calculated_watch PRIVATE -Wall -Wextra -Wpedantic -Werror)
 add_test(NAME calculated_watch_mapping_session_alerts COMMAND test_calculated_watch)
 
-add_executable(test_restart_bench test_restart_bench.c ../../src/pc_bench.c ../../src/pc_bench_storage.c ../../src/scuba_calculated.c ../../src/scuba_model.c)
+add_executable(test_restart_bench test_restart_bench.c ../../src/scuba_presentation.c ../../src/pc_bench.c ../../src/pc_bench_storage.c ../../src/scuba_calculated.c ../../src/scuba_model.c)
 target_include_directories(test_restart_bench PRIVATE ../../src)
 target_link_libraries(test_restart_bench PRIVATE ostc4_exposure m)
 target_compile_options(test_restart_bench PRIVATE -Wall -Wextra -Wpedantic -Werror)

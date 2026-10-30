@@ -1,0 +1,45 @@
+[  1%] Built target ostc4_corrected_source
+[  5%] Built target ostc4_upstream
+[ 13%] Built target ostc4_upstream_contained
+[ 19%] Built target ostc4_upstream_corrected
+[ 21%] Built target ostc4_baseline
+[ 30%] Built target test_ostc4_contract
+[ 30%] Built target ostc4_corrected
+[ 30%] Built target ostc4_replay
+[ 32%] Built target ostc4_exposure
+[ 35%] Built target ostc4_continuity_replay
+[ 38%] Built target test_ostc4_exposure
+[ 41%] Built target ostc4_replay_corrected
+[ 43%] Built target test_ostc4_corrected_contract
+[ 49%] Built target test_calculated_watch
+[ 52%] Built target test_ostc4_restart
+[ 53%] Building C object CMakeFiles/test_pc_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench.c.o
+[ 54%] Building C object CMakeFiles/test_restart_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench.c.o
+[ 56%] Building C object CMakeFiles/test_gf_pair.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench.c.o
+[ 57%] Building C object CMakeFiles/gf_bench_replay.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench.c.o
+[ 58%] Linking C executable test_pc_bench
+[ 60%] Linking C executable test_restart_bench
+[ 61%] Linking C executable gf_bench_replay
+[ 63%] Linking C executable test_gf_pair
+[ 68%] Built target test_pc_bench
+[ 75%] Built target test_restart_bench
+[ 78%] Built target gf_bench_replay
+[ 80%] Built target test_gf_pair
+[ 82%] Building C object CMakeFiles/test_checkpoint_file.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench.c.o
+[ 83%] Building C object CMakeFiles/test_storage_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench.c.o
+[ 84%] Building C object CMakeFiles/test_recovery_lifecycle.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench.c.o
+[ 86%] Linking C executable test_checkpoint_file
+[ 87%] Linking C executable test_storage_bench
+[ 89%] Linking C executable test_recovery_lifecycle
+[ 93%] Built target test_checkpoint_file
+[ 95%] Built target test_storage_bench
+[100%] Built target test_recovery_lifecycle
+Test project /tmp/desaturation17-bench
+    Start  3: restart_watch_diagnostics
+1/2 Test  #3: restart_watch_diagnostics .......................   Passed    0.81 sec
+    Start 10: disk_checkpoint_process_continuity_and_faults
+2/2 Test #10: disk_checkpoint_process_continuity_and_faults ...   Passed    0.11 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Total Test time (real) =   0.92 sec

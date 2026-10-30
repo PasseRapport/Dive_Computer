@@ -1,0 +1,59 @@
+Test project /tmp/desaturation17-bench
+      Start  1: pc_bench_controls_time_graph
+ 1/27 Test  #1: pc_bench_controls_time_graph ........................   Passed    1.51 sec
+      Start  2: calculated_watch_mapping_session_alerts
+ 2/27 Test  #2: calculated_watch_mapping_session_alerts .............   Passed    0.00 sec
+      Start  3: restart_watch_diagnostics
+ 3/27 Test  #3: restart_watch_diagnostics ...........................   Passed    1.06 sec
+      Start  4: configurable_gf_public_behavior
+ 4/27 Test  #4: configurable_gf_public_behavior .....................   Passed    0.02 sec
+      Start  5: configurable_gf_independent_acceptance
+ 5/27 Test  #5: configurable_gf_independent_acceptance ..............   Passed    1.43 sec
+      Start  6: disk_checkpoint_save
+ 6/27 Test  #6: disk_checkpoint_save ................................   Passed    0.00 sec
+      Start  7: disk_checkpoint_fresh_process
+ 7/27 Test  #7: disk_checkpoint_fresh_process .......................   Passed    0.00 sec
+      Start  8: disk_checkpoint_complete_later_exposure
+ 8/27 Test  #8: disk_checkpoint_complete_later_exposure .............   Passed    0.00 sec
+      Start  9: disk_checkpoint_requires_configuration_evidence
+ 9/27 Test  #9: disk_checkpoint_requires_configuration_evidence .....   Passed    0.00 sec
+      Start 10: disk_checkpoint_process_continuity_and_faults
+10/27 Test #10: disk_checkpoint_process_continuity_and_faults .......   Passed    0.11 sec
+      Start 11: durable_preferences_logs_separate_processes
+11/27 Test #11: durable_preferences_logs_separate_processes .........   Passed    0.10 sec
+      Start 12: independent_exact_stop_grid_travel
+12/27 Test #12: independent_exact_stop_grid_travel ..................   Passed    1.15 sec
+      Start 13: recovery_pair_lifecycle_log_integration
+13/27 Test #13: recovery_pair_lifecycle_log_integration .............   Passed    0.07 sec
+      Start 14: estimated_desaturation_independent_acceptance
+14/27 Test #14: estimated_desaturation_independent_acceptance .......   Passed    0.55 sec
+      Start 15: upstream_source_identity
+15/27 Test #15: upstream_source_identity ............................   Passed    0.05 sec
+      Start 16: synthetic_replay_contracts
+16/27 Test #16: synthetic_replay_contracts ..........................   Passed    0.10 sec
+      Start 17: public_pressure_time_contract
+17/27 Test #17: public_pressure_time_contract .......................   Passed    0.00 sec
+      Start 18: corrected_public_pressure_time_contract
+18/27 Test #18: corrected_public_pressure_time_contract .............   Passed    0.00 sec
+      Start 19: corrected_synthetic_replay_contracts
+19/27 Test #19: corrected_synthetic_replay_contracts ................   Passed    0.11 sec
+      Start 20: independently_verified_tissues
+20/27 Test #20: independently_verified_tissues ......................   Passed    0.73 sec
+      Start 21: continuous_exposure_contract
+21/27 Test #21: continuous_exposure_contract ........................   Passed    0.02 sec
+      Start 22: independent_repetitive_exposure
+22/27 Test #22: independent_repetitive_exposure .....................   Passed    0.11 sec
+      Start 23: continuity_replay_faults
+23/27 Test #23: continuity_replay_faults ............................   Passed    0.08 sec
+      Start 24: independent_schedule_analytical_checks
+24/27 Test #24: independent_schedule_analytical_checks ..............   Passed    0.13 sec
+      Start 25: independent_schedule_comparator_rejects_mutations
+25/27 Test #25: independent_schedule_comparator_rejects_mutations ...   Passed    0.10 sec
+      Start 26: checkpoint_restart_continuity
+26/27 Test #26: checkpoint_restart_continuity .......................   Passed    0.00 sec
+      Start 27: checkpoint_fresh_process
+27/27 Test #27: checkpoint_fresh_process ............................   Passed    0.07 sec
+
+100% tests passed, 0 tests failed out of 27
+
+Total Test time (real) =   7.54 sec

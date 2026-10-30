@@ -1,12 +1,45 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "pc_bench.h"
 #include "scuba_calculated.h"
+#include "scuba_presentation.h"
+#include "pc_bench_checkpoint_file.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #define CHECK(x) do { if(!(x)){fprintf(stderr,"%d: %s\n",__LINE__,#x);exit(1);} }while(0)
+static void rejected_checkpoint_invalidates_desaturation(void)
+{
+    CHECK(!pc_bench_fresh(1.01325f,1025,NULL,0));
+    CHECK(!pc_bench_accept_sample(&(ostc4_sample){120,3.01325f}));
+    CHECK(!pc_bench_accept_sample(&(ostc4_sample){1320,3.01325f}));
+    const struct bench_view *v=pc_bench_read();
+    struct scuba_model model;scuba_model_init(&model);
+    scuba_calculated_apply_recorded(&model,&v->recording,&v->result,v->seconds,20,18,87);
+    CHECK(!pc_bench_accept_sample(&(ostc4_sample){1500,1.01325f}));
+    scuba_calculated_apply_recorded(&model,&v->recording,&v->result,v->seconds,0,18,87);
+    CHECK(!pc_bench_recording_finish());
+    scuba_calculated_apply_recorded(&model,&v->recording,&v->result,v->seconds,0,18,87);
+    CHECK(model.summary.valid && model.summary.desaturation_valid);
+    CHECK(v->result.desaturation==OSTC4_AVAILABLE && v->result.desaturation_minutes>0);
+    ostc4_observation before=v->result;
+    /* Corrupt recovery must invalidate both the controller's public estimate
+     * and its summary, including repeated rejection at the same instant. */
+    for(unsigned i=0;i<2;++i) {
+        CHECK(pc_bench_checkpoint_reject(OSTC4_CHECKPOINT_CORRUPT)==OSTC4_CHECKPOINT_CORRUPT);
+        CHECK(v->result.desaturation==OSTC4_INVALID && v->result.tissues==OSTC4_INVALID);
+        CHECK(v->result.desaturation_minutes==before.desaturation_minutes);
+        CHECK(v->result.timestamp_seconds==before.timestamp_seconds);
+        CHECK(!memcmp(v->result.nitrogen_bar,before.nitrogen_bar,sizeof(before.nitrogen_bar)));
+        scuba_calculated_apply_recorded(&model,&v->recording,&v->result,v->seconds,0,18,87);
+        CHECK(model.summary.valid && !model.summary.desaturation_valid);
+        char text[64];
+        scuba_desaturation_text(text,sizeof(text),model.summary.desaturation_minutes,model.summary.desaturation_valid);
+        CHECK(!strcmp(text,"Désaturation : -- h -- min"));
+    }
+}
 int main(void)
 {
+    rejected_checkpoint_invalidates_desaturation();
     CHECK(pc_bench_fresh(1.01325f,1025,pc_bench_two_dives,8)==0);
     pc_bench_poll(1920000);
     CHECK(pc_bench_checkpoint()==0);
