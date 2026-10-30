@@ -18,3 +18,6 @@ unsigned scuba_ring_stop(uint32_t elapsed_ms,uint32_t target_ms);
 
 /* Fixed-GF Low / High, nearest tenth; invalid/missing endpoints stay explicit. */
 void scuba_ceiling_pair_text(char *out,size_t size,float low,bool low_valid,float high,bool high_valid);
+
+/* Estimated desaturation in engine integer minutes; no 24-hour wrap. */
+void scuba_desaturation_text(char *out,size_t size,uint32_t minutes,bool valid);

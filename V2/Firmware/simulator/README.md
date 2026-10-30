@@ -615,3 +615,75 @@ python3 tests/check_scroll_menus.py /tmp/menu-gallery
 This checks general/watch/dive menus, water selectors, Back without applying
 pending changes, rapid input, and x2 rendering. Watch catalog checks also cover
 the final Back card for both analog and digital faces.
+
+### Estimated desaturation on the scuba summary (ticket17)
+
+The calculated summary retains maximum/average depth, recorded duration, elapsed
+surface time and existing navigation. It adds `Désaturation : 12 h 34 min`, using
+unpadded total hours and two-digit minutes. Zero remains visible; unavailable or
+invalid exposure displays `Désaturation : -- h -- min`. Scripted demonstrations
+have no calculated estimate and display the placeholder. The new field alone
+uses the approved French wording; other labels retain their existing language.
+
+`ostc4_observation.desaturation_minutes` exposes integer **minutes**, accompanied
+by `desaturation` availability. This is a derived observation of the current
+tracked tissues and surface pressure, not a separate timer. Every accepted
+observation refreshes the summary, including immediate validity loss. Pause and
+acceleration use the existing exposure clock. Recording completion, navigation
+and repeated reads do not reset exposure; elapsed surface time continues after
+manual completion as well as automatic completion. Existing checkpoint bytes and
+missing-exposure/recovery policies are unchanged: no elapsed shutdown time is
+invented and no offline countdown is persisted.
+
+The adapter calls the unchanged pinned OSTC4
+`decom_calc_desaturation_time()` in revision
+`7198d203520f3a3cdccf1ccc0bf8af6475ee4819`, `Common/Src/decom.c:1129`.
+Its inspired nitrogen reference is `B = 0.7902 * (surface_bar - 0.0627)`.
+For nitrogen above `1.05 * B`, the equivalent analytical expression is
+`half_time * ln((P_N2 - B) / (0.05 * B)) / 0.6931 / (100 / 142)`;
+otherwise its nitrogen contribution is zero. Helium uses a 0.1 bar threshold
+and its own half-times; the product remains air-only with zero helium.
+The implementation preserves the pinned binary32 expression order, `logf`,
+`0.6931f`, multiplier and integer truncation, then takes the largest compartment
+contribution. It does not replace them with this explanatory binary64 formula.
+
+Zero means the engine's displayed desaturation criterion yields zero remaining
+integer minutes. It does **not** establish complete physical elimination of gas
+or clearance to dive again. That qualification belongs in documentation and
+diagnostics, not in a warning panel on the compact summary.
+
+Independent numerical fixtures in `tests/bench/desaturation-reference` were
+frozen by a separate author before production comparison. All 27 selected
+surface checkpoints match exactly: loaded, repetitive, zero and more than 24 h.
+The binary64/binary32 boundary analysis is preserved explicitly: a theoretical
+`60 - 0.001` minute fixture can truncate to 59 analytically but 60 under the pinned
+rounded expression; no tolerance is added. The chosen acceptance checkpoints are
+away from those conversion boundaries. Extreme diagnostic nitrogen fixtures at
+`1e7` bar can lose the logarithm argument to float rounding; they cannot arise
+through accepted pressures or checkpoints (surface 0.8–1.2 bar, ambient at most
+surface + 6 bar, saved N2 at most 8 bar and helium zero). No new numerical convention
+or broad precision change is introduced.
+
+Reproduce the public tests and native presentation checks:
+
+```sh
+cmake -S V2/Firmware/simulator/tests/bench -B /tmp/pc-bench
+cmake --build /tmp/pc-bench -j4
+ctest --test-dir /tmp/pc-bench --output-on-failure
+python3 V2/Firmware/simulator/launch.py --desaturation-check --capture /tmp/desaturation
+python3 V2/Firmware/simulator/tests/check_desaturation_render.py /tmp/desaturation
+```
+
+Native captures 0–7 exercise real tracked exposure: loaded summary, pause,
+successive surface minutes, options/reopening, immediate invalidity, persistent
+zero and 3517 minutes (`58 h 37 min`). Captures 8–12 are deliberately separate
+presentation fixtures for 1/59/60/61/754 minutes through the existing calculated
+adapter; their controller result remains 3517 minutes, while only the presented
+observation is supplied the stated formatting fixture. They do not certify a
+physiological profile or create a scripted numeric value in normal operation.
+The native checks assert all six exact labels, the accented glyph, non-overlap
+and circular visible bounds. Saved PNG/JSON/CSV, raw numerical differences,
+red/green logs and operational invariance are in `../evidence/ticket17`.
+
+This is PC/headless/native-simulator evidence. No target display integration,
+physical execution, timing, safety certification or clearance claim is made.

@@ -10,6 +10,9 @@ enum scuba_alert { SCUBA_CEILING = 1, SCUBA_ASCENT = 2, SCUBA_BATTERY = 4,
                    SCUBA_NDL = 8, SCUBA_DEPTH = 16, SCUBA_TIME = 32, SCUBA_OXYGEN = 64, SCUBA_DECOMPRESSION = 128 };
 struct scuba_summary {
     bool valid;
+    /* Live calculated estimate, not a countdown saved with the recording. */
+    bool desaturation_valid;
+    uint32_t desaturation_minutes;
     uint32_t duration_s;
     uint16_t max_dm, average_dm;
     int16_t min_temperature;

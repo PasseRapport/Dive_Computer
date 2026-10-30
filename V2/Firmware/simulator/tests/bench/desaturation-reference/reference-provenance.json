@@ -1,0 +1,29 @@
+{
+  "frozen_at_utc": "2026-10-27T22:37:02.650205+00:00",
+  "author": "independent_reference subagent; no production decom.c, adapter implementation, or policy arrays read before freeze",
+  "oracle_sha256": "842186e884ddd3fdba8fd7aff76322f688706de6b5b31ce7ec1da4ed4b77208a",
+  "sources": [
+    {
+      "id": "buhlmann-table26",
+      "url": "https://www.nigelhewitt.co.uk/stuff/aab.jpg",
+      "file": "aab.jpg",
+      "description": "Photograph of Tauchmedizin Table 26: 17 rows including alternatives 1 (4 min) and 1b (5 min); all nitrogen half-times and A/B/C a and b. Read visually, no OSTC source used.",
+      "sha256": "9291a566b0979321257e0593e8284c241dd3d87871a1456b356a9fd7f105b88d"
+    },
+    {
+      "id": "baker-gfdeco",
+      "url": "https://wrobell.dcmod.org/decotengu/_downloads/95e3b867a5cc362d6a756aadc9b7ecf3/gfdeco.f",
+      "file": "gfdeco.f",
+      "description": "Original Erik C. Baker authored GFDECO Fortran, lines117-132 half-times, 712-755 Schreiner/Haldane, 2047-2076 B coefficients (a in msw, divided by10). Header explicitly says optional compartment1b.",
+      "sha256": "5387bef0845efb1c204b4455f104ac351be0536bc09a2ed3a6781fb6babd3c73"
+    }
+  ],
+  "tolerances_precomparison": {
+    "single_segment_abs_bar": 0.0001,
+    "complete_history_abs_bar": 0.0005,
+    "cached_factor_abs": 1e-10,
+    "coefficients_abs": 1e-07,
+    "k_abs_per_second": 1e-09
+  },
+  "identity_note": "Both B and C independently transcribed for subsequent classification; 5-minute compartment1b does not by itself distinguish B/C. Exposure fraction .79, reset .7902, vapour .0493 come from documented public replay metadata contract, not mathematical standard."
+}

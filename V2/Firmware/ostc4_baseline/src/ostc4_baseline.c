@@ -83,6 +83,17 @@ static void endpoint_ceilings(ostc4_observation *r, float surface)
     r->gf_high_ceiling_meters = (pressure[1] - surface) * 10.0f;
 }
 
+/* Derived from a copy of the observation: reading cannot change exposure or
+ * planner scratch. The pinned function's coefficients and quantization apply. */
+static void estimated_desaturation(ostc4_observation *r, float surface)
+{
+    r->desaturation_minutes = 0;
+    r->desaturation = r->tissues;
+    if (r->tissues != OSTC4_AVAILABLE) return;
+    r->desaturation_minutes = decom_calc_desaturation_time(
+        r->nitrogen_bar, r->helium_bar, surface);
+}
+
 ostc4_status ostc4_read(ostc4_observation *observation)
 {
     if (!observation)
@@ -91,6 +102,7 @@ ostc4_status ostc4_read(ostc4_observation *observation)
         return OSTC4_NOT_INITIALIZED;
     *observation = current;
     endpoint_ceilings(observation, life.pressure_surface_bar);
+    estimated_desaturation(observation, life.pressure_surface_bar);
     return OSTC4_OK;
 }
 
@@ -139,6 +151,7 @@ static ostc4_status calculate(SLifeData *next, SDiveSettings *next_settings,
                 observed.stops = OSTC4_LIMITED;
     }
     endpoint_ceilings(&observed, next->pressure_surface_bar);
+    estimated_desaturation(&observed, next->pressure_surface_bar);
     *output = observed;
     return OSTC4_OK;
 }
@@ -268,7 +281,7 @@ ostc4_status ostc4_exposure_predict(const ostc4_sample *future, ostc4_observatio
     if (exposure_incomplete) {
         prediction->tissues = prediction->ndl = prediction->tts =
             prediction->ceiling = prediction->stops = prediction->gf_low_ceiling =
-            prediction->gf_high_ceiling = OSTC4_INVALID;
+            prediction->gf_high_ceiling = prediction->desaturation = OSTC4_INVALID;
         return OSTC4_BAD_INPUT;
     }
     const SLifeData saved_life = life;

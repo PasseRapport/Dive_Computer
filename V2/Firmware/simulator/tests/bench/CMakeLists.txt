@@ -66,3 +66,7 @@ target_link_libraries(test_recovery_lifecycle PRIVATE ostc4_exposure m)
 target_compile_options(test_recovery_lifecycle PRIVATE -Wall -Wextra -Wpedantic -Werror)
 add_test(NAME recovery_pair_lifecycle_log_integration COMMAND ${Python3_EXECUTABLE}
     ${CMAKE_CURRENT_SOURCE_DIR}/check_recovery_lifecycle.py $<TARGET_FILE:test_recovery_lifecycle>)
+
+add_test(NAME estimated_desaturation_independent_acceptance COMMAND ${Python3_EXECUTABLE}
+    ${CMAKE_CURRENT_SOURCE_DIR}/desaturation-reference/compare_public.py
+    $<TARGET_FILE:gf_bench_replay> --output ${CMAKE_CURRENT_BINARY_DIR}/desaturation-comparison.json)

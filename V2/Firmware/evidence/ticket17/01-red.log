@@ -1,0 +1,78 @@
+[  1%] Generating corrected/decom.c
+[  2%] Building C object ostc4/CMakeFiles/ostc4_upstream.dir/upstream/Common/Src/decom.c.o
+[  4%] Building C object ostc4/CMakeFiles/ostc4_upstream.dir/upstream/Discovery/Src/buehlmann.c.o
+[  4%] Built target ostc4_corrected_source
+[  5%] Generating corrected/buehlmann-contained.c
+[  6%] Building C object ostc4/CMakeFiles/ostc4_upstream_corrected.dir/corrected/decom.c.o
+[  8%] Generating corrected/buehlmann-grid-timed.c
+[  9%] Building C object ostc4/CMakeFiles/ostc4_upstream_contained.dir/corrected/decom.c.o
+[ 11%] Building C object ostc4/CMakeFiles/ostc4_upstream_corrected.dir/upstream/Discovery/Src/buehlmann.c.o
+[ 12%] Linking C static library libostc4_upstream.a
+[ 13%] Building C object ostc4/CMakeFiles/ostc4_upstream_contained.dir/corrected/buehlmann-grid-timed.c.o
+[ 13%] Built target ostc4_upstream
+[ 15%] Building C object ostc4/CMakeFiles/ostc4_baseline.dir/src/ostc4_baseline.c.o
+[ 16%] Linking C static library libostc4_upstream_corrected.a
+[ 18%] Linking C static library libostc4_baseline.a
+[ 19%] Built target ostc4_upstream_corrected
+[ 20%] Building C object ostc4/CMakeFiles/ostc4_corrected.dir/src/ostc4_baseline.c.o
+[ 22%] Linking C static library libostc4_upstream_contained.a
+[ 22%] Built target ostc4_baseline
+[ 23%] Building C object ostc4/CMakeFiles/test_ostc4_contract.dir/tests/test_contract.c.o
+[ 25%] Building C object ostc4/CMakeFiles/ostc4_replay.dir/src/replay.c.o
+[ 26%] Built target ostc4_upstream_contained
+[ 27%] Linking C static library libostc4_corrected.a
+[ 29%] Building C object ostc4/CMakeFiles/ostc4_exposure.dir/src/ostc4_baseline.c.o
+[ 30%] Linking C executable test_ostc4_contract
+[ 31%] Linking C executable ostc4_replay
+[ 31%] Built target ostc4_corrected
+[ 31%] Built target test_ostc4_contract
+[ 33%] Building C object ostc4/CMakeFiles/ostc4_replay_corrected.dir/src/replay.c.o
+[ 34%] Building C object ostc4/CMakeFiles/test_ostc4_corrected_contract.dir/tests/test_contract.c.o
+[ 34%] Built target ostc4_replay
+[ 36%] Linking C executable test_ostc4_corrected_contract
+[ 37%] Linking C executable ostc4_replay_corrected
+[ 37%] Built target test_ostc4_corrected_contract
+[ 37%] Built target ostc4_replay_corrected
+[ 38%] Linking C static library libostc4_exposure.a
+[ 38%] Built target ostc4_exposure
+[ 40%] Building C object CMakeFiles/test_restart_bench.dir/test_restart_bench.c.o
+[ 41%] Building C object CMakeFiles/test_gf_pair.dir/test_gf_pair.c.o
+[ 43%] Building C object CMakeFiles/test_pc_bench.dir/test_pc_bench.c.o
+[ 44%] Building C object CMakeFiles/test_calculated_watch.dir/test_calculated_watch.c.o
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_pc_bench.c: In function ‘desaturation_is_available_at_surface_equilibrium’:
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_pc_bench.c:190:12: error: ‘ostc4_observation’ has no member named ‘desaturation’
+  190 |     CHECK(r->desaturation==OSTC4_AVAILABLE);
+      |            ^~
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_pc_bench.c:8:29: note: in definition of macro ‘CHECK’
+    8 | #define CHECK(x) do { if (!(x)) { fprintf(stderr,"%d: %s\n",__LINE__,#x); exit(1); } } while(0)
+      |                             ^
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_pc_bench.c:191:12: error: ‘ostc4_observation’ has no member named ‘desaturation_minutes’
+  191 |     CHECK(r->desaturation_minutes==0);
+      |            ^~
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_pc_bench.c:8:29: note: in definition of macro ‘CHECK’
+    8 | #define CHECK(x) do { if (!(x)) { fprintf(stderr,"%d: %s\n",__LINE__,#x); exit(1); } } while(0)
+      |                             ^
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_pc_bench.c:193:34: error: ‘ostc4_observation’ has no member named ‘desaturation’
+  193 |     CHECK(pc_bench_read()->result.desaturation==OSTC4_INVALID);
+      |                                  ^
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_pc_bench.c:8:29: note: in definition of macro ‘CHECK’
+    8 | #define CHECK(x) do { if (!(x)) { fprintf(stderr,"%d: %s\n",__LINE__,#x); exit(1); } } while(0)
+      |                             ^
+gmake[2]: *** [CMakeFiles/test_pc_bench.dir/build.make:79: CMakeFiles/test_pc_bench.dir/test_pc_bench.c.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:197: CMakeFiles/test_pc_bench.dir/all] Error 2
+gmake[1]: *** Waiting for unfinished jobs....
+[ 45%] Building C object CMakeFiles/test_calculated_watch.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/scuba_calculated.c.o
+[ 47%] Building C object CMakeFiles/test_calculated_watch.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/scuba_model.c.o
+[ 48%] Building C object CMakeFiles/test_restart_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench.c.o
+[ 50%] Building C object CMakeFiles/test_gf_pair.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench.c.o
+[ 51%] Building C object CMakeFiles/test_gf_pair.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench_storage.c.o
+[ 52%] Linking C executable test_calculated_watch
+[ 54%] Building C object CMakeFiles/test_restart_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench_storage.c.o
+[ 55%] Building C object CMakeFiles/test_restart_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/scuba_calculated.c.o
+[ 55%] Built target test_calculated_watch
+[ 56%] Linking C executable test_gf_pair
+[ 58%] Building C object CMakeFiles/test_restart_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/scuba_model.c.o
+[ 58%] Built target test_gf_pair
+[ 59%] Linking C executable test_restart_bench
+[ 59%] Built target test_restart_bench
+gmake: *** [Makefile:101: all] Error 2

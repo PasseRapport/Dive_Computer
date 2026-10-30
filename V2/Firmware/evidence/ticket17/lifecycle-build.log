@@ -1,0 +1,24 @@
+[  1%] Built target ostc4_corrected_source
+[  5%] Built target ostc4_upstream
+[ 13%] Built target ostc4_upstream_contained
+[ 16%] Built target ostc4_baseline
+[ 22%] Built target ostc4_upstream_corrected
+[ 25%] Built target test_ostc4_contract
+[ 27%] Built target ostc4_replay
+[ 30%] Built target ostc4_exposure
+[ 33%] Built target ostc4_corrected
+[ 38%] Built target test_calculated_watch
+[ 47%] Built target test_restart_bench
+[ 48%] Building C object CMakeFiles/test_pc_bench.dir/test_pc_bench.c.o
+[ 54%] Built target test_gf_pair
+[ 59%] Built target gf_bench_replay
+[ 66%] Built target test_checkpoint_file
+[ 72%] Built target test_storage_bench
+[ 79%] Built target test_recovery_lifecycle
+[ 81%] Built target ostc4_replay_corrected
+[ 84%] Built target test_ostc4_corrected_contract
+[ 87%] Built target test_ostc4_exposure
+[ 90%] Built target ostc4_continuity_replay
+[ 93%] Built target test_ostc4_restart
+[ 94%] Linking C executable test_pc_bench
+[100%] Built target test_pc_bench

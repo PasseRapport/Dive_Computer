@@ -8,6 +8,7 @@
 #include <lvgl.h>
 #include <zephyr/kernel.h>
 #include <string.h>
+#include <stdio.h>
 
 /* Public bench inputs plus real watch menu commands share one recording. */
 static void recording_checks(void)
@@ -268,6 +269,115 @@ static void paired_footer_render(const char *expected)
     }
 }
 
+/* Ticket17 uses accepted timestamp/pressure segments and ordinary navigation.
+ * Expected minute values are frozen by the independent reference author. */
+static void summary_fixture(unsigned bottom_end,unsigned surfaced)
+{
+    __ASSERT(!pc_bench_fresh(1.01325f,1025,NULL,0),"summary fixture failed");
+    struct watch_data data={.temperature_c=18,.battery_percent=87};
+    for(unsigned t=60;t<=surfaced;t+=60) {
+        float pressure=t<=120?1.01325f+3.0f*t/120:
+            t<=bottom_end?4.01325f:4.01325f-3.0f*(t-bottom_end)/(surfaced-bottom_end);
+        if(t==surfaced)pressure=1.01325f;
+        __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){t,pressure}),"summary pressure rejected");
+        if(t==60)watch_ui_update(&data);
+    }
+    __ASSERT(!pc_bench_recording_finish(),"summary completion failed");
+    watch_ui_update(&data);
+}
+static void summary_render(const char *expected)
+{
+    __ASSERT(scuba_ui_screen()==SCUBA_SUMMARY,"summary navigation failed");
+    const struct scuba_model *m=scuba_ui_model();
+    char max[48],average[48],duration[48],surface[48];
+    snprintf(max,sizeof(max),"MAX %u.%u m",m->summary.max_dm/10,m->summary.max_dm%10);
+    snprintf(average,sizeof(average),"AVG %u.%u m",m->summary.average_dm/10,m->summary.average_dm%10);
+    snprintf(duration,sizeof(duration),"DURATION %02u:%02u",m->summary.duration_s/60,m->summary.duration_s%60);
+    snprintf(surface,sizeof(surface),"SURFACE TIME %02u:%02u",m->surface_ms/60000,m->surface_ms/1000%60);
+    const char *texts[]={"DIVE SUMMARY",max,average,duration,surface,expected};
+    lv_area_t previous={0};
+    for(unsigned i=0;i<6;++i) {
+        lv_obj_t *label=visible_label(lv_screen_active(),texts[i]);
+        __ASSERT(label,"summary field absent or wording incorrect: %s",texts[i]);
+        const lv_font_t *font=lv_obj_get_style_text_font(label,0);
+        if(i==5) {
+            lv_font_glyph_dsc_t glyph;
+            __ASSERT(lv_font_get_glyph_dsc(font,&glyph,0xe9,0) && !glyph.is_placeholder,
+                "French acute glyph missing");
+        }
+        lv_area_t area;lv_obj_get_coords(label,&area);
+        __ASSERT(!i || area.y1>previous.y2,"summary fields overlap");
+        const int x[]={area.x1,area.x2},y[]={area.y1,area.y2};
+        for(unsigned a=0;a<2;++a)for(unsigned b=0;b<2;++b) {
+            int dx=x[a]-182,dy=y[b]-182;
+            __ASSERT(dx*dx+dy*dy<148*148,"summary text clips circular display");
+        }
+        previous=area;
+        printk("DESATURATION LABEL: %s [%d,%d,%d,%d]\n",texts[i],area.x1,area.y1,area.x2,area.y2);
+    }
+}
+static void desaturation_checks(void)
+{
+    static unsigned stage;
+    static uint64_t after;
+    uint64_t now=k_uptime_get();
+    if(now<500 || now<after || stage>=26)return;
+    const struct bench_view *v=pc_bench_read();
+    static const char *expected[]={"Désaturation : 22 h 23 min","Désaturation : 22 h 23 min",
+        "Désaturation : 22 h 22 min","Désaturation : 22 h 20 min",
+        "Désaturation : -- h -- min","Désaturation : 0 h 00 min",
+        "Désaturation : 0 h 00 min","Désaturation : 58 h 37 min",
+        "Désaturation : 0 h 01 min","Désaturation : 0 h 59 min",
+        "Désaturation : 1 h 00 min","Désaturation : 1 h 01 min",
+        "Désaturation : 12 h 34 min"};
+    if(!(stage%2)) {
+        switch(stage/2) {
+        case 0:summary_fixture(2220,2400);break;
+        case 1: {
+            ostc4_observation before=v->result;pc_bench_pause(true);pc_bench_poll(60000);
+            __ASSERT(!memcmp(&before,&v->result,sizeof(before)),"pause changed estimate");break;
+        }
+        case 2:pc_bench_pause(false);
+            __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){2460,1.01325f}),"surface minute rejected");break;
+        case 3: {
+            scuba_ui_input(WATCH_CROWN,1);scuba_ui_input(WATCH_SINGLE_TAP,0);
+            __ASSERT(scuba_ui_screen()==SCUBA_OPTIONS,"summary options missing");
+            __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){2520,1.01325f}),"surface interval rejected");
+            ostc4_observation before=v->result;
+            scuba_ui_input(WATCH_DOUBLE_TAP,0);
+            __ASSERT(!memcmp(&before,&v->result,sizeof(before)),"navigation changed exposure");break;
+        }
+        case 4:pc_bench_mark_missing();break;
+        case 5: {
+            __ASSERT(!pc_bench_fresh(1.01325f,1025,NULL,0),"zero fixture failed");
+            __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){1,1.31325f}),"short dive rejected");
+            struct watch_data data={.temperature_c=18,.battery_percent=87};watch_ui_update(&data);
+            __ASSERT(!pc_bench_accept_sample(&(ostc4_sample){2,1.01325f}),"short surfacing rejected");
+            __ASSERT(!pc_bench_recording_finish(),"zero completion failed");break;
+        }
+        case 6:__ASSERT(!pc_bench_accept_sample(&(ostc4_sample){62,1.01325f}),"zero surface rejected");break;
+        case 7:summary_fixture(14520,14700);break;
+        default: {
+            /* Presentation-only integer fixtures use the existing adapter seam.
+             * The real bench result stays 3517; no tissue expectation is derived
+             * from these boundary-format render cases. */
+            static const int minutes[]={1,59,60,61,754};
+            struct bench_view fixture=*v;
+            fixture.result.desaturation_minutes=minutes[stage/2-8];
+            scuba_ui_calculated(&fixture);break;
+        }
+        }
+        pc_bench_pause(true);after=now+300;++stage;
+    } else {
+        struct watch_data data={.temperature_c=18,.battery_percent=87};
+        watch_ui_update(&data);lv_refr_now(NULL);
+        summary_render(expected[stage/2]);
+        __ASSERT(!sim_host_bench_capture(stage/2),"desaturation capture failed");
+        if(stage==25)printk("DESATURATION SUMMARY PASS: exact labels, acute glyph, all six fields, circular bounds, live surface refresh, reopening, pause, invalid immediate placeholder, persistent zero, long hours\n");
+        after=now+300;++stage;
+    }
+}
+
 /* Public watch commands demonstrate atomic preparation editing and start lock. */
 static void gf_checks(void)
 {
@@ -469,6 +579,7 @@ void pc_bench_checks_poll(void)
     if(mode && !fixture_started) {
         fixture_started=true;watch_ui_open_calculated_scuba();pc_bench_pause(false);
     }
+    if(mode==7){desaturation_checks();return;}
     if(sim_host_bench_check_enabled()==5){checkpoint_file_checks();return;}
     if(sim_host_bench_check_enabled()==4){gf_checks();return;}
     if(sim_host_bench_check_enabled()==3){restart_checks();return;}

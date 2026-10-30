@@ -39,3 +39,9 @@ void scuba_ceiling_pair_text(char *out,size_t size,float low,bool low_valid,floa
     ceiling_text(a,sizeof(a),low,low_valid);ceiling_text(b,sizeof(b),high,high_valid);
     snprintf(out,size,"%s / %s m",a,b);
 }
+
+void scuba_desaturation_text(char *out,size_t size,uint32_t minutes,bool valid)
+{
+    if(valid)snprintf(out,size,"Désaturation : %u h %02u min",minutes/60,minutes%60);
+    else snprintf(out,size,"Désaturation : -- h -- min");
+}

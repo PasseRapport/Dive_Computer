@@ -1,0 +1,18 @@
+{
+  "frozen_at_utc": "2026-10-30T15:16:26.172065+00:00",
+  "author": "independent desaturation_reference agent; no new production desaturation implementation read",
+  "pinned_revision": "7198d203520f3a3cdccf1ccc0bf8af6475ee4819",
+  "pinned_source": "V2/Firmware/ostc4_baseline/upstream/Common/Src/decom.c",
+  "pinned_source_sha256": "f7c95aa71598f05905f6a2737eb8ca3a4346b4563d5404f66f3c167e9a71c6cd",
+  "source_lines": {
+    "nitrogen_half_times": "154-170",
+    "helium_half_times": "172-188",
+    "selected_desaturation_convention": "1121-1229"
+  },
+  "independent_tissue_reference_sha256": "842186e884ddd3fdba8fd7aff76322f688706de6b5b31ce7ec1da4ed4b77208a",
+  "independent_tissue_reference_provenance": "reference-provenance.json; authored and frozen 2026-10-27 before reading production arrays; coefficient photograph and Baker Fortran sources",
+  "primary_math": "Binary64 analytical tissue integration, then baseline B=.7902*(surface-.0627). N2 time=0 if P<=1.05*B, otherwise h*ln((P-B)/(.05*B))/.6931*1.42; He time=0 if P<=.1 else hHe*ln(P/.1)/.6931*1.42; truncate positive minutes and max across16. Product profiles He=0.",
+  "rounding_diagnostic": "Separate binary32 rounded expression model, no production function call. Not a replacement independent tissue engine and not an allowance.",
+  "oracle_sha256": "a42a8a1d4c6bee01b35ef6bf1f3815723dbadea77adcb31bd6641d191d722910",
+  "scope": "Synthetic PC numerical reference only, no production comparison yet, no target or physical execution, no operational clearance claim."
+}

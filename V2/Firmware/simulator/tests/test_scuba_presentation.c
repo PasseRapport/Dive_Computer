@@ -38,5 +38,18 @@ int main(void)
     assert(!strcmp(out,"-- / -- m"));
     scuba_ceiling_pair_text(out,sizeof(out),NAN,true,3.14f,true);
     assert(!strcmp(out,"-- / 3.1 m"));
+    /* Exact approved wording and total hours, with persistent zero. */
+    const struct {uint32_t minutes;const char *text;} estimates[]={
+        {0,"Désaturation : 0 h 00 min"},{1,"Désaturation : 0 h 01 min"},
+        {59,"Désaturation : 0 h 59 min"},{60,"Désaturation : 1 h 00 min"},
+        {61,"Désaturation : 1 h 01 min"},{754,"Désaturation : 12 h 34 min"},
+        {3517,"Désaturation : 58 h 37 min"}};
+    char desaturation[64];
+    for(unsigned i=0;i<sizeof(estimates)/sizeof(estimates[0]);++i) {
+        scuba_desaturation_text(desaturation,sizeof(desaturation),estimates[i].minutes,true);
+        assert(!strcmp(desaturation,estimates[i].text));
+    }
+    scuba_desaturation_text(desaturation,sizeof(desaturation),754,false);
+    assert(!strcmp(desaturation,"Désaturation : -- h -- min"));
     puts("SCUBA PRESENTATION PASS: NDL >99, surface formats, ascent thresholds/duration and air ppO2 preview");
 }

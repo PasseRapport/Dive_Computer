@@ -1,0 +1,4 @@
+V2/Firmware/simulator/tests/test_scuba_presentation.c: In function ‘main’:
+V2/Firmware/simulator/tests/test_scuba_presentation.c:49:9: error: implicit declaration of function ‘scuba_desaturation_text’ [-Wimplicit-function-declaration]
+   49 |         scuba_desaturation_text(desaturation,sizeof(desaturation),estimates[i].minutes,true);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~

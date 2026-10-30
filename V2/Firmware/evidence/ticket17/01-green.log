@@ -1,0 +1,85 @@
+[  1%] Built target ostc4_corrected_source
+[  5%] Built target ostc4_upstream
+[  6%] Building C object ostc4/CMakeFiles/ostc4_baseline.dir/src/ostc4_baseline.c.o
+[ 12%] Built target ostc4_upstream_corrected
+[ 20%] Built target ostc4_upstream_contained
+[ 22%] Building C object ostc4/CMakeFiles/ostc4_corrected.dir/src/ostc4_baseline.c.o
+[ 23%] Building C object ostc4/CMakeFiles/ostc4_exposure.dir/src/ostc4_baseline.c.o
+[ 25%] Linking C static library libostc4_baseline.a
+[ 26%] Linking C static library libostc4_corrected.a
+[ 26%] Built target ostc4_baseline
+[ 27%] Building C object ostc4/CMakeFiles/test_ostc4_contract.dir/tests/test_contract.c.o
+[ 29%] Building C object ostc4/CMakeFiles/ostc4_replay.dir/src/replay.c.o
+[ 29%] Built target ostc4_corrected
+[ 30%] Building C object ostc4/CMakeFiles/ostc4_replay_corrected.dir/src/replay.c.o
+[ 31%] Linking C executable test_ostc4_contract
+[ 33%] Linking C executable ostc4_replay
+[ 33%] Built target test_ostc4_contract
+[ 34%] Linking C executable ostc4_replay_corrected
+[ 36%] Building C object ostc4/CMakeFiles/test_ostc4_corrected_contract.dir/tests/test_contract.c.o
+[ 36%] Built target ostc4_replay
+[ 37%] Linking C static library libostc4_exposure.a
+[ 37%] Built target ostc4_replay_corrected
+[ 38%] Linking C executable test_ostc4_corrected_contract
+[ 38%] Built target ostc4_exposure
+[ 38%] Built target test_ostc4_corrected_contract
+[ 40%] Building C object CMakeFiles/test_calculated_watch.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/scuba_calculated.c.o
+[ 41%] Building C object CMakeFiles/test_pc_bench.dir/test_pc_bench.c.o
+[ 43%] Building C object CMakeFiles/test_restart_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench.c.o
+[ 44%] Building C object CMakeFiles/test_restart_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench_storage.c.o
+[ 45%] Building C object CMakeFiles/test_calculated_watch.dir/test_calculated_watch.c.o
+[ 47%] Building C object CMakeFiles/test_restart_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/scuba_calculated.c.o
+[ 48%] Building C object CMakeFiles/test_pc_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench.c.o
+[ 50%] Linking C executable test_calculated_watch
+[ 51%] Building C object CMakeFiles/test_restart_bench.dir/test_restart_bench.c.o
+[ 52%] Built target test_calculated_watch
+[ 54%] Linking C executable test_restart_bench
+[ 55%] Building C object CMakeFiles/test_gf_pair.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench.c.o
+[ 56%] Building C object CMakeFiles/gf_bench_replay.dir/gf_bench_replay.c.o
+[ 58%] Building C object CMakeFiles/test_pc_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench_storage.c.o
+[ 59%] Built target test_restart_bench
+[ 61%] Building C object CMakeFiles/gf_bench_replay.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench.c.o
+[ 62%] Building C object CMakeFiles/test_checkpoint_file.dir/test_checkpoint_file.c.o
+[ 63%] Building C object CMakeFiles/test_gf_pair.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench_storage.c.o
+[ 65%] Building C object CMakeFiles/test_pc_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/scuba_calculated.c.o
+[ 66%] Building C object CMakeFiles/test_checkpoint_file.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench.c.o
+[ 68%] Building C object CMakeFiles/gf_bench_replay.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench_storage.c.o
+[ 69%] Building C object CMakeFiles/test_pc_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/scuba_model.c.o
+[ 70%] Building C object CMakeFiles/test_gf_pair.dir/test_gf_pair.c.o
+[ 72%] Linking C executable gf_bench_replay
+[ 73%] Linking C executable test_pc_bench
+[ 75%] Linking C executable test_gf_pair
+[ 76%] Building C object CMakeFiles/test_checkpoint_file.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench_checkpoint_file.c.o
+[ 76%] Built target test_pc_bench
+[ 76%] Built target gf_bench_replay
+[ 76%] Built target test_gf_pair
+[ 77%] Building C object CMakeFiles/test_storage_bench.dir/test_storage_bench.c.o
+[ 79%] Building C object CMakeFiles/test_recovery_lifecycle.dir/test_recovery_lifecycle.c.o
+[ 80%] Building C object ostc4/CMakeFiles/test_ostc4_exposure.dir/tests/test_exposure.c.o
+[ 81%] Building C object CMakeFiles/test_checkpoint_file.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench_storage.c.o
+[ 83%] Building C object CMakeFiles/test_recovery_lifecycle.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench.c.o
+[ 84%] Building C object CMakeFiles/test_storage_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench.c.o
+[ 86%] Linking C executable test_ostc4_exposure
+[ 87%] Linking C executable test_checkpoint_file
+[ 87%] Built target test_ostc4_exposure
+[ 87%] Built target test_checkpoint_file
+[ 88%] Building C object CMakeFiles/test_recovery_lifecycle.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench_storage.c.o
+[ 90%] Building C object CMakeFiles/test_recovery_lifecycle.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench_checkpoint_file.c.o
+[ 91%] Building C object ostc4/CMakeFiles/ostc4_continuity_replay.dir/src/replay.c.o
+[ 93%] Building C object CMakeFiles/test_storage_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/pc_bench_storage.c.o
+[ 94%] Linking C executable test_recovery_lifecycle
+[ 95%] Linking C executable test_storage_bench
+[ 97%] Building C object ostc4/CMakeFiles/test_ostc4_restart.dir/tests/test_restart.c.o
+[ 97%] Built target test_recovery_lifecycle
+[ 98%] Linking C executable ostc4_continuity_replay
+[ 98%] Built target test_storage_bench
+[100%] Linking C executable test_ostc4_restart
+[100%] Built target ostc4_continuity_replay
+[100%] Built target test_ostc4_restart
+Test project /tmp/desaturation17-bench
+    Start 1: pc_bench_controls_time_graph
+1/1 Test #1: pc_bench_controls_time_graph .....   Passed    1.45 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   1.45 sec

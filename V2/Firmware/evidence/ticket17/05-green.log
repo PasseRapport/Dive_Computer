@@ -1,0 +1,28 @@
+[  4%] Built target ostc4_upstream
+[  5%] Built target ostc4_corrected_source
+[  8%] Built target ostc4_baseline
+[ 16%] Built target ostc4_upstream_contained
+[ 22%] Built target ostc4_upstream_corrected
+[ 25%] Built target ostc4_exposure
+[ 27%] Built target ostc4_replay
+[ 30%] Built target test_ostc4_contract
+[ 33%] Built target ostc4_corrected
+[ 41%] Built target test_restart_bench
+[ 47%] Built target test_calculated_watch
+[ 55%] Built target test_pc_bench
+[ 61%] Built target test_gf_pair
+[ 62%] Building C object CMakeFiles/gf_bench_replay.dir/gf_bench_replay.c.o
+[ 69%] Built target test_checkpoint_file
+[ 75%] Built target test_storage_bench
+[ 81%] Built target test_recovery_lifecycle
+[ 84%] Built target ostc4_replay_corrected
+[ 87%] Built target test_ostc4_corrected_contract
+[ 90%] Built target test_ostc4_exposure
+[ 91%] Linking C executable gf_bench_replay
+[ 94%] Built target test_ostc4_restart
+[ 97%] Built target ostc4_continuity_replay
+[100%] Built target gf_bench_replay
+surface-zero PASS [(0, 0), (60, 0), (3600, 0)]
+loaded-surface PASS [(2400, 0), (2460, 0), (2520, 0), (2700, 0), (3000, 0), (3600, 0), (4200, 0), (6000, 0)]
+repetitive PASS [(1500, 0), (1560, 0), (1800, 0), (2400, 0), (3300, 0), (4800, 0), (4860, 0), (5100, 0), (5400, 0), (6600, 0)]
+long-loaded-surface PASS [(14700, 0), (14760, 0), (14820, 0), (15300, 0), (16500, 0), (18300, 0)]

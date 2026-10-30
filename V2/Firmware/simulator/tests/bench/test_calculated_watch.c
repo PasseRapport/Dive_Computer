@@ -6,6 +6,25 @@
 #define CHECK(x) do { if (!(x)) { fprintf(stderr,"%d: %s\n",__LINE__,#x); exit(1); } } while(0)
 int main(void)
 {
+    /* Surface desaturation remains authoritative while dive guidance is absent. */
+    struct scuba_model surface;
+    scuba_model_init(&surface);
+    ostc4_observation estimate={.tissues=OSTC4_AVAILABLE,
+        .desaturation=OSTC4_AVAILABLE,.desaturation_minutes=754};
+    scuba_calculated_apply(&surface,&estimate,120,0,18,87);
+    CHECK(surface.summary.desaturation_valid && surface.summary.desaturation_minutes==754);
+    estimate.desaturation_minutes=0;
+    scuba_calculated_apply(&surface,&estimate,120,0,18,87);
+    CHECK(surface.summary.desaturation_valid && surface.summary.desaturation_minutes==0);
+    estimate.desaturation=OSTC4_INVALID;
+    scuba_calculated_apply(&surface,&estimate,120,0,18,87);
+    CHECK(!surface.summary.desaturation_valid); /* same instant, no minute delay */
+    estimate.desaturation=OSTC4_AVAILABLE;estimate.tissues=OSTC4_INVALID;
+    scuba_calculated_apply(&surface,&estimate,120,0,18,87);
+    CHECK(!surface.summary.desaturation_valid);
+    estimate.tissues=OSTC4_AVAILABLE;estimate.desaturation_minutes=-1;
+    scuba_calculated_apply(&surface,&estimate,120,0,18,87);
+    CHECK(!surface.summary.desaturation_valid);
     struct scuba_model m;
     scuba_model_init(&m);scuba_model_arm(&m,0);
     ostc4_observation o={.tissues=OSTC4_AVAILABLE,.ndl=OSTC4_AVAILABLE,

@@ -1,0 +1,3 @@
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/check_desaturation_render.py:27: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  assert sum(min(c) > 180 for c in band.getdata()) > 40, (index, top)
+DESATURATION RENDER PASS: exact native labels/glyph/circular bounds; saved pixels for positive, live minute changes, reopened summary, immediate invalidity, persistent zero, 58-hour estimate and retained statistics/surface time

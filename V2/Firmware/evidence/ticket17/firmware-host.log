@@ -1,0 +1,99 @@
+
+COMMAND: cmake -S V2/Firmware/tests/firmware -B /tmp/desaturation-final-host -DCMAKE_C_COMPILER=/usr/bin/gcc
+-- The C compiler identification is GNU 16.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Found Python3: /usr/bin/python3.14 (found version "3.14.8") found components: Interpreter
+-- Configuring done (1.0s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/desaturation-final-host
+
+COMMAND: cmake --build /tmp/desaturation-final-host -j4
+[  2%] Generating corrected/decom.c
+[  5%] Building C object core/CMakeFiles/ostc4_upstream.dir/upstream/Common/Src/decom.c.o
+[  8%] Building C object core/CMakeFiles/ostc4_upstream.dir/upstream/Discovery/Src/buehlmann.c.o
+[  8%] Built target ostc4_corrected_source
+[ 10%] Generating corrected/buehlmann-contained.c
+[ 13%] Building C object core/CMakeFiles/ostc4_upstream_corrected.dir/corrected/decom.c.o
+[ 16%] Generating corrected/buehlmann-grid-timed.c
+[ 18%] Building C object core/CMakeFiles/ostc4_upstream_contained.dir/corrected/decom.c.o
+[ 21%] Building C object core/CMakeFiles/ostc4_upstream_contained.dir/corrected/buehlmann-grid-timed.c.o
+[ 24%] Linking C static library libostc4_upstream.a
+[ 24%] Built target ostc4_upstream
+[ 27%] Building C object core/CMakeFiles/ostc4_upstream_corrected.dir/upstream/Discovery/Src/buehlmann.c.o
+[ 29%] Building C object core/CMakeFiles/ostc4_baseline.dir/src/ostc4_baseline.c.o
+[ 32%] Linking C static library libostc4_upstream_contained.a
+[ 35%] Linking C static library libostc4_baseline.a
+[ 37%] Linking C static library libostc4_upstream_corrected.a
+[ 40%] Built target ostc4_upstream_contained
+[ 40%] Built target ostc4_baseline
+[ 43%] Building C object core/CMakeFiles/ostc4_replay.dir/src/replay.c.o
+[ 45%] Building C object core/CMakeFiles/test_ostc4_contract.dir/tests/test_contract.c.o
+[ 48%] Building C object core/CMakeFiles/ostc4_exposure.dir/src/ostc4_baseline.c.o
+[ 51%] Built target ostc4_upstream_corrected
+[ 54%] Linking C executable test_ostc4_contract
+[ 56%] Building C object core/CMakeFiles/ostc4_corrected.dir/src/ostc4_baseline.c.o
+[ 59%] Linking C executable ostc4_replay
+[ 59%] Built target test_ostc4_contract
+[ 59%] Built target ostc4_replay
+[ 62%] Linking C static library libostc4_corrected.a
+[ 62%] Built target ostc4_corrected
+[ 64%] Building C object core/CMakeFiles/ostc4_replay_corrected.dir/src/replay.c.o
+[ 67%] Building C object core/CMakeFiles/test_ostc4_corrected_contract.dir/tests/test_contract.c.o
+[ 70%] Linking C executable test_ostc4_corrected_contract
+[ 72%] Linking C static library libostc4_exposure.a
+[ 75%] Linking C executable ostc4_replay_corrected
+[ 75%] Built target test_ostc4_corrected_contract
+[ 75%] Built target ostc4_exposure
+[ 75%] Built target ostc4_replay_corrected
+[ 78%] Building C object CMakeFiles/test_firmware_exposure.dir/test_firmware_exposure.c.o
+[ 81%] Building C object core/CMakeFiles/ostc4_continuity_replay.dir/src/replay.c.o
+[ 83%] Building C object core/CMakeFiles/test_ostc4_exposure.dir/tests/test_exposure.c.o
+[ 86%] Building C object core/CMakeFiles/test_ostc4_restart.dir/tests/test_restart.c.o
+[ 89%] Building C object CMakeFiles/test_firmware_exposure.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/src/firmware_exposure.c.o
+[ 91%] Linking C executable test_ostc4_exposure
+[ 94%] Linking C executable test_ostc4_restart
+[ 97%] Linking C executable test_firmware_exposure
+[100%] Linking C executable ostc4_continuity_replay
+[100%] Built target test_ostc4_exposure
+[100%] Built target test_ostc4_restart
+[100%] Built target test_firmware_exposure
+[100%] Built target ostc4_continuity_replay
+
+COMMAND: ctest --test-dir /tmp/desaturation-final-host --output-on-failure
+Test project /tmp/desaturation-final-host
+      Start  1: firmware_pressure_time_contract
+ 1/14 Test  #1: firmware_pressure_time_contract .....................   Passed    0.00 sec
+      Start  2: upstream_source_identity
+ 2/14 Test  #2: upstream_source_identity ............................   Passed    0.07 sec
+      Start  3: synthetic_replay_contracts
+ 3/14 Test  #3: synthetic_replay_contracts ..........................   Passed    0.12 sec
+      Start  4: public_pressure_time_contract
+ 4/14 Test  #4: public_pressure_time_contract .......................   Passed    0.00 sec
+      Start  5: corrected_public_pressure_time_contract
+ 5/14 Test  #5: corrected_public_pressure_time_contract .............   Passed    0.00 sec
+      Start  6: corrected_synthetic_replay_contracts
+ 6/14 Test  #6: corrected_synthetic_replay_contracts ................   Passed    0.12 sec
+      Start  7: independently_verified_tissues
+ 7/14 Test  #7: independently_verified_tissues ......................   Passed    0.98 sec
+      Start  8: continuous_exposure_contract
+ 8/14 Test  #8: continuous_exposure_contract ........................   Passed    0.05 sec
+      Start  9: independent_repetitive_exposure
+ 9/14 Test  #9: independent_repetitive_exposure .....................   Passed    0.22 sec
+      Start 10: continuity_replay_faults
+10/14 Test #10: continuity_replay_faults ............................   Passed    0.12 sec
+      Start 11: independent_schedule_analytical_checks
+11/14 Test #11: independent_schedule_analytical_checks ..............   Passed    0.33 sec
+      Start 12: independent_schedule_comparator_rejects_mutations
+12/14 Test #12: independent_schedule_comparator_rejects_mutations ...   Passed    0.18 sec
+      Start 13: checkpoint_restart_continuity
+13/14 Test #13: checkpoint_restart_continuity .......................   Passed    0.00 sec
+      Start 14: checkpoint_fresh_process
+14/14 Test #14: checkpoint_fresh_process ............................   Passed    0.09 sec
+
+100% tests passed, 0 tests failed out of 14
+
+Total Test time (real) =   2.30 sec

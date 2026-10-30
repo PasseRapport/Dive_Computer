@@ -1,0 +1,13 @@
+Test project /tmp/desaturation17-bench
+    Start 1: pc_bench_controls_time_graph
+1/1 Test #1: pc_bench_controls_time_graph .....***Failed    0.10 sec
+226: v->result.nitrogen_bar[5]>before.nitrogen_bar[5]
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   0.10 sec
+
+The following tests FAILED:
+	  1 - pc_bench_controls_time_graph (Failed)
+Errors while running CTest

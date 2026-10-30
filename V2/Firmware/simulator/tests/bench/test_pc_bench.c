@@ -170,6 +170,13 @@ static void recording_surface_completion_and_second_dive(void)
     CHECK(before.gf_locked && !v->result.gf_locked);
     before.gf_locked=false; /* Completion changes lock metadata only. */
     CHECK(memcmp(&before,&v->result,sizeof(before))==0 && v->history_count==history_count);
+    /* Manual completion keeps both elapsed surface time and tissues moving. */
+    uint32_t surface_before=v->recording.surface_seconds;
+    pc_bench_poll(60000);
+    CHECK(v->recording.surface_seconds==surface_before+60);
+    CHECK(recorded_watch.surface_ms==(surface_before+60)*1000);
+    CHECK(v->result.desaturation==OSTC4_AVAILABLE);
+    before=v->result;history_count=v->history_count;
     pc_bench_recording_arm();
     CHECK(memcmp(&before,&v->result,sizeof(before))==0 && v->history_count==history_count);
     pc_bench_manual(3,0);pc_bench_poll(1000);
@@ -183,8 +190,65 @@ static void recording_surface_completion_and_second_dive(void)
     CHECK(v->recording.surface_seconds==301);
     pc_bench_set_observer(NULL);
 }
+static void desaturation_summary_follows_repetitive_exposure(void)
+{
+    const ostc4_sample profile[]={{0,1.01325f},{120,3.01325f},{1320,3.01325f},
+        {1500,1.01325f},{3300,1.01325f},{3420,3.01325f},{4620,3.01325f},
+        {4800,1.01325f},{6600,1.01325f}};
+    ostc4_observation normal={0};
+    for(unsigned speed=1;speed<=60;speed=speed==1?10:60) {
+        CHECK(!pc_bench_fresh(1.01325f,1025,profile,9));
+        scuba_model_init(&recorded_watch);pc_bench_set_observer(recording_observer);
+        recording_observer(pc_bench_read());pc_bench_speed(speed);
+        ostc4_observation fresh=pc_bench_read()->result;
+        const struct bench_view *v=pc_bench_read();
+        /* A replay is sampled on its existing one-second clock at every speed. */
+        while(v->seconds<1800)pc_bench_poll(1000);
+        CHECK(!v->recording.active && v->recording.dives_completed==1);
+        CHECK(recorded_watch.summary.valid && recorded_watch.summary.desaturation_valid);
+        CHECK(recorded_watch.summary.desaturation_minutes==(unsigned)v->result.desaturation_minutes);
+        CHECK(v->result.desaturation_minutes>0);
+        struct scuba_summary summary=recorded_watch.summary;
+        ostc4_observation before=v->result,read;
+        pc_bench_pause(true);pc_bench_poll(60000);
+        for(unsigned n=0;n<4;++n) {
+            CHECK(ostc4_exposure_read(&read)==OSTC4_OK);
+            CHECK(!memcmp(&before,&read,sizeof(read)));
+            recording_observer(v);
+        }
+        CHECK(!memcmp(&summary,&recorded_watch.summary,sizeof(summary)));
+        CHECK(!memcmp(&before,&v->result,sizeof(before)));
+        pc_bench_pause(false);
+        while(v->seconds<3300)pc_bench_poll(1000);
+        CHECK(v->result.nitrogen_bar[15]>fresh.nitrogen_bar[15]);
+        while(!v->ended && !v->error)pc_bench_poll(1000);
+        CHECK(!v->error && v->seconds==6600 && v->recording.dives_completed==2);
+        CHECK(recorded_watch.summary.valid && !recorded_watch.active);
+        CHECK(recorded_watch.summary.desaturation_valid);
+        CHECK(recorded_watch.summary.desaturation_minutes==(unsigned)v->result.desaturation_minutes);
+        CHECK(v->result.nitrogen_bar[15]>fresh.nitrogen_bar[15]);
+        if(speed==1)normal=v->result;
+        else CHECK(!memcmp(&normal,&v->result,sizeof(normal)));
+        uint32_t seconds=v->seconds;
+        pc_bench_mark_missing();
+        CHECK(v->seconds==seconds && !recorded_watch.summary.desaturation_valid);
+        pc_bench_set_observer(NULL);
+        if(speed==60)break;
+    }
+}
+static void desaturation_is_available_at_surface_equilibrium(void)
+{
+    CHECK(pc_bench_fresh(1.0f,1000,NULL,0)==0);
+    const ostc4_observation *r=&pc_bench_read()->result;
+    CHECK(r->desaturation==OSTC4_AVAILABLE);
+    CHECK(r->desaturation_minutes==0);
+    pc_bench_mark_missing();
+    CHECK(pc_bench_read()->result.desaturation==OSTC4_INVALID);
+}
 int main(void)
 {
+    desaturation_is_available_at_surface_equilibrium();
+    desaturation_summary_follows_repetitive_exposure();
     recording_surface_completion_and_second_dive();
     recording_start_threshold();
     automatic_takeover();

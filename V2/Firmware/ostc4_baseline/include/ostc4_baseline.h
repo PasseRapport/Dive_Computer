@@ -43,6 +43,10 @@ typedef struct {
     float gf_low_depth_bar;
     int ndl_seconds;
     int tts_seconds;
+    /* Pinned OSTC4 estimate, integer minutes (truncated); zero is available.
+     * Engine convention only, never clearance to dive again. */
+    int desaturation_minutes;
+    ostc4_availability desaturation;
     float ceiling_meters; /* Operational interpolation/anchor ceiling. */
     /* Current fixed-GF endpoints from the same tissues; never guide ascent. */
     float gf_low_ceiling_meters, gf_high_ceiling_meters;

@@ -1,0 +1,37 @@
+[  1%] Built target ostc4_corrected_source
+[  5%] Built target ostc4_upstream
+[ 13%] Built target ostc4_upstream_contained
+[ 16%] Built target ostc4_baseline
+[ 22%] Built target ostc4_upstream_corrected
+[ 25%] Built target ostc4_exposure
+[ 27%] Built target test_ostc4_contract
+[ 30%] Built target ostc4_replay
+[ 33%] Built target ostc4_corrected
+[ 38%] Built target test_calculated_watch
+[ 40%] Building C object CMakeFiles/test_pc_bench.dir/test_pc_bench.c.o
+[ 48%] Built target test_restart_bench
+[ 54%] Built target test_gf_pair
+[ 59%] Built target gf_bench_replay
+[ 66%] Built target test_checkpoint_file
+[ 72%] Built target test_storage_bench
+[ 79%] Built target test_recovery_lifecycle
+[ 81%] Built target ostc4_replay_corrected
+[ 84%] Built target test_ostc4_corrected_contract
+[ 87%] Built target test_ostc4_exposure
+[ 90%] Built target ostc4_continuity_replay
+[ 93%] Built target test_ostc4_restart
+[ 94%] Linking C executable test_pc_bench
+[100%] Built target test_pc_bench
+Test project /tmp/desaturation17-bench
+    Start 1: pc_bench_controls_time_graph
+1/1 Test #1: pc_bench_controls_time_graph .....***Failed    0.00 sec
+176: v->recording.surface_seconds==surface_before+60
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   0.01 sec
+
+The following tests FAILED:
+	  1 - pc_bench_controls_time_graph (Failed)
+Errors while running CTest

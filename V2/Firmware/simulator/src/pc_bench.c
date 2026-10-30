@@ -252,7 +252,10 @@ static void recording_sample(uint32_t seconds,float pressure)
 {
     struct recorded_dive *r=&view.recording;
     uint32_t depth_mm=(uint32_t)lroundf(fmaxf(0,(pressure-view.surface_bar)*10000));
-    if (!r->armed) return;
+    if (!r->armed) {
+        if(r->dives_completed && depth_mm<500)++r->surface_seconds;
+        return;
+    }
     if (!r->active && depth_mm/100>=r->start_depth_dm) {
         r->active=true;r->started_seconds=seconds;++r->dives_started;
         r->dive_seconds=r->surface_seconds=0;

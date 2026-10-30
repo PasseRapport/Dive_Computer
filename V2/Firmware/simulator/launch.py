@@ -12,6 +12,7 @@ import subprocess
 parser = argparse.ArgumentParser()
 parser.add_argument("--bench", action="store_true", help="Calculated experimental OSTC4 diagnostics and depth graph")
 parser.add_argument("--bench-profile", help="Replay CSV: timestamp_seconds,absolute_pressure_bar (implies --bench)")
+parser.add_argument("--desaturation-check", action="store_true", help="Estimated desaturation summary live/render acceptance")
 parser.add_argument("--checkpoint-check", action="store_true", help="Disk checkpoint controls, explicit clock assertion and recovered lock captures")
 parser.add_argument("--gf-check", action="store_true", help="Atomic GF preparation editor and recorded-dive lock captures")
 parser.add_argument("--restart-check", action="store_true", help="Synthetic checkpoint recovery and fault captures")
@@ -29,7 +30,7 @@ parser.add_argument("--apnea-settings-check", action="store_true")
 parser.add_argument("--apnea-check", action="store_true", help="Deterministic freediving session and Main render journey")
 parser.add_argument("--scuba-check", action="store_true", help="Exercise the scuba UI with accelerated scenarios")
 args = parser.parse_args()
-args.bench = args.bench or bool(args.bench_profile) or args.bench_check or args.calculated_check or args.restart_check or args.gf_check or args.checkpoint_check
+args.bench = args.bench or bool(args.bench_profile) or args.bench_check or args.calculated_check or args.restart_check or args.gf_check or args.checkpoint_check or args.desaturation_check
 if args.bench and (args.gallery or args.scuba_check or args.scale_check or args.check_controls or args.water_check or args.dive_check or args.apnea_check or args.apnea_settings_check):
     parser.error("Bench checks use --bench-check; legacy gallery/control checks run without --bench")
 if (args.apnea_check or args.apnea_settings_check) and not args.gallery:
@@ -105,15 +106,15 @@ if not args.build_only:
     storage_fixture = None
     if (args.gallery or args.smoke or args.check_controls or args.scale_check or args.water_check or
         args.dive_check or args.apnea_check or args.apnea_settings_check or args.scuba_check or
-        args.bench_check or args.calculated_check or args.restart_check or args.gf_check or args.checkpoint_check):
+        args.bench_check or args.calculated_check or args.restart_check or args.gf_check or args.checkpoint_check or args.desaturation_check):
         storage_fixture = tempfile.TemporaryDirectory(prefix="dive-watch-state-")
         env["DIVE_WATCH_STATE_DIR"] = storage_fixture.name
     if args.bench_profile:
         env["DIVE_SIM_BENCH_PROFILE"] = str(Path(args.bench_profile).resolve())
-    if args.bench_check or args.calculated_check or args.restart_check or args.gf_check or args.checkpoint_check:
-        env["DIVE_SIM_BENCH_CHECK"] = "checkpoint" if args.checkpoint_check else "gf" if args.gf_check else "restart" if args.restart_check else "calculated" if args.calculated_check else "1"
+    if args.bench_check or args.calculated_check or args.restart_check or args.gf_check or args.checkpoint_check or args.desaturation_check:
+        env["DIVE_SIM_BENCH_CHECK"] = "desaturation" if args.desaturation_check else "checkpoint" if args.checkpoint_check else "gf" if args.gf_check else "restart" if args.restart_check else "calculated" if args.calculated_check else "1"
         env["SDL_VIDEODRIVER"] = "dummy"
-        command += ["--stop_at=10" if args.checkpoint_check or args.gf_check else "--stop_at=20" if args.calculated_check else "--stop_at=15" if args.restart_check else "--stop_at=90", "--no-rt"]
+        command += ["--stop_at=10" if args.desaturation_check or args.checkpoint_check or args.gf_check else "--stop_at=20" if args.calculated_check else "--stop_at=15" if args.restart_check else "--stop_at=90", "--no-rt"]
     if args.scale_check:
         env["DIVE_SIM_SCALE_CHECK"] = "1"
     if args.scuba_check:

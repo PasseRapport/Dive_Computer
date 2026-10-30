@@ -13,6 +13,7 @@ static void emit(void)
         (double)r->gf_low_depth_bar,(double)r->ceiling_meters,r->ndl_seconds,r->tts_seconds);
     printf("\"gf_low_ceiling_meters\":%.9g,\"gf_high_ceiling_meters\":%.9g,", (double)r->gf_low_ceiling_meters,(double)r->gf_high_ceiling_meters);
     printf("\"endpoint_availability\":[\"%s\",\"%s\"],", ostc4_availability_name(r->gf_low_ceiling),ostc4_availability_name(r->gf_high_ceiling));
+    printf("\"desaturation_minutes\":%d,\"desaturation_availability\":\"%s\",",r->desaturation_minutes,ostc4_availability_name(r->desaturation));
     printf("\"nitrogen_bar\":[");
     for(int i=0;i<OSTC4_TISSUES;++i)printf("%s%.9g",i?",":"",(double)r->nitrogen_bar[i]);
     printf("],\"stop_seconds\":[");

@@ -40,3 +40,5 @@ target_sources(app PRIVATE src/watch_faces.c src/watch_catalog_checks.c src/asse
 target_sources(native_simulator INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/watch_preferences_host.c)
 
 target_sources(app PRIVATE src/menu_checks.c)
+
+target_sources(app PRIVATE src/assets/montserrat_french_14.c)

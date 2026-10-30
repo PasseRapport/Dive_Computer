@@ -290,7 +290,7 @@ void sim_host_bench_watch(const struct scuba_model *model) {calculated_watch=mod
 #include <stdio.h>
 int sim_host_bench_check_enabled(void) {
     const char *mode=getenv("DIVE_SIM_BENCH_CHECK");
-    return !mode?0:!strcmp(mode,"startup")?6:!strcmp(mode,"checkpoint")?5:!strcmp(mode,"gf")?4:!strcmp(mode,"restart")?3:!strcmp(mode,"calculated")?2:1;
+    return !mode?0:!strcmp(mode,"desaturation")?7:!strcmp(mode,"startup")?6:!strcmp(mode,"checkpoint")?5:!strcmp(mode,"gf")?4:!strcmp(mode,"restart")?3:!strcmp(mode,"calculated")?2:1;
 }
 static void configure_bench_storage(void)
 {
@@ -395,6 +395,12 @@ int sim_host_bench_capture(unsigned milestone)
     }
     fprintf(out,"]}");
 
+    fprintf(out,",\"desaturation\":{\"minutes\":%d,\"availability\":%d},"
+        "\"summary\":{\"valid\":%s,\"max_dm\":%u,\"average_dm\":%u,\"duration_seconds\":%u,"
+        "\"desaturation_minutes\":%u,\"desaturation_valid\":%s}",
+        v->result.desaturation_minutes,v->result.desaturation,m->summary.valid?"true":"false",
+        m->summary.max_dm,m->summary.average_dm,m->summary.duration_s,
+        m->summary.desaturation_minutes,m->summary.desaturation_valid?"true":"false");
     fprintf(out,",\"gf_ceilings\":{\"low_m\":%.9g,\"high_m\":%.9g,\"validity\":[%d,%d]}",
         (double)v->result.gf_low_ceiling_meters,(double)v->result.gf_high_ceiling_meters,
         v->result.gf_low_ceiling,v->result.gf_high_ceiling);

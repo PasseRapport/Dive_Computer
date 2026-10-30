@@ -1,5 +1,6 @@
 #include "scuba_ui.h"
 #include "scuba_dashboard.h"
+#include "scuba_presentation.h"
 #include "selection.h"
 #include "native_fonts.h"
 #include "v1_ui_layout.h"
@@ -15,7 +16,7 @@ LV_IMAGE_DECLARE(icon_drop);
 LV_IMAGE_DECLARE(icon_wave);
 static struct scuba_model model;
 static enum scuba_screen screen, brightness_origin;
-static lv_obj_t *root, *content, *arc, *title, *value, *metric, *detail, *hint;
+static lv_obj_t *root, *content, *arc, *title, *value, *metric, *detail, *hint, *desaturation;
 static lv_obj_t *menu, *pill, *rows[3];
 static lv_obj_t *alert_text, *brightness_editor, *sensitivity_editor;
 static int setting, leave_progress, water_row;
@@ -167,6 +168,7 @@ static void render(void)
     lv_arc_set_value(arc,0);
     message(title,"",36); message(value,"",86); message(metric,"",163);
     message(detail,"",208); message(hint,"",250);
+    hide(desaturation,screen!=SCUBA_SUMMARY);
     hide(brightness_editor,screen!=SCUBA_BRIGHTNESS);
     hide(sensitivity_editor,screen!=SCUBA_SENSITIVITY);
     for(int i=0;i<2;i++)hide(prep_alarm[i],screen!=SCUBA_PREP);
@@ -213,15 +215,18 @@ static void render(void)
     } else if (screen==SCUBA_SUMMARY) {
         const struct scuba_summary *r=&model.summary;
         message(title,"DIVE SUMMARY",40);
-        lv_obj_set_style_text_font(value,&lv_font_montserrat_34,0);
+        lv_obj_set_style_text_font(value,&lv_font_montserrat_28,0);
+        lv_obj_set_style_text_font(metric,&lv_font_montserrat_24,0);
         uint16_t peak=r->max_dm;
-        snprintf(text,sizeof(text),"MAX %u.%u m",peak/10,peak%10); message(value,text,95);
+        snprintf(text,sizeof(text),"MAX %u.%u m",peak/10,peak%10); message(value,text,82);
         uint16_t average=r->average_dm;
-        snprintf(text,sizeof(text),"AVG %u.%u m",average/10,average%10); message(metric,text,147);
+        snprintf(text,sizeof(text),"AVG %u.%u m",average/10,average%10); message(metric,text,124);
         duration(time,sizeof(time),r->duration_s);
-        snprintf(text,sizeof(text),"DURATION %s",time); message(detail,text,195);
+        snprintf(text,sizeof(text),"DURATION %s",time); message(detail,text,165);
         duration(time,sizeof(time),model.surface_ms/1000);
-        snprintf(text,sizeof(text),"SURFACE TIME %s",time); message(hint,text,238);lv_obj_set_style_text_color(hint,lv_color_white(),0);
+        snprintf(text,sizeof(text),"SURFACE TIME %s",time); message(hint,text,203);lv_obj_set_style_text_color(hint,lv_color_white(),0);
+        scuba_desaturation_text(text,sizeof(text),r->desaturation_minutes,model.calculated && r->desaturation_valid);
+        message(desaturation,text,235);
     } else if (screen==SCUBA_LEAVE) {
         message(title,"LEAVE",58);
         lv_obj_set_style_text_font(value,&lv_font_montserrat_24,0);
@@ -288,6 +293,7 @@ lv_obj_t *scuba_ui_create(lv_obj_t *parent)
     content=lv_obj_create(root);lv_obj_remove_style_all(content);lv_obj_set_size(content,320,300);lv_obj_remove_flag(content,LV_OBJ_FLAG_SCROLLABLE);
     title=label(content,36,&lv_font_montserrat_18);value=label(content,86,&watch_montserrat_60);
     metric=label(content,163,&lv_font_montserrat_28);detail=label(content,208,&lv_font_montserrat_18);hint=label(content,250,&lv_font_montserrat_14);
+    desaturation=label(content,235,&watch_montserrat_french_14);
     lv_obj_set_style_text_color(hint,lv_color_hex(0xaaaaaa),0);
     menu=lv_obj_create(root);lv_obj_remove_style_all(menu);lv_obj_set_size(menu,320,300);lv_obj_remove_flag(menu,LV_OBJ_FLAG_SCROLLABLE);
     menu_title=label(menu,43,&lv_font_montserrat_22);message(menu_title,"DIVE SETTINGS",43);

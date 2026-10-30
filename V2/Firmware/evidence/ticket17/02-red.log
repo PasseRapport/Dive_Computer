@@ -1,0 +1,63 @@
+[  1%] Built target ostc4_corrected_source
+[  5%] Built target ostc4_upstream
+[ 11%] Built target ostc4_upstream_corrected
+[ 13%] Built target ostc4_baseline
+[ 22%] Built target ostc4_upstream_contained
+[ 25%] Built target ostc4_corrected
+[ 27%] Built target ostc4_replay
+[ 30%] Built target test_ostc4_contract
+[ 33%] Built target ostc4_exposure
+[ 36%] Built target ostc4_replay_corrected
+[ 37%] Building C object CMakeFiles/test_calculated_watch.dir/test_calculated_watch.c.o
+[ 40%] Built target test_ostc4_corrected_contract
+[ 48%] Built target test_pc_bench
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_calculated_watch.c: In function ‘main’:
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_calculated_watch.c:15:26: error: ‘struct scuba_summary’ has no member named ‘desaturation_valid’
+   15 |     CHECK(surface.summary.desaturation_valid && surface.summary.desaturation_minutes==754);
+      |                          ^
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_calculated_watch.c:6:29: note: in definition of macro ‘CHECK’
+    6 | #define CHECK(x) do { if (!(x)) { fprintf(stderr,"%d: %s\n",__LINE__,#x); exit(1); } } while(0)
+      |                             ^
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_calculated_watch.c:15:64: error: ‘struct scuba_summary’ has no member named ‘desaturation_minutes’
+   15 |     CHECK(surface.summary.desaturation_valid && surface.summary.desaturation_minutes==754);
+      |                                                                ^
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_calculated_watch.c:6:29: note: in definition of macro ‘CHECK’
+    6 | #define CHECK(x) do { if (!(x)) { fprintf(stderr,"%d: %s\n",__LINE__,#x); exit(1); } } while(0)
+      |                             ^
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_calculated_watch.c:18:26: error: ‘struct scuba_summary’ has no member named ‘desaturation_valid’
+   18 |     CHECK(surface.summary.desaturation_valid && surface.summary.desaturation_minutes==0);
+      |                          ^
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_calculated_watch.c:6:29: note: in definition of macro ‘CHECK’
+    6 | #define CHECK(x) do { if (!(x)) { fprintf(stderr,"%d: %s\n",__LINE__,#x); exit(1); } } while(0)
+      |                             ^
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_calculated_watch.c:18:64: error: ‘struct scuba_summary’ has no member named ‘desaturation_minutes’
+   18 |     CHECK(surface.summary.desaturation_valid && surface.summary.desaturation_minutes==0);
+      |                                                                ^
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_calculated_watch.c:6:29: note: in definition of macro ‘CHECK’
+    6 | #define CHECK(x) do { if (!(x)) { fprintf(stderr,"%d: %s\n",__LINE__,#x); exit(1); } } while(0)
+      |                             ^
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_calculated_watch.c:21:27: error: ‘struct scuba_summary’ has no member named ‘desaturation_valid’
+   21 |     CHECK(!surface.summary.desaturation_valid); /* same instant, no minute delay */
+      |                           ^
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_calculated_watch.c:6:29: note: in definition of macro ‘CHECK’
+    6 | #define CHECK(x) do { if (!(x)) { fprintf(stderr,"%d: %s\n",__LINE__,#x); exit(1); } } while(0)
+      |                             ^
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_calculated_watch.c:24:27: error: ‘struct scuba_summary’ has no member named ‘desaturation_valid’
+   24 |     CHECK(!surface.summary.desaturation_valid);
+      |                           ^
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_calculated_watch.c:6:29: note: in definition of macro ‘CHECK’
+    6 | #define CHECK(x) do { if (!(x)) { fprintf(stderr,"%d: %s\n",__LINE__,#x); exit(1); } } while(0)
+      |                             ^
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_calculated_watch.c:27:27: error: ‘struct scuba_summary’ has no member named ‘desaturation_valid’
+   27 |     CHECK(!surface.summary.desaturation_valid);
+      |                           ^
+/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/bench/test_calculated_watch.c:6:29: note: in definition of macro ‘CHECK’
+    6 | #define CHECK(x) do { if (!(x)) { fprintf(stderr,"%d: %s\n",__LINE__,#x); exit(1); } } while(0)
+      |                             ^
+gmake[2]: *** [CMakeFiles/test_calculated_watch.dir/build.make:79: CMakeFiles/test_calculated_watch.dir/test_calculated_watch.c.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:230: CMakeFiles/test_calculated_watch.dir/all] Error 2
+gmake[1]: *** Waiting for unfinished jobs....
+[ 56%] Built target test_restart_bench
+[ 62%] Built target gf_bench_replay
+[ 68%] Built target test_gf_pair
+gmake: *** [Makefile:101: all] Error 2

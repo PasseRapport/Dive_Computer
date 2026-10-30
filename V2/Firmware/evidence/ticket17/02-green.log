@@ -1,0 +1,41 @@
+[  4%] Built target ostc4_upstream
+[  5%] Built target ostc4_corrected_source
+[ 13%] Built target ostc4_baseline
+[ 13%] Built target ostc4_upstream_corrected
+[ 22%] Built target ostc4_upstream_contained
+[ 27%] Built target ostc4_corrected
+[ 27%] Built target test_ostc4_contract
+[ 30%] Built target ostc4_exposure
+[ 33%] Built target ostc4_replay
+[ 36%] Built target test_ostc4_corrected_contract
+[ 38%] Built target test_ostc4_exposure
+[ 41%] Built target ostc4_replay_corrected
+[ 44%] Built target ostc4_continuity_replay
+[ 47%] Built target test_ostc4_restart
+[ 48%] Building C object CMakeFiles/test_calculated_watch.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/scuba_calculated.c.o
+[ 50%] Building C object CMakeFiles/test_pc_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/scuba_calculated.c.o
+[ 51%] Building C object CMakeFiles/test_restart_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/scuba_calculated.c.o
+[ 52%] Building C object CMakeFiles/test_restart_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/scuba_model.c.o
+[ 54%] Building C object CMakeFiles/test_calculated_watch.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/scuba_model.c.o
+[ 55%] Building C object CMakeFiles/test_restart_bench.dir/test_restart_bench.c.o
+[ 56%] Building C object CMakeFiles/test_pc_bench.dir/home/Bilal/Documents/ChatGPT/Dive_Watch/.work/desaturation-17/V2/Firmware/simulator/src/scuba_model.c.o
+[ 58%] Building C object CMakeFiles/test_calculated_watch.dir/test_calculated_watch.c.o
+[ 59%] Linking C executable test_restart_bench
+[ 61%] Building C object CMakeFiles/test_pc_bench.dir/test_pc_bench.c.o
+[ 62%] Linking C executable test_calculated_watch
+[ 68%] Built target test_gf_pair
+[ 70%] Built target test_restart_bench
+[ 76%] Built target gf_bench_replay
+[ 76%] Built target test_calculated_watch
+[ 83%] Built target test_checkpoint_file
+[ 88%] Built target test_storage_bench
+[ 90%] Linking C executable test_pc_bench
+[ 97%] Built target test_recovery_lifecycle
+[100%] Built target test_pc_bench
+Test project /tmp/desaturation17-bench
+    Start 2: calculated_watch_mapping_session_alerts
+1/1 Test #2: calculated_watch_mapping_session_alerts ...   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.01 sec

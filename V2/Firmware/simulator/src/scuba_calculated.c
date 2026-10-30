@@ -62,6 +62,12 @@ void scuba_calculated_apply(struct scuba_model *m,const ostc4_observation *r,
      * display truncation. Raw depth controls the ceiling and stop boundaries. */
     uint32_t mm=isfinite(depth)&&depth>=0&&depth<=61?(uint32_t)lroundf(depth*1000):m->depth_dm*100u;
     scuba_model_update_mm(m,(uint64_t)seconds*1000,mm,temperature,battery);
+    /* Surface guidance may be unavailable while tracked tissues remain valid.
+     * Refresh every observation, including same-instant validity loss. */
+    m->summary.desaturation_valid=r->tissues==OSTC4_AVAILABLE &&
+        r->desaturation==OSTC4_AVAILABLE && r->desaturation_minutes>=0;
+    m->summary.desaturation_minutes=m->summary.desaturation_valid?
+        (uint32_t)r->desaturation_minutes:0;
 }
 
 void scuba_calculated_apply_recorded(struct scuba_model *m,const struct recorded_dive *recording,

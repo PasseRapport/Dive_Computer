@@ -1,0 +1,4 @@
+surface-zero FAIL [(0, None), (60, None), (3600, None)]
+loaded-surface FAIL [(2400, None), (2460, None), (2520, None), (2700, None), (3000, None), (3600, None), (4200, None), (6000, None)]
+repetitive FAIL [(1500, None), (1560, None), (1800, None), (2400, None), (3300, None), (4800, None), (4860, None), (5100, None), (5400, None), (6600, None)]
+long-loaded-surface FAIL [(14700, None), (14760, None), (14820, None), (15300, None), (16500, None), (18300, None)]
