@@ -1,0 +1,26 @@
+{
+  "ticket": 17,
+  "execution": "completed",
+  "integration_branch": "codex/desaturation-integration",
+  "code_commit": "a025574839a29c94e434f047af18358c58c625ae",
+  "baseline_commit": "2d2c0646457181fbb176d85f0aa166d04554f257",
+  "final_reviews": {
+    "standards_remaining": 0,
+    "spec_remaining": 0
+  },
+  "validation": {
+    "bench_passed": 27,
+    "bench_total": 27,
+    "host_passed": 14,
+    "host_total": 14,
+    "independent_desaturation_checkpoints_exact": 27,
+    "invariance_observations": 578,
+    "invariance_existing_scalar_values": 49708,
+    "invariance_differences": 0,
+    "native_summary_captures": 13
+  },
+  "known_preexisting_failure": "legacy check_scuba_render: Missing decompression indicator; identical baseline frame",
+  "original_work_preserved": true,
+  "target_ui_or_physical_validation": false,
+  "remote_push": false
+}

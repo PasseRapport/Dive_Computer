@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/desaturation-17/V2/Firmware/simulator/tests/check_scuba_render.py", line 34, in <module>
+    assert count(pixels('scuba-13-deco'),orange,(55,125,145,146))>10,'Missing decompression indicator'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Missing decompression indicator

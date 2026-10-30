@@ -1,0 +1,54 @@
+Ticket 17 — estimated desaturation on the scuba summary
+
+Implemented on codex/desaturation-integration.
+Code tip: a025574839a29c94e434f047af18358c58c625ae
+Base: 2d2c0646457181fbb176d85f0aa166d04554f257
+
+Result: existing OSTC4 estimate flows through the public observation and
+calculated-watch adapter to an additive summary field. It follows exposure
+time, retains zero, and uses dashes for unknown/invalid results. Surface time
+continues after manual completion. No decompression policy is changed.
+
+Validation:
+- Final simulator/controller/core suite: 27/27 passed.
+- Host firmware/core suite: 14/14 passed (engine unchanged by review fixes).
+- Independently authored desaturation checkpoints: 27 exact matches.
+- Before/after public observations: 578; 49,708 pre-existing scalar values
+  compared exactly, zero differences.
+- Native summaries: 13 captures; live/paused/reopened/invalid/zero/long and
+  formatting boundaries, exact glyph/text, all six fields inside round display.
+- Calculated-watch and GF/paired-ceiling native checks passed.
+- Existing scripted scenario passed. Its legacy pixel checker still fails
+  Missing decompression indicator, identically on base and implementation;
+  affected captures have identical pixels and identical BMP SHA256. This is
+  recorded as a pre-existing failure, not a passing check.
+- Both review findings corrected, final independent reviews below.
+
+## Standards
+
+Remaining Standards findings: 0.
+Documented-standard violations: 0. Actionable judgement-call smells: 0.
+
+Reviewed fixed-point diff `2d2c0646457181fbb176d85f0aa166d04554f257...a025574839a29c94e434f047af18358c58c625ae`, including both feature and correction commits. The initial report is preserved at `/tmp/desaturation-review-standards-initial.txt`.
+
+The Montserrat notice finding is fixed. `simulator/licenses/Montserrat-OFL.txt` matches the source font's license byte-for-byte. The generated asset includes the original copyright, OFL identity and correct relative license path; the generator retains those notices. Source font/license, bundled license and committed asset hashes match recorded provenance. Two isolated regenerations reproduce the committed asset exactly without modifying the checkout.
+
+The rejected-checkpoint correction adds desaturation to the existing invalidation policy and exercises public observations, presentation and repeated rejection. It introduces no new abstraction, numerical convention, persistence format or standards conflict. Added evidence keeps PC execution distinct from target/physical claims and preserves the rejected initial evidence.
+
+Previously verified independent-reference manifests and pinned-source preservation remain unaffected. The legacy scripted decompression-indicator failure is independently established as baseline-identical and is not introduced by these changes.
+
+## Spec
+
+Spec review — corrected HEAD a025574839a29c94e434f047af18358c58c625ae against base 2d2c0646457181fbb176d85f0aa166d04554f257.
+
+Remaining findings: 0.
+
+The original P2 is fixed: rejected recovery now invalidates the public controller desaturation availability alongside existing fields, including repeated rejection. Re-ran the original public-API reproducer against corrected controller source: before rejection tissues=AVAILABLE, desaturation=AVAILABLE, minutes=539; afterward tissues=INVALID, desaturation=INVALID, minutes=539. Retaining the old diagnostic number with explicit invalid availability is correct; the summary renders the exact unavailable placeholder. The initial finding remains preserved in /tmp/desaturation-review-spec-initial.txt.
+
+Reviewed the added repeated-rejection/summary assertions and actual disk-recovery fault assertions. Both targeted regression tests passed again (2/2). No native rebuild was run. The font changes add licensing/provenance only; glyph payload is unchanged.
+
+No additional missing/partial requirement, scope creep, or incorrectly implemented requirement found in the full approved scope. Calculation remains shared and read-only, pinned OSTC4 sources unchanged, with exact minute formatting, additive summary fields, live exposure-clock refresh, explicit availability, pause/navigation/repetitive-exposure coverage and independent numerical evidence. The pre-existing scripted pixel-checker failure is separately documented and reproduced on the baseline. Evidence remains PC execution; target/physical validation is neither required nor claimed.
+
+Scope: PC/headless/native-simulator implementation and evidence. No target UI
+port, physical execution, runtime performance measurement or operational safety
+validation is asserted. Original local changes are preserved. No push.

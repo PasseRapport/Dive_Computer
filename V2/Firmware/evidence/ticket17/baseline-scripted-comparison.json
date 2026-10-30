@@ -1,0 +1,15 @@
+{
+  "baseline_commit": "2d2c0646457181fbb176d85f0aa166d04554f257",
+  "implementation_commit": "6b722d04c5a1ccff57c9d872e5a3059ef11dc0e1",
+  "baseline_native_scenario_exit": 0,
+  "baseline_pixel_check_exit": 1,
+  "baseline_pixel_check_error": "AssertionError: Missing decompression indicator",
+  "deco_capture_size": [
+    620,
+    420
+  ],
+  "deco_capture_identical_pixels": true,
+  "deco_capture_changed_bounds": null,
+  "baseline_bmp_sha256": "9b37b6ef914a540416462488054a296b1f6899e60a199cc9983fd80d8062f1f3",
+  "implementation_bmp_sha256": "9b37b6ef914a540416462488054a296b1f6899e60a199cc9983fd80d8062f1f3"
+}

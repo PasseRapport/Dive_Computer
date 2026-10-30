@@ -1,0 +1,10 @@
+Remaining Standards findings: 0.
+Documented-standard violations: 0. Actionable judgement-call smells: 0.
+
+Reviewed fixed-point diff `2d2c0646457181fbb176d85f0aa166d04554f257...a025574839a29c94e434f047af18358c58c625ae`, including both feature and correction commits. The initial report is preserved at `/tmp/desaturation-review-standards-initial.txt`.
+
+The Montserrat notice finding is fixed. `simulator/licenses/Montserrat-OFL.txt` matches the source font's license byte-for-byte. The generated asset includes the original copyright, OFL identity and correct relative license path; the generator retains those notices. Source font/license, bundled license and committed asset hashes match recorded provenance. Two isolated regenerations reproduce the committed asset exactly without modifying the checkout.
+
+The rejected-checkpoint correction adds desaturation to the existing invalidation policy and exercises public observations, presentation and repeated rejection. It introduces no new abstraction, numerical convention, persistence format or standards conflict. Added evidence keeps PC execution distinct from target/physical claims and preserves the rejected initial evidence.
+
+Previously verified independent-reference manifests and pinned-source preservation remain unaffected. The legacy scripted decompression-indicator failure is independently established as baseline-identical and is not introduced by these changes.

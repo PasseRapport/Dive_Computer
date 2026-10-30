@@ -1,0 +1,9 @@
+Spec review — corrected HEAD a025574839a29c94e434f047af18358c58c625ae against base 2d2c0646457181fbb176d85f0aa166d04554f257.
+
+Remaining findings: 0.
+
+The original P2 is fixed: rejected recovery now invalidates the public controller desaturation availability alongside existing fields, including repeated rejection. Re-ran the original public-API reproducer against corrected controller source: before rejection tissues=AVAILABLE, desaturation=AVAILABLE, minutes=539; afterward tissues=INVALID, desaturation=INVALID, minutes=539. Retaining the old diagnostic number with explicit invalid availability is correct; the summary renders the exact unavailable placeholder. The initial finding remains preserved in /tmp/desaturation-review-spec-initial.txt.
+
+Reviewed the added repeated-rejection/summary assertions and actual disk-recovery fault assertions. Both targeted regression tests passed again (2/2). No native rebuild was run. The font changes add licensing/provenance only; glyph payload is unchanged.
+
+No additional missing/partial requirement, scope creep, or incorrectly implemented requirement found in the full approved scope. Calculation remains shared and read-only, pinned OSTC4 sources unchanged, with exact minute formatting, additive summary fields, live exposure-clock refresh, explicit availability, pause/navigation/repetitive-exposure coverage and independent numerical evidence. The pre-existing scripted pixel-checker failure is separately documented and reproduced on the baseline. Evidence remains PC execution; target/physical validation is neither required nor claimed.

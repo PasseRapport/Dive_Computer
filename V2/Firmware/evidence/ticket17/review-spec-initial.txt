@@ -1,0 +1,9 @@
+1 finding — requirements implemented incorrectly.
+
+[P2] Invalidate the new controller availability after recovery rejection — V2/Firmware/simulator/src/pc_bench.c:465–467 (new field declared at ostc4_baseline/include/ostc4_baseline.h:48–49).
+
+SPEC.md:212 requires a result with “explicit availability” mapped through the existing boundary; SPEC.md:219 requires preserving “existing recovery validity rules.” pc_bench_checkpoint_reject() restores its retained prior observation after invalidating the older fields, but omits desaturation. After a loaded dive, rejecting a corrupt checkpoint therefore exposes tissues=INVALID alongside desaturation=AVAILABLE and the old numeric estimate through pc_bench_read()/capture diagnostics. The summary happens to show dashes because its adapter also checks tissue validity; the new public availability itself remains wrong. Add desaturation to this existing invalidation path and exercise a rejected import after a numeric estimate, including repeated rejection.
+
+Reproduced on PC using the public controller rejection API and current source: before rejection tissues=1, desaturation=1, minutes=539; afterward tissues=3, desaturation=1, minutes=539. Reproducer: /tmp/desaturation-recovery-repro.c.
+
+No other missing/partial requirement or scope creep found. The additive summary, exact French formatting, current-exposure calculation, pause/replay/navigation continuity and independent reference policies match the approved scope. Target/physical execution is not required or claimed.

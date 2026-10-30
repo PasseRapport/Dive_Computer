@@ -20,7 +20,7 @@ expected.json, source provenance, inputs, formula implementation and explicit
 integer-boundary analysis. No tolerance was added. 05-green.json retains each
 raw observation and each expected/actual/difference integer-minute comparison.
 
-Operational-invariance.json compares 578 public observations and 49708 preexisting
+operational-invariance.json compares 578 public observations and 49708 preexisting
 scalar values exactly to base, with zero differences. Baseline and current JSONL
 and the comparison script are saved here. Existing GF reference limits remain
 0.006 m for endpoints and three seconds only for total TTS; unrelated outputs
@@ -36,8 +36,10 @@ mandatory stop/countdown, alerts and explicit invalidity pass.
 render-check.log: 13 summary captures pass native geometry/text plus saved pixels.
 scripted-render.log: native scripted scuba scenario passes; old pixel checker
 scripted-render-check.log reports Missing decompression indicator in the untouched
-main-dashboard scuba-13-deco capture. Investigation remains explicit; no threshold
-was changed. scripted-summary.png preserves the unavailable summary presentation.
+main-dashboard scuba-13-deco capture. The parent reproduced the same failure on
+pristine base2d2c064; the affected BMP is byte-identical before/after. See
+baseline-scripted-comparison.json and the preserved baseline logs/frame. No
+threshold was changed and no new regression is attributed to this feature. scripted-summary.png preserves the unavailable summary presentation.
 
 render/summary-0..7: real accepted pressure/timestamp exposure, loaded 1343,
 paused 1343, surface 1342, reopened 1340, invalid placeholder, zero then persistent
@@ -80,3 +82,16 @@ Review fixes (following commit 6b722d0):
   the generated acute-glyph asset and generator. review-font-license.json records
   source/font/license hashes, exact license-copy integrity, identical output
   across two regenerations and unchanged glyph payload. No visual change.
+
+Final delivery audit
+
+The independent Standards and Spec reviews each initially found one P2 issue:
+missing notices for the added font glyph and a retained available desaturation
+flag after rejected recovery. Commit a025574 corrects both; red/green regression
+evidence and immutable source-license comparison are retained. Final per-axis
+reports are review-standards-final.txt and review-spec-final.txt; initial reports
+remain alongside them. No unresolved introduced finding remains.
+
+work-preservation.json confirms all nine original modified/untracked files and
+the original checkout status were unchanged. The code is delivered on the local
+codex/desaturation-integration branch, without a remote push or a main merge.
