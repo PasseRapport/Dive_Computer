@@ -1,0 +1,26 @@
+PASS: independent generated SoC, special pins, power/clocks, partitions, runners and preserved ABI
+{
+  "regions": {
+    "FLASH": {
+      "origin": 49152,
+      "capacity_bytes": 487424,
+      "used_bytes": 45752,
+      "remaining_bytes": 441672
+    },
+    "RAM": {
+      "origin": 536870912,
+      "capacity_bytes": 262144,
+      "used_bytes": 16768,
+      "remaining_bytes": 245376
+    }
+  },
+  "allocated_stacks": {
+    "z_idle_stacks": 512,
+    "z_interrupt_stacks": 2176,
+    "z_main_stack": 8320
+  }
+}
+PASS: replacement target, independent capacities, image link region and truthful report
+PASS: generated six-device I2C address contract, including grounded-ADDR Hall at 0x34
+PASS: compiled TWIM0/pinctrl, 400 kHz and explicit open-drain P0.15/P0.17
+PASS: sensor interrupt polarities, charger input/bias policy, NFC and unique GPIO owners
