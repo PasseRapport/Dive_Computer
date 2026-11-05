@@ -1,11 +1,11 @@
-OSTC4 custom nRF52833 development build (ticket 08)
-================================================
+OSTC4 custom nRF52840-QIAA-F development build
+============================================
 
-This is the entire currently configured Zephyr application for dc_v2_1/nrf52833,
+This is the entire currently configured Zephyr application for dc_v2_2/nrf52840,
 not a DK image or an isolated archive. It is NOT the complete watch product:
 main previously returned immediately; the target JDI driver/LVGL presentation,
 Bluetooth application/services, sensor acquisition and persisted clock/history
-adapter are not implemented/enabled here. The existing board descriptions,
+adapter are not implemented/enabled here. The previous active MCU target is replaced; existing peripheral assignments,
 drivers and desktop LVGL presentation are preserved. No full-watch fit claim.
 
 At boot this development image runs a clearly labelled SYNTHETIC self-test via
@@ -22,12 +22,17 @@ Repeat on the installed environment, without flashing:
   python3 V2/Firmware/tools/build_target.py --build-dir /tmp/dive-watch-target
   python3 V2/Firmware/tools/report_target.py /tmp/dive-watch-target \
       --output /tmp/dive-watch-target/report.json
+  python3 V2/Firmware/tests/target_board/check_resources.py /tmp/dive-watch-target
+  python3 V2/Firmware/tests/target_board/check_configuration.py /tmp/dive-watch-target
 
 Run from the repository root. Paths to NCS/toolchain can be overridden through
 --ncs and --toolchain. Defaults: ~/ncs/v3.4.1, ~/ncs/toolchains/8285d8ad56.
 Use source/build paths without spaces: this NCS devicetree overlay discovery
 splits a source path containing spaces. Cache/build output is outside the SDK.
 Use a fresh build directory after changing SDK/toolchain/board configuration.
+The public builder accepts repeatable --extra-conf PATH and --overlay PATH.
+These append Kconfig fragments and DT overlays after the normal app defaults;
+use separate fresh build directories for each controller-validation variant.
 
 Host verification of the same target smoke and the adapter:
 
@@ -74,8 +79,8 @@ part of the preserved source arithmetic, not "fixed" to shrink the image.
 
 Memory evidence and limitations
 -------------------------------
-Evidence in evidence/nrf52833/ identifies the complete configured image and
-configuration. report.json records ELF hash, generated-source hashes, compilation
+Historical evidence in evidence/nrf52833/ identifies the earlier configured image
+and configuration; its identity and measurements remain unchanged. report.json records ELF hash, generated-source hashes, compilation
 commands, math members, ABI attributes, actual linker capacities and stack
 objects. Zephyr linker _flash_used and _image_ram_size are the used-byte sources;
 the map supplies region origin/length. ELF debug/file size is not flash use.
@@ -86,8 +91,18 @@ workqueue size does not imply an allocated workqueue stack in this application.
 No dynamic heap is reserved; COMMON_LIBC_MALLOC_ARENA_SIZE=0 and
 HEAP_MEM_POOL_SIZE=0. Remaining RAM is static headroom, not runtime headroom.
 
-The board partitions 512 KiB flash into boot (48 KiB), image0 (220 KiB), image1
-(220 KiB) and storage (24 KiB). USE_DT_CODE_PARTITION=y honors image0 at 0xc000.
+The nRF52840-QIAA has 1 MiB flash and 256 KiB RAM. QIAA-F is the procurement
+variant; QIAA is the installed SDK package identifier. The derived aligned layout
+preserves boot (48 KiB) and storage (24 KiB), enlarging both images to 476 KiB:
+
+  boot       0x000000..0x00c000   size 0x0c000
+  image0     0x00c000..0x083000   size 0x77000
+  image1     0x083000..0x0fa000   size 0x77000
+  storage    0x0fa000..0x100000   size 0x06000
+
+These exact byte values are an implementation proposal derived from the specified
+reservations, not a separately recorded owner choice. USE_DT_CODE_PARTITION=y
+honors image0 at 0xc000. Reports distinguish chip capacity from this link region.
 This un-signed development ELF has no MCUboot header/trailer or bootloader build;
 it is not a deployable update package. Do not treat compilation as boot proof.
 The reserved main/IRQ/idle stacks are compile-time choices, not measured safe
@@ -95,8 +110,31 @@ sizes. No target timing, high-water, physical sensor/display/BLE or dive evidenc
 The desktop simulator's 1 MiB LVGL pool alone exceeds all target RAM; this ticket
 does not port that desktop configuration or claim it can fit unchanged.
 
-Revalidation after the simulator GF extension (2026-10-28)
---------------------------------------------------------
+Power, clocks and programming boundary
+-------------------------------------
+Battery feeds VDDH. The supported SDK reg0 status and reg1 initial-mode select
+both DC/DC stages. Hardware requires the Nordic reference LC networks for both
+stages (DCC/DCCH/DEC connections); software cannot replace their populated parts.
+Nominal MCU VDD/GPIO is 1.8 V. MCU VDD and the independently switched external
+peripheral 1.8 V regulator output are separate nets and must not be shorted.
+
+The generated zephyr,user node records the intended REGOUT0 VOUT=0 (1.8 V).
+This SDK has no REGOUT0 DT/Kconfig programming property: no startup UICR write
+has been added. The report inspects whether the HEX actually contains REGOUT0.
+An absent REGOUT0 image word does NOT enforce 1.8 V on a previously programmed
+device. Actual VOUT=0 or erased/default VOUT=7 gives 1.8 V; other pre-existing
+values must be detected/resolved during later authorized hardware qualification.
+No UICR read, write, erase, probe connection, programming or execution occurs here.
+The SDK NFC/reset selections may themselves write their UICR fields when this
+image eventually executes; compilation does not establish actual pin state.
+
+External 32 MHz and 32.768 kHz crystals remain required. LF selection is XTAL
+with conservative 50 ppm temperature/aging budget. P0.00/P0.01 remain crystal
+pins; P0.18 is nRESET. NFC P0.09/P0.10 are selected as GPIO; parallel trace stays
+disabled. SWD/RTT is the debug boundary. J-Link and pyOCD metadata name nRF52840.
+
+Historical nRF52833 revalidation (2026-10-28)
+-------------------------------------------
 The shared endpoint-ceiling calculation added after ticket 08 failed the target
 build's -Werror=double-promotion checks. Explicit double casts now document the
 same conversions already required by the C expressions; formulas, source

@@ -10,6 +10,10 @@ import subprocess
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--build-dir', required=True, type=Path)
 parser.add_argument('--ncs', type=Path, default=Path.home() / 'ncs/v3.4.1')
+parser.add_argument('--extra-conf', action='append', type=Path, default=[],
+                    help='Additional Kconfig file; repeat to compose validation profiles')
+parser.add_argument('--overlay', action='append', type=Path, default=[],
+                    help='Additional devicetree overlay, appended after app.overlay; repeatable')
 parser.add_argument('--toolchain', type=Path, default=Path.home() / 'ncs/toolchains/8285d8ad56')
 args = parser.parse_args()
 source = Path(__file__).resolve().parents[1]
@@ -27,8 +31,13 @@ env.update(ZEPHYR_BASE=str(args.ncs / 'zephyr'),
            CCACHE_DISABLE='1', XDG_CACHE_HOME=str(args.build_dir.resolve() / '.cache'))
 # Use host tools with their own system libraries; retain bundled Python's lib.
 env['LD_LIBRARY_PATH'] = str(args.toolchain / 'usr/local/lib')
+cmake_args = []
+if args.extra_conf:
+    cmake_args.append('-DEXTRA_CONF_FILE=' + ';'.join(str(p.resolve()) for p in args.extra_conf))
+if args.overlay:
+    cmake_args.append('-DEXTRA_DTC_OVERLAY_FILE=' + ';'.join(str(p.resolve()) for p in args.overlay))
 subprocess.run([str(args.toolchain / 'usr/local/bin/west'), 'build', '--no-sysbuild',
-                '-b', 'dc_v2_1/nrf52833', '-d', str(args.build_dir.resolve()),
+                '-b', 'dc_v2_2/nrf52840', '-d', str(args.build_dir.resolve()),
                 str(source), '--', '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON',
-                '-DUSER_CACHE_DIR=' + str(args.build_dir.resolve() / '.cache')],
+                '-DUSER_CACHE_DIR=' + str(args.build_dir.resolve() / '.cache'), *cmake_args],
                env=env, check=True, cwd=args.ncs)

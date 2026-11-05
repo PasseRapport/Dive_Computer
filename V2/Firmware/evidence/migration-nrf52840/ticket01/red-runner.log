@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/dive-nrf52840-ticket01/V2/Firmware/tests/target_board/check_configuration.py", line 47, in <module>
+    assert '--device=nRF52840_xxAA' in runners
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

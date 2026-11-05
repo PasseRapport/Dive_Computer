@@ -1,19 +1,20 @@
 /*
- * Devicetree overlay - Dive Computer V2 (nRF52833 QDAA, custom board)
+ * Devicetree overlay - Dive Computer V2 (nRF52840 QIAA-F, custom board)
  *
  * Carries the GPIO pin assignments of the design so they are visible
  * and editable in the Devicetree Visual Editor (Pin Overview).
  * The buses, their pinctrl and the sensor/screen nodes are defined in
- * the board files (boards/nordic/dc_v2_1/); keep the pin numbers here
+ * the board files (boards/nordic/dc_v2_2/); keep the pin numbers here
  * in sync with the KiCad schematic.
  *
- * Pin map (QFN40 pin in brackets):
- *   P0.02 [32] INT_ACC1  P0.03 [31] INT_ENC    P0.04 [4]  SCREEN_SCL
- *   P0.05 [5]  SCREEN_SDI P0.09 [22] QI_EN     P0.10 [23] ~CHG
- *   P0.11 [7]  SCREEN_CS  P0.15 [14] SCL       P0.17 [15] SDA
- *   P0.20 [17] BL_PWM_MCU P0.28 [33] 1.2+1.8V_EN P0.29 [34] 3.1V_EN
- *   P0.30 [35] INT_LIGHT P0.31 [36] SYNC (TE)  P1.09 [6]  SCREEN_RST
- * (SPI/I2C bus pins are in dc_v2_1_nrf52833-pinctrl.dtsi.)
+ * Pin map (QIAA pad in brackets):
+ *   P0.02 [A12] INT_ACC1   P0.03 [B13] INT_ENC    P0.04 [J1] SCREEN_SCL
+ *   P0.05 [K2] SCREEN_SDI  P0.09 [L24] QI_EN     P0.10 [J24] ~CHG
+ *   P0.11 [T2] SCREEN_CS   P0.15 [AD10] SCL      P0.17 [AD12] SDA
+ *   P0.18 [AC13] nRESET   P0.20 [AD16] BL_PWM_MCU
+ *   P0.28 [B11] 1.2+1.8V_EN P0.29 [A10] 3.1V_EN P0.30 [B9] INT_LIGHT
+ *   P0.31 [A8] SYNC (TE)  P1.09 [R1] SCREEN_RST
+ * (SPI/I2C bus pins are in dc_v2_2_nrf52840-pinctrl.dtsi.)
  *
  * SPDX-License-Identifier: Apache-2.0
  */

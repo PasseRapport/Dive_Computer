@@ -1,28 +1,34 @@
 /*
- * Dive Computer V2 rev 1 - nRF52833 QDAA (QFN40)
- *
- * Board hardware description, matching the KiCad schematic.
- * Power architecture: high-voltage mode (VDDH = battery on pin 9, VDD
- * pins decoupling only) - the internal REG0 LDO generates the 1.8 V
- * digital supply (REGOUT0 default), so all GPIO levels are 1.8 V.
- *
+ * Dive Computer V2 rev 2 - nRF52840-QIAA; procurement variant QIAA-F.
+ * Battery feeds VDDH. MCU VDD is distinct from the switched external 1.8 V rail.
+ * Both internal DC/DC stages require their Nordic reference LC networks.
+ * No image/startup code here writes REGOUT0; inspect the actual device UICR
+ * before any later hardware programming. See README-target.txt.
  * SPDX-License-Identifier: Apache-2.0
  */
 
 /dts-v1/;
-#include <nordic/nrf52833_qdaa.dtsi>
-#include "dc_v2_1_nrf52833-pinctrl.dtsi"
+#include <nordic/nrf52840_qiaa.dtsi>
+#include "dc_v2_2_nrf52840-pinctrl.dtsi"
 
 / {
-	model = "Dive Computer V2 rev 1";
+	model = "Dive Computer V2 rev 2";
 	compatible = "dive,dc-v2-1";
 
 	chosen {
 		zephyr,sram = &sram0;
 		zephyr,flash = &flash0;
 		zephyr,code-partition = &slot0_partition;
-		/* No UART is routed on this board (no spare QFN40 GPIO);
+		/* No UART is routed on this board;
 		 * use SEGGER RTT over SWD for console output. */
+	};
+
+	/* Inspectable voltage policy, not proof of a preprogrammed UICR value.
+	 * VOUT=0 selects 1.8 V; erased/default VOUT=7 also gives 1.8 V.
+	 * Existing devices with another value require separate qualification. */
+	zephyr,user {
+		mcu-regout0-microvolt = <1800000>;
+		mcu-regout0-uicr-vout = <0>;
 	};
 
 	/* GPIO pin assignments (gpio-leds/gpio-keys, sensor and screen
@@ -49,6 +55,16 @@
  * re-attached (same effect as nrfjprog --pinresetenable). */
 &uicr {
 	gpio-as-nreset;
+	nfct-pins-as-gpios;
+};
+
+/* Supported SDK regulator selection; do not use deprecated DCDC Kconfig. */
+&reg0 {
+	status = "okay";
+};
+
+&reg1 {
+	regulator-initial-mode = <NRF5X_REG_MODE_DCDC>;
 };
 
 &i2c0 {
@@ -117,6 +133,7 @@
 	};
 };
 
+/* Derived layout: 48 + 476 + 476 + 24 KiB; reservations only. */
 &flash0 {
 	partitions {
 		ranges;
@@ -132,19 +149,19 @@
 		slot0_partition: partition@c000 {
 			compatible = "zephyr,mapped-partition";
 			label = "image-0";
-			reg = <0x0000c000 0x37000>;
+			reg = <0x0000c000 0x77000>;
 		};
 
-		slot1_partition: partition@43000 {
+		slot1_partition: partition@83000 {
 			compatible = "zephyr,mapped-partition";
 			label = "image-1";
-			reg = <0x00043000 0x37000>;
+			reg = <0x00083000 0x77000>;
 		};
 
-		storage_partition: partition@7a000 {
+		storage_partition: partition@fa000 {
 			compatible = "zephyr,mapped-partition";
 			label = "storage";
-			reg = <0x0007a000 0x00006000>;
+			reg = <0x000fa000 0x00006000>;
 		};
 	};
 };

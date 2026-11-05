@@ -1,0 +1,31 @@
+Ticket01: static build evidence only; 2026-11-05.
+
+Red: public builder compiled the old target in /tmp/nrf52840-ticket01-red;
+check_resources.py rejected the report's dc_v2_1/nrf52833 identity.
+The independent generated-configuration test also rejects that previous target.
+A generated-runner assertion then caught stale nRF52833 J-Link metadata during
+implementation; the corrected runner is checked in the final build.
+
+Green reproduction (from repository root, source path without spaces):
+python3 V2/Firmware/tools/build_target.py --build-dir /tmp/nrf52840-ticket01-final
+python3 V2/Firmware/tests/target_board/check_configuration.py /tmp/nrf52840-ticket01-final
+python3 V2/Firmware/tests/target_board/check_resources.py /tmp/nrf52840-ticket01-final
+
+The final build directory was absent before its first invocation. All recorded
+builds use NCS 3.4.1 and the installed toolchain; no SDK changes, probe, flashing,
+erase, recovery, live UICR access or execution occurred. ELF/map/HEX and all full
+build artifacts remain in that external directory; SHA256SUMS fingerprints them.
+
+Generated MCU policy selects both DC/DC stages and nominal 1.8 V. No REGOUT0 word
+is emitted in this image and no startup REGOUT0 write was added: actual GPIO
+voltage on a previously programmed device remains unverified. Hardware needs the
+required LC networks. NFC/reset selections are configuration, not a hardware read.
+
+The flash layout is derived: 48 + 476 + 476 + 24 KiB. No bootloader, working
+storage/DFU, target execution or full-watch fit is established. Peripheral,
+display/PWM and physical-connection acceptance are downstream ticket deliveries.
+
+Original nRF52833 evidence, portable engine, simulator and hardware files were
+not changed by this ticket. Root orchestration retains the original KiCad diff
+and hashes for final comparison. No physical Pin Overview UI was available;
+these tests inspect generated Devicetree, Kconfig and runner artifacts only.

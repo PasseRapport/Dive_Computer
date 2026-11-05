@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: Apache-2.0
+
+CONFIG_ARM_MPU=y
+CONFIG_GPIO=y
+# External 32 MHz HF crystal and 32.768 kHz LF crystal remain populated.
+# Keep the full temperature/aging accuracy budget at 50 ppm.
+CONFIG_CLOCK_CONTROL_NRF_K32SRC_XTAL=y
+CONFIG_CLOCK_CONTROL_NRF_K32SRC_50PPM=y
+# Console/debug stays on SWD + RTT; parallel trace is not selected.
+CONFIG_CONSOLE=y
+CONFIG_USE_SEGGER_RTT=y
+CONFIG_RTT_CONSOLE=y
+CONFIG_SERIAL=n
+CONFIG_UART_CONSOLE=n

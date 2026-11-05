@@ -1,0 +1,26 @@
+{
+  "regions": {
+    "FLASH": {
+      "origin": 49152,
+      "capacity_bytes": 225280,
+      "used_bytes": 39396,
+      "remaining_bytes": 185884
+    },
+    "RAM": {
+      "origin": 536870912,
+      "capacity_bytes": 131072,
+      "used_bytes": 15104,
+      "remaining_bytes": 115968
+    }
+  },
+  "allocated_stacks": {
+    "z_idle_stacks": 512,
+    "z_interrupt_stacks": 2176,
+    "z_main_stack": 8320
+  }
+}
+Traceback (most recent call last):
+  File "/tmp/dive-nrf52840-ticket01/V2/Firmware/tests/target_board/check_resources.py", line 22, in <module>
+    assert report['board'] == 'dc_v2_2/nrf52840', report['board']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: dc_v2_1/nrf52833

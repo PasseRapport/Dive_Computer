@@ -1,18 +1,11 @@
 /*
- * Dive Computer V2 rev 1 - pin control definitions
- *
- * Final pinout, validated against the KiCad schematic netlist and the
- * nRF52833 QDAA (QFN40) pin assignments (product spec v1.2, Table 140).
- *
- * Only bonded QFN40 GPIOs are used. Per Table 140, P0.02, P0.03, P0.09,
- * P0.10 and P0.28-P0.30 are standard-drive, low-frequency only (<= 10 kHz)
- * pins: they carry the slow control/event signals below. All fast signals
- * (I2C at 400 kHz, screen SPI at 8 MHz) are on full-speed GPIOs.
- *
- * Fast GPIOs : P0.04, P0.05, P0.11, P1.09, P0.15, P0.17, P0.20, P0.31
- * Slow GPIOs : P0.02, P0.03, P0.09, P0.10, P0.28, P0.29, P0.30
- * Reserved   : P0.00/P0.01 (32 kHz crystal XL1/XL2), P0.18 (nRESET)
- *
+ * Dive Computer V2 rev 2 - nRF52840-QIAA pin control.
+ * Existing GPIO assignments are retained; QIAA-F is the procurement variant.
+ * QIAA standard-drive/low-frequency recommendation (<=10 kHz): P0.02,
+ * P0.03, P0.09, P0.10, P0.28-P0.31. P0.31 TE is documented at 63.1 Hz,
+ * 560 us high; this does not qualify a future line-rate TE mode.
+ * SPI P0.04/P0.05 and I2C P0.15/P0.17 have no such restriction.
+ * P0.00/P0.01 remain XL1/XL2; P0.18 remains nRESET.
  * SPDX-License-Identifier: Apache-2.0
  */
 

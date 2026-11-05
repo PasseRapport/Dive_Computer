@@ -1,9 +1,9 @@
-identifier: dc_v2_1/nrf52833
-name: DC_V2-1
+identifier: dc_v2_2/nrf52840
+name: DC_V2-2
 type: mcu
 arch: arm
-ram: 128
-flash: 512
+ram: 256
+flash: 1024
 toolchain:
   - zephyr
   - gnuarmemb

@@ -1,0 +1,7 @@
+# Dive Computer V2 rev 2 board configuration
+
+# Copyright (c) 2026
+# SPDX-License-Identifier: Apache-2.0
+
+config BOARD_DC_V2_2
+	select SOC_NRF52840_QIAA if BOARD_DC_V2_2_NRF52840

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/dive-nrf52840-ticket01/V2/Firmware/tests/target_board/check_configuration.py", line 19, in <module>
+    assert config['CONFIG_SOC_NRF52840_QIAA'] == 'y'
+           ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'CONFIG_SOC_NRF52840_QIAA'

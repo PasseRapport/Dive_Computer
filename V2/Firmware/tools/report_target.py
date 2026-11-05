@@ -42,6 +42,32 @@ for name, used in [('FLASH', symbols['_flash_used']), ('RAM', symbols['_image_ra
                          remaining_bytes=regions[name]['capacity_bytes'] - used)
 config_text = (zephyr / '.config').read_text()
 config = dict(re.findall(r'^(CONFIG_\w+)=(.*)$', config_text, re.M))
+board = json.loads(config['CONFIG_BOARD_TARGET'])
+soc = json.loads(config['CONFIG_SOC'])
+package_symbols = [key for key, value in config.items()
+                   if key.startswith('CONFIG_SOC_' + soc.upper() + '_') and value == 'y']
+package = package_symbols[0].rsplit('_', 1)[1] if len(package_symbols) == 1 else None
+# Inspect the delivered HEX rather than assuming a UICR value was emitted.
+hex_bytes = {}
+base = 0
+for line in (zephyr / 'zephyr.hex').read_text().splitlines():
+    record = bytes.fromhex(line[1:])
+    count, address, kind = record[0], int.from_bytes(record[1:3], 'big'), record[3]
+    data = record[4:4 + count]
+    if kind == 4:
+        base = int.from_bytes(data, 'big') << 16
+    elif kind == 2:
+        base = int.from_bytes(data, 'big') << 4
+    elif kind == 0:
+        hex_bytes.update((base + address + i, byte) for i, byte in enumerate(data))
+regout_address = 0x10001304
+regout_bytes = [hex_bytes.get(regout_address + i) for i in range(4)]
+regout_value = (int.from_bytes(bytes(regout_bytes), 'little')
+                if all(byte is not None for byte in regout_bytes) else None)
+dts_text = (zephyr / 'zephyr.dts').read_text()
+def dts_integer(name):
+    match = re.search(r'\b' + re.escape(name) + r'\s*=\s*<\s*(0x[0-9a-f]+|\d+)\s*>', dts_text)
+    return int(match[1], 0) if match else None
 keys = ['MAIN_STACK_SIZE', 'ISR_STACK_SIZE', 'IDLE_STACK_SIZE', 'SYSTEM_WORKQUEUE_STACK_SIZE',
         'HEAP_MEM_POOL_SIZE', 'COMMON_LIBC_MALLOC_ARENA_SIZE', 'FPU', 'FP_HARDABI',
         'FP_SOFTABI', 'PICOLIBC', 'USE_DT_CODE_PARTITION', 'RTT_CONSOLE', 'USE_SEGGER_RTT',
@@ -56,7 +82,17 @@ report = {
     'evidence_level': 'custom-board compilation and static linked-image analysis only',
     'full_watch_fit_established': False,
     'target_execution': False,
-    'board': 'dc_v2_1/nrf52833',
+    'board': board,
+    'device': {'soc': soc, 'package': package,
+               'total_flash_bytes': int(config['CONFIG_FLASH_SIZE']) * 1024,
+               'total_ram_bytes': int(config['CONFIG_SRAM_SIZE']) * 1024},
+    'regout0_policy': {
+        'intended_microvolt': dts_integer('mcu-regout0-microvolt'),
+        'intended_uicr_vout': dts_integer('mcu-regout0-uicr-vout'),
+        'hex_contains_regout0': any(byte is not None for byte in regout_bytes),
+        'hex_regout0_value': regout_value,
+        'effective_voltage_established': False,
+        'note': 'No startup REGOUT0 write. 1.8 V requires actual UICR VOUT=0 or erased/default 7; verify previously programmed devices separately. No physical UICR read or write occurred.'},
     'elf_sha256': hashlib.sha256(elf.read_bytes()).hexdigest(),
     'compiler': run('gcc', '--version').splitlines()[0],
     'regions': regions,
