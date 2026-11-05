@@ -1,0 +1,55 @@
+Ticket02 sensor/charger declaration evidence, 2026-11-05.
+
+Base: integration branch codex/migration-nrf52840-qiaa at 8f5990a.
+Isolated branch: codex/nrf52840-ticket02; worktree /tmp/dive-nrf52840-ticket02.
+Seam: existing public build/report flow and its generated configuration/artifacts.
+
+Three vertical red/green observations (logs retained):
+1. check_sensors.py against ticket01's generated DTS rejects Hall 0x35.
+   Correcting grounded-ADDR Hall to 0x34 makes the six-device contract pass.
+2. Against the address-only controller build, the check rejects missing explicit
+   S0D1 pinctrl declaration. Both states now expose standard-low/disconnected-high.
+   The installed SDK's pinctrl_nrf.c also substitutes S0D1 for default TWIM S0S1;
+   no claim is made that the previous runtime default drove TWIM high.
+3. Against that pinctrl build, the input check rejects the missing light sensor
+   interrupt property. Sensor-owned inputs replace duplicate GPIO-key ownership;
+   CHG now declares LOW|PULL_UP plus explicit INPUT/MCU-VDD policy. No GPIO
+   initialization has been added; its pre-initialization idle remains undefined.
+
+Reproduction from repository root (a source path without spaces):
+python3 V2/Firmware/tools/build_target.py --build-dir /tmp/nrf52840-ticket02-final --extra-conf V2/Firmware/validation/sensors.conf
+python3 V2/Firmware/tools/report_target.py /tmp/nrf52840-ticket02-final --output /tmp/nrf52840-ticket02-final/report.json
+python3 V2/Firmware/tests/target_board/check_configuration.py /tmp/nrf52840-ticket02-final
+python3 V2/Firmware/tests/target_board/check_resources.py /tmp/nrf52840-ticket02-final
+python3 V2/Firmware/tests/target_board/check_sensors.py /tmp/nrf52840-ticket02-final
+python3 V2/Firmware/tools/build_target.py --build-dir /tmp/nrf52840-ticket02-normal
+python3 V2/Firmware/tools/report_target.py /tmp/nrf52840-ticket02-normal --output /tmp/nrf52840-ticket02-normal/report.json
+python3 V2/Firmware/tests/target_board/check_configuration.py /tmp/nrf52840-ticket02-normal
+python3 V2/Firmware/tests/target_board/check_resources.py /tmp/nrf52840-ticket02-normal
+
+All pass. Both build directories were absent before first invocation; controller
+build was then regenerated after correcting the remaining root-compatible rev2
+identity. Full ELF/map/HEX and compile commands remain outside the repository;
+SHA256SUMS fingerprints those files and retained logs/configuration/reports.
+The controller variant compiles i2c_nrfx_twim.c and pinctrl_nrf.c, SENSOR=n:
+45752 B flash / 16768 B static/reserved RAM. Normal calculation build:
+42536 B flash / 16640 B static/reserved RAM. Both link into the 476 KiB image0
+reservation on the 1 MiB-flash/256 KiB-RAM MCU. No runtime headroom is measured.
+
+The checks independently transcribe the six addresses, TWIM PSELs, active levels,
+charge policy and unique relevant GPIO owners. Magnetometer/haptic interrupts
+remain absent; no acquisition driver was added. Root compatible is dive,dc-v2-2.
+The charge declaration is not an executed initializer. Historical QI_EN reaches
+charger EN2, adapter-source priority (AD grounded), never general Qi disable.
+
+README-target.txt preserves shared P0.28 rail shutdown/pull-state requirements,
+loss of sensor wake/acquisition when unpowered, DRV2624 battery/I2C-domain split,
+<=10 kHz event limits, 4.7 kohm/approximately 75 pF rise-time reservation,
+MS5837 low-level bound and independent-rail/output/interrupt guarantees.
+These remain unresolved electrical qualifications; compilation closes none.
+
+Pin Overview/Devicetree Visual Editor inspection is PENDING: no native nRF
+Connect editor UI is available here. Text artifacts do not prove GUI inspection.
+No probe connection, flashing, erase, UICR access, target execution, physical
+sensor wake/readings, display/Bluetooth operation or charge detection occurred.
+No KiCad, calculation engine, simulator or historical evidence was edited.

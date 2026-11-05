@@ -1,0 +1,6 @@
+PASS: generated six-device I2C address contract, including grounded-ADDR Hall at 0x34
+Traceback (most recent call last):
+  File "/tmp/dive-nrf52840-ticket02/V2/Firmware/tests/target_board/check_sensors.py", line 39, in <module>
+    assert group.props['nordic,drive-mode'].to_num() == 6  # S0D1, never drive high
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'nordic,drive-mode'

@@ -1,0 +1,7 @@
+PASS: generated six-device I2C address contract, including grounded-ADDR Hall at 0x34
+PASS: compiled TWIM0/pinctrl, 400 kHz and explicit open-drain P0.15/P0.17
+Traceback (most recent call last):
+  File "/tmp/dive-nrf52840-ticket02/V2/Firmware/tests/target_board/check_sensors.py", line 64, in <module>
+    assert gpio_cells(dt.label2node[label].props[prop]) == [gpio0, pin, flags]
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+KeyError: 'int-gpios'

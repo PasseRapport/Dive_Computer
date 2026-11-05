@@ -22,9 +22,10 @@
 / {
 	/* Rail control outputs. All LDO enables are active high
 	 * (TPS7A02 family, internal pull-down: floating = off).
-	 * 1.2 V (MIPI LP-11 pins) and 1.8 V (VDDI/DCX) are driven by a
-	 * single GPIO; 3.1 V (VCI) stays separate to enforce the JDI
-	 * power sequence (VDDI before VCI).
+	 * P0.28 enables both 1.2 V (MIPI LP-11) and peripheral 1.8 V:
+	 * sensors, interrupt/I2C pull-ups and panel VDDI/DCX. This is not
+	 * independent sensor/display control. Rail off removes sensor wake
+	 * and pressure acquisition. 3.1 V (VCI) stays separate.
 	 */
 	gpio-leds {
 		compatible = "gpio-leds";
@@ -38,6 +39,8 @@
 		};
 
 		qi_en {
+			/* Historical QI_EN net reaches BQ51051B EN2 (AD=GND):
+			 * adapter-source priority, NOT global wireless-charge off. */
 			gpios = <&gpio0 9 0>;
 		};
 
@@ -46,29 +49,15 @@
 		};
 	};
 
-	/* Event inputs. INT_ENC (TMAG3001, open-drain + R8 10k) and
-	 * INT_LIGHT (VEML6035 + R9 10k) are active low; ~CHG is the
-	 * BQ51051 open-drain charge status, active low while charging
-	 * (external pull-up still to be added on the schematic).
-	 */
-	gpio-keys {
-		compatible = "zephyr,gpio-keys";
-
-		int_acc1 {
-			gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
-		};
-
-		int_enc {
-			gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
-		};
-
-		int_light {
-			gpios = <&gpio0 30 GPIO_ACTIVE_LOW>;
-		};
-	};
-
 	zephyr,user {
-		chg_n-gpios = <&gpio0 10 (GPIO_ACTIVE_LOW | GPIO_OPEN_SOURCE)>;
+		/* BQ51051B ~CHG is open-drain, active low. Future code must
+		 * configure GPIO_INPUT with these DT flags. This passive policy
+		 * does not initialize GPIO; idle is undefined until then. The
+		 * internal pull-up is toward always-powered MCU VDD, never BAT+
+		 * or the switched peripheral rail. No resistor is added here. */
+		chg_n-gpios = <&gpio0 10 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+		chg_n-input;
+		chg_n-pullup-domain = "mcu-vdd";
 	};
 };
 
@@ -82,12 +71,22 @@
 	te-gpios = <&gpio0 31 GPIO_ACTIVE_HIGH>;
 };
 
-/* Sensor interrupt pins. */
+/* Single ownership: sensor nodes own their MCU interrupt inputs; no parallel
+ * gpio-keys consumer. These low-frequency pins require <=10 kHz event rates.
+ * GPIO/sense declarations do not configure the sensors or prove wake-up. */
 &acc {
+	/* INT_ACC1: intended sensor push-pull, active high. */
 	int1-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
 	status = "okay";
 };
 
 &enc {
+	/* INT_ENC: open-drain, external 10k to switched peripheral 1.8 V.
+	 * Event/change use; do not export every 20 kHz conversion. */
 	int-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+};
+
+&light {
+	/* INT_LIGHT: open-drain, external 10k to switched peripheral 1.8 V. */
+	int-gpios = <&gpio0 30 GPIO_ACTIVE_LOW>;
 };

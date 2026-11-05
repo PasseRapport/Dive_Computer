@@ -13,7 +13,7 @@
 
 / {
 	model = "Dive Computer V2 rev 2";
-	compatible = "dive,dc-v2-1";
+	compatible = "dive,dc-v2-2";
 
 	chosen {
 		zephyr,sram = &sram0;
@@ -96,13 +96,13 @@
 	};
 
 	/* 3D Hall sensor for the rotary encoder, ADDR pin to GND. */
-	enc: tmag3001@35 {
+	enc: tmag3001@34 {
 		compatible = "ti,tmag3001";
-		reg = <0x35>;
+		reg = <0x34>;
 	};
 
 	/* Ambient light sensor (out-of-tree driver, fixed address). */
-	veml6035@10 {
+	light: veml6035@10 {
 		compatible = "vishay,veml6035";
 		reg = <0x10>;
 	};

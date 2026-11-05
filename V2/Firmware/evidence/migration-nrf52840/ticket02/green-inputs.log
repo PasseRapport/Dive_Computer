@@ -1,0 +1,3 @@
+PASS: generated six-device I2C address contract, including grounded-ADDR Hall at 0x34
+PASS: compiled TWIM0/pinctrl, 400 kHz and explicit open-drain P0.15/P0.17
+PASS: sensor interrupt polarities, charger input/bias policy, NFC and unique GPIO owners

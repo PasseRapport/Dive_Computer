@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/dive-nrf52840-ticket02/V2/Firmware/tests/target_board/check_sensors.py", line 22, in <module>
+    assert actual == expected, (actual, expected)
+           ^^^^^^^^^^^^^^^^^^
+AssertionError: ({'st,lis2mdl': 30, 'st,lis2dux12': 25, 'meas,ms5837-30ba': 118, 'ti,tmag3001': 53, 'vishay,veml6035': 16, 'ti,drv2624': 90}, {'st,lis2mdl': 30, 'st,lis2dux12': 25, 'meas,ms5837-30ba': 118, 'ti,tmag3001': 52, 'vishay,veml6035': 16, 'ti,drv2624': 90})

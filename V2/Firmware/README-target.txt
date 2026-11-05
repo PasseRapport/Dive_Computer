@@ -133,6 +133,76 @@ with conservative 50 ppm temperature/aging budget. P0.00/P0.01 remain crystal
 pins; P0.18 is nRESET. NFC P0.09/P0.10 are selected as GPIO; parallel trace stays
 disabled. SWD/RTT is the debug boundary. J-Link and pyOCD metadata name nRF52840.
 
+Sensors, charger and shared peripheral supply
+--------------------------------------------
+Controller-validation build, still using the existing calculation application:
+
+  python3 V2/Firmware/tools/build_target.py --build-dir /tmp/dive-sensor-controllers \
+      --extra-conf V2/Firmware/validation/sensors.conf
+  python3 V2/Firmware/tools/report_target.py /tmp/dive-sensor-controllers \
+      --output /tmp/dive-sensor-controllers/report.json
+  python3 V2/Firmware/tests/target_board/check_sensors.py /tmp/dive-sensor-controllers
+
+This profile compiles existing TWIM0/pinctrl drivers without CONFIG_SENSOR. It
+does not implement acquisition, sensor setup, wake handling or charge detection.
+The normal calculation build can leave the controller/pinctrl compiled out;
+source declarations alone are not evidence of a compiled controller. Inspect
+the generated zephyr.dts/.config and compile_commands.json for the selected build.
+Physical nRF Connect Devicetree Visual Editor/Pin Overview inspection remains
+PENDING: no native editor UI is available in this execution environment. Text
+checks do not count as a completed graphical pin inspection.
+
+TWIM0 uses SCL P0.15/AD10 and SDA P0.17/AD12, with the declared 400 kHz ceiling.
+Both active/sleep groups explicitly use NRF_DRIVE_S0D1: drive low, disconnect
+high. Installed Nordic pinctrl also substitutes S0D1 for default TWIM S0S1. The
+external 4.7 kohm pull-ups connect to switched peripheral 1.8 V, not MCU VDD.
+The six 7-bit addresses are LIS2MDL 0x1e, LIS2DUX12 0x19, MS5837-30BA 0x76,
+TMAG3001 0x34 (ADDR grounded), VEML6035 0x10 and DRV2624 0x5a. Magnetometer
+INT/DRDY and haptic IRQ are not routed; no interrupt has been invented for them.
+
+INT_ACC1 P0.02/A12 is active high for the intended accelerometer push-pull
+setting. INT_ENC P0.03/B13 and INT_LIGHT P0.30/B9 are active low from open-drain
+sensor outputs with external 10 kohm pull-ups to the switched peripheral rail.
+Each interrupt has one owner on its sensor node, without duplicate gpio-keys.
+These QIAA pins carry the standard-drive/low-frequency recommendation, <=10 kHz.
+Hall is intended for event/change use; exporting every 20 kHz conversion is not
+qualified. Polarity declarations do not configure sensor output stages or prove
+their output guarantees against MCU VIH/VIL over rail tolerances/load.
+
+Historical QI_EN P0.09/L24 reaches BQ51051B EN2. EN2 governs adapter-source
+priority; AD is grounded in the current design. This signal is not a general
+wireless-charge disable input. ~CHG P0.10/J24 is an active-low input from an
+open-drain charger output. Its zephyr,user declaration specifies INPUT policy
+and GPIO_ACTIVE_LOW | GPIO_PULL_UP: future initialization must call the GPIO
+input configuration with those flags. The internal pull-up goes to always-
+powered MCU VDD, not BAT+ or the switched peripheral supply. Passive DT policy
+does not initialize it; idle is NOT guaranteed before initialization. No physical
+resistor or charger control/runtime code has been added. NFC remains GPIO.
+
+P0.28/B11 gates both external 1.2 V and external peripheral 1.8 V. That 1.8 V
+rail supplies sensors, interrupt/I2C pull-ups and panel VDDI/DCX; MCU VDD is a
+separate always-powered net. DRV2624 has a battery power input, while its shared
+I2C pull-ups still use the switched 1.8 V domain. Turning P0.28 off removes
+motion/Hall/light wake capability and pressure acquisition. Keep this rail on
+for future firmware requiring those functions, unless hardware is redesigned.
+
+Before a future rail shutdown: finish/stop bus transfers, suspend the controller
+and select its disconnected-input sleep state with no internal pulls. Sensor
+interrupt MCU inputs must also be high impedance with their MCU internal pulls
+disabled. Do not leave live MCU pull-ups/driven highs feeding unpowered sensor
+pins through protection structures. Check every other signal crossing the rail
+boundary and follow panel-specific power sequencing separately. This is a future
+initialization/shutdown contract; no runtime power manager or sequencing is
+implemented here. GPIO sense alone cannot wake from an unpowered sensor.
+
+Electrical reservations stay open: a 4.7 kohm/300 ns simple-RC limit gives about
+75 pF bus loading; 400 kHz rise times need real loading measurements. MS5837's
+nominal 0.36 V VIL versus some participants' 0.4 V guaranteed VOL at their test
+current leaves an unclosed worst-case guarantee, not an observed failure at the
+actual lower load. Independent regulator tolerance, interrupt/output DC bounds,
+charge levels/startup and powered/unpowered behavior require hardware checks.
+Successful compilation proves none of these electrical or wake-up properties.
+
 Historical nRF52833 revalidation (2026-10-28)
 -------------------------------------------
 The shared endpoint-ceiling calculation added after ticket 08 failed the target

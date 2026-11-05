@@ -12,11 +12,15 @@
 &pinctrl {
 	/* Shared sensor bus: LIS2MDL (0x1E), LIS2DUX12 (0x19), VEML6035,
 	 * TMAG3001 (ADDR=GND), MS5837-30BA (0x76), DRV2624 (0x5A).
-	 * External 4.7k pull-ups to the always-on 1.8 V rail. */
+	 * External 4.7k pull-ups to the switched peripheral 1.8 V rail,
+	 * enabled together with panel VDDI/DCX by P0.28. */
 	i2c0_default: i2c0_default {
 		group1 {
 			psels = <NRF_PSEL(TWIM_SCL, 0, 15)>,
 				<NRF_PSEL(TWIM_SDA, 0, 17)>;
+			/* Standard low, disconnected high (open-drain). The SDK
+			 * TWIM pinctrl driver also maps its default S0S1 to S0D1. */
+			nordic,drive-mode = <NRF_DRIVE_S0D1>;
 		};
 	};
 
@@ -24,9 +28,11 @@
 		group1 {
 			psels = <NRF_PSEL(TWIM_SCL, 0, 15)>,
 				<NRF_PSEL(TWIM_SDA, 0, 17)>;
-			/* High-Z in sleep: the external pull-ups to the
-			 * always-on 1.8 V rail keep the bus defined while
-			 * the sensors stay powered for wake-up events. */
+			nordic,drive-mode = <NRF_DRIVE_S0D1>;
+			/* Inputs disconnected, no internal pulls. External pull-ups
+			 * disappear when the shared rail is off. A future power
+			 * manager must quiesce transfers before selecting this state;
+			 * this declaration alone does not sequence the rail. */
 			low-power-enable;
 		};
 	};
