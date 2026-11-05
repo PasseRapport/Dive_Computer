@@ -1,0 +1,2 @@
+PASS: spi8 generated display pins/mode/drive, single ownership, compiled controllers
+PENDING: native nRF Connect Pin Overview and physical timing/DC/power/TE/PWM qualification

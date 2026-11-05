@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/dive-nrf52840-ticket03/V2/Firmware/tests/target_board/check_display.py", line 41, in <module>
+    assert lcd.props['spi-max-frequency'].to_num() == (4000000 if args.variant == 'spi4' else 8000000)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

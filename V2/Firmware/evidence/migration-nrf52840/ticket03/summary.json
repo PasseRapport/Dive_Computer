@@ -1,0 +1,74 @@
+{
+  "normal": {
+    "build_dir": "/tmp/nrf52840-ticket03-normal",
+    "regions": {
+      "FLASH": {
+        "origin": 49152,
+        "capacity_bytes": 487424,
+        "used_bytes": 42536,
+        "remaining_bytes": 444888
+      },
+      "RAM": {
+        "origin": 536870912,
+        "capacity_bytes": 262144,
+        "used_bytes": 16640,
+        "remaining_bytes": 245504
+      }
+    },
+    "elf_sha256": "f8c6a1cf43f738824cfccc57e09053156f1d498de1a01a93656c6860948ccbea"
+  },
+  "spi8": {
+    "build_dir": "/tmp/nrf52840-ticket03-spi8",
+    "regions": {
+      "FLASH": {
+        "origin": 49152,
+        "capacity_bytes": 487424,
+        "used_bytes": 47496,
+        "remaining_bytes": 439928
+      },
+      "RAM": {
+        "origin": 536870912,
+        "capacity_bytes": 262144,
+        "used_bytes": 16896,
+        "remaining_bytes": 245248
+      }
+    },
+    "elf_sha256": "bcbfe6d02a2a2bf5a92d5f2a90f7febdb0228de0ea7492181c7e682dc9a8f978"
+  },
+  "spi4": {
+    "build_dir": "/tmp/nrf52840-ticket03-spi4",
+    "regions": {
+      "FLASH": {
+        "origin": 49152,
+        "capacity_bytes": 487424,
+        "used_bytes": 47496,
+        "remaining_bytes": 439928
+      },
+      "RAM": {
+        "origin": 536870912,
+        "capacity_bytes": 262144,
+        "used_bytes": 16896,
+        "remaining_bytes": 245248
+      }
+    },
+    "elf_sha256": "642a61cab578fc1b296eb6fd548e419ec7f3b41fa7aca0f136336b6de864facb"
+  },
+  "pwm": {
+    "build_dir": "/tmp/nrf52840-ticket03-pwm-final",
+    "regions": {
+      "FLASH": {
+        "origin": 49152,
+        "capacity_bytes": 487424,
+        "used_bytes": 49000,
+        "remaining_bytes": 438424
+      },
+      "RAM": {
+        "origin": 536870912,
+        "capacity_bytes": 262144,
+        "used_bytes": 16896,
+        "remaining_bytes": 245248
+      }
+    },
+    "elf_sha256": "ac5fc15e33da3b905d632cbc945b63ede73a6f3602a988f07d9ce182d8861a4d"
+  }
+}

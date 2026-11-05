@@ -1,0 +1,7 @@
+{
+  "zephyr/zephyr.elf": "f8c6a1cf43f738824cfccc57e09053156f1d498de1a01a93656c6860948ccbea",
+  "zephyr/zephyr.map": "89b5a754de2f0a9fb4379da959f2a4c444c02886d769720ba1d71c2cee184f58",
+  "zephyr/.config": "f1e43c9afcac9afc09d3676cd90405b90225719110ba099cc73ee73a1e8fe4f3",
+  "zephyr/zephyr.dts": "b98908f2464273967dd58b4d3e66c325174eab416de3f3980a1e0676008efbcd",
+  "zephyr/include/generated/zephyr/devicetree_generated.h": "c34046e0906f483dd6e4de288aec434622bc715823985ae40602440b58728347"
+}

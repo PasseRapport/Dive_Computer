@@ -148,3 +148,77 @@ independent_schedule_acceptance succeeds with the existing comparison policy.
 The evidence/nrf52833 bundle above remains the original ticket08 snapshot;
 these new figures describe the later shared implementation. The configured-image
 and physical-validation limitations above still apply. No target execution.
+
+Display and backlight build-only variants
+----------------------------------------
+The normal board retains SPIM1 SCK P0.04/J1, MOSI P0.05/K2, active-low GPIO
+CS P0.11/T2, active-low reset P1.09/R1 and TE input P0.31/A8. No MISO/read
+path is routed. SPI mode 0 is represented by absent CPOL/CPHA properties.
+The minimal normal application does not compile/initialize a display controller.
+Use the same public builder with a controller-validation profile:
+
+  python3 V2/Firmware/tools/build_target.py --build-dir /tmp/dive-spi8 \
+      --extra-conf V2/Firmware/validation/display.conf
+  python3 V2/Firmware/tests/target_board/check_display.py /tmp/dive-spi8 \
+      --variant spi8
+
+8 MHz remains the previously confirmed declared ceiling, with an unresolved
+published-bound setup margin: 62.5 ns half-cycle - 59 ns maximum MOSI delay =
+3.5 ns, below JDI's 20 ns register and 5 ns GRAM requirements. This is not a
+measurement of a failed physical unit. The audit recommends selectable 4 MHz:
+
+  python3 V2/Firmware/tools/build_target.py --build-dir /tmp/dive-spi4 \
+      --extra-conf V2/Firmware/validation/display.conf \
+      --overlay V2/Firmware/validation/spi4mhz.overlay
+  python3 V2/Firmware/tests/target_board/check_display.py /tmp/dive-spi4 \
+      --variant spi4
+
+That overlay keeps identical pins, selects high drive only on unrestricted
+SCK/MOSI, and leaves 66 ns (125 - 59 ns) before board skew. It is an audit
+recommendation, not a separately confirmed replacement of 8 MHz. The JDI 10 ns
+edge requirement and independent nominal 1.8 V rail/DC margins remain unqualified;
+high drive does not close voltage guarantees. Slow restricted signals remain
+standard drive. TE is a frame input: documented 63.1 Hz, 560 us high; P0.31's
+standard-drive/low-frequency recommendation is <=10 kHz, so unspecified high-rate
+line TE cannot be inferred compatible. No frame capture has occurred.
+
+The installed spi_nrfx_spim_common.c rejects word sizes other than eight bits.
+Panel three-wire nine-bit framing still needs a future transport that handles
+packing, exact command/GRAM clocks and CS continuity. No display driver or SPI
+transfer is added by these profiles; compilation is not evidence of visible pixels.
+
+PWM ecran is normal operation: R8 fitted, R7 not fitted. PWM0 is disabled and
+P0.20/AD16 has no active GPIO output alias in the normal board. PWM MCU de secours
+requires a manual hardware assembly choice: R7 fitted, R8 not fitted. The explicit
+fallback variant is only for compiling/inspecting that alternative controller:
+
+  python3 V2/Firmware/tools/build_target.py --build-dir /tmp/dive-pwm \
+      --extra-conf V2/Firmware/validation/display.conf \
+      --extra-conf V2/Firmware/validation/pwm-fallback.conf \
+      --overlay V2/Firmware/validation/pwm-fallback.overlay
+  python3 V2/Firmware/tests/target_board/check_display.py /tmp/dive-pwm \
+      --variant pwm
+
+PWM0 channel 0 routes to P0.20, active high. Its proposed period is 4 ms (250 Hz),
+an audit proposal, not a measured or separately confirmed product frequency.
+At 1%, 40 us exceeds TPS7510x's recommended 33 us on-time. The zephyr,user
+pwms property records this proposal; no application consumes it,
+sets duty cycle or starts PWM. There is no brightness driver or automatic failover.
+Never fit R7 and R8 together: these are alternate sources, not concurrent drivers.
+The test changes no resistor, BOM, KiCad flag or hardware.
+
+P0.28/B11 gates shared 1.2 V and peripheral 1.8 V (sensors plus panel VDDI/DCX);
+P0.29/A10 gates panel 3.1 V VCI. VDDI must precede VCI. Powered mode-0 idle
+(SCK low, CS inactive, valid reset/TE behavior) and unpowered interface-at-GND
+requirements are different phases. The SPI sleep state merely disconnects the
+input buffer and requests weak pull-downs; it does not drive guaranteed GND or
+implement safe CS/reset/TE shutdown. A future power sequence must establish
+suitable levels before rail-off, avoid MCU pull-ups feeding unpowered inputs,
+and account for losing sensor wake/acquisition when the shared rail is off.
+No runtime power manager or operational sequence is implemented here.
+
+Generated checks cover pin choices, frequency, mode flags, drive mode, fallback
+period/polarity, ownership and linked controller objects. Native nRF Connect
+Devicetree Visual Editor/Pin Overview inspection is PENDING: no suitable native
+editor surface was available. Physical timing/DC/slew/rail/TE/PWM qualification,
+probe connection, flashing and target execution remain unperformed.

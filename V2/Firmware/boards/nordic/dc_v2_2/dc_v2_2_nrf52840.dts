@@ -120,10 +120,11 @@
 	pinctrl-1 = <&spi1_sleep>;
 	pinctrl-names = "default", "sleep";
 
-	/* JDI LPM013M091A, 320x300 RGB111 memory-in-pixel, 3-wire 9-bit
-	 * SPI (IM0=GND, DCX=VDDI). Out-of-tree display driver; TE (SYNC)
-	 * input for tear-free updates. Chip select, reset and TE pins are
-	 * assigned in app.overlay. */
+	/* JDI LPM013M091A, 320x300 RGB111, three-wire nine-bit protocol
+	 * (IM0=GND, DCX=VDDI). No panel transport/driver is implemented.
+	 * Absent spi-cpol/spi-cpha select mode 0 (rising-edge sampling).
+	 * 8 MHz is the confirmed ceiling, not qualified operating speed.
+	 * Chip select/reset/TE live in app.overlay; no MISO/read path. */
 	lcd: lpm013m091a@0 {
 		compatible = "jdi,lpm013m091a";
 		reg = <0>;
@@ -131,6 +132,15 @@
 		width = <320>;
 		height = <300>;
 	};
+};
+
+/* PWM écran remains normal: R8 fitted, R7 DNP. P0.20 has no active
+ * owner until explicit fallback selection (R7 fitted, R8 DNP). */
+&pwm0 {
+	status = "disabled";
+	pinctrl-0 = <&pwm0_default>;
+	pinctrl-1 = <&pwm0_sleep>;
+	pinctrl-names = "default", "sleep";
 };
 
 /* Derived layout: 48 + 476 + 476 + 24 KiB; reservations only. */

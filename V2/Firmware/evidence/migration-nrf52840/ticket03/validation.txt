@@ -1,0 +1,42 @@
+Ticket 03 target-build/static-configuration evidence, 2026-11-05.
+Base: 8f5990ae87cde8d2bcf0f397bc18e6a27bc90dc4, integration branch.
+Source branch: codex/nrf52840-ticket03; source path /tmp/dive-nrf52840-ticket03.
+NCS 3.4.1 / Zephyr 4.4.2, bundled toolchain 8285d8ad56.
+
+Public build entry point: V2/Firmware/tools/build_target.py --build-dir BUILD.
+Normal: no extra arguments.
+spi8: --extra-conf V2/Firmware/validation/display.conf
+spi4: spi8 args + --overlay V2/Firmware/validation/spi4mhz.overlay
+pwm: spi8 args + --extra-conf V2/Firmware/validation/pwm-fallback.conf
+     --overlay V2/Firmware/validation/pwm-fallback.overlay
+Fresh build dirs recorded in summary.json. All four builds completed.
+Generated acceptance: tests/target_board/check_display.py BUILD --variant VARIANT.
+Normal public check_resources.py and check_configuration.py also passed.
+Reports generated through tools/report_target.py BUILD --output PATH.
+Full ELF/map remain in external build dirs, fingerprinted in artifact-hashes.json.
+Source/config/evidence hashes are in SHA256SUMS.
+
+Red sequence: original ticket01-final generated output has no prepared PWM0
+pinctrl routing (red-normal.log). After normal routing fix, spi4 rejects unchanged
+8 MHz (red-spi4.log), then 4 MHz/high drive + compiled controllers pass. pwm rejects
+normal disabled PWM0 (red-pwm.log), then optional enabled PWM0 passes. A custom
+property prefix failed SDK phandle-cell inference; rejected-pwm-property.log is
+preserved. Standard zephyr,user pwms resolves to #pwm-cells and compiles.
+
+Normal: PWM disabled, P0.20 has no active GPIO owner. Fallback: PWM0 ch0/P0.20,
+4,000,000 ns, normal polarity, no alternate GPIO owner. SPI8 and fallback retain
+8 MHz; spi4 selects 4 MHz/high drive on identical unrestricted clock/data pins.
+Live link-map init/pinctrl symbols and controller objects checked, not source
+nodes alone. No driver API is called or PWM duty requested by the application.
+
+PWM ecran: R8 fitted/R7 DNP. PWM MCU de secours: R7 fitted/R8 DNP, manual assembly.
+The 250 Hz proposal and 4 MHz audit recommendation are not separate confirmations.
+8 MHz setup reservation (3.5 ns versus 20/5 ns), panel nine-bit framing over the
+installed eight-bit driver, DC/10 ns slew, rail sequencing and TE capture remain
+unqualified. Build-only controller coverage does not implement panel protocol,
+brightness, runtime power management or working display/physical backlight.
+
+Native nRF Connect Devicetree Visual Editor/Pin Overview: PENDING, no suitable
+native editor surface available. No probe, flash, erase, UICR read/write, target
+execution or physical testing. Calculation/simulator/historical evidence/KiCad
+are untouched. README-target.txt contains complete commands and reservations.

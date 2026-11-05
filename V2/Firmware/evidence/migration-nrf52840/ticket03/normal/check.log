@@ -1,0 +1,2 @@
+PASS: normal generated display pins/mode/drive, single ownership, disabled fallback
+PENDING: native nRF Connect Pin Overview and physical timing/DC/power/TE/PWM qualification

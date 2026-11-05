@@ -31,14 +31,19 @@
 		};
 	};
 
-	/* JDI LPM013M091A, 3-wire 9-bit SPI. 9-bit frames are produced by
-	 * packing 8 frames into 9 bytes and issuing one transfer per line
-	 * with CS held low (nRF SPIM is 8-bit only). tSCYCW min = 16 ns for
-	 * GRAM writes, so 8 MHz is within spec. */
+	/* JDI three-wire nine-bit framing needs a future transport over the
+	 * installed eight-bit-word SPIM driver: packing, exact clocks and CS
+	 * continuity are not implemented here. No MISO/read path is routed.
+	 * 8 MHz remains the confirmed ceiling with unresolved setup margin:
+	 * 62.5 - 59 = 3.5 ns versus 20 ns register / 5 ns GRAM requirement.
+	 * validation/spi4mhz.overlay selects the audit's recommended 4 MHz
+	 * and high drive, leaving 66 ns before board skew. DC/10 ns edges
+	 * still require physical qualification. */
 	spi1_default: spi1_default {
 		group1 {
 			psels = <NRF_PSEL(SPIM_SCK, 0, 4)>,
 				<NRF_PSEL(SPIM_MOSI, 0, 5)>;
+			nordic,drive-mode = <NRF_DRIVE_S0S1>;
 		};
 	};
 
@@ -46,10 +51,28 @@
 		group1 {
 			psels = <NRF_PSEL(SPIM_SCK, 0, 4)>,
 				<NRF_PSEL(SPIM_MOSI, 0, 5)>;
-			/* Screen rails are gated off in sleep; keep the SPI
-			 * lines low so the unpowered panel is not back-
-			 * powered through its ESD diodes (JDI requires
-			 * interface lines at GND level while VDDI/VCI off). */
+			/* Input/disconnected buffer plus weak pull-down: not a driven
+			 * low or an implemented shutdown sequence. Powered mode-0
+			 * idle and unpowered GND requirements are distinct. Runtime
+			 * sequencing must establish suitable levels before rail-off
+			 * and cover CS/reset/TE too; pinctrl alone proves none of it. */
+			low-power-enable;
+			bias-pull-down;
+		};
+	};
+
+	/* PWM MCU de secours: P0.20/AD16, no GPIO output alias.
+	 * The controller stays disabled until the explicit fallback overlay. */
+	pwm0_default: pwm0_default {
+		group1 {
+			psels = <NRF_PSEL(PWM_OUT0, 0, 20)>;
+			nordic,drive-mode = <NRF_DRIVE_S0S1>;
+		};
+	};
+
+	pwm0_sleep: pwm0_sleep {
+		group1 {
+			psels = <NRF_PSEL(PWM_OUT0, 0, 20)>;
 			low-power-enable;
 			bias-pull-down;
 		};

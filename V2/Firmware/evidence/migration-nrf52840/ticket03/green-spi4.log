@@ -1,0 +1,2 @@
+PASS: spi4 generated display pins/mode/drive, single GPIO ownership, controller build and fallback policy
+PENDING: native nRF Connect Pin Overview and physical timing/DC/power/TE/PWM qualification

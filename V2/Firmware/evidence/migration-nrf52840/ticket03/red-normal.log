@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/dive-nrf52840-ticket03/V2/Firmware/tests/target_board/check_display.py", line 46, in <module>
+    assert 'pinctrl-0' in pwm.props, 'fallback PWM0 P0.20 routing is not prepared'
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: fallback PWM0 P0.20 routing is not prepared

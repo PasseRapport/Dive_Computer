@@ -1,0 +1,13 @@
+/* Audit-recommended bring-up choice, not a replacement confirmation of 8 MHz.
+ * Published setup budget: 125 - 59 = 66 ns before board skew.
+ * High drive on unrestricted pins still needs DC and 10 ns edge qualification.
+ * Mode 0 remains selected by absent spi-cpol/spi-cpha in the panel node. */
+&lcd {
+	spi-max-frequency = <4000000>;
+};
+
+&spi1_default {
+	group1 {
+		nordic,drive-mode = <NRF_DRIVE_H0H1>;
+	};
+};
