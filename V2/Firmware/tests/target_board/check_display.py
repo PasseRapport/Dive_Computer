@@ -5,7 +5,7 @@ import argparse
 from pathlib import Path
 import re
 import sys
-import struct
+from artifact_dt import cells, enabled
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('build_dir', type=Path)
@@ -21,17 +21,6 @@ z = args.build_dir / 'zephyr'
 dt = dtlib.DT(str(z / 'zephyr.dts'))
 config = dict(re.findall(r'^(CONFIG_\w+)=(.*)$', (z / '.config').read_text(), re.M))
 spi, lcd, pwm = (dt.label2node[label] for label in ['spi1', 'lcd', 'pwm0'])
-def enabled(node):
-    return node is not None and all('status' not in n.props or n.props['status'].to_string() == 'okay'
-                                    for n in [node, *parents(node)])
-def parents(node):
-    while node.parent:
-        node = node.parent
-        yield node
-
-def cells(prop):
-    return list(struct.unpack('>' + 'I' * (len(prop.value) // 4), prop.value))
-
 def gpio(node, prop, controller, pin, flags):
     assert cells(node.props[prop]) == [dt.label2node[controller].props['phandle'].to_num(), pin, flags], prop
 

@@ -1,0 +1,47 @@
+[
+  {
+    "path": "/home/Bilal/Documents/apps/Markdown files/spec-decompression-engine/issues/migration-nrf52840/01-buildable-board-and-expanded-memory.md",
+    "before_sha256": "3b7d111d60cc6c0662369ab631baa7d2b72947282915ef5d77cdcfb35ba929b5",
+    "after_sha256": "e3e74c508cd7340c9292eeb4c7e7252e7bdb71c47063735e49a9bad6a02a6ce6",
+    "status": "ready-for-agent",
+    "checked_criteria": 12,
+    "pending_graphical_criteria": 0
+  },
+  {
+    "path": "/home/Bilal/Documents/apps/Markdown files/spec-decompression-engine/issues/migration-nrf52840/02-sensor-and-charger-connections.md",
+    "before_sha256": "eca6545b9276996b74f88db8a797f059aa64bd67c65c7bf9a35f7088b10d5ed2",
+    "after_sha256": "dba9c6d51e007596182eaabd53114c9e6f5ff038d4450bfcc03da79f5e619c34",
+    "status": "ready-for-human",
+    "checked_criteria": 11,
+    "pending_graphical_criteria": 2
+  },
+  {
+    "path": "/home/Bilal/Documents/apps/Markdown files/spec-decompression-engine/issues/migration-nrf52840/03-display-and-backlight-fallback.md",
+    "before_sha256": "6756ff007a76ebebc4a1bb12c375366839ad04cb871d9af691f2722a87ca0166",
+    "after_sha256": "e785c2eaeaaa393548c249902b99df9c40079f3cfd1328c6df44b7b7965be71f",
+    "status": "ready-for-human",
+    "checked_criteria": 11,
+    "pending_graphical_criteria": 2
+  },
+  {
+    "path": "/home/Bilal/Documents/apps/Markdown files/spec-decompression-engine/issues/migration-nrf52840/04-complete-board-and-connection-handoff.md",
+    "before_sha256": "69601ec975f2e421b27af8091a15636f4ec6e5bde8c7b2d96fb794dac616f94a",
+    "after_sha256": "9f1230be6083b28d7ef3f47ffd3cef9d1d52f7a84c2bd7b1be3de42a2c3c8061",
+    "status": "ready-for-human",
+    "checked_criteria": 13,
+    "pending_graphical_criteria": 1
+  },
+  {
+    "path": "/home/Bilal/Documents/apps/Markdown files/spec-decompression-engine/SPEC-migration-nrf52840-qiaa.md",
+    "before_sha256": "5196b7ef9525f7de634b78b7b1a0c15b1f043454b8325eebb16996ae3e4b32af",
+    "after_sha256": "3740341aca37755ae33dd60ad4b0ab306c4214bbb647179dfcc0a03caa973753",
+    "status": "ready-for-human",
+    "execution": "implemented-pending-editor",
+    "accepted_body_unchanged": true
+  },
+  {
+    "path": "/home/Bilal/Documents/apps/Markdown files/migration-nrf52840-delivery.md",
+    "before_sha256": "9350a094fdfbfde5dfd97c996a666baae5fa5ceb8a58619b9da306995d30ab3d",
+    "after_sha256": "8a4a3359b1b0b674bf3829ff31432c4da13b231db296285947c1c8e9334b0520"
+  }
+]

@@ -1,0 +1,18 @@
+{
+  "live_hardware_sha256": {
+    "V2/Hardware/DiveComputerV2/DiveComputerV2.kicad_pcb": "b1a9665c6d65d201ccb31730997fd80de1853cfc763b1643277b32a62c046837",
+    "V2/Hardware/DiveComputerV2/DiveComputerV2.kicad_prl": "e6d576d271c7770a006e365f3fbc98872bcf64c7f09d382726614f3f77f2be0b",
+    "V2/Hardware/DiveComputerV2/DiveComputerV2.kicad_pro": "f268aaecd2b054dfe182c42a803bf9da8a87abcbc0fdc114891d262e39843f3b",
+    "V2/Hardware/DiveComputerV2/DiveComputerV2.kicad_sch": "ad52a61fd74b314aef300ee5d18c399628e567dbb7a71740a82dcdbaf8a54929"
+  },
+  "hardware_diff_unchanged": true,
+  "committed_trees": {
+    "V2/Hardware": "8856144c1a04e2195f0f279034ded9d6e1419328",
+    "V2/Firmware/ostc4_baseline": "f77b2178810d677ec429cc7fc3b8de8ac70ad671",
+    "V2/Firmware/simulator": "6e0dd4d1fd5f352d6d27abc4165001c858ee0a91"
+  },
+  "correction_scope": "acceptance utility, validators, review evidence and authorized external tracker/delivery only",
+  "target_rebuilt": false,
+  "target_executed": false,
+  "target_programmed": false
+}

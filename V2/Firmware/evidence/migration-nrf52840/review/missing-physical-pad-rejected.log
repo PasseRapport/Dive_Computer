@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/Bilal/.codex/visualizations/2026/11/05/01a1ab4b-2ea7-7c93-bc07-cd33966966c5/nrf52840-review-fixes/V2/Firmware/tests/target_board/check_integrated.py", line 36, in <module>
+    assert Counter(table) == Counter(expected), 'delivery physical table omitted/duplicated/renamed a pad'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: delivery physical table omitted/duplicated/renamed a pad
+Exit: 1

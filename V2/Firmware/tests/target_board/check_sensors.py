@@ -6,6 +6,7 @@ from pathlib import Path
 import json
 import re
 import sys
+from artifact_dt import cells, enabled
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('build_dir', type=Path)
@@ -51,22 +52,14 @@ print('PASS: compiled TWIM0/pinctrl, 400 kHz and explicit open-drain P0.15/P0.17
 gpio0 = dt.label2node['gpio0'].props['phandle'].to_num()
 
 
-def gpio_cells(prop):
-    # Generated DTS can preserve symbolic phandle markers. Public raw property
-    # bytes contain the resolved cells even where dtlib.to_nums rejects markers.
-    assert len(prop.value) % 4 == 0
-    return [int.from_bytes(prop.value[i:i + 4], 'big')
-            for i in range(0, len(prop.value), 4)]
-
-
 # Sensor properties describe MCU inputs: active high ACC, active low Hall/light;
 # external interrupt pull-ups belong to the switched peripheral rail.
 for label, prop, pin, flags in [('acc', 'int1-gpios', 2, 0),
                                 ('enc', 'int-gpios', 3, 1),
                                 ('light', 'int-gpios', 30, 1)]:
-    assert gpio_cells(dt.label2node[label].props[prop]) == [gpio0, pin, flags]
+    assert cells(dt.label2node[label].props[prop]) == [gpio0, pin, flags]
 user = dt.get_node('/zephyr,user')
-assert gpio_cells(user.props['chg_n-gpios']) == [gpio0, 10, 17]  # LOW | PULL_UP
+assert cells(user.props['chg_n-gpios']) == [gpio0, 10, 17]  # LOW | PULL_UP
 assert 'chg_n-input' in user.props
 assert user.props['chg_n-pullup-domain'].to_string() == 'mcu-vdd'
 assert 'nfct-pins-as-gpios' in dt.label2node['uicr'].props
@@ -76,21 +69,14 @@ assert 'nfct-pins-as-gpios' in dt.label2node['uicr'].props
 owners = {}
 
 
-def node_parent_chain(node):
-    while node.parent is not None:
-        node = node.parent
-        yield node
-
-
 for node in dt.node_iter():
-    if any(n.props.get('status') and n.props['status'].to_string() == 'disabled'
-           for n in [node, *node_parent_chain(node)]):
+    if not enabled(node):
         continue
     for name, prop in node.props.items():
         if name == 'gpios' or name.endswith('-gpios'):
-            cells = gpio_cells(prop)
-            for offset in range(0, len(cells), 3):
-                port, pin, flags = cells[offset:offset + 3]
+            values = cells(prop)
+            for offset in range(0, len(values), 3):
+                port, pin, flags = values[offset:offset + 3]
                 if port == gpio0 and pin in (2, 3, 9, 10, 28, 30):
                     owners.setdefault(pin, []).append(f'{node.path}:{name}')
 assert set(owners) == {2, 3, 9, 10, 28, 30}, owners

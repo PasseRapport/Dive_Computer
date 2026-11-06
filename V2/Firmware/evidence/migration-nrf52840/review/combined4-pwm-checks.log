@@ -1,0 +1,44 @@
+$ check_resources.py /home/Bilal/.codex/visualizations/2026/11/05/01a1ab4b-2ea7-7c93-bc07-cd33966966c5/nrf52840-builds/combined4-pwm 
+{
+  "regions": {
+    "FLASH": {
+      "origin": 49152,
+      "capacity_bytes": 487424,
+      "used_bytes": 51828,
+      "remaining_bytes": 435596
+    },
+    "RAM": {
+      "origin": 536870912,
+      "capacity_bytes": 262144,
+      "used_bytes": 17024,
+      "remaining_bytes": 245120
+    }
+  },
+  "allocated_stacks": {
+    "z_idle_stacks": 512,
+    "z_interrupt_stacks": 2176,
+    "z_main_stack": 8320
+  }
+}
+PASS: replacement target, independent capacities, image link region and truthful report
+Exit: 0
+
+$ check_configuration.py /home/Bilal/.codex/visualizations/2026/11/05/01a1ab4b-2ea7-7c93-bc07-cd33966966c5/nrf52840-builds/combined4-pwm 
+PASS: independent generated SoC, special pins, power/clocks, partitions, runners and preserved ABI
+Exit: 0
+
+$ check_display.py /home/Bilal/.codex/visualizations/2026/11/05/01a1ab4b-2ea7-7c93-bc07-cd33966966c5/nrf52840-builds/combined4-pwm --variant spi4-pwm
+PASS: spi4-pwm generated display pins/mode/drive, single ownership, compiled controllers
+PENDING: native nRF Connect Pin Overview and physical timing/DC/power/TE/PWM qualification
+Exit: 0
+
+$ check_integrated.py /home/Bilal/.codex/visualizations/2026/11/05/01a1ab4b-2ea7-7c93-bc07-cd33966966c5/nrf52840-builds/combined4-pwm --variant combined4-pwm --connection-reference /home/Bilal/Documents/apps/Markdown files/migration-nrf52840-delivery.md
+PASS: all 16 independent GPIO/pad contracts; 74 unique physical pads; no cross-subsystem GPIO/pinctrl or shared-instance conflict
+PASS: applicable linked controller coverage and proposed PWM period; physical hardware and native editor inspection remain pending
+Exit: 0
+
+$ check_sensors.py /home/Bilal/.codex/visualizations/2026/11/05/01a1ab4b-2ea7-7c93-bc07-cd33966966c5/nrf52840-builds/combined4-pwm 
+PASS: generated six-device I2C address contract, including grounded-ADDR Hall at 0x34
+PASS: compiled TWIM0/pinctrl, 400 kHz and explicit open-drain P0.15/P0.17
+PASS: sensor interrupt polarities, charger input/bias policy, NFC and unique GPIO owners
+Exit: 0

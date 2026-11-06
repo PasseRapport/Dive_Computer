@@ -10,8 +10,8 @@ from collections import Counter, defaultdict
 import json
 from pathlib import Path
 import re
-import struct
 import sys
+from artifact_dt import cells, enabled
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('build_dir', type=Path)
@@ -40,16 +40,6 @@ from devicetree import dtlib
 z = args.build_dir / 'zephyr'
 dt = dtlib.DT(str(z / 'zephyr.dts'))
 config = dict(re.findall(r'^(CONFIG_\w+)=(.*)$', (z / '.config').read_text(), re.M))
-
-def cells(prop):
-    return list(struct.unpack('>' + 'I' * (len(prop.value) // 4), prop.value))
-
-def enabled(node):
-    while node is not None:
-        if 'status' in node.props and node.props['status'].to_string() != 'okay':
-            return False
-        node = node.parent
-    return True
 
 ports = {dt.label2node[f'gpio{n}'].props['phandle'].to_num(): n for n in [0, 1]}
 owners = defaultdict(list)
