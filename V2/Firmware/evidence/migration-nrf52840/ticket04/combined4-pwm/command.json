@@ -1,0 +1,16 @@
+[
+  "/usr/bin/python3",
+  "/home/Bilal/.codex/visualizations/2026/11/05/01a1ab4b-2ea7-7c93-bc07-cd33966966c5/nrf52840-ticket04/V2/Firmware/tools/build_target.py",
+  "--build-dir",
+  "/home/Bilal/.codex/visualizations/2026/11/05/01a1ab4b-2ea7-7c93-bc07-cd33966966c5/nrf52840-builds/combined4-pwm",
+  "--extra-conf",
+  "/home/Bilal/.codex/visualizations/2026/11/05/01a1ab4b-2ea7-7c93-bc07-cd33966966c5/nrf52840-ticket04/V2/Firmware/validation/sensors.conf",
+  "--extra-conf",
+  "/home/Bilal/.codex/visualizations/2026/11/05/01a1ab4b-2ea7-7c93-bc07-cd33966966c5/nrf52840-ticket04/V2/Firmware/validation/display.conf",
+  "--extra-conf",
+  "/home/Bilal/.codex/visualizations/2026/11/05/01a1ab4b-2ea7-7c93-bc07-cd33966966c5/nrf52840-ticket04/V2/Firmware/validation/pwm-fallback.conf",
+  "--overlay",
+  "/home/Bilal/.codex/visualizations/2026/11/05/01a1ab4b-2ea7-7c93-bc07-cd33966966c5/nrf52840-ticket04/V2/Firmware/validation/spi4mhz.overlay",
+  "--overlay",
+  "/home/Bilal/.codex/visualizations/2026/11/05/01a1ab4b-2ea7-7c93-bc07-cd33966966c5/nrf52840-ticket04/V2/Firmware/validation/pwm-fallback.overlay"
+]

@@ -1,0 +1,49 @@
+-- west build: generating a build system
+Loading Zephyr default modules (Zephyr base).
+-- Application: /home/Bilal/Documents/ChatGPT/Dive Watch/.work/nrf52840-ticket04/V2/Firmware
+-- CMake version: 4.2.1
+-- Found Python3: /home/Bilal/ncs/toolchains/8285d8ad56/usr/local/bin/python3.12 (found suitable version "3.12.4", minimum required is "3.12") found components: Interpreter
+-- Cache files will be written to: /home/Bilal/Documents/ChatGPT/Dive Watch/.work/nrf52840-builds/normal/.cache
+-- Zephyr version: 4.4.2 (/home/Bilal/ncs/v3.4.1/zephyr)
+-- Found west (found suitable version "1.5.0", minimum required is "0.14.0")
+-- Board: dc_v2_2, qualifiers: nrf52840
+-- Found host-tools: zephyr 1.0.1 (/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk)
+-- Found toolchain: zephyr 1.0.1 (/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk)
+-- Found Dtc: /home/Bilal/ncs/toolchains/8285d8ad56/bin/dtc (found suitable version "1.5.0", minimum required is "1.4.6")
+-- Found BOARD.dts: /home/Bilal/Documents/ChatGPT/Dive Watch/.work/nrf52840-ticket04/V2/Firmware/boards/nordic/dc_v2_2/dc_v2_2_nrf52840.dts
+-- Found devicetree overlay: /home/Bilal/Documents/ChatGPT/Dive
+-- Found devicetree overlay: Watch/.work/nrf52840-ticket04/V2/Firmware/app.overlay
+<command-line>: fatal error: /home/Bilal/Documents/ChatGPT/Dive: No such file or directory
+compilation terminated.
+CMake Error at /home/Bilal/ncs/v3.4.1/zephyr/cmake/modules/extensions.cmake:4815 (message):
+  failed to preprocess devicetree files (error code 1):
+  /home/Bilal/Documents/ChatGPT/Dive
+  Watch/.work/nrf52840-ticket04/V2/Firmware/boards/nordic/dc_v2_2/dc_v2_2_nrf52840.dts;/home/Bilal/Documents/ChatGPT/Dive;Watch/.work/nrf52840-ticket04/V2/Firmware/app.overlay
+Call Stack (most recent call first):
+  /home/Bilal/ncs/v3.4.1/zephyr/cmake/modules/dts.cmake:267 (zephyr_dt_preprocess)
+  /home/Bilal/ncs/v3.4.1/zephyr/cmake/modules/dts.cmake:435 (dts_edt_pickle)
+  /home/Bilal/ncs/v3.4.1/zephyr/cmake/modules/zephyr_default.cmake:133 (dts_init)
+  /home/Bilal/ncs/v3.4.1/zephyr/cmake/modules/zephyr_default.cmake:133 (cmake_language)
+  /home/Bilal/ncs/v3.4.1/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)
+  /home/Bilal/ncs/v3.4.1/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)
+  CMakeLists.txt:3 (find_package)
+
+
+-- Configuring incomplete, errors occurred!
+FATAL ERROR: command exited with status 1: /home/Bilal/ncs/toolchains/8285d8ad56/usr/local/bin/cmake -DWEST_PYTHON=/home/Bilal/ncs/toolchains/8285d8ad56/usr/local/bin/python3.12 '-B/home/Bilal/Documents/ChatGPT/Dive Watch/.work/nrf52840-builds/normal' -GNinja -DBOARD=dc_v2_2/nrf52840 -DCMAKE_EXPORT_COMPILE_COMMANDS=ON '-DUSER_CACHE_DIR=/home/Bilal/Documents/ChatGPT/Dive Watch/.work/nrf52840-builds/normal/.cache' '-S/home/Bilal/Documents/ChatGPT/Dive Watch/.work/nrf52840-ticket04/V2/Firmware'
+Traceback (most recent call last):
+  File "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/nrf52840-ticket04/V2/Firmware/tools/build_target.py", line 39, in <module>
+    subprocess.run([str(args.toolchain / 'usr/local/bin/west'), 'build', '--no-sysbuild',
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    '-b', 'dc_v2_2/nrf52840', '-d', str(args.build_dir.resolve()),
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    str(source), '--', '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON',
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    '-DUSER_CACHE_DIR=' + str(args.build_dir.resolve() / '.cache'), *cmake_args],
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   env=env, check=True, cwd=args.ncs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/home/Bilal/ncs/toolchains/8285d8ad56/usr/local/bin/west', 'build', '--no-sysbuild', '-b', 'dc_v2_2/nrf52840', '-d', '/home/Bilal/Documents/ChatGPT/Dive Watch/.work/nrf52840-builds/normal', '/home/Bilal/Documents/ChatGPT/Dive Watch/.work/nrf52840-ticket04/V2/Firmware', '--', '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-DUSER_CACHE_DIR=/home/Bilal/Documents/ChatGPT/Dive Watch/.work/nrf52840-builds/normal/.cache']' returned non-zero exit status 1.

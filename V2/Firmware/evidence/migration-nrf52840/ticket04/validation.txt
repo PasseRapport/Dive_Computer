@@ -1,0 +1,34 @@
+2026-11-06, ticket04 integrated configuration and physical handoff.
+
+Four fresh builds through tools/build_target.py with no flash/probe operation.
+command.json records exact invocations. All: check_resources, check_configuration,
+check_display and check_integrated. Combined variants also: check_sensors.
+check_resources invokes the public report; retained report.json fingerprints ELF.
+Normal build has GPIO/GPIOTE; I2C/SPI/pinctrl declarations are not linked drivers.
+Combined8/combined4 add sensors.conf+display.conf; combined4 uses spi4mhz.overlay.
+Combined4-pwm also adds pwm-fallback.conf+pwm-fallback.overlay.
+All four final integrated checks and applicable preceding checks PASS.
+
+TDD: retained red-combined-variant.log shows old public display checker could not
+express simultaneous 4 MHz/PWM. Added explicit spi4-pwm; combined4-pwm green check
+uses the real public build artifacts. No board/runtime change was needed.
+
+Negative generated-artifact controls (copies, not board mutations):
+- Change CS GPIO from 11 to 4: rejected duplicate CS/SCK owner.
+- Change enabled serial controller reg 40004000 to 40003000: rejected shared
+  TWIM0/SPIM1 hardware register instance.
+- Remove AD14 physical table row from copied delivery plain text: rejected
+  incomplete physical table against independent manufacturer reference.
+Retained rejected-*.log records failures. No tolerance/frequency silently changed.
+rejected-sdk-spaces.log is environmental failure from installed SDK splitting source
+paths. Moved checkout/builds to persistent writable no-space paths; SDK unchanged.
+
+Independent pad source verified from Nordic on 2026-11-05, rechecked against installed
+KiCad symbol 2026-11-06; full 74-pad data and current fresh 2026-11-06 netlist retained.
+No production DT/pinctrl data was used as the physical-pad oracle.
+
+Physical reference and acceptance matrix:
+/home/Bilal/Documents/apps/Markdown files/migration-nrf52840-delivery.md
+Native editor inspection PENDING (extension commands recorded, no native UI).
+Scenario 4 remains PARTIAL. No target execution/full-watch fit, boot/DFU or electrical
+qualification established. No numerical tests rerun; arithmetic code unchanged.

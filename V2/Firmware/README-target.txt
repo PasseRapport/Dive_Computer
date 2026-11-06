@@ -292,3 +292,22 @@ period/polarity, ownership and linked controller objects. Native nRF Connect
 Devicetree Visual Editor/Pin Overview inspection is PENDING: no suitable native
 editor surface was available. Physical timing/DC/slew/rail/TE/PWM qualification,
 probe connection, flashing and target execution remain unperformed.
+
+Complete nRF52840 migration handoff (2026-11-06)
+----------------------------------------------
+Physical reference, all 74 pads, fresh actual-vs-intended wiring, qualification
+ledger, all 17 acceptance scenarios, four combined build variants and repeatable
+commands:
+
+  /home/Bilal/Documents/apps/Markdown files/migration-nrf52840-delivery.md
+
+The corresponding retained evidence is evidence/migration-nrf52840/ticket04/.
+Run tests/target_board/check_integrated.py BUILD_DIR --variant normal|combined8|
+combined4|combined4-pwm after the applicable public build. It spans GPIO and bus
+pinctrl owners and shared serial instances against independent pad research.
+Optional --connection-reference PATH also checks the complete physical table.
+Use check_sensors.py for combined builds and check_display.py --variant
+normal|spi8|spi4|spi4-pwm respectively; the final variant explicitly composes the
+4 MHz bring-up selection and PWM fallback. This does not activate app transfers.
+Native nRF Connect graphical inspection is PENDING, separately from successful
+generated-artifact acceptance. Hardware qualification remains unestablished.

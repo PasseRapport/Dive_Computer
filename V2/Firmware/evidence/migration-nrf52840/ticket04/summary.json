@@ -1,0 +1,132 @@
+{
+  "normal": {
+    "build_dir": "/home/Bilal/.codex/visualizations/2026/11/05/01a1ab4b-2ea7-7c93-bc07-cd33966966c5/nrf52840-builds/normal",
+    "regions": {
+      "FLASH": {
+        "origin": 49152,
+        "capacity_bytes": 487424,
+        "used_bytes": 42536,
+        "remaining_bytes": 444888
+      },
+      "RAM": {
+        "origin": 536870912,
+        "capacity_bytes": 262144,
+        "used_bytes": 16640,
+        "remaining_bytes": 245504
+      }
+    },
+    "elf_sha256": "64d0a6dfb1f4436d567ff1a2d33052948d32917048bdbaa04502118f9893f880",
+    "compiled_controller_sources": [
+      "gpio_nrfx.c"
+    ],
+    "target_execution": false,
+    "full_watch_fit_established": false,
+    "compiled_gpio_event_support": [
+      "gpiote_nrfx.c",
+      "nrfx_gpiote.c"
+    ]
+  },
+  "combined8": {
+    "build_dir": "/home/Bilal/.codex/visualizations/2026/11/05/01a1ab4b-2ea7-7c93-bc07-cd33966966c5/nrf52840-builds/combined8",
+    "regions": {
+      "FLASH": {
+        "origin": 49152,
+        "capacity_bytes": 487424,
+        "used_bytes": 50308,
+        "remaining_bytes": 437116
+      },
+      "RAM": {
+        "origin": 536870912,
+        "capacity_bytes": 262144,
+        "used_bytes": 17024,
+        "remaining_bytes": 245120
+      }
+    },
+    "elf_sha256": "445f877daffa4a0da74f992652b20f390796dc70c330f3e4a5e83fc002e254ca",
+    "compiled_controller_sources": [
+      "common.c",
+      "gpio_nrfx.c",
+      "i2c_common.c",
+      "i2c_nrfx_twim.c",
+      "i2c_nrfx_twim_common.c",
+      "pinctrl_nrf.c",
+      "spi_nrfx_spim.c",
+      "spi_nrfx_spim_common.c"
+    ],
+    "target_execution": false,
+    "full_watch_fit_established": false,
+    "compiled_gpio_event_support": [
+      "gpiote_nrfx.c",
+      "nrfx_gpiote.c"
+    ]
+  },
+  "combined4": {
+    "build_dir": "/home/Bilal/.codex/visualizations/2026/11/05/01a1ab4b-2ea7-7c93-bc07-cd33966966c5/nrf52840-builds/combined4",
+    "regions": {
+      "FLASH": {
+        "origin": 49152,
+        "capacity_bytes": 487424,
+        "used_bytes": 50308,
+        "remaining_bytes": 437116
+      },
+      "RAM": {
+        "origin": 536870912,
+        "capacity_bytes": 262144,
+        "used_bytes": 17024,
+        "remaining_bytes": 245120
+      }
+    },
+    "elf_sha256": "43e12e21790baacc9a5f09b46cd23c8f2ccb63b4f59379de6c4909210aeece49",
+    "compiled_controller_sources": [
+      "common.c",
+      "gpio_nrfx.c",
+      "i2c_common.c",
+      "i2c_nrfx_twim.c",
+      "i2c_nrfx_twim_common.c",
+      "pinctrl_nrf.c",
+      "spi_nrfx_spim.c",
+      "spi_nrfx_spim_common.c"
+    ],
+    "target_execution": false,
+    "full_watch_fit_established": false,
+    "compiled_gpio_event_support": [
+      "gpiote_nrfx.c",
+      "nrfx_gpiote.c"
+    ]
+  },
+  "combined4-pwm": {
+    "build_dir": "/home/Bilal/.codex/visualizations/2026/11/05/01a1ab4b-2ea7-7c93-bc07-cd33966966c5/nrf52840-builds/combined4-pwm",
+    "regions": {
+      "FLASH": {
+        "origin": 49152,
+        "capacity_bytes": 487424,
+        "used_bytes": 51828,
+        "remaining_bytes": 435596
+      },
+      "RAM": {
+        "origin": 536870912,
+        "capacity_bytes": 262144,
+        "used_bytes": 17024,
+        "remaining_bytes": 245120
+      }
+    },
+    "elf_sha256": "7aa9b7ffadd459abb75afaa6b0947d5a9e1b3d095ecf83debbf31002df30ce92",
+    "compiled_controller_sources": [
+      "common.c",
+      "gpio_nrfx.c",
+      "i2c_common.c",
+      "i2c_nrfx_twim.c",
+      "i2c_nrfx_twim_common.c",
+      "pinctrl_nrf.c",
+      "pwm_nrfx.c",
+      "spi_nrfx_spim.c",
+      "spi_nrfx_spim_common.c"
+    ],
+    "target_execution": false,
+    "full_watch_fit_established": false,
+    "compiled_gpio_event_support": [
+      "gpiote_nrfx.c",
+      "nrfx_gpiote.c"
+    ]
+  }
+}

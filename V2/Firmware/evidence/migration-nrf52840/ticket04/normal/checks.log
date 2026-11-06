@@ -1,0 +1,25 @@
+{
+  "regions": {
+    "FLASH": {
+      "origin": 49152,
+      "capacity_bytes": 487424,
+      "used_bytes": 42536,
+      "remaining_bytes": 444888
+    },
+    "RAM": {
+      "origin": 536870912,
+      "capacity_bytes": 262144,
+      "used_bytes": 16640,
+      "remaining_bytes": 245504
+    }
+  },
+  "allocated_stacks": {
+    "z_idle_stacks": 512,
+    "z_interrupt_stacks": 2176,
+    "z_main_stack": 8320
+  }
+}
+PASS: replacement target, independent capacities, image link region and truthful report
+PASS: independent generated SoC, special pins, power/clocks, partitions, runners and preserved ABI
+PASS: normal generated display pins/mode/drive, single ownership, disabled fallback
+PENDING: native nRF Connect Pin Overview and physical timing/DC/power/TE/PWM qualification

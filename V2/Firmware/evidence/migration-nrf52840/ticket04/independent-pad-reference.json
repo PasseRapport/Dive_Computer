@@ -1,0 +1,3323 @@
+{
+  "date": "2026-11-06",
+  "manufacturer_source_verified": "2026-11-05",
+  "manufacturer_source_refetched": false,
+  "source_age_note": "Manufacturer facts retained from verified 2026-11-05 research; pin identities independently rechecked against installed KiCad symbol on 2026-11-06. Physical connections are fresh 2026-11-06 export.",
+  "source": "https://docs.nordicsemi.com/r/bundle/ps_nrf52840/page/pin.html?contentId=hMpuE~dcsjrrIlIt8ErcrQ",
+  "sources": {
+    "pin_table": "https://docs.nordicsemi.com/r/bundle/ps_nrf52840/page/pin.html?contentId=hMpuE~dcsjrrIlIt8ErcrQ",
+    "reference": "https://docs.nordicsemi.com/r/bundle/ps_nrf52840/page/ref_circuitry.html",
+    "support": "https://devzone.nordicsemi.com/f/nordic-q-a/104586/nrf52840-pcb-antenna-design/449892",
+    "historical_notes": "/home/Bilal/Documents/apps/Markdown files/migration-nrf52840-research.md"
+  },
+  "historical_notes_sha256": "2776cf53ee504a98dacb973c03f53aa81a4f11b55ba5e08da004a078485b205e",
+  "schematic": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Hardware/DiveComputerV2/DiveComputerV2.kicad_sch",
+  "schematic_sha256": "ad52a61fd74b314aef300ee5d18c399628e567dbb7a71740a82dcdbaf8a54929",
+  "netlist": "/home/Bilal/Documents/ChatGPT/Dive Watch/.work/nrf52840-current.xml",
+  "netlist_sha256": "282ffac92048fffe19c2e49c2816e856252c4a08fbf5caf9e08ba5e83b8091fe",
+  "netlist_export_time": "2026-11-06T08:30:17",
+  "netlist_tool": "Eeschema 10.0.6-1.fc44",
+  "counts": {
+    "application": 16,
+    "spare_gpio": 30,
+    "fixed": 25,
+    "lf_crystal": 2,
+    "exposed_ground": 1
+  },
+  "independent_symbol": "/usr/share/kicad/symbols/MCU_Nordic.kicad_sym:nRF52840",
+  "independent_symbol_sha256": "bcf85a9e24b04ab2d1674cbec7433c42028d4790146b2c9ca0ddb4c8963ce968",
+  "symbol_count": 74,
+  "components": {
+    "L1": {
+      "value": "LQW15AN15NG00D",
+      "dnp": false
+    },
+    "L2": {
+      "value": "LQM18DN100M70L",
+      "dnp": false
+    },
+    "L11": {
+      "value": "SLM1608100MIT",
+      "dnp": false
+    },
+    "C16": {
+      "value": "100n",
+      "dnp": false
+    },
+    "C17": {
+      "value": "1u",
+      "dnp": false
+    },
+    "C18": {
+      "value": "47n",
+      "dnp": false
+    },
+    "C21": {
+      "value": "100p",
+      "dnp": false
+    },
+    "C62": {
+      "value": "100p",
+      "dnp": false
+    },
+    "C25": {
+      "value": "12p",
+      "dnp": false
+    },
+    "C26": {
+      "value": "12p",
+      "dnp": false
+    },
+    "C11": {
+      "value": "12p",
+      "dnp": false
+    },
+    "C12": {
+      "value": "12p",
+      "dnp": false
+    },
+    "X1": {
+      "value": "CM8V-T1A-32.768KHZ-9PF-20PPM-TB-QC",
+      "dnp": false
+    },
+    "X2": {
+      "value": "ECS-320-CDX-2152",
+      "dnp": false
+    },
+    "R1": {
+      "value": "10k",
+      "dnp": false
+    },
+    "R2": {
+      "value": "10k",
+      "dnp": false
+    },
+    "R5": {
+      "value": "4.7k",
+      "dnp": false
+    },
+    "R6": {
+      "value": "4.7k",
+      "dnp": false
+    },
+    "R7": {
+      "value": "0",
+      "dnp": true
+    },
+    "R8": {
+      "value": "0",
+      "dnp": false
+    },
+    "U4": {
+      "value": "TMAG3001A1Y",
+      "dnp": false
+    },
+    "U7": {
+      "value": "NRF52833-QDAA-R",
+      "dnp": false
+    },
+    "U13": {
+      "value": "nRF52840-QIAA",
+      "dnp": false
+    },
+    "U8": {
+      "value": "TPS7A0212PYCHR",
+      "dnp": false
+    },
+    "U9": {
+      "value": "TPS7A0331PDQNR",
+      "dnp": false
+    },
+    "U10": {
+      "value": "TPS7A0218PDQNR",
+      "dnp": false
+    },
+    "U11": {
+      "value": "BQ51051BRHLR",
+      "dnp": false
+    }
+  },
+  "pads": [
+    {
+      "pad": "A8",
+      "name": "P0.31",
+      "gpio": "P0.31",
+      "category": "application",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": {
+        "signal": "SYNC/TE",
+        "gpio": "P0.31",
+        "pad": "A8",
+        "direction": "input",
+        "active_level": "frame pulse",
+        "role_policy": "JDI TE 63.1 Hz / high 560 us; No required pull-up asserted; standard; LF <=10 kHz; LF compatible only for documented frame waveform; future line-rate mode needs requalification; TE DC bounds unclosed",
+        "policy_source_observed": "2026-11-05; retained approved research, not requalified electrically on 2026-11-06"
+      },
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.31/AIN7-PadA8)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "A8"
+          }
+        ]
+      },
+      "alternate_functions": [
+        "AIN7"
+      ],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "A10",
+      "name": "P0.29",
+      "gpio": "P0.29",
+      "category": "application",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": {
+        "signal": "3.1V_EN",
+        "gpio": "P0.29",
+        "pad": "A10",
+        "direction": "output",
+        "active_level": "high",
+        "role_policy": "U9 3.1 V regulator enable; No new bias asserted; standard; LF <=10 kHz; Panel VCI; VDDI before VCI; EN low tolerance unqualified",
+        "policy_source_observed": "2026-11-05; retained approved research, not requalified electrically on 2026-11-06"
+      },
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.29/AIN5-PadA10)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "A10"
+          }
+        ]
+      },
+      "alternate_functions": [
+        "AIN5"
+      ],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "A12",
+      "name": "P0.02",
+      "gpio": "P0.02",
+      "category": "application",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": {
+        "signal": "INT_ACC1",
+        "gpio": "P0.02",
+        "pad": "A12",
+        "direction": "input",
+        "active_level": "high",
+        "role_policy": "LIS2DUX12 IRQ; No pull-up needed for selected push-pull mode; OD mode would need one; standard; LF <=10 kHz; Switched peripheral 1.8 V required",
+        "policy_source_observed": "2026-11-05; retained approved research, not requalified electrically on 2026-11-06"
+      },
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.02/AIN0-PadA12)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "A12"
+          }
+        ]
+      },
+      "alternate_functions": [
+        "AIN0"
+      ],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "A14",
+      "name": "P1.15",
+      "gpio": "P1.15",
+      "category": "spare_gpio",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": "LF <=10 kHz, standard drive; Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P1.15-PadA14)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "A14"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "A16",
+      "name": "P1.13",
+      "gpio": "P1.13",
+      "category": "spare_gpio",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": "LF <=10 kHz, standard drive; Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P1.13-PadA16)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "A16"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "A18",
+      "name": "DEC2",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Leave floating; Nordic support explicitly says not grounded",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-DEC2-PadA18)",
+        "connected": false,
+        "pin_type": "power_in+no_connect",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "A18"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "A20",
+      "name": "P1.10",
+      "gpio": "P1.10",
+      "category": "spare_gpio",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": "LF <=10 kHz, standard drive; Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P1.10-PadA20)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "A20"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "A22",
+      "name": "VDD",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "REG0 output nominal 1.8 V; join all five VDD pads externally; separate from U10 peripheral +1.8 V output",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "VDD",
+        "connected": true,
+        "pin_type": "power_in",
+        "endpoints": [
+          {
+            "ref": "C13",
+            "pin": "1"
+          },
+          {
+            "ref": "C15",
+            "pin": "2"
+          },
+          {
+            "ref": "C19",
+            "pin": "2"
+          },
+          {
+            "ref": "C20",
+            "pin": "2"
+          },
+          {
+            "ref": "C29",
+            "pin": "2"
+          },
+          {
+            "ref": "L11",
+            "pin": "1"
+          },
+          {
+            "ref": "U13",
+            "pin": "A22"
+          },
+          {
+            "ref": "U13",
+            "pin": "AD23"
+          },
+          {
+            "ref": "U13",
+            "pin": "B1"
+          },
+          {
+            "ref": "U13",
+            "pin": "W1"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "A23",
+      "name": "XC2",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "External 32 MHz crystal; A23 to X2 pin1 / C25 12 pF",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "Net-(U13-XC2)",
+        "connected": true,
+        "pin_type": "output",
+        "endpoints": [
+          {
+            "ref": "C25",
+            "pin": "2"
+          },
+          {
+            "ref": "U13",
+            "pin": "A23"
+          },
+          {
+            "ref": "X2",
+            "pin": "1"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "B1",
+      "name": "VDD",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "REG0 output nominal 1.8 V; join all five VDD pads externally; separate from U10 peripheral +1.8 V output",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "VDD",
+        "connected": true,
+        "pin_type": "power_in",
+        "endpoints": [
+          {
+            "ref": "C13",
+            "pin": "1"
+          },
+          {
+            "ref": "C15",
+            "pin": "2"
+          },
+          {
+            "ref": "C19",
+            "pin": "2"
+          },
+          {
+            "ref": "C20",
+            "pin": "2"
+          },
+          {
+            "ref": "C29",
+            "pin": "2"
+          },
+          {
+            "ref": "L11",
+            "pin": "1"
+          },
+          {
+            "ref": "U13",
+            "pin": "A22"
+          },
+          {
+            "ref": "U13",
+            "pin": "AD23"
+          },
+          {
+            "ref": "U13",
+            "pin": "B1"
+          },
+          {
+            "ref": "U13",
+            "pin": "W1"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "B3",
+      "name": "DCC",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "REG1 DC/DC network: DCC through 10 uH + 15 nH series network to joined DEC4/DEC6, reference decoupling required",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "Net-(U13-DCC)",
+        "connected": true,
+        "pin_type": "output",
+        "endpoints": [
+          {
+            "ref": "L2",
+            "pin": "1"
+          },
+          {
+            "ref": "U13",
+            "pin": "B3"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "B5",
+      "name": "DEC4",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Join DEC6/E24, 1.3 V regulator decoupling and REG1 network",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "1.3V",
+        "connected": true,
+        "pin_type": "power_in",
+        "endpoints": [
+          {
+            "ref": "C17",
+            "pin": "2"
+          },
+          {
+            "ref": "C18",
+            "pin": "2"
+          },
+          {
+            "ref": "L1",
+            "pin": "2"
+          },
+          {
+            "ref": "U13",
+            "pin": "B5"
+          },
+          {
+            "ref": "U13",
+            "pin": "E24"
+          },
+          {
+            "ref": "U7",
+            "pin": "26"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "B7",
+      "name": "VSS",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Ground; exposed pad must connect to ground",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "GND",
+        "connected": true,
+        "pin_type": "power_in",
+        "endpoints": [
+          {
+            "ref": "ANT1",
+            "pin": "2"
+          },
+          {
+            "ref": "ANT1",
+            "pin": "3"
+          },
+          {
+            "ref": "ANT1",
+            "pin": "4"
+          },
+          {
+            "ref": "C1",
+            "pin": "2"
+          },
+          {
+            "ref": "C10",
+            "pin": "2"
+          },
+          {
+            "ref": "C11",
+            "pin": "2"
+          },
+          {
+            "ref": "C12",
+            "pin": "2"
+          },
+          {
+            "ref": "C13",
+            "pin": "2"
+          },
+          {
+            "ref": "C14",
+            "pin": "2"
+          },
+          {
+            "ref": "C15",
+            "pin": "1"
+          },
+          {
+            "ref": "C16",
+            "pin": "2"
+          },
+          {
+            "ref": "C17",
+            "pin": "1"
+          },
+          {
+            "ref": "C18",
+            "pin": "1"
+          },
+          {
+            "ref": "C19",
+            "pin": "1"
+          },
+          {
+            "ref": "C2",
+            "pin": "1"
+          },
+          {
+            "ref": "C20",
+            "pin": "1"
+          },
+          {
+            "ref": "C21",
+            "pin": "1"
+          },
+          {
+            "ref": "C23",
+            "pin": "1"
+          },
+          {
+            "ref": "C24",
+            "pin": "1"
+          },
+          {
+            "ref": "C25",
+            "pin": "1"
+          },
+          {
+            "ref": "C26",
+            "pin": "1"
+          },
+          {
+            "ref": "C27",
+            "pin": "1"
+          },
+          {
+            "ref": "C28",
+            "pin": "1"
+          },
+          {
+            "ref": "C29",
+            "pin": "5"
+          },
+          {
+            "ref": "C3",
+            "pin": "2"
+          },
+          {
+            "ref": "C34",
+            "pin": "1"
+          },
+          {
+            "ref": "C35",
+            "pin": "1"
+          },
+          {
+            "ref": "C36",
+            "pin": "1"
+          },
+          {
+            "ref": "C4",
+            "pin": "2"
+          },
+          {
+            "ref": "C43",
+            "pin": "1"
+          },
+          {
+            "ref": "C44",
+            "pin": "1"
+          },
+          {
+            "ref": "C45",
+            "pin": "1"
+          },
+          {
+            "ref": "C46",
+            "pin": "1"
+          },
+          {
+            "ref": "C47",
+            "pin": "1"
+          },
+          {
+            "ref": "C48",
+            "pin": "1"
+          },
+          {
+            "ref": "C49",
+            "pin": "1"
+          },
+          {
+            "ref": "C5",
+            "pin": "2"
+          },
+          {
+            "ref": "C6",
+            "pin": "1"
+          },
+          {
+            "ref": "C62",
+            "pin": "1"
+          },
+          {
+            "ref": "C7",
+            "pin": "2"
+          },
+          {
+            "ref": "C8",
+            "pin": "2"
+          },
+          {
+            "ref": "C9",
+            "pin": "2"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "1"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "14"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "17"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "20"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "24"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "25"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "6"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "7"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "9"
+          },
+          {
+            "ref": "J3",
+            "pin": "2"
+          },
+          {
+            "ref": "LIS2DUX1",
+            "pin": "6"
+          },
+          {
+            "ref": "LIS2DUX1",
+            "pin": "7"
+          },
+          {
+            "ref": "LIS2DUX1",
+            "pin": "8"
+          },
+          {
+            "ref": "NTC1",
+            "pin": "1"
+          },
+          {
+            "ref": "R11",
+            "pin": "1"
+          },
+          {
+            "ref": "R13",
+            "pin": "2"
+          },
+          {
+            "ref": "R3",
+            "pin": "2"
+          },
+          {
+            "ref": "U1",
+            "pin": "6"
+          },
+          {
+            "ref": "U1",
+            "pin": "8"
+          },
+          {
+            "ref": "U10",
+            "pin": "2"
+          },
+          {
+            "ref": "U10",
+            "pin": "5"
+          },
+          {
+            "ref": "U11",
+            "pin": "1"
+          },
+          {
+            "ref": "U11",
+            "pin": "20"
+          },
+          {
+            "ref": "U11",
+            "pin": "21"
+          },
+          {
+            "ref": "U11",
+            "pin": "9"
+          },
+          {
+            "ref": "U13",
+            "pin": "74"
+          },
+          {
+            "ref": "U13",
+            "pin": "B7"
+          },
+          {
+            "ref": "U13",
+            "pin": "F23"
+          },
+          {
+            "ref": "U2",
+            "pin": "1"
+          },
+          {
+            "ref": "U3",
+            "pin": "B3"
+          },
+          {
+            "ref": "U4",
+            "pin": "A2"
+          },
+          {
+            "ref": "U4",
+            "pin": "B2"
+          },
+          {
+            "ref": "U5",
+            "pin": "1"
+          },
+          {
+            "ref": "U6",
+            "pin": "1"
+          },
+          {
+            "ref": "U6",
+            "pin": "11"
+          },
+          {
+            "ref": "U6",
+            "pin": "5"
+          },
+          {
+            "ref": "U8",
+            "pin": "B2"
+          },
+          {
+            "ref": "U9",
+            "pin": "2"
+          },
+          {
+            "ref": "U9",
+            "pin": "5"
+          },
+          {
+            "ref": "X2",
+            "pin": "2"
+          },
+          {
+            "ref": "X2",
+            "pin": "4"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "B9",
+      "name": "P0.30",
+      "gpio": "P0.30",
+      "category": "application",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": {
+        "signal": "INT_LIGHT",
+        "gpio": "P0.30",
+        "pad": "B9",
+        "direction": "input",
+        "active_level": "low",
+        "role_policy": "VEML6035 IRQ; R1 10 kohm to switched peripheral 1.8 V; standard; LF <=10 kHz; No wake when shared rail off; INT VOL bound separate from SDA",
+        "policy_source_observed": "2026-11-05; retained approved research, not requalified electrically on 2026-11-06"
+      },
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.30/AIN6-PadB9)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "B9"
+          }
+        ]
+      },
+      "alternate_functions": [
+        "AIN6"
+      ],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "B11",
+      "name": "P0.28",
+      "gpio": "P0.28",
+      "category": "application",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": {
+        "signal": "1.2+1.8V_EN",
+        "gpio": "P0.28",
+        "pad": "B11",
+        "direction": "output",
+        "active_level": "high",
+        "role_policy": "Shared U8 1.2 V and U10 1.8 V regulator enable; No new bias asserted; standard; LF <=10 kHz; Current schematic net /1.2V_EN; sensors, pull-ups and panel VDDI/DCX all share U10; off removes sensor wake/acquisition",
+        "policy_source_observed": "2026-11-05; retained approved research, not requalified electrically on 2026-11-06"
+      },
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.28/AIN4-PadB11)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "B11"
+          }
+        ]
+      },
+      "alternate_functions": [
+        "AIN4"
+      ],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "B13",
+      "name": "P0.03",
+      "gpio": "P0.03",
+      "category": "application",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": {
+        "signal": "INT_ENC",
+        "gpio": "P0.03",
+        "pad": "B13",
+        "direction": "input",
+        "active_level": "low",
+        "role_policy": "TMAG3001 event IRQ; address 0x34, ADDR grounded; R2 10 kohm to switched peripheral 1.8 V; standard; LF <=10 kHz; No wake when shared rail off; avoid 20 kHz data-ready export",
+        "policy_source_observed": "2026-11-05; retained approved research, not requalified electrically on 2026-11-06"
+      },
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.03/AIN1-PadB13)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "B13"
+          }
+        ]
+      },
+      "alternate_functions": [
+        "AIN1"
+      ],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "B15",
+      "name": "P1.14",
+      "gpio": "P1.14",
+      "category": "spare_gpio",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": "LF <=10 kHz, standard drive; Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P1.14-PadB15)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "B15"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "B17",
+      "name": "P1.12",
+      "gpio": "P1.12",
+      "category": "spare_gpio",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": "LF <=10 kHz, standard drive; Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P1.12-PadB17)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "B17"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "B19",
+      "name": "P1.11",
+      "gpio": "P1.11",
+      "category": "spare_gpio",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": "LF <=10 kHz, standard drive; Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P1.11-PadB19)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "B19"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "B24",
+      "name": "XC1",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "External 32 MHz crystal; B24 to X2 pin3 / C26 12 pF",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "Net-(U13-XC1)",
+        "connected": true,
+        "pin_type": "input",
+        "endpoints": [
+          {
+            "ref": "C26",
+            "pin": "2"
+          },
+          {
+            "ref": "U13",
+            "pin": "B24"
+          },
+          {
+            "ref": "X2",
+            "pin": "3"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "C1",
+      "name": "DEC1",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "1.1 V regulator decoupling; current C16 100 nF to ground",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "Net-(U13-DEC1)",
+        "connected": true,
+        "pin_type": "power_in",
+        "endpoints": [
+          {
+            "ref": "C16",
+            "pin": "1"
+          },
+          {
+            "ref": "U13",
+            "pin": "C1"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "D2",
+      "name": "P0.00",
+      "gpio": "P0.00",
+      "category": "lf_crystal",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Reserved for 32.768 kHz crystal; not spare GPIO",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "Net-(U13-P0.00/XL1)",
+        "connected": true,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "C11",
+            "pin": "1"
+          },
+          {
+            "ref": "U13",
+            "pin": "D2"
+          },
+          {
+            "ref": "X1",
+            "pin": "1"
+          }
+        ]
+      },
+      "alternate_functions": [
+        "XL1"
+      ],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "D23",
+      "name": "DEC3",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Power decoupling; current C62 100 pF to ground",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "Net-(U13-DEC3)",
+        "connected": true,
+        "pin_type": "power_in",
+        "endpoints": [
+          {
+            "ref": "C62",
+            "pin": "2"
+          },
+          {
+            "ref": "U13",
+            "pin": "D23"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "E24",
+      "name": "DEC6",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Join DEC4/B5, 1.3 V regulator decoupling and REG1 network",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "1.3V",
+        "connected": true,
+        "pin_type": "power_in",
+        "endpoints": [
+          {
+            "ref": "C17",
+            "pin": "2"
+          },
+          {
+            "ref": "C18",
+            "pin": "2"
+          },
+          {
+            "ref": "L1",
+            "pin": "2"
+          },
+          {
+            "ref": "U13",
+            "pin": "B5"
+          },
+          {
+            "ref": "U13",
+            "pin": "E24"
+          },
+          {
+            "ref": "U7",
+            "pin": "26"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "F2",
+      "name": "P0.01",
+      "gpio": "P0.01",
+      "category": "lf_crystal",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Reserved for 32.768 kHz crystal; not spare GPIO",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "Net-(U13-P0.01/XL2)",
+        "connected": true,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "C12",
+            "pin": "1"
+          },
+          {
+            "ref": "U13",
+            "pin": "F2"
+          },
+          {
+            "ref": "X1",
+            "pin": "2"
+          }
+        ]
+      },
+      "alternate_functions": [
+        "XL2"
+      ],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "F23",
+      "name": "VSS_PA",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Radio supply ground, layout per reference",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "GND",
+        "connected": true,
+        "pin_type": "power_in",
+        "endpoints": [
+          {
+            "ref": "ANT1",
+            "pin": "2"
+          },
+          {
+            "ref": "ANT1",
+            "pin": "3"
+          },
+          {
+            "ref": "ANT1",
+            "pin": "4"
+          },
+          {
+            "ref": "C1",
+            "pin": "2"
+          },
+          {
+            "ref": "C10",
+            "pin": "2"
+          },
+          {
+            "ref": "C11",
+            "pin": "2"
+          },
+          {
+            "ref": "C12",
+            "pin": "2"
+          },
+          {
+            "ref": "C13",
+            "pin": "2"
+          },
+          {
+            "ref": "C14",
+            "pin": "2"
+          },
+          {
+            "ref": "C15",
+            "pin": "1"
+          },
+          {
+            "ref": "C16",
+            "pin": "2"
+          },
+          {
+            "ref": "C17",
+            "pin": "1"
+          },
+          {
+            "ref": "C18",
+            "pin": "1"
+          },
+          {
+            "ref": "C19",
+            "pin": "1"
+          },
+          {
+            "ref": "C2",
+            "pin": "1"
+          },
+          {
+            "ref": "C20",
+            "pin": "1"
+          },
+          {
+            "ref": "C21",
+            "pin": "1"
+          },
+          {
+            "ref": "C23",
+            "pin": "1"
+          },
+          {
+            "ref": "C24",
+            "pin": "1"
+          },
+          {
+            "ref": "C25",
+            "pin": "1"
+          },
+          {
+            "ref": "C26",
+            "pin": "1"
+          },
+          {
+            "ref": "C27",
+            "pin": "1"
+          },
+          {
+            "ref": "C28",
+            "pin": "1"
+          },
+          {
+            "ref": "C29",
+            "pin": "5"
+          },
+          {
+            "ref": "C3",
+            "pin": "2"
+          },
+          {
+            "ref": "C34",
+            "pin": "1"
+          },
+          {
+            "ref": "C35",
+            "pin": "1"
+          },
+          {
+            "ref": "C36",
+            "pin": "1"
+          },
+          {
+            "ref": "C4",
+            "pin": "2"
+          },
+          {
+            "ref": "C43",
+            "pin": "1"
+          },
+          {
+            "ref": "C44",
+            "pin": "1"
+          },
+          {
+            "ref": "C45",
+            "pin": "1"
+          },
+          {
+            "ref": "C46",
+            "pin": "1"
+          },
+          {
+            "ref": "C47",
+            "pin": "1"
+          },
+          {
+            "ref": "C48",
+            "pin": "1"
+          },
+          {
+            "ref": "C49",
+            "pin": "1"
+          },
+          {
+            "ref": "C5",
+            "pin": "2"
+          },
+          {
+            "ref": "C6",
+            "pin": "1"
+          },
+          {
+            "ref": "C62",
+            "pin": "1"
+          },
+          {
+            "ref": "C7",
+            "pin": "2"
+          },
+          {
+            "ref": "C8",
+            "pin": "2"
+          },
+          {
+            "ref": "C9",
+            "pin": "2"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "1"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "14"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "17"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "20"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "24"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "25"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "6"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "7"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "9"
+          },
+          {
+            "ref": "J3",
+            "pin": "2"
+          },
+          {
+            "ref": "LIS2DUX1",
+            "pin": "6"
+          },
+          {
+            "ref": "LIS2DUX1",
+            "pin": "7"
+          },
+          {
+            "ref": "LIS2DUX1",
+            "pin": "8"
+          },
+          {
+            "ref": "NTC1",
+            "pin": "1"
+          },
+          {
+            "ref": "R11",
+            "pin": "1"
+          },
+          {
+            "ref": "R13",
+            "pin": "2"
+          },
+          {
+            "ref": "R3",
+            "pin": "2"
+          },
+          {
+            "ref": "U1",
+            "pin": "6"
+          },
+          {
+            "ref": "U1",
+            "pin": "8"
+          },
+          {
+            "ref": "U10",
+            "pin": "2"
+          },
+          {
+            "ref": "U10",
+            "pin": "5"
+          },
+          {
+            "ref": "U11",
+            "pin": "1"
+          },
+          {
+            "ref": "U11",
+            "pin": "20"
+          },
+          {
+            "ref": "U11",
+            "pin": "21"
+          },
+          {
+            "ref": "U11",
+            "pin": "9"
+          },
+          {
+            "ref": "U13",
+            "pin": "74"
+          },
+          {
+            "ref": "U13",
+            "pin": "B7"
+          },
+          {
+            "ref": "U13",
+            "pin": "F23"
+          },
+          {
+            "ref": "U2",
+            "pin": "1"
+          },
+          {
+            "ref": "U3",
+            "pin": "B3"
+          },
+          {
+            "ref": "U4",
+            "pin": "A2"
+          },
+          {
+            "ref": "U4",
+            "pin": "B2"
+          },
+          {
+            "ref": "U5",
+            "pin": "1"
+          },
+          {
+            "ref": "U6",
+            "pin": "1"
+          },
+          {
+            "ref": "U6",
+            "pin": "11"
+          },
+          {
+            "ref": "U6",
+            "pin": "5"
+          },
+          {
+            "ref": "U8",
+            "pin": "B2"
+          },
+          {
+            "ref": "U9",
+            "pin": "2"
+          },
+          {
+            "ref": "U9",
+            "pin": "5"
+          },
+          {
+            "ref": "X2",
+            "pin": "2"
+          },
+          {
+            "ref": "X2",
+            "pin": "4"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "G1",
+      "name": "P0.26",
+      "gpio": "P0.26",
+      "category": "spare_gpio",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.26-PadG1)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "G1"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "H2",
+      "name": "P0.27",
+      "gpio": "P0.27",
+      "category": "spare_gpio",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.27-PadH2)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "H2"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "H23",
+      "name": "ANT",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Radio antenna/matching network per Nordic reference; not a configurable GPIO",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-ANT-PadH23)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "H23"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "J1",
+      "name": "P0.04",
+      "gpio": "P0.04",
+      "category": "application",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": {
+        "signal": "SCREEN_SCL",
+        "gpio": "P0.04",
+        "pad": "J1",
+        "direction": "output",
+        "active_level": "mode 0",
+        "role_policy": "SPIM1 SCK, declared 8 MHz; selectable bring-up 4 MHz; No generic pull-up assumption; high drive H0H1 recommended for edge qualification; no package LF restriction; Respect powered panel idle and VDDI/VCI sequence; prevent injection when off",
+        "policy_source_observed": "2026-11-05; retained approved research, not requalified electrically on 2026-11-06"
+      },
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.04/AIN2-PadJ1)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "J1"
+          }
+        ]
+      },
+      "alternate_functions": [
+        "AIN2"
+      ],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "J24",
+      "name": "P0.10",
+      "gpio": "P0.10",
+      "category": "application",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": {
+        "signal": "~CHG",
+        "gpio": "P0.10",
+        "pad": "J24",
+        "direction": "input",
+        "active_level": "low",
+        "role_policy": "BQ51051B open-drain CHG; Internal pull-up to always-powered MCU VDD during initialization; no idle guarantee before initialization; external pull-up absent; standard; NFC disabled; LF <=10 kHz; Never pull to battery or switched peripheral rail",
+        "policy_source_observed": "2026-11-05; retained approved research, not requalified electrically on 2026-11-06"
+      },
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "/~{CHG}",
+        "connected": true,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U11",
+            "pin": "7"
+          },
+          {
+            "ref": "U13",
+            "pin": "J24"
+          },
+          {
+            "ref": "U7",
+            "pin": "23"
+          }
+        ]
+      },
+      "alternate_functions": [
+        "NFC2"
+      ],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "K2",
+      "name": "P0.05",
+      "gpio": "P0.05",
+      "category": "application",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": {
+        "signal": "SCREEN_SDI",
+        "gpio": "P0.05",
+        "pad": "K2",
+        "direction": "output",
+        "active_level": "mode 0",
+        "role_policy": "SPIM1 MOSI, 3-wire display; no working MISO; No generic pull-up assumption; high drive H0H1 recommended for edge qualification; no package LF restriction; Same panel phase constraints as SCK; 9-bit protocol driver absent",
+        "policy_source_observed": "2026-11-05; retained approved research, not requalified electrically on 2026-11-06"
+      },
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.05/AIN3-PadK2)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "K2"
+          }
+        ]
+      },
+      "alternate_functions": [
+        "AIN3"
+      ],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "L1",
+      "name": "P0.06",
+      "gpio": "P0.06",
+      "category": "spare_gpio",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.06-PadL1)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "L1"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "L24",
+      "name": "P0.09",
+      "gpio": "P0.09",
+      "category": "application",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": {
+        "signal": "QI_EN",
+        "gpio": "P0.09",
+        "pad": "L24",
+        "direction": "output",
+        "active_level": "EN2 truth table",
+        "role_policy": "BQ51051B EN2 adapter-source priority; not global Qi-disable; No required pull-up asserted; standard; NFC disabled; LF <=10 kHz; AD grounded; battery charger domain; preserve net name",
+        "policy_source_observed": "2026-11-05; retained approved research, not requalified electrically on 2026-11-06"
+      },
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "/QI_EN",
+        "connected": true,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U11",
+            "pin": "11"
+          },
+          {
+            "ref": "U13",
+            "pin": "L24"
+          },
+          {
+            "ref": "U7",
+            "pin": "22"
+          }
+        ]
+      },
+      "alternate_functions": [
+        "NFC1"
+      ],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "M2",
+      "name": "P0.07",
+      "gpio": "P0.07",
+      "category": "spare_gpio",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.07-PadM2)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "M2"
+          }
+        ]
+      },
+      "alternate_functions": [
+        "TRACECLK"
+      ],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "N1",
+      "name": "P0.08",
+      "gpio": "P0.08",
+      "category": "spare_gpio",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.08-PadN1)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "N1"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "N24",
+      "name": "NC_Fxx",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "N24 NC for Fxx and later build codes; legacy DEC5 for Dxx and earlier. Current C21 100 pF unnecessary; presence alone not established harmful",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "Net-(U13-DEC5)",
+        "connected": true,
+        "pin_type": "power_in",
+        "endpoints": [
+          {
+            "ref": "C21",
+            "pin": "2"
+          },
+          {
+            "ref": "U13",
+            "pin": "N24"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "P2",
+      "name": "P1.08",
+      "gpio": "P1.08",
+      "category": "spare_gpio",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P1.08-PadP2)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "P2"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "P23",
+      "name": "P1.07",
+      "gpio": "P1.07",
+      "category": "spare_gpio",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": "LF <=10 kHz, standard drive; Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P1.07-PadP23)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "P23"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "R1",
+      "name": "P1.09",
+      "gpio": "P1.09",
+      "category": "application",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": {
+        "signal": "SCREEN_RST",
+        "gpio": "P1.09",
+        "pad": "R1",
+        "direction": "output",
+        "active_level": "low",
+        "role_policy": "Display reset; No generic pull-up assumption; standard; parallel trace disabled; no package LF restriction; Respect panel power sequencing and prevent unpowered injection",
+        "policy_source_observed": "2026-11-05; retained approved research, not requalified electrically on 2026-11-06"
+      },
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P1.09-PadR1)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "R1"
+          }
+        ]
+      },
+      "alternate_functions": [
+        "TRACEDATA3"
+      ],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "R24",
+      "name": "P1.06",
+      "gpio": "P1.06",
+      "category": "spare_gpio",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": "LF <=10 kHz, standard drive; Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P1.06-PadR24)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "R24"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "T2",
+      "name": "P0.11",
+      "gpio": "P0.11",
+      "category": "application",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": {
+        "signal": "SCREEN_CS",
+        "gpio": "P0.11",
+        "pad": "T2",
+        "direction": "output",
+        "active_level": "low",
+        "role_policy": "GPIO-controlled SPIM1 chip select; No generic pull-up assumption; standard; parallel trace disabled; no package LF restriction; Respect panel CS timing and powered/unpowered states",
+        "policy_source_observed": "2026-11-05; retained approved research, not requalified electrically on 2026-11-06"
+      },
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.11-PadT2)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "T2"
+          }
+        ]
+      },
+      "alternate_functions": [
+        "TRACEDATA2"
+      ],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "T23",
+      "name": "P1.05",
+      "gpio": "P1.05",
+      "category": "spare_gpio",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": "LF <=10 kHz, standard drive; Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P1.05-PadT23)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "T23"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "U1",
+      "name": "P0.12",
+      "gpio": "P0.12",
+      "category": "spare_gpio",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.12-PadU1)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "U1"
+          }
+        ]
+      },
+      "alternate_functions": [
+        "TRACEDATA1"
+      ],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "U24",
+      "name": "P1.04",
+      "gpio": "P1.04",
+      "category": "spare_gpio",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": "LF <=10 kHz, standard drive; Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P1.04-PadU24)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "U24"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "V23",
+      "name": "P1.03",
+      "gpio": "P1.03",
+      "category": "spare_gpio",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": "LF <=10 kHz, standard drive; Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P1.03-PadV23)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "V23"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "W1",
+      "name": "VDD",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "REG0 output nominal 1.8 V; join all five VDD pads externally; separate from U10 peripheral +1.8 V output",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "VDD",
+        "connected": true,
+        "pin_type": "power_in",
+        "endpoints": [
+          {
+            "ref": "C13",
+            "pin": "1"
+          },
+          {
+            "ref": "C15",
+            "pin": "2"
+          },
+          {
+            "ref": "C19",
+            "pin": "2"
+          },
+          {
+            "ref": "C20",
+            "pin": "2"
+          },
+          {
+            "ref": "C29",
+            "pin": "2"
+          },
+          {
+            "ref": "L11",
+            "pin": "1"
+          },
+          {
+            "ref": "U13",
+            "pin": "A22"
+          },
+          {
+            "ref": "U13",
+            "pin": "AD23"
+          },
+          {
+            "ref": "U13",
+            "pin": "B1"
+          },
+          {
+            "ref": "U13",
+            "pin": "W1"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "W24",
+      "name": "P1.02",
+      "gpio": "P1.02",
+      "category": "spare_gpio",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": "LF <=10 kHz, standard drive; Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P1.02-PadW24)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "W24"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "Y2",
+      "name": "VDDH",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Battery input, high-voltage supply architecture; decouple following Nordic reference",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "BAT+",
+        "connected": true,
+        "pin_type": "power_in",
+        "endpoints": [
+          {
+            "ref": "C14",
+            "pin": "1"
+          },
+          {
+            "ref": "C43",
+            "pin": "2"
+          },
+          {
+            "ref": "C44",
+            "pin": "2"
+          },
+          {
+            "ref": "C45",
+            "pin": "2"
+          },
+          {
+            "ref": "C46",
+            "pin": "2"
+          },
+          {
+            "ref": "C47",
+            "pin": "2"
+          },
+          {
+            "ref": "C5",
+            "pin": "1"
+          },
+          {
+            "ref": "J3",
+            "pin": "1"
+          },
+          {
+            "ref": "U10",
+            "pin": "4"
+          },
+          {
+            "ref": "U11",
+            "pin": "4"
+          },
+          {
+            "ref": "U13",
+            "pin": "Y2"
+          },
+          {
+            "ref": "U3",
+            "pin": "B2"
+          },
+          {
+            "ref": "U3",
+            "pin": "C2"
+          },
+          {
+            "ref": "U6",
+            "pin": "9"
+          },
+          {
+            "ref": "U8",
+            "pin": "A1"
+          },
+          {
+            "ref": "U9",
+            "pin": "4"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "Y23",
+      "name": "P1.01",
+      "gpio": "P1.01",
+      "category": "spare_gpio",
+      "low_frequency": true,
+      "max_signal_frequency_hz": 10000,
+      "intended": "LF <=10 kHz, standard drive; Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P1.01-PadY23)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "Y23"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": "standard drive; signal frequency <=10 kHz"
+    },
+    {
+      "pad": "AA24",
+      "name": "SWDCLK",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Programming/debug clock; probe referenced to nominal MCU VDD 1.8 V",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "/SWDCLK",
+        "connected": true,
+        "pin_type": "input",
+        "endpoints": [
+          {
+            "ref": "C29",
+            "pin": "4"
+          },
+          {
+            "ref": "U13",
+            "pin": "AA24"
+          },
+          {
+            "ref": "U7",
+            "pin": "20"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "AB2",
+      "name": "DCCH",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "REG0 DC/DC network: DCCH through 10 uH to VDD, reference decoupling required",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "Net-(U13-DCCH)",
+        "connected": true,
+        "pin_type": "power_in",
+        "endpoints": [
+          {
+            "ref": "L11",
+            "pin": "2"
+          },
+          {
+            "ref": "U13",
+            "pin": "AB2"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "AC5",
+      "name": "DECUSB",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "USB unused: floating",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-DECUSB-PadAC5)",
+        "connected": false,
+        "pin_type": "power_in+no_connect",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AC5"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "AC9",
+      "name": "P0.14",
+      "gpio": "P0.14",
+      "category": "spare_gpio",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.14-PadAC9)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AC9"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "AC11",
+      "name": "P0.16",
+      "gpio": "P0.16",
+      "category": "spare_gpio",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.16-PadAC11)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AC11"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "AC13",
+      "name": "P0.18",
+      "gpio": "P0.18",
+      "category": "application",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": {
+        "signal": "nRESET",
+        "gpio": "P0.18",
+        "pad": "AC13",
+        "direction": "input",
+        "active_level": "low",
+        "role_policy": "Hardware reset, UICR reserved; Reset-function bias; external probe referenced to MCU VDD; Reset owner; not ordinary GPIO; no package LF restriction; MCU VDD nominal 1.8 V; recovery/debug connection incomplete",
+        "policy_source_observed": "2026-11-05; retained approved research, not requalified electrically on 2026-11-06"
+      },
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.18/RESET-PadAC13)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AC13"
+          }
+        ]
+      },
+      "alternate_functions": [
+        "nRESET"
+      ],
+      "manufacturer_recommended_use": "QSPI/CSN (hardware reset reserved by this design)"
+    },
+    {
+      "pad": "AC15",
+      "name": "P0.19",
+      "gpio": "P0.19",
+      "category": "spare_gpio",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.19-PadAC15)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AC15"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": "QSPI/SCK"
+    },
+    {
+      "pad": "AC17",
+      "name": "P0.21",
+      "gpio": "P0.21",
+      "category": "spare_gpio",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.21-PadAC17)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AC17"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": "QSPI"
+    },
+    {
+      "pad": "AC19",
+      "name": "P0.23",
+      "gpio": "P0.23",
+      "category": "spare_gpio",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.23-PadAC19)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AC19"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": "QSPI"
+    },
+    {
+      "pad": "AC21",
+      "name": "P0.25",
+      "gpio": "P0.25",
+      "category": "spare_gpio",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.25-PadAC21)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AC21"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "AC24",
+      "name": "SWDIO",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Programming/debug I/O; probe referenced to nominal MCU VDD 1.8 V",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "/SWDIO",
+        "connected": true,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "C29",
+            "pin": "1"
+          },
+          {
+            "ref": "U13",
+            "pin": "AC24"
+          },
+          {
+            "ref": "U7",
+            "pin": "19"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "AD2",
+      "name": "VBUS",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "USB unused: Nordic support recommends ground; current NC marker is not a ground",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-VBUS-PadAD2)",
+        "connected": false,
+        "pin_type": "power_in+no_connect",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AD2"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "AD4",
+      "name": "D-",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "USB unused: floating",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-D--PadAD4)",
+        "connected": false,
+        "pin_type": "bidirectional+no_connect",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AD4"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "AD6",
+      "name": "D+",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "USB unused: floating",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-D+-PadAD6)",
+        "connected": false,
+        "pin_type": "bidirectional+no_connect",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AD6"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "AD8",
+      "name": "P0.13",
+      "gpio": "P0.13",
+      "category": "spare_gpio",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.13-PadAD8)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AD8"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "AD10",
+      "name": "P0.15",
+      "gpio": "P0.15",
+      "category": "application",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": {
+        "signal": "SCL",
+        "gpio": "P0.15",
+        "pad": "AD10",
+        "direction": "bidirectional/open-drain",
+        "active_level": "wired low",
+        "role_policy": "TWIM0 SCL, 400 kHz ceiling; R6 4.7 kohm to switched peripheral 1.8 V; S0D1 open-drain; release high; no package LF restriction; Disconnect bus and internal MCU pull-ups before shared rail shutdown; rise time/margin unqualified",
+        "policy_source_observed": "2026-11-05; retained approved research, not requalified electrically on 2026-11-06"
+      },
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.15-PadAD10)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AD10"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "AD12",
+      "name": "P0.17",
+      "gpio": "P0.17",
+      "category": "application",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": {
+        "signal": "SDA",
+        "gpio": "P0.17",
+        "pad": "AD12",
+        "direction": "bidirectional/open-drain",
+        "active_level": "wired low",
+        "role_policy": "TWIM0 SDA, 400 kHz ceiling; R5 4.7 kohm to switched peripheral 1.8 V; S0D1 open-drain; release high; no package LF restriction; Same shared-rail shutdown and margin constraints as SCL",
+        "policy_source_observed": "2026-11-05; retained approved research, not requalified electrically on 2026-11-06"
+      },
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.17-PadAD12)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AD12"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "AD14",
+      "name": "VDD",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "REG0 output nominal 1.8 V; join all five VDD pads externally; separate from U10 peripheral +1.8 V output",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-VDD-PadAD14)",
+        "connected": false,
+        "pin_type": "power_in",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AD14"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "AD16",
+      "name": "P0.20",
+      "gpio": "P0.20",
+      "category": "application",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": {
+        "signal": "BL_PWM_MCU",
+        "gpio": "P0.20",
+        "pad": "AD16",
+        "direction": "output only in fallback",
+        "active_level": "high",
+        "role_policy": "PWM0 channel 0, disabled normally; proposed 250 Hz / 4 ms; None required asserted; standard; no package LF restriction; Normal PWM ecran: R8 fitted/R7 DNP; fallback PWM MCU de secours: R7 fitted/R8 DNP; manual assembly selection",
+        "policy_source_observed": "2026-11-05; retained approved research, not requalified electrically on 2026-11-06"
+      },
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.20-PadAD16)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AD16"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "AD18",
+      "name": "P0.22",
+      "gpio": "P0.22",
+      "category": "spare_gpio",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.22-PadAD18)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AD18"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": "QSPI"
+    },
+    {
+      "pad": "AD20",
+      "name": "P0.24",
+      "gpio": "P0.24",
+      "category": "spare_gpio",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P0.24-PadAD20)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AD20"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "AD22",
+      "name": "P1.00",
+      "gpio": "P1.00",
+      "category": "spare_gpio",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Unassigned; leave reserved/unconfigured, do not ground just because unused",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "unconnected-(U13-P1.00-PadAD22)",
+        "connected": false,
+        "pin_type": "bidirectional",
+        "endpoints": [
+          {
+            "ref": "U13",
+            "pin": "AD22"
+          }
+        ]
+      },
+      "alternate_functions": [
+        "TRACEDATA0",
+        "SWO"
+      ],
+      "manufacturer_recommended_use": "QSPI"
+    },
+    {
+      "pad": "AD23",
+      "name": "VDD",
+      "gpio": null,
+      "category": "fixed",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "REG0 output nominal 1.8 V; join all five VDD pads externally; separate from U10 peripheral +1.8 V output",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "VDD",
+        "connected": true,
+        "pin_type": "power_in",
+        "endpoints": [
+          {
+            "ref": "C13",
+            "pin": "1"
+          },
+          {
+            "ref": "C15",
+            "pin": "2"
+          },
+          {
+            "ref": "C19",
+            "pin": "2"
+          },
+          {
+            "ref": "C20",
+            "pin": "2"
+          },
+          {
+            "ref": "C29",
+            "pin": "2"
+          },
+          {
+            "ref": "L11",
+            "pin": "1"
+          },
+          {
+            "ref": "U13",
+            "pin": "A22"
+          },
+          {
+            "ref": "U13",
+            "pin": "AD23"
+          },
+          {
+            "ref": "U13",
+            "pin": "B1"
+          },
+          {
+            "ref": "U13",
+            "pin": "W1"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    },
+    {
+      "pad": "EP",
+      "name": "VSS",
+      "gpio": null,
+      "category": "exposed_ground",
+      "low_frequency": false,
+      "max_signal_frequency_hz": null,
+      "intended": "Ground; exposed pad must connect to ground",
+      "intended_provenance": "Nordic pin table manually transcribed and verified 2026-11-05; rechecked installed symbol 2026-11-06",
+      "current_u13": {
+        "net": "GND",
+        "connected": true,
+        "pin_type": "power_in",
+        "endpoints": [
+          {
+            "ref": "ANT1",
+            "pin": "2"
+          },
+          {
+            "ref": "ANT1",
+            "pin": "3"
+          },
+          {
+            "ref": "ANT1",
+            "pin": "4"
+          },
+          {
+            "ref": "C1",
+            "pin": "2"
+          },
+          {
+            "ref": "C10",
+            "pin": "2"
+          },
+          {
+            "ref": "C11",
+            "pin": "2"
+          },
+          {
+            "ref": "C12",
+            "pin": "2"
+          },
+          {
+            "ref": "C13",
+            "pin": "2"
+          },
+          {
+            "ref": "C14",
+            "pin": "2"
+          },
+          {
+            "ref": "C15",
+            "pin": "1"
+          },
+          {
+            "ref": "C16",
+            "pin": "2"
+          },
+          {
+            "ref": "C17",
+            "pin": "1"
+          },
+          {
+            "ref": "C18",
+            "pin": "1"
+          },
+          {
+            "ref": "C19",
+            "pin": "1"
+          },
+          {
+            "ref": "C2",
+            "pin": "1"
+          },
+          {
+            "ref": "C20",
+            "pin": "1"
+          },
+          {
+            "ref": "C21",
+            "pin": "1"
+          },
+          {
+            "ref": "C23",
+            "pin": "1"
+          },
+          {
+            "ref": "C24",
+            "pin": "1"
+          },
+          {
+            "ref": "C25",
+            "pin": "1"
+          },
+          {
+            "ref": "C26",
+            "pin": "1"
+          },
+          {
+            "ref": "C27",
+            "pin": "1"
+          },
+          {
+            "ref": "C28",
+            "pin": "1"
+          },
+          {
+            "ref": "C29",
+            "pin": "5"
+          },
+          {
+            "ref": "C3",
+            "pin": "2"
+          },
+          {
+            "ref": "C34",
+            "pin": "1"
+          },
+          {
+            "ref": "C35",
+            "pin": "1"
+          },
+          {
+            "ref": "C36",
+            "pin": "1"
+          },
+          {
+            "ref": "C4",
+            "pin": "2"
+          },
+          {
+            "ref": "C43",
+            "pin": "1"
+          },
+          {
+            "ref": "C44",
+            "pin": "1"
+          },
+          {
+            "ref": "C45",
+            "pin": "1"
+          },
+          {
+            "ref": "C46",
+            "pin": "1"
+          },
+          {
+            "ref": "C47",
+            "pin": "1"
+          },
+          {
+            "ref": "C48",
+            "pin": "1"
+          },
+          {
+            "ref": "C49",
+            "pin": "1"
+          },
+          {
+            "ref": "C5",
+            "pin": "2"
+          },
+          {
+            "ref": "C6",
+            "pin": "1"
+          },
+          {
+            "ref": "C62",
+            "pin": "1"
+          },
+          {
+            "ref": "C7",
+            "pin": "2"
+          },
+          {
+            "ref": "C8",
+            "pin": "2"
+          },
+          {
+            "ref": "C9",
+            "pin": "2"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "1"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "14"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "17"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "20"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "24"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "25"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "6"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "7"
+          },
+          {
+            "ref": "FPC1",
+            "pin": "9"
+          },
+          {
+            "ref": "J3",
+            "pin": "2"
+          },
+          {
+            "ref": "LIS2DUX1",
+            "pin": "6"
+          },
+          {
+            "ref": "LIS2DUX1",
+            "pin": "7"
+          },
+          {
+            "ref": "LIS2DUX1",
+            "pin": "8"
+          },
+          {
+            "ref": "NTC1",
+            "pin": "1"
+          },
+          {
+            "ref": "R11",
+            "pin": "1"
+          },
+          {
+            "ref": "R13",
+            "pin": "2"
+          },
+          {
+            "ref": "R3",
+            "pin": "2"
+          },
+          {
+            "ref": "U1",
+            "pin": "6"
+          },
+          {
+            "ref": "U1",
+            "pin": "8"
+          },
+          {
+            "ref": "U10",
+            "pin": "2"
+          },
+          {
+            "ref": "U10",
+            "pin": "5"
+          },
+          {
+            "ref": "U11",
+            "pin": "1"
+          },
+          {
+            "ref": "U11",
+            "pin": "20"
+          },
+          {
+            "ref": "U11",
+            "pin": "21"
+          },
+          {
+            "ref": "U11",
+            "pin": "9"
+          },
+          {
+            "ref": "U13",
+            "pin": "74"
+          },
+          {
+            "ref": "U13",
+            "pin": "B7"
+          },
+          {
+            "ref": "U13",
+            "pin": "F23"
+          },
+          {
+            "ref": "U2",
+            "pin": "1"
+          },
+          {
+            "ref": "U3",
+            "pin": "B3"
+          },
+          {
+            "ref": "U4",
+            "pin": "A2"
+          },
+          {
+            "ref": "U4",
+            "pin": "B2"
+          },
+          {
+            "ref": "U5",
+            "pin": "1"
+          },
+          {
+            "ref": "U6",
+            "pin": "1"
+          },
+          {
+            "ref": "U6",
+            "pin": "11"
+          },
+          {
+            "ref": "U6",
+            "pin": "5"
+          },
+          {
+            "ref": "U8",
+            "pin": "B2"
+          },
+          {
+            "ref": "U9",
+            "pin": "2"
+          },
+          {
+            "ref": "U9",
+            "pin": "5"
+          },
+          {
+            "ref": "X2",
+            "pin": "2"
+          },
+          {
+            "ref": "X2",
+            "pin": "4"
+          }
+        ]
+      },
+      "alternate_functions": [],
+      "manufacturer_recommended_use": ""
+    }
+  ],
+  "u13_connected_count": 23,
+  "u13_unconnected_count": 51
+}

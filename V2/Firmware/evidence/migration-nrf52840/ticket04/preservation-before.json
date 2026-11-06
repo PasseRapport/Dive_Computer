@@ -1,0 +1,23 @@
+{
+  "snapshot_date": "2026-11-06",
+  "base_commit": "3d25591c6829a830a076e32480b77eaff6254f69",
+  "original_checkout": "/home/Bilal/Documents/GitHub/Dive_Computer",
+  "original_branch": "main",
+  "original_local_status": " M V2/Hardware/DiveComputerV2/DiveComputerV2.kicad_pcb\n M V2/Hardware/DiveComputerV2/DiveComputerV2.kicad_prl\n M V2/Hardware/DiveComputerV2/DiveComputerV2.kicad_pro\n M V2/Hardware/DiveComputerV2/DiveComputerV2.kicad_sch\n",
+  "kiCad_file_sha256": {
+    "V2/Hardware/DiveComputerV2/DiveComputerV2.kicad_pcb": "b1a9665c6d65d201ccb31730997fd80de1853cfc763b1643277b32a62c046837",
+    "V2/Hardware/DiveComputerV2/DiveComputerV2.kicad_prl": "e6d576d271c7770a006e365f3fbc98872bcf64c7f09d382726614f3f77f2be0b",
+    "V2/Hardware/DiveComputerV2/DiveComputerV2.kicad_pro": "f268aaecd2b054dfe182c42a803bf9da8a87abcbc0fdc114891d262e39843f3b",
+    "V2/Hardware/DiveComputerV2/DiveComputerV2.kicad_sch": "ad52a61fd74b314aef300ee5d18c399628e567dbb7a71740a82dcdbaf8a54929"
+  },
+  "hardware_diff_sha256": "31c671e8f00a177ec79a4122f9fe9b41bbbb9c8ee6e7241e1f892160b1af9460",
+  "preserved_trees": {
+    "V2/Hardware": "8856144c1a04e2195f0f279034ded9d6e1419328",
+    "V2/Firmware/ostc4_baseline": "f77b2178810d677ec429cc7fc3b8de8ac70ad671",
+    "V2/Firmware/simulator": "6e0dd4d1fd5f352d6d27abc4165001c858ee0a91",
+    "V2/Firmware/evidence": "4e41353814faddb07c0fc19779f709cc42cd89d7"
+  },
+  "target_programmed": false,
+  "target_executed": false,
+  "note": "Fresh resumed-session snapshot; owner hardware edits changed since2026-11-05. No attribution to migration code."
+}

@@ -1,0 +1,8 @@
+{
+  "zephyr/zephyr.elf": "445f877daffa4a0da74f992652b20f390796dc70c330f3e4a5e83fc002e254ca",
+  "zephyr/zephyr.hex": "440acdb2e0a914f761f51014be1d80a2c48e5d58569f0f124efd036a5f705d32",
+  "zephyr/zephyr.map": "3b1ead6a9c1d0e6098fae00e9411a5baa0203336264f8803d0f4c8d257e52f35",
+  "zephyr/.config": "0e33dddcbc032404db0b275b3c78feb07177957126d51d9f0307c424b1520ec7",
+  "zephyr/zephyr.dts": "9a18e0aaee41548ff89a07917f928cc874866de58ece436d2a1f75bfe99b22da",
+  "compile_commands.json": "47cae1f5b39fe540c4608143a95eb210e28922b15ae7b29fe94803cfef3dba4c"
+}

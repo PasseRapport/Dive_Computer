@@ -1,0 +1,27 @@
+Independent physical-pad reference, 2026-11-06
+
+Manufacturer source: Nordic nRF52840 Product Specification aQFN73 pin table.
+The URL and 2026-11-05 verification date are retained in the JSON reference.
+Manufacturer facts were not fetched again on 2026-11-06; coordinates and GPIO
+identities were rechecked against the installed KiCad MCU_Nordic nRF52840
+symbol, independently of production board DT/pinctrl declarations.
+
+Reconciliation: 73 package coordinates plus exposed ground = 74 unique entries.
+16 application + 30 spare ordinary GPIO + 2 LF-crystal GPIO + 25 fixed + 1 exposed
+pad. All 74 coordinates and GPIO identities matched the installed symbol.
+Its path/hash is recorded in JSON. The legacy DEC5 symbol label at N24 does not
+override Nordic Fxx NC treatment. U13 exposed-pad number 74 is normalized to EP;
+installed KiCad calls it EP, while Nordic calls it die pad.
+
+Fresh physical observation uses a read-only Eeschema export on 2026-11-06.
+Schematic/netlist hashes and export tool/time are recorded in JSON and the
+retained current-netlist.xml. Reduced JSON retains U13 net/endpoint references
+for every pad plus current component value/DNP. The fresh observation Markdown
+and full research data remain in the user directory and persistent work area.
+
+check_integrated.py compares generated application GPIO/pinctrl assignments
+with the independent contract and checks complete physical-table rows against
+this reference. Negative controls reject a duplicate bus/GPIO pin, shared serial
+hardware register instance, and omitted physical VDD pad AD14.
+This establishes description integrity. Electrical and native editor acceptance
+remain pending.

@@ -1,0 +1,21 @@
+{
+  "extension": "nrf-devicetree",
+  "version": "2026.10.1020",
+  "package_path": "/home/Bilal/.vscode/extensions/nordic-semiconductor.nrf-devicetree-2026.10.1020/package.json",
+  "native_ui_access": false,
+  "inspection": "pending; native VS Code unavailable",
+  "commands": [
+    {
+      "command": "devicetree.editor.showPins",
+      "category": "nRF DeviceTree",
+      "title": "Show Pins",
+      "enablement": "activeCustomEditorId == devicetree.editor"
+    },
+    {
+      "command": "devicetree.showVisualEditor",
+      "category": "nRF DeviceTree",
+      "title": "Show Visual Editor",
+      "icon": "$(nrf-connect-soc)"
+    }
+  ]
+}

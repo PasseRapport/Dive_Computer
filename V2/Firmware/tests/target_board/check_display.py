@@ -9,9 +9,11 @@ import struct
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('build_dir', type=Path)
-parser.add_argument('--variant', choices=['normal', 'spi8', 'spi4', 'pwm'], default='normal')
+parser.add_argument('--variant', choices=['normal', 'spi8', 'spi4', 'pwm', 'spi4-pwm'], default='normal')
 parser.add_argument('--ncs', type=Path, default=Path.home() / 'ncs/v3.4.1')
 args = parser.parse_args()
+spi4 = args.variant in ('spi4', 'spi4-pwm')
+pwm_enabled = args.variant in ('pwm', 'spi4-pwm')
 sys.path.insert(0, str(args.ncs / 'zephyr/scripts/dts/python-devicetree/src'))
 from devicetree import dtlib
 
@@ -38,15 +40,15 @@ gpio(spi, 'cs-gpios', 'gpio0', 11, 1)
 gpio(lcd, 'reset-gpios', 'gpio1', 9, 1)
 gpio(lcd, 'te-gpios', 'gpio0', 31, 0)
 assert 'spi-cpol' not in lcd.props and 'spi-cpha' not in lcd.props, 'mode 0'
-assert lcd.props['spi-max-frequency'].to_num() == (4000000 if args.variant == 'spi4' else 8000000)
+assert lcd.props['spi-max-frequency'].to_num() == (4000000 if spi4 else 8000000)
 spi_group = spi.props['pinctrl-0'].to_nodes()[0].nodes['group1']
 assert spi_group.props['psels'].to_nums() == [67108868, 83886085], 'SCK P0.04, MOSI P0.05, no MISO'
 drive = spi_group.props.get('nordic,drive-mode')
-assert (drive.to_num() if drive else 0) == (3 if args.variant == 'spi4' else 0)
+assert (drive.to_num() if drive else 0) == (3 if spi4 else 0)
 assert 'pinctrl-0' in pwm.props, 'fallback PWM0 P0.20 routing is not prepared'
 assert pwm.props['pinctrl-0'].to_nodes()[0].nodes['group1'].props['psels'].to_nums() == [369098772]
-assert enabled(pwm) == (args.variant == 'pwm'), 'PWM0 disabled in normal assembly'
-if args.variant == 'pwm':
+assert enabled(pwm) == (pwm_enabled), 'PWM0 disabled in normal assembly'
+if pwm_enabled:
     pwm_cells = cells(dt.get_node('/zephyr,user').props['pwms'])
     assert pwm_cells == [pwm.props['phandle'].to_num(), 0, 4000000, 0], 'PWM0 ch0, 4 ms, active high'
 else:
@@ -76,7 +78,7 @@ for node in dt.node_iter():
                         claims[(port, pin)] += 1
 assert list(claims.values()) == [1, 1, 1, 0, 0, 0], claims
 assert pin_owners == {4: [spi.path], 5: [spi.path],
-                      20: [pwm.path] if args.variant == 'pwm' else []}, pin_owners
+                      20: [pwm.path] if pwm_enabled else []}, pin_owners
 assert 'nfct-pins-as-gpios' in dt.label2node['uicr'].props
 assert 'gpio-as-nreset' in dt.label2node['uicr'].props
 assert config.get('CONFIG_NRF_TRACE_PORT', 'n') == 'n'
@@ -88,7 +90,7 @@ if args.variant != 'normal':
     assert 'pinctrl_nrf.c.obj' in link_map
     assert re.search(r'0x[0-9a-f]+\s+spi_nrfx_spim_common_init$', link_map, re.M)
     assert re.search(r'0x[0-9a-f]+\s+pinctrl_configure_pins$', link_map, re.M)
-    if args.variant == 'pwm':
+    if pwm_enabled:
         assert config['CONFIG_PWM'] == config['CONFIG_PWM_NRFX'] == 'y'
         assert 'pwm_nrfx.c.obj' in link_map
         assert re.search(r'\.text\.pwm_nrfx_init0\s+0x0*[1-9a-f][0-9a-f]*', link_map)

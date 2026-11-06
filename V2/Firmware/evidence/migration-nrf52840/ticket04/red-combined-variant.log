@@ -1,0 +1,3 @@
+usage: check_display.py [-h] [--variant {normal,spi8,spi4,pwm}] [--ncs NCS]
+                        build_dir
+check_display.py: error: argument --variant: invalid choice: 'spi4-pwm' (choose from 'normal', 'spi8', 'spi4', 'pwm')
