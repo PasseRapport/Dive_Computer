@@ -1,10 +1,10 @@
 /*
  * Dive Computer V2 rev 2 - nRF52840-QIAA pin control.
- * Existing GPIO assignments are retained; QIAA-F is the procurement variant.
- * QIAA standard-drive/low-frequency recommendation (<=10 kHz): P0.02,
- * P0.03, P0.09, P0.10, P0.28-P0.31. P0.31 TE is documented at 63.1 Hz,
- * 560 us high; this does not qualify a future line-rate TE mode.
- * SPI P0.04/P0.05 and I2C P0.15/P0.17 have no such restriction.
+ * Owner-approved pin-plan.json, 2026-11-10.
+ * SPI0 SCK/MOSI P0.04/P0.26; I2C1 SCL/SDA P0.27/P0.05.
+ * Bus pins have no QIAA low-frequency restriction. Restricted application
+ * GPIOs use standard drive and <=10 kHz event rates: P0.02/P0.03,
+ * P0.28-P0.31, P1.01/P1.02/P1.13-P1.15.
  * P0.00/P0.01 remain XL1/XL2; P0.18 remains nRESET.
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -13,21 +13,21 @@
 	/* Shared sensor bus: LIS2MDL (0x1E), LIS2DUX12 (0x19), VEML6035,
 	 * TMAG3001 (ADDR=GND), MS5837-30BA (0x76), DRV2624 (0x5A).
 	 * External 4.7k pull-ups to the switched peripheral 1.8 V rail,
-	 * enabled together with panel VDDI/DCX by P0.28. */
-	i2c0_default: i2c0_default {
+	 * enabled by P1.14 independently of the 1.2 V rail on P0.03. */
+	i2c1_default: i2c1_default {
 		group1 {
-			psels = <NRF_PSEL(TWIM_SCL, 0, 15)>,
-				<NRF_PSEL(TWIM_SDA, 0, 17)>;
+			psels = <NRF_PSEL(TWIM_SCL, 0, 27)>,
+				<NRF_PSEL(TWIM_SDA, 0, 5)>;
 			/* Standard low, disconnected high (open-drain). The SDK
 			 * TWIM pinctrl driver also maps its default S0S1 to S0D1. */
 			nordic,drive-mode = <NRF_DRIVE_S0D1>;
 		};
 	};
 
-	i2c0_sleep: i2c0_sleep {
+	i2c1_sleep: i2c1_sleep {
 		group1 {
-			psels = <NRF_PSEL(TWIM_SCL, 0, 15)>,
-				<NRF_PSEL(TWIM_SDA, 0, 17)>;
+			psels = <NRF_PSEL(TWIM_SCL, 0, 27)>,
+				<NRF_PSEL(TWIM_SDA, 0, 5)>;
 			nordic,drive-mode = <NRF_DRIVE_S0D1>;
 			/* Inputs disconnected, no internal pulls. External pull-ups
 			 * disappear when the shared rail is off. A future power
@@ -45,18 +45,18 @@
 	 * validation/spi4mhz.overlay selects the audit's recommended 4 MHz
 	 * and high drive, leaving 66 ns before board skew. DC/10 ns edges
 	 * still require physical qualification. */
-	spi1_default: spi1_default {
+	spi0_default: spi0_default {
 		group1 {
 			psels = <NRF_PSEL(SPIM_SCK, 0, 4)>,
-				<NRF_PSEL(SPIM_MOSI, 0, 5)>;
+				<NRF_PSEL(SPIM_MOSI, 0, 26)>;
 			nordic,drive-mode = <NRF_DRIVE_S0S1>;
 		};
 	};
 
-	spi1_sleep: spi1_sleep {
+	spi0_sleep: spi0_sleep {
 		group1 {
 			psels = <NRF_PSEL(SPIM_SCK, 0, 4)>,
-				<NRF_PSEL(SPIM_MOSI, 0, 5)>;
+				<NRF_PSEL(SPIM_MOSI, 0, 26)>;
 			/* Input/disconnected buffer plus weak pull-down: not a driven
 			 * low or an implemented shutdown sequence. Powered mode-0
 			 * idle and unpowered GND requirements are distinct. Runtime
@@ -67,18 +67,18 @@
 		};
 	};
 
-	/* PWM MCU de secours: P0.20/AD16, no GPIO output alias.
+	/* PWM MCU de secours: P0.12/U1, no GPIO output alias.
 	 * The controller stays disabled until the explicit fallback overlay. */
 	pwm0_default: pwm0_default {
 		group1 {
-			psels = <NRF_PSEL(PWM_OUT0, 0, 20)>;
+			psels = <NRF_PSEL(PWM_OUT0, 0, 12)>;
 			nordic,drive-mode = <NRF_DRIVE_S0S1>;
 		};
 	};
 
 	pwm0_sleep: pwm0_sleep {
 		group1 {
-			psels = <NRF_PSEL(PWM_OUT0, 0, 20)>;
+			psels = <NRF_PSEL(PWM_OUT0, 0, 12)>;
 			low-power-enable;
 			bias-pull-down;
 		};

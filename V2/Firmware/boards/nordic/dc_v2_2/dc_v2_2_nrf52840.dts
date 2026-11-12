@@ -31,7 +31,7 @@
 		mcu-regout0-uicr-vout = <0>;
 	};
 
-	/* GPIO pin assignments (gpio-leds/gpio-keys, sensor and screen
+	/* GPIO pin assignments (rail enables, sensor and screen
 	 * control pins, SPI chip select) live in app.overlay so they are
 	 * visible and editable in the Devicetree Visual Editor. */
 };
@@ -67,23 +67,20 @@
 	regulator-initial-mode = <NRF5X_REG_MODE_DCDC>;
 };
 
-&i2c0 {
+&i2c1 {
 	status = "okay";
-	pinctrl-0 = <&i2c0_default>;
-	pinctrl-1 = <&i2c0_sleep>;
+	pinctrl-0 = <&i2c1_default>;
+	pinctrl-1 = <&i2c1_sleep>;
 	pinctrl-names = "default", "sleep";
 	clock-frequency = <400000>;
 
-	/* Magnetometer, I2C mode (CS pin tied high), fixed address.
-	 * INT/DRDY not routed to the MCU: polled. */
-	lis2mdl@1e {
+	/* Magnetometer, I2C mode (CS high), DRDY on P1.15. */
+	mag: lis2mdl@1e {
 		compatible = "st,lis2mdl";
 		reg = <0x1e>;
 	};
 
-	/* Accelerometer, I2C mode (CS high), SA0 high. INT1 routed
-	 * (wake-on-motion, assigned in app.overlay); INT2 not routed
-	 * per pin budget decision. */
+	/* Accelerometer, SA0 high; INT1/INT2 on P0.02/P0.29. */
 	acc: lis2dux12@19 {
 		compatible = "st,lis2dux12";
 		reg = <0x19>;
@@ -108,16 +105,16 @@
 	};
 
 	/* Haptic driver, LRA 250 Hz (out-of-tree driver, fixed address). */
-	drv2624@5a {
+	haptic: drv2624@5a {
 		compatible = "ti,drv2624";
 		reg = <0x5a>;
 	};
 };
 
-&spi1 {
+&spi0 {
 	status = "okay";
-	pinctrl-0 = <&spi1_default>;
-	pinctrl-1 = <&spi1_sleep>;
+	pinctrl-0 = <&spi0_default>;
+	pinctrl-1 = <&spi0_sleep>;
 	pinctrl-names = "default", "sleep";
 
 	/* JDI LPM013M091A, 320x300 RGB111, three-wire nine-bit protocol
@@ -134,7 +131,7 @@
 	};
 };
 
-/* PWM écran remains normal: R8 fitted, R7 DNP. P0.20 has no active
+/* PWM écran remains normal: R8 fitted, R7 DNP. P0.12 has no active
  * owner until explicit fallback selection (R7 fitted, R8 DNP). */
 &pwm0 {
 	status = "disabled";

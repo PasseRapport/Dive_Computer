@@ -77,6 +77,7 @@ linker_zephyr_pre0.cmd: \
  /home/Bilal/ncs/v3.4.1/zephyr/include/zephyr/linker/kobject-rom.ld \
  /home/Bilal/ncs/v3.4.1/zephyr/include/zephyr/linker/cplusplus-rom.ld \
  /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/zephyr/include/generated/snippets-ram-sections.ld \
+ /home/Bilal/ncs/v3.4.1/zephyr/include/../modules/segger/segger_rtt.ld \
  /home/Bilal/ncs/v3.4.1/zephyr/include/../arch/common/ramfunc.ld \
  /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/zephyr/include/generated/snippets-ramfunc-section.ld \
  /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/zephyr/include/generated/snippets-rwdata.ld \

@@ -1,8 +1,8 @@
  OUTPUT_FORMAT("elf32-littlearm")
-_region_min_align = 32;
+_region_min_align = 128;
 MEMORY
     {
-    FLASH (rx) : ORIGIN = (0x0 + 0x0), LENGTH = (512 * 1024 - 0x0 - 0x0)
+    FLASH (rx) : ORIGIN = ((49152)), LENGTH = ((225280) - 0x0)
     RAM (wx) : ORIGIN = (536870912), LENGTH = (131072)
    
     IDT_LIST (wx) : ORIGIN = 0xFFFF7FFF, LENGTH = 32K
@@ -41,7 +41,7 @@ SECTIONS
  *(.iplt)
  }
    
- __rom_region_start = (0x0 + 0x0);
+ __rom_region_start = ((49152));
     rom_start :
  {
 HIDDEN(__rom_start_address = .);
@@ -292,6 +292,13 @@ ztest :
  . = (536870912);
  . = ALIGN(_region_min_align);
  _image_ram_start = .;
+_RTT_SECTION_NAME (NOLOAD) : ALIGN_WITH_INPUT
+{
+__rtt_buff_data_start = .;
+*(".rtt_buff_data")
+__rtt_buff_data_end = ALIGN(4);
+} > RAM AT > RAM
+__rtt_buff_data_size = __rtt_buff_data_end - __rtt_buff_data_start;
 .ramfunc : ALIGN_WITH_INPUT
 {
  __ramfunc_region_start = .;

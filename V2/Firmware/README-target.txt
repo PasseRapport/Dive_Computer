@@ -5,7 +5,7 @@ This is the entire currently configured Zephyr application for dc_v2_2/nrf52840,
 not a DK image or an isolated archive. It is NOT the complete watch product:
 main previously returned immediately; the target JDI driver/LVGL presentation,
 Bluetooth application/services, sensor acquisition and persisted clock/history
-adapter are not implemented/enabled here. The previous active MCU target is replaced; existing peripheral assignments,
+adapter are not implemented/enabled here. The previous active MCU target is replaced; the current pin plan is recorded below;
 drivers and desktop LVGL presentation are preserved. No full-watch fit claim.
 
 At boot this development image runs a clearly labelled SYNTHETIC self-test via
@@ -133,75 +133,73 @@ with conservative 50 ppm temperature/aging budget. P0.00/P0.01 remain crystal
 pins; P0.18 is nRESET. NFC P0.09/P0.10 are selected as GPIO; parallel trace stays
 disabled. SWD/RTT is the debug boundary. J-Link and pyOCD metadata name nRF52840.
 
-Sensors, charger and shared peripheral supply
---------------------------------------------
-Controller-validation build, still using the existing calculation application:
+Current pin plan — 2026-11-10
+-----------------------------
+Reference: boards/nordic/dc_v2_2/source-pin-plan.json (owner export, 19 signals).
+Effective plan: boards/nordic/dc_v2_2/pin-plan.json. The MCU PWM fallback is
+disabled by default, as explicitly reconfirmed by the owner. CHG has an external
+pull-up to MCU VDD, also confirmed; no internal pull-up or output flags are used.
 
-  python3 V2/Firmware/tools/build_target.py --build-dir /tmp/dive-sensor-controllers \
-      --extra-conf V2/Firmware/validation/sensors.conf
-  python3 V2/Firmware/tools/report_target.py /tmp/dive-sensor-controllers \
-      --output /tmp/dive-sensor-controllers/report.json
-  python3 V2/Firmware/tests/target_board/check_sensors.py /tmp/dive-sensor-controllers
+  SCREEN_SDI    P0.26  G1    SPIM0_MOSI       8000000 Hz  pull=none
+  SCREEN_SCL    P0.04  J1    SPIM0_SCK        8000000 Hz  pull=none
+  SCREEN_NRST   P0.06  L1    GPIO_OUTPUT            0 Hz  pull=up
+  SCREEN_CS     P0.08  N1    GPIO_OUTPUT            0 Hz  pull=down
+  SCREEN_SYNC   P1.09  R1    GPIO_INPUT             0 Hz  pull=none
+  BL_PWM_MCU    P0.12  U1    PWM0_CH0             250 Hz  pull=none
+  INT_LIGHT     P1.13  A16   GPIO_INPUT             0 Hz  pull=none
+  INT_MAG       P1.15  A14   GPIO_INPUT             0 Hz  pull=none
+  INT_ACC1      P0.02  A12   GPIO_INPUT             0 Hz  pull=none
+  INT_ACC2      P0.29  A10   GPIO_INPUT             0 Hz  pull=none
+  INT_HAPTIC    P0.31  A8    GPIO_INPUT             0 Hz  pull=none
+  INT_ENC       P0.30  B9    GPIO_INPUT             0 Hz  pull=none
+  1.8V_EN       P1.14  B15   GPIO_OUTPUT            0 Hz  pull=down
+  1.2V_EN       P0.03  B13   GPIO_OUTPUT            0 Hz  pull=down
+  3.1V_EN       P0.28  B11   GPIO_OUTPUT            0 Hz  pull=down
+  CHG           P1.02  W24   GPIO_INPUT             0 Hz  pull=none
+  QI_EN         P1.01  Y23   GPIO_OUTPUT            0 Hz  pull=none
+  SCL           P0.27  H2    TWIM1_SCL         400000 Hz  pull=none
+  SDA           P0.05  K2    TWIM1_SDA         400000 Hz  pull=none
 
-This profile compiles existing TWIM0/pinctrl drivers without CONFIG_SENSOR. It
-does not implement acquisition, sensor setup, wake handling or charge detection.
-The normal calculation build can leave the controller/pinctrl compiled out;
-source declarations alone are not evidence of a compiled controller. Inspect
-the generated zephyr.dts/.config and compile_commands.json for the selected build.
-Physical nRF Connect Devicetree Visual Editor/Pin Overview inspection remains
-PENDING: no native editor UI is available in this execution environment. Text
-checks do not count as a completed graphical pin inspection.
+SPI0 and I2C1 use different peripheral IDs. SPI0 and I2C0 cannot run together.
+P0.00/P0.01 remain LF crystal pins; P0.18 remains reset. SWD/RTT is preserved,
+NFC is GPIO and parallel trace is disabled. Supply/decoupling/RF pads are fixed.
 
-TWIM0 uses SCL P0.15/AD10 and SDA P0.17/AD12, with the declared 400 kHz ceiling.
-Both active/sleep groups explicitly use NRF_DRIVE_S0D1: drive low, disconnect
-high. Installed Nordic pinctrl also substitutes S0D1 for default TWIM S0S1. The
-external 4.7 kohm pull-ups connect to switched peripheral 1.8 V, not MCU VDD.
-The six 7-bit addresses are LIS2MDL 0x1e, LIS2DUX12 0x19, MS5837-30BA 0x76,
-TMAG3001 0x34 (ADDR grounded), VEML6035 0x10 and DRV2624 0x5a. Magnetometer
-INT/DRDY and haptic IRQ are not routed; no interrupt has been invented for them.
+1.2 V, 1.8 V and 3.1 V now have independent enables. P1.14 controls the switched
+peripheral 1.8 V supply (sensor/I2C/interrupt pull-ups and panel VDDI/DCX), separate
+from MCU VDD; P0.03 controls 1.2 V and P0.28 controls VCI 3.1 V. No runtime rail
+sequence is implemented. Quiesce interfaces before rail-off and avoid backfeeding.
 
-INT_ACC1 P0.02/A12 is active high for the intended accelerometer push-pull
-setting. INT_ENC P0.03/B13 and INT_LIGHT P0.30/B9 are active low from open-drain
-sensor outputs with external 10 kohm pull-ups to the switched peripheral rail.
-Each interrupt has one owner on its sensor node, without duplicate gpio-keys.
-These QIAA pins carry the standard-drive/low-frequency recommendation, <=10 kHz.
-Hall is intended for event/change use; exporting every 20 kHz conversion is not
-qualified. Polarity declarations do not configure sensor output stages or prove
-their output guarantees against MCU VIH/VIL over rail tolerances/load.
+IRQ properties have a single owner on each sensor node. ACC/MAG use the SDK
+bindings' intended active-high polarity; Hall/light/haptic use active low.
+The JSON does not configure sensor registers. DRV2624 TRIG/INTZ in interrupt
+mode needs an external pull-up; hardware presence remains to be checked:
+https://www.ti.com/lit/ds/symlink/drv2624.pdf (SLOS893D, section 7.3.16.3).
+Custom haptic/light/display nodes remain passive declarations, not new drivers.
 
-Historical QI_EN P0.09/L24 reaches BQ51051B EN2. EN2 governs adapter-source
-priority; AD is grounded in the current design. This signal is not a general
-wireless-charge disable input. ~CHG P0.10/J24 is an active-low input from an
-open-drain charger output. Its zephyr,user declaration specifies INPUT policy
-and GPIO_ACTIVE_LOW | GPIO_PULL_UP: future initialization must call the GPIO
-input configuration with those flags. The internal pull-up goes to always-
-powered MCU VDD, not BAT+ or the switched peripheral supply. Passive DT policy
-does not initialize it; idle is NOT guaranteed before initialization. No physical
-resistor or charger control/runtime code has been added. NFC remains GPIO.
+GPIO pulls apply after configuration, not before initialization. Requested CS
+pull-down is preserved, but active-low CS must be driven inactive high before
+transfers; it does not guarantee deselection during MCU reset. Display RESET
+uses active low plus the requested pull-up. TE moved to unrestricted P1.09.
+LF-restricted GPIO events still require <=10 kHz and standard drive.
 
-P0.28/B11 gates both external 1.2 V and external peripheral 1.8 V. That 1.8 V
-rail supplies sensors, interrupt/I2C pull-ups and panel VDDI/DCX; MCU VDD is a
-separate always-powered net. DRV2624 has a battery power input, while its shared
-I2C pull-ups still use the switched 1.8 V domain. Turning P0.28 off removes
-motion/Hall/light wake capability and pressure acquisition. Keep this rail on
-for future firmware requiring those functions, unless hardware is redesigned.
+All six I2C addresses remain: LIS2MDL 0x1e, LIS2DUX12 0x19, MS5837-30BA 0x76,
+TMAG3001 0x34 (ADDR grounded), VEML6035 0x10, DRV2624 0x5a. I2C1 is 400 kHz,
+open-drain with external pull-ups. Actual rise times, DC and power domains need
+physical validation; no hardware is accessed by this update.
 
-Before a future rail shutdown: finish/stop bus transfers, suspend the controller
-and select its disconnected-input sleep state with no internal pulls. Sensor
-interrupt MCU inputs must also be high impedance with their MCU internal pulls
-disabled. Do not leave live MCU pull-ups/driven highs feeding unpowered sensor
-pins through protection structures. Check every other signal crossing the rail
-boundary and follow panel-specific power sequencing separately. This is a future
-initialization/shutdown contract; no runtime power manager or sequencing is
-implemented here. GPIO sense alone cannot wake from an unpowered sensor.
+Controller build (no sensor acquisition or actual SPI transfer):
 
-Electrical reservations stay open: a 4.7 kohm/300 ns simple-RC limit gives about
-75 pF bus loading; 400 kHz rise times need real loading measurements. MS5837's
-nominal 0.36 V VIL versus some participants' 0.4 V guaranteed VOL at their test
-current leaves an unclosed worst-case guarantee, not an observed failure at the
-actual lower load. Independent regulator tolerance, interrupt/output DC bounds,
-charge levels/startup and powered/unpowered behavior require hardware checks.
-Successful compilation proves none of these electrical or wake-up properties.
+  python3 V2/Firmware/tools/build_target.py --build-dir V2/Firmware/build_pinplan \
+      --extra-conf V2/Firmware/validation/sensors.conf \
+      --extra-conf V2/Firmware/validation/display.conf
+  python3 V2/Firmware/tests/target_board/check_sensors.py V2/Firmware/build_pinplan
+  python3 V2/Firmware/tests/target_board/check_display.py V2/Firmware/build_pinplan --variant spi8
+  python3 V2/Firmware/tests/target_board/check_integrated.py V2/Firmware/build_pinplan --variant combined8
+
+nRF Connect: application V2/Firmware, target dc_v2_2/nrf52840, build_pinplan.
+Select that new configuration rather than the older build/build_1 profiles.
+Native graphical Pin Overview inspection and physical qualification are distinct
+from generated devicetree, Kconfig, compiled controller and ownership checks.
 
 Historical nRF52833 revalidation (2026-10-28)
 -------------------------------------------
@@ -221,81 +219,31 @@ and physical-validation limitations above still apply. No target execution.
 
 Display and backlight build-only variants
 ----------------------------------------
-The normal board retains SPIM1 SCK P0.04/J1, MOSI P0.05/K2, active-low GPIO
-CS P0.11/T2, active-low reset P1.09/R1 and TE input P0.31/A8. No MISO/read
-path is routed. SPI mode 0 is represented by absent CPOL/CPHA properties.
-The minimal normal application does not compile/initialize a display controller.
-Use the same public builder with a controller-validation profile:
+Current routing is in the 2026-11-10 table above. SPI mode 0, no MISO. 8 MHz is
+the requested ceiling; the previously documented worst-case setup margin remains
+unqualified. validation/spi4mhz.overlay selects 4 MHz/high drive on the SAME
+SCK/MOSI pins. It no longer changes PWM routing in either power state.
+Three-wire nine-bit panel framing needs a future transport over the installed
+eight-bit SPIM driver; no visible-pixel or actual-transfer test is implemented.
 
-  python3 V2/Firmware/tools/build_target.py --build-dir /tmp/dive-spi8 \
-      --extra-conf V2/Firmware/validation/display.conf
-  python3 V2/Firmware/tests/target_board/check_display.py /tmp/dive-spi8 \
-      --variant spi8
+Normal assembly: panel PWM, R8 fitted/R7 DNP. PWM0 ch0 P0.12 stays disabled,
+with no duplicate GPIO output owner. Manual fallback: R7 fitted/R8 removed.
+Never fit both. The optional validation profile uses 250 Hz (4 ms), as requested,
+but no application starts PWM, sets duty or implements automatic failover.
 
-8 MHz remains the previously confirmed declared ceiling, with an unresolved
-published-bound setup margin: 62.5 ns half-cycle - 59 ns maximum MOSI delay =
-3.5 ns, below JDI's 20 ns register and 5 ns GRAM requirements. This is not a
-measurement of a failed physical unit. The audit recommends selectable 4 MHz:
+To the combined build above, append the following only for the manual variant:
 
-  python3 V2/Firmware/tools/build_target.py --build-dir /tmp/dive-spi4 \
-      --extra-conf V2/Firmware/validation/display.conf \
-      --overlay V2/Firmware/validation/spi4mhz.overlay
-  python3 V2/Firmware/tests/target_board/check_display.py /tmp/dive-spi4 \
-      --variant spi4
+  --extra-conf V2/Firmware/validation/pwm-fallback.conf \
+  --overlay V2/Firmware/validation/spi4mhz.overlay \
+  --overlay V2/Firmware/validation/pwm-fallback.overlay
 
-That overlay keeps identical pins, selects high drive only on unrestricted
-SCK/MOSI, and leaves 66 ns (125 - 59 ns) before board skew. It is an audit
-recommendation, not a separately confirmed replacement of 8 MHz. The JDI 10 ns
-edge requirement and independent nominal 1.8 V rail/DC margins remain unqualified;
-high drive does not close voltage guarantees. Slow restricted signals remain
-standard drive. TE is a frame input: documented 63.1 Hz, 560 us high; P0.31's
-standard-drive/low-frequency recommendation is <=10 kHz, so unspecified high-rate
-line TE cannot be inferred compatible. No frame capture has occurred.
+Then use check_display.py --variant spi4-pwm and check_integrated.py --variant
+combined4-pwm. Hardware timing/DC/slew/power/TE/PWM qualification remains pending.
 
-The installed spi_nrfx_spim_common.c rejects word sizes other than eight bits.
-Panel three-wire nine-bit framing still needs a future transport that handles
-packing, exact command/GRAM clocks and CS continuity. No display driver or SPI
-transfer is added by these profiles; compilation is not evidence of visible pixels.
-
-PWM ecran is normal operation: R8 fitted, R7 not fitted. PWM0 is disabled and
-P0.20/AD16 has no active GPIO output alias in the normal board. PWM MCU de secours
-requires a manual hardware assembly choice: R7 fitted, R8 not fitted. The explicit
-fallback variant is only for compiling/inspecting that alternative controller:
-
-  python3 V2/Firmware/tools/build_target.py --build-dir /tmp/dive-pwm \
-      --extra-conf V2/Firmware/validation/display.conf \
-      --extra-conf V2/Firmware/validation/pwm-fallback.conf \
-      --overlay V2/Firmware/validation/pwm-fallback.overlay
-  python3 V2/Firmware/tests/target_board/check_display.py /tmp/dive-pwm \
-      --variant pwm
-
-PWM0 channel 0 routes to P0.20, active high. Its proposed period is 4 ms (250 Hz),
-an audit proposal, not a measured or separately confirmed product frequency.
-At 1%, 40 us exceeds TPS7510x's recommended 33 us on-time. The zephyr,user
-pwms property records this proposal; no application consumes it,
-sets duty cycle or starts PWM. There is no brightness driver or automatic failover.
-Never fit R7 and R8 together: these are alternate sources, not concurrent drivers.
-The test changes no resistor, BOM, KiCad flag or hardware.
-
-P0.28/B11 gates shared 1.2 V and peripheral 1.8 V (sensors plus panel VDDI/DCX);
-P0.29/A10 gates panel 3.1 V VCI. VDDI must precede VCI. Powered mode-0 idle
-(SCK low, CS inactive, valid reset/TE behavior) and unpowered interface-at-GND
-requirements are different phases. The SPI sleep state merely disconnects the
-input buffer and requests weak pull-downs; it does not drive guaranteed GND or
-implement safe CS/reset/TE shutdown. A future power sequence must establish
-suitable levels before rail-off, avoid MCU pull-ups feeding unpowered inputs,
-and account for losing sensor wake/acquisition when the shared rail is off.
-No runtime power manager or operational sequence is implemented here.
-
-Generated checks cover pin choices, frequency, mode flags, drive mode, fallback
-period/polarity, ownership and linked controller objects. Native nRF Connect
-Devicetree Visual Editor/Pin Overview inspection is PENDING: no suitable native
-editor surface was available. Physical timing/DC/slew/rail/TE/PWM qualification,
-probe connection, flashing and target execution remain unperformed.
-
-Complete nRF52840 migration handoff (2026-11-06)
+Historical nRF52840 migration handoff (2026-11-06)
 ----------------------------------------------
-Physical reference, all 74 pads, fresh actual-vs-intended wiring, qualification
+Its older GPIO allocation is superseded by the 2026-11-10 plan above.
+Physical reference, all 74 pads, historical actual-vs-intended wiring, qualification
 ledger, all 17 acceptance scenarios, four combined build variants and repeatable
 commands:
 

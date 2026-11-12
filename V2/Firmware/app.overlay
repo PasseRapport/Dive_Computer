@@ -1,94 +1,73 @@
 /*
- * Devicetree overlay - Dive Computer V2 (nRF52840 QIAA-F, custom board)
- *
- * Carries the GPIO pin assignments of the design so they are visible
- * and editable in the Devicetree Visual Editor (Pin Overview).
- * The buses, their pinctrl and the sensor/screen nodes are defined in
- * the board files (boards/nordic/dc_v2_2/); keep the pin numbers here
- * in sync with the KiCad schematic.
- *
- * Pin map (QIAA pad in brackets):
- *   P0.02 [A12] INT_ACC1   P0.03 [B13] INT_ENC    P0.04 [J1] SCREEN_SCL
- *   P0.05 [K2] SCREEN_SDI  P0.09 [L24] QI_EN     P0.10 [J24] ~CHG
- *   P0.11 [T2] SCREEN_CS   P0.15 [AD10] SCL      P0.17 [AD12] SDA
- *   P0.18 [AC13] nRESET   P0.20 [AD16] BL_PWM_MCU
- *   P0.28 [B11] 1.2+1.8V_EN P0.29 [A10] 3.1V_EN P0.30 [B9] INT_LIGHT
- *   P0.31 [A8] SYNC (TE)  P1.09 [R1] SCREEN_RST
- * P0.20 has no active GPIO driver: PWM écran is normal (R8 fitted,
- * R7 DNP). Explicit fallback enables PWM0 only after manual R7/R8 swap.
- * (SPI/I2C bus pins are in dc_v2_2_nrf52840-pinctrl.dtsi.)
- *
+ * Dive Computer V2 rev 2, nRF52840-QIAA-F.
+ * Approved Pin Studio plan, 2026-11-10: boards/nordic/dc_v2_2/pin-plan.json.
+ * SPI0: SCK P0.04, MOSI P0.26. I2C1: SCL P0.27, SDA P0.05.
+ * Passive routing/polarity/bias declarations, not a runtime power sequence.
  * SPDX-License-Identifier: Apache-2.0
  */
-
 / {
-	/* Rail control outputs. All LDO enables are active high
-	 * (TPS7A02 family, internal pull-down: floating = off).
-	 * P0.28 enables both 1.2 V (MIPI LP-11) and peripheral 1.8 V:
-	 * sensors, interrupt/I2C pull-ups and panel VDDI/DCX. This is not
-	 * independent sensor/display control. Rail off removes sensor wake
-	 * and pressure acquisition. 3.1 V (VCI) stays separate.
-	 */
+	/* Three independent active-high external regulator enables.
+	 * Switched peripheral 1.8 V is distinct from always-powered MCU VDD. */
 	gpio-leds {
 		compatible = "gpio-leds";
-
-		rail_1v2_1v8_en {
-			gpios = <&gpio0 28 GPIO_ACTIVE_HIGH>;
+		rail_1v2_en {
+			gpios = <&gpio0 3 GPIO_PULL_DOWN>;
 		};
-
+		rail_1v8_en {
+			gpios = <&gpio1 14 GPIO_PULL_DOWN>;
+		};
 		rail_3v1_en {
-			gpios = <&gpio0 29 GPIO_ACTIVE_HIGH>;
+			gpios = <&gpio0 28 GPIO_PULL_DOWN>;
 		};
-
 		qi_en {
-			/* Historical QI_EN net reaches BQ51051B EN2 (AD=GND):
-			 * adapter-source priority, NOT global wireless-charge off. */
-			gpios = <&gpio0 9 0>;
+			/* BQ51051B EN2 adapter priority, not global Qi off. */
+			gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
 		};
-
 	};
-
 	zephyr,user {
-		/* BQ51051B ~CHG is open-drain, active low. Future code must
-		 * configure GPIO_INPUT with these DT flags. This passive policy
-		 * does not initialize GPIO; idle is undefined until then. The
-		 * internal pull-up is toward always-powered MCU VDD, never BAT+
-		 * or the switched peripheral rail. No resistor is added here. */
-		chg_n-gpios = <&gpio0 10 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+		/* Open-drain charger status; external pull-up to MCU VDD confirmed.
+		 * Input only, with no MCU pull or output-driver flags. */
+		chg_n-gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
 		chg_n-input;
-		chg_n-pullup-domain = "mcu-vdd";
+		chg_n-pullup-domain = "external-mcu-vdd";
 	};
 };
 
-&spi1 {
-	cs-gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;
+&spi0 {
+	cs-gpios = <&gpio0 8 (GPIO_ACTIVE_LOW | GPIO_PULL_DOWN)>;
 };
 
-/* Screen reset: P1.09/R1, active low, standard drive; trace stays off.
- * TE: P0.31/A8, input, low-frequency/standard-drive QIAA restriction.
- * Documented frame waveform: 63.1 Hz, 560 us high; no >10 kHz line TE.
- * Neither declaration initializes the pins or implements rail sequencing. */
 &lcd {
-	reset-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
-	te-gpios = <&gpio0 31 GPIO_ACTIVE_HIGH>;
+	reset-gpios = <&gpio0 6 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+	te-gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
 };
 
-/* Single ownership: sensor nodes own their MCU interrupt inputs; no parallel
- * gpio-keys consumer. These low-frequency pins require <=10 kHz event rates.
- * GPIO/sense declarations do not configure the sensors or prove wake-up. */
+/* Single owner per interrupt, no duplicate gpio-keys. Intended ACC/MAG
+ * active-high configuration follows SDK bindings; these flags do not set
+ * sensor registers. Hall/light/haptic IRQ are active low. */
 &acc {
-	/* INT_ACC1: intended sensor push-pull, active high. */
 	int1-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
+	int2-gpios = <&gpio0 29 GPIO_ACTIVE_HIGH>;
 	status = "okay";
 };
 
+&mag {
+	irq-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
+};
+
 &enc {
-	/* INT_ENC: open-drain, external 10k to switched peripheral 1.8 V.
-	 * Event/change use; do not export every 20 kHz conversion. */
-	int-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+	int-gpios = <&gpio0 30 GPIO_ACTIVE_LOW>;
 };
 
 &light {
-	/* INT_LIGHT: open-drain, external 10k to switched peripheral 1.8 V. */
-	int-gpios = <&gpio0 30 GPIO_ACTIVE_LOW>;
+	int-gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
 };
+
+&haptic {
+	/* TRIG/INTZ in interrupt mode needs an external pull-up.
+	 * No haptic register setup/driver is implemented by this declaration. */
+	int-gpios = <&gpio0 31 GPIO_ACTIVE_LOW>;
+};
+
+/* BL_PWM_MCU P0.12 has only the optional PWM0 owner, disabled normally.
+ * Manual fallback: R7 fitted/R8 removed. Normal panel PWM: R8 fitted/R7 DNP. */

@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "chip": "nRF52840-QIAA-F",
+  "name": "Brochage montre — 2026-11-10",
+  "config": {
+    "lfxo": true,
+    "reset": true,
+    "nfc": false,
+    "trace": false
+  },
+  "assignments": {
+    "P0.26": {
+      "signal": "SCREEN_SDI",
+      "function": "SPIM0_MOSI",
+      "frequency": 8000000,
+      "pull": "none",
+      "drive": "standard",
+      "notes": "",
+      "enabled": true
+    },
+    "P0.04": {
+      "signal": "SCREEN_SCL",
+      "function": "SPIM0_SCK",
+      "frequency": 8000000,
+      "pull": "none",
+      "drive": "standard",
+      "notes": "",
+      "enabled": true
+    },
+    "P0.06": {
+      "signal": "SCREEN_NRST",
+      "function": "GPIO_OUTPUT",
+      "frequency": 0,
+      "pull": "up",
+      "drive": "standard",
+      "notes": "",
+      "enabled": true
+    },
+    "P0.08": {
+      "signal": "SCREEN_CS",
+      "function": "GPIO_OUTPUT",
+      "frequency": 0,
+      "pull": "down",
+      "drive": "standard",
+      "notes": "",
+      "enabled": true
+    },
+    "P1.09": {
+      "signal": "SCREEN_SYNC",
+      "function": "GPIO_INPUT",
+      "frequency": 0,
+      "pull": "none",
+      "drive": "standard",
+      "notes": "",
+      "enabled": true
+    },
+    "P0.12": {
+      "signal": "BL_PWM_MCU",
+      "function": "PWM0_CH0",
+      "frequency": 250,
+      "pull": "none",
+      "drive": "standard",
+      "notes": "Secours manuel R7 monté/R8 retiré ; désactivé par défaut.",
+      "enabled": false
+    },
+    "P1.13": {
+      "signal": "INT_LIGHT",
+      "function": "GPIO_INPUT",
+      "frequency": 0,
+      "pull": "none",
+      "drive": "standard",
+      "notes": "",
+      "enabled": true
+    },
+    "P1.15": {
+      "signal": "INT_MAG",
+      "function": "GPIO_INPUT",
+      "frequency": 0,
+      "pull": "none",
+      "drive": "standard",
+      "notes": "",
+      "enabled": true
+    },
+    "P0.02": {
+      "signal": "INT_ACC1",
+      "function": "GPIO_INPUT",
+      "frequency": 0,
+      "pull": "none",
+      "drive": "standard",
+      "notes": "",
+      "enabled": true
+    },
+    "P0.29": {
+      "signal": "INT_ACC2",
+      "function": "GPIO_INPUT",
+      "frequency": 0,
+      "pull": "none",
+      "drive": "standard",
+      "notes": "",
+      "enabled": true
+    },
+    "P0.31": {
+      "signal": "INT_HAPTIC",
+      "function": "GPIO_INPUT",
+      "frequency": 0,
+      "pull": "none",
+      "drive": "standard",
+      "notes": "",
+      "enabled": true
+    },
+    "P0.30": {
+      "signal": "INT_ENC",
+      "function": "GPIO_INPUT",
+      "frequency": 0,
+      "pull": "none",
+      "drive": "standard",
+      "notes": "",
+      "enabled": true
+    },
+    "P1.14": {
+      "signal": "1.8V_EN",
+      "function": "GPIO_OUTPUT",
+      "frequency": 0,
+      "pull": "down",
+      "drive": "standard",
+      "notes": "",
+      "enabled": true
+    },
+    "P0.03": {
+      "signal": "1.2V_EN",
+      "function": "GPIO_OUTPUT",
+      "frequency": 0,
+      "pull": "down",
+      "drive": "standard",
+      "notes": "",
+      "enabled": true
+    },
+    "P0.28": {
+      "signal": "3.1V_EN",
+      "function": "GPIO_OUTPUT",
+      "frequency": 0,
+      "pull": "down",
+      "drive": "standard",
+      "notes": "",
+      "enabled": true
+    },
+    "P1.02": {
+      "signal": "CHG",
+      "function": "GPIO_INPUT",
+      "frequency": 0,
+      "pull": "none",
+      "drive": "standard",
+      "notes": "CHG actif bas, pull-up externe vers VDD MCU confirmé.",
+      "enabled": true
+    },
+    "P1.01": {
+      "signal": "QI_EN",
+      "function": "GPIO_OUTPUT",
+      "frequency": 0,
+      "pull": "none",
+      "drive": "standard",
+      "notes": "",
+      "enabled": true
+    },
+    "P0.27": {
+      "signal": "SCL",
+      "function": "TWIM1_SCL",
+      "frequency": 400000,
+      "pull": "none",
+      "drive": "open-drain",
+      "notes": "",
+      "enabled": true
+    },
+    "P0.05": {
+      "signal": "SDA",
+      "function": "TWIM1_SDA",
+      "frequency": 400000,
+      "pull": "none",
+      "drive": "open-drain",
+      "notes": "",
+      "enabled": true
+    }
+  },
+  "source": "https://docs.nordicsemi.com/r/bundle/ps_nrf52840/page/pin.html",
+  "exportedAt": "2026-11-10T18:03:49.216Z",
+  "integration": {
+    "source": "source-pin-plan.json",
+    "date": "2026-11-10",
+    "backlight": "manual fallback, disabled by default as confirmed by owner",
+    "chargerPullup": "external-mcu-vdd",
+    "hardwareValidation": false
+  }
+}

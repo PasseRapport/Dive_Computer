@@ -966,10 +966,10 @@
   int_light {
    gpios = <&gpio0 30 (1 << 0)>;
   };
+ };
 
-  chg_n {
-   gpios = <&gpio0 10 (1 << 0)>;
-  };
+ zephyr,user {
+  chg_n-gpios = <&gpio0 10 ((1 << 0) | ((1 << 1) | (0 << 2)))>;
  };
 };
 

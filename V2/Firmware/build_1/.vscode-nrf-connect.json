@@ -1,0 +1,22 @@
+{
+  "toolchainPath": "/home/Bilal/ncs/toolchains/8285d8ad56",
+  "sdkPath": "/home/Bilal/ncs/v3.4.1",
+  "board": "dc_v2_2/nrf52840",
+  "boardDir": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/boards/nordic/dc_v2_2",
+  "boardDirs": [
+    "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/boards/nordic/dc_v2_2"
+  ],
+  "optimizations": "default",
+  "cmakeArgs": [],
+  "confFiles": [],
+  "buildDirectory": "build_1",
+  "kconfigFragments": [],
+  "snippets": [],
+  "dtcOverlays": [],
+  "extraDtcOverlays": [
+    "simulator/app.overlay",
+    "validation/pwm-fallback.overlay",
+    "validation/spi4mhz.overlay"
+  ],
+  "boardRoot": "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware"
+}

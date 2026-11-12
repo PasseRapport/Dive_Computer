@@ -1,0 +1,50 @@
+cmake:
+  application:
+    configuration-dir: '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware'
+    source-dir: '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware'
+  board:
+    name: 'dc_v2_2'
+    path:
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/boards/nordic/dc_v2_2'
+    qualifiers: 'nrf52840'
+    revision: ''
+  devicetree:
+    bindings-dirs:
+     - '/home/Bilal/ncs/v3.4.1/nrf/dts/bindings'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/bindings'
+    extra-user-files:
+     - 'simulator/app.overlay'
+     - 'validation/pwm-fallback.overlay'
+     - 'validation/spi4mhz.overlay'
+    files:
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/boards/nordic/dc_v2_2/dc_v2_2_nrf52840.dts'
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/app.overlay'
+     - 'simulator/app.overlay'
+     - 'validation/pwm-fallback.overlay'
+     - 'validation/spi4mhz.overlay'
+    include-dirs:
+     - '/home/Bilal/ncs/v3.4.1/nrf/include'
+     - '/home/Bilal/ncs/v3.4.1/nrf/dts/common'
+     - '/home/Bilal/ncs/v3.4.1/nrf/dts/riscv'
+     - '/home/Bilal/ncs/v3.4.1/nrf/dts/arm'
+     - '/home/Bilal/ncs/v3.4.1/nrf/dts'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/include'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/include/zephyr'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/common'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/vendor'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/rx'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/x86'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/xtensa'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/sparc'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/riscv'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/posix'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/arm64'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/arm'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/arc'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts'
+    user-files:
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/app.overlay'
+  toolchain:
+    name: 'zephyr'
+    path: '/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk'
+version: '0.1.0'

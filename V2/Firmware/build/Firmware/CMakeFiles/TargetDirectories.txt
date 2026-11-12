@@ -19,6 +19,9 @@
 /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/CMakeFiles/pristine.dir
 /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/CMakeFiles/zephyr_property_target.dir
 /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/CMakeFiles/app.dir
+/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/CMakeFiles/ostc4_corrected_source.dir
+/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/CMakeFiles/ostc4_upstream_contained.dir
+/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/CMakeFiles/ostc4_exposure.dir
 /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/CMakeFiles/edit_cache.dir
 /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/CMakeFiles/rebuild_cache.dir
 /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/zephyr/CMakeFiles/zephyr.dir
@@ -353,6 +356,7 @@
 /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/modules/percepio/CMakeFiles/rebuild_cache.dir
 /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/modules/picolibc/CMakeFiles/edit_cache.dir
 /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/modules/picolibc/CMakeFiles/rebuild_cache.dir
+/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/modules/segger/CMakeFiles/modules__segger.dir
 /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/modules/segger/CMakeFiles/edit_cache.dir
 /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/modules/segger/CMakeFiles/rebuild_cache.dir
 /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/modules/uoscore-uedhoc/CMakeFiles/edit_cache.dir

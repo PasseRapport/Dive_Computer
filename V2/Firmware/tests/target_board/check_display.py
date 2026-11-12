@@ -20,22 +20,22 @@ from devicetree import dtlib
 z = args.build_dir / 'zephyr'
 dt = dtlib.DT(str(z / 'zephyr.dts'))
 config = dict(re.findall(r'^(CONFIG_\w+)=(.*)$', (z / '.config').read_text(), re.M))
-spi, lcd, pwm = (dt.label2node[label] for label in ['spi1', 'lcd', 'pwm0'])
+spi, lcd, pwm = (dt.label2node[label] for label in ['spi0', 'lcd', 'pwm0'])
 def gpio(node, prop, controller, pin, flags):
     assert cells(node.props[prop]) == [dt.label2node[controller].props['phandle'].to_num(), pin, flags], prop
 
 # Independent routing/period/mode expectations transcribed from the specification.
-gpio(spi, 'cs-gpios', 'gpio0', 11, 1)
-gpio(lcd, 'reset-gpios', 'gpio1', 9, 1)
-gpio(lcd, 'te-gpios', 'gpio0', 31, 0)
+gpio(spi, 'cs-gpios', 'gpio0', 8, 33)
+gpio(lcd, 'reset-gpios', 'gpio0', 6, 17)
+gpio(lcd, 'te-gpios', 'gpio1', 9, 0)
 assert 'spi-cpol' not in lcd.props and 'spi-cpha' not in lcd.props, 'mode 0'
 assert lcd.props['spi-max-frequency'].to_num() == (4000000 if spi4 else 8000000)
 spi_group = spi.props['pinctrl-0'].to_nodes()[0].nodes['group1']
-assert spi_group.props['psels'].to_nums() == [67108868, 83886085], 'SCK P0.04, MOSI P0.05, no MISO'
+assert spi_group.props['psels'].to_nums() == [67108868, 83886106], 'SCK P0.04, MOSI P0.26, no MISO'
 drive = spi_group.props.get('nordic,drive-mode')
 assert (drive.to_num() if drive else 0) == (3 if spi4 else 0)
-assert 'pinctrl-0' in pwm.props, 'fallback PWM0 P0.20 routing is not prepared'
-assert pwm.props['pinctrl-0'].to_nodes()[0].nodes['group1'].props['psels'].to_nums() == [369098772]
+assert 'pinctrl-0' in pwm.props, 'fallback PWM0 P0.12 routing is not prepared'
+assert pwm.props['pinctrl-0'].to_nodes()[0].nodes['group1'].props['psels'].to_nums() == [369098764]
 assert enabled(pwm) == (pwm_enabled), 'PWM0 disabled in normal assembly'
 if pwm_enabled:
     pwm_cells = cells(dt.get_node('/zephyr,user').props['pwms'])
@@ -43,10 +43,10 @@ if pwm_enabled:
 else:
     assert 'pwms' not in dt.get_node('/zephyr,user').props
 
-# No enabled GPIO property may claim P0.20, or duplicate display control pins.
-claims = {('gpio0', 11): 0, ('gpio1', 9): 0, ('gpio0', 31): 0, ('gpio0', 20): 0,
-          ('gpio0', 4): 0, ('gpio0', 5): 0}
-pin_owners = {4: [], 5: [], 20: []}
+# No enabled GPIO property may claim P0.12, or duplicate display control pins.
+claims = {('gpio0', 8): 0, ('gpio0', 6): 0, ('gpio1', 9): 0, ('gpio0', 12): 0,
+          ('gpio0', 4): 0, ('gpio0', 26): 0}
+pin_owners = {4: [], 26: [], 12: []}
 for node in dt.node_iter():
     if not enabled(node):
         continue
@@ -66,8 +66,8 @@ for node in dt.node_iter():
                     if values[offset:offset + 2] == [phandle, pin]:
                         claims[(port, pin)] += 1
 assert list(claims.values()) == [1, 1, 1, 0, 0, 0], claims
-assert pin_owners == {4: [spi.path], 5: [spi.path],
-                      20: [pwm.path] if pwm_enabled else []}, pin_owners
+assert pin_owners == {4: [spi.path], 26: [spi.path],
+                      12: [pwm.path] if pwm_enabled else []}, pin_owners
 assert 'nfct-pins-as-gpios' in dt.label2node['uicr'].props
 assert 'gpio-as-nreset' in dt.label2node['uicr'].props
 assert config.get('CONFIG_NRF_TRACE_PORT', 'n') == 'n'

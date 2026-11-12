@@ -2944,3 +2944,90 @@ events:
         - "/bin"
       CMAKE_INSTALL_PREFIX: "/usr/local"
 ...
+
+---
+events:
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/Bilal/ncs/v3.4.1/zephyr/cmake/compiler/gcc/target.cmake:8 (find_program)"
+      - "/home/Bilal/ncs/v3.4.1/zephyr/cmake/modules/FindTargetTools.cmake:103 (include)"
+      - "/home/Bilal/ncs/v3.4.1/zephyr/cmake/modules/kernel.cmake:25 (find_package)"
+      - "/home/Bilal/ncs/v3.4.1/zephyr/cmake/modules/zephyr_default.cmake:145 (include)"
+      - "/home/Bilal/ncs/v3.4.1/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "/home/Bilal/ncs/v3.4.1/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:97 (include_boilerplate)"
+      - "CMakeLists.txt:3 (find_package)"
+    mode: "program"
+    variable: "CMAKE_C_COMPILER"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc"
+    candidate_directories:
+      - "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/"
+    found: "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/hosttools/sysroots/x86_64-pokysdk-linux/usr"
+      ENV{PATH}:
+        - "/home/Bilal/ncs/toolchains/8285d8ad56/usr/bin"
+        - "/home/Bilal/ncs/toolchains/8285d8ad56/usr/bin"
+        - "/home/Bilal/ncs/toolchains/8285d8ad56/usr/local/bin"
+        - "/home/Bilal/ncs/toolchains/8285d8ad56/opt/bin"
+        - "/home/Bilal/ncs/toolchains/8285d8ad56/opt/nanopb/generator-bin"
+        - "/home/Bilal/ncs/toolchains/8285d8ad56/nrfutil/bin"
+        - "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin"
+        - "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/riscv64-zephyr-elf/bin"
+        - "/home/Bilal/.espressif/eim_gui"
+        - "/home/Bilal/.local/bin"
+        - "/home/Bilal/bin"
+        - "/usr/lib64/ccache"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/bin"
+        - "/home/Bilal/.espressif/eim_gui"
+        - "/home/Bilal/.local/bin"
+        - "/home/Bilal/bin"
+        - "/usr/lib64/ccache"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/bin"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/home/Bilal/ncs/toolchains/8285d8ad56/usr/local/share/cmake-4.2/Modules/Internal/CheckSourceCompiles.cmake:104 (try_compile)"
+      - "/home/Bilal/ncs/toolchains/8285d8ad56/usr/local/share/cmake-4.2/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/home/Bilal/ncs/toolchains/8285d8ad56/usr/local/share/cmake-4.2/Modules/CheckCCompilerFlag.cmake:105 (cmake_check_compiler_flag)"
+      - "/home/Bilal/ncs/v3.4.1/zephyr/cmake/modules/extensions.cmake:2421 (check_c_compiler_flag)"
+      - "/home/Bilal/ncs/v3.4.1/zephyr/cmake/modules/extensions.cmake:1199 (check_compiler_flag)"
+      - "/home/Bilal/ncs/v3.4.1/zephyr/cmake/modules/extensions.cmake:2482 (zephyr_check_compiler_flag)"
+      - "/home/Bilal/ncs/v3.4.1/zephyr/cmake/modules/extensions.cmake:165 (target_ld_options)"
+      - "/home/Bilal/ncs/v3.4.1/zephyr/CMakeLists.txt:451 (zephyr_ld_options)"
+    directories:
+      source: "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/CMakeFiles/CMakeScratch/TryCompile-PDT3Ff"
+      binary: "/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/CMakeFiles/CMakeScratch/TryCompile-PDT3Ff"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/Bilal/ncs/v3.4.1/nrf/cmake/modules;/home/Bilal/ncs/v3.4.1/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_C__nostartfiles__nostdlib__isystem___home_Bilal_ncs_toolchains_8285d8ad56_opt_zephyr_sdk_gnu_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_14_3_0_include___isystem___home_Bilal_ncs_toolchains_8285d8ad56_opt_zephyr_sdk_gnu_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_14_3_0_include___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__fuse_ld_bfd__mcpu_cortex_m4__mthumb__mabi_aapcs__mfpu_fpv4_sp_d16__mfloat_abi_hard__mfp16_format_ieee__mtp_soft"
+      cached: true
+      stdout: |
+        Change Dir: '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/CMakeFiles/CMakeScratch/TryCompile-PDT3Ff'
+        
+        Run Build Command(s): /home/Bilal/ncs/toolchains/8285d8ad56/usr/local/bin/ninja -v cmTC_db42d
+        [1/2] /home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc -Dcheck_C__nostartfiles__nostdlib__isystem___home_Bilal_ncs_toolchains_8285d8ad56_opt_zephyr_sdk_gnu_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_14_3_0_include___isystem___home_Bilal_ncs_toolchains_8285d8ad56_opt_zephyr_sdk_gnu_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_14_3_0_include___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__fuse_ld_bfd__mcpu_cortex_m4__mthumb__mabi_aapcs__mfpu_fpv4_sp_d16__mfloat_abi_hard__mfp16_format_ieee__mtp_soft  -nostartfiles -nostdlib -isystem "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/include" -isystem "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/include" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -fuse-ld=bfd -mcpu=cortex-m4 -mthumb -mabi=aapcs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mfp16-format=ieee -mtp=soft -o CMakeFiles/cmTC_db42d.dir/src.c.obj -c /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build/Firmware/CMakeFiles/CMakeScratch/TryCompile-PDT3Ff/src.c
+        [2/2] : && /home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc -nostartfiles -nostdlib -isystem "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/include" -isystem "/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/14.3.0/include" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -fuse-ld=bfd -mcpu=cortex-m4 -mthumb -mabi=aapcs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mfp16-format=ieee -mtp=soft  CMakeFiles/cmTC_db42d.dir/src.c.obj -o cmTC_db42d   && :
+        
+      exitCode: 0
+...

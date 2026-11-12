@@ -852,10 +852,10 @@
 		int_light {
 			gpios = < &gpio0 0x1e 0x1 >; /* in ../../Documents/GitHub/Dive_Computer/V2/Firmware/app.overlay:65 */
 		};
+	};
 
-		/* node '/gpio-keys/chg_n' defined in ../../Documents/GitHub/Dive_Computer/V2/Firmware/app.overlay:68 */
-		chg_n {
-			gpios = < &gpio0 0xa 0x1 >; /* in ../../Documents/GitHub/Dive_Computer/V2/Firmware/app.overlay:69 */
-		};
+	/* node '/zephyr,user' defined in ../../Documents/GitHub/Dive_Computer/V2/Firmware/app.overlay:69 */
+	zephyr,user {
+		chg_n-gpios = < &gpio0 0xa 0x3 >; /* in ../../Documents/GitHub/Dive_Computer/V2/Firmware/app.overlay:70 */
 	};
 };

@@ -1,0 +1,33 @@
+2026-11-06T08:12:51.166Z west build --build-dir /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build_1 /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware --pristine --board dc_v2_2/nrf52840 -- -DCONFIG_DEBUG_THREAD_INFO=y -DEXTRA_DTC_OVERLAY_FILE="simulator/app.overlay;validation/pwm-fallback.overlay;validation/spi4mhz.overlay" -DBOARD_ROOT="/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware"
+2026-11-06T08:12:51.803Z -- west build: generating a build system
+2026-11-06T08:12:52.189Z -- Found Python3: /home/Bilal/ncs/toolchains/8285d8ad56/usr/local/bin/python3.12 (found suitable version "3.12.4", minimum required is "3.12") found components: Interpreter
+2026-11-06T08:12:52.229Z -- Cache files will be written to: /home/Bilal/.cache/zephyr
+2026-11-06T08:12:52.431Z -- Found west (found suitable version "1.5.0", minimum required is "0.14.0")
+2026-11-06T08:12:55.681Z -- Board: dc_v2_2, qualifiers: nrf52840
+2026-11-06T08:12:58.473Z Parsing /home/Bilal/ncs/v3.4.1/zephyr/share/sysbuild/Kconfig
+2026-11-06T08:12:58.474Z Loaded configuration '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build_1/_sysbuild/empty.conf'
+2026-11-06T08:12:58.474Z Merged configuration '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build_1/_sysbuild/empty.conf'
+2026-11-06T08:12:58.474Z Configuration saved to '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build_1/zephyr/.config'
+2026-11-06T08:12:58.474Z Kconfig header saved to '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build_1/_sysbuild/autoconf.h'
+2026-11-06T08:12:58.704Z -- 
+2026-11-06T08:12:58.705Z    ******************************
+2026-11-06T08:12:58.705Z    * Running CMake for Firmware *
+2026-11-06T08:12:58.705Z    ******************************
+2026-11-06T08:12:58.705Z 
+2026-11-06T08:12:58.721Z -- Application: /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware
+2026-11-06T08:12:58.721Z -- CMake version: 4.2.1
+2026-11-06T08:12:59.190Z -- Found Python3: /home/Bilal/ncs/toolchains/8285d8ad56/usr/local/bin/python3.12 (found suitable version "3.12.4", minimum required is "3.12") found components: Interpreter
+2026-11-06T08:12:59.241Z -- Cache files will be written to: /home/Bilal/.cache/zephyr
+2026-11-06T08:12:59.276Z -- Zephyr version: 4.4.2 (/home/Bilal/ncs/v3.4.1/zephyr)
+2026-11-06T08:12:59.471Z -- Found west (found suitable version "1.5.0", minimum required is "0.14.0")
+2026-11-06T08:13:02.614Z -- Board: dc_v2_2, qualifiers: nrf52840
+2026-11-06T08:13:04.714Z -- Found host-tools: zephyr 1.0.1 (/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk)
+2026-11-06T08:13:04.718Z -- Found toolchain: zephyr 1.0.1 (/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk)
+2026-11-06T08:13:04.742Z -- Found Dtc: /home/Bilal/ncs/toolchains/8285d8ad56/usr/bin/dtc (found suitable version "1.5.0", minimum required is "1.4.6")
+2026-11-06T08:13:04.772Z -- Found BOARD.dts: /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/boards/nordic/dc_v2_2/dc_v2_2_nrf52840.dts
+2026-11-06T08:13:04.773Z -- Found devicetree overlay: /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/app.overlay
+2026-11-06T08:13:04.773Z -- Found devicetree overlay: simulator/app.overlay
+2026-11-06T08:13:04.773Z -- Found devicetree overlay: validation/pwm-fallback.overlay
+2026-11-06T08:13:04.773Z -- Found devicetree overlay: validation/spi4mhz.overlay
+2026-11-06T08:13:05.138Z -- Configuring incomplete, errors occurred!
+2026-11-06T08:13:05.150Z -- Configuring incomplete, errors occurred!

@@ -1,0 +1,48 @@
+{
+  "sourceFile": "nrf52840-pin-plan(4).json",
+  "sourceSha256": "516aa3874a7ffa735b80b851c9f2e7ca85d280014697dfd30a5210e71a527f2c",
+  "board": "dc_v2_2/nrf52840",
+  "signals": 19,
+  "profiles": {
+    "normal": {
+      "build": "/tmp/dive-pinplan-20261110-normal",
+      "flash": 42536,
+      "ram": 16640,
+      "configuration": true,
+      "display": true,
+      "integrated": true,
+      "resources": true
+    },
+    "combined8": {
+      "build": "V2/Firmware/build_pinplan",
+      "flash": 50308,
+      "ram": 17024,
+      "configuration": true,
+      "display": true,
+      "sensors": true,
+      "integrated": true,
+      "resources": true
+    },
+    "fallback4": {
+      "build": "/tmp/dive-pinplan-20261110-fallback",
+      "flash": 51828,
+      "ram": 17024,
+      "configuration": true,
+      "display": true,
+      "sensors": true,
+      "integrated": true,
+      "resources": true
+    }
+  },
+  "pwmDefaultEnabled": false,
+  "chargerPullup": "external-mcu-vdd, confirmed by owner",
+  "pinOverviewUiInspected": false,
+  "hardwareFlashed": false,
+  "targetExecuted": false,
+  "kicadModifiedByAgent": false,
+  "hardwareChangesDuringBuild": [
+    "V2/Hardware/DiveComputerV2/DiveComputerV2.kicad_pcb",
+    "V2/Hardware/DiveComputerV2/DiveComputerV2.kicad_pro",
+    "V2/Hardware/DiveComputerV2/DiveComputerV2.kicad_sch"
+  ]
+}

@@ -1,5 +1,8 @@
 {
     "nrf-connect.boardRoots": [
         "${workspaceFolder}/V2/Firmware"
+    ],
+    "nrf-connect.applications": [
+        "${workspaceFolder}/V2/Firmware"
     ]
 }

@@ -1,0 +1,30 @@
+cmake:
+  application:
+    configuration-dir: '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware'
+    source-dir: '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware'
+  board:
+    name: 'dc_v2_2'
+    path:
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/boards/nordic/dc_v2_2'
+    qualifiers: 'nrf52840'
+    revision: ''
+  devicetree:
+    bindings-dirs:
+     - '/home/Bilal/ncs/v3.4.1/nrf/dts/bindings'
+     - '/home/Bilal/ncs/v3.4.1/zephyr/dts/bindings'
+    extra-user-files:
+     - 'simulator/app.overlay'
+     - 'validation/pwm-fallback.overlay'
+     - 'validation/spi4mhz.overlay'
+    files:
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/boards/nordic/dc_v2_2/dc_v2_2_nrf52840.dts'
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/app.overlay'
+     - 'simulator/app.overlay'
+     - 'validation/pwm-fallback.overlay'
+     - 'validation/spi4mhz.overlay'
+    user-files:
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/app.overlay'
+  toolchain:
+    name: 'zephyr'
+    path: '/home/Bilal/ncs/toolchains/8285d8ad56/opt/zephyr-sdk'
+version: '0.1.0'

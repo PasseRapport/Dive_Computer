@@ -1,0 +1,22 @@
+cmake:
+  board:
+    name: 'dc_v2_2'
+    path:
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/boards/nordic/dc_v2_2'
+    qualifiers: 'nrf52840'
+    revision: ''
+  images:
+   - name: 'Firmware'
+     source-dir: '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware'
+     type: 'MAIN'
+  kconfig:
+    files:
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build_1/_sysbuild/empty.conf'
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build_1/_sysbuild/empty.conf'
+    user-files:
+     - '/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build_1/_sysbuild/empty.conf'
+version: '0.1.0'
+west:
+  command: '/home/Bilal/ncs/toolchains/8285d8ad56/usr/local/bin/west build --build-dir /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware/build_1 /home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware --pristine --board dc_v2_2/nrf52840 -- -DCONFIG_DEBUG_THREAD_INFO=y -DEXTRA_DTC_OVERLAY_FILE=simulator/app.overlay;validation/pwm-fallback.overlay;validation/spi4mhz.overlay -DBOARD_ROOT=/home/Bilal/Documents/GitHub/Dive_Computer/V2/Firmware'
+  topdir: '/home/Bilal/ncs/v3.4.1'
+  version: '1.5.0'
