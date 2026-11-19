@@ -2,3 +2,4 @@
 
 # Local nRF Connect build for the approved pin plan.
 /V2/Firmware/build_pinplan/
+*.lck

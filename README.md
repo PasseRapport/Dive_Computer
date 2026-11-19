@@ -70,6 +70,12 @@ More compact, better component integration, and additional sensors.
   <img src="./V2/Exploded_view.png" alt="V2 Exploded View" width="65%">
 </p>
 
+### Schematic
+
+<p align="center">
+  <img src="./V2/Schematic.svg" alt="V2 Schematic" width="100%">
+</p>
+
 ---
 
 ## Repository Structure

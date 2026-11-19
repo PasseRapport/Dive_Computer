@@ -10,4 +10,4 @@
 ![PCB](./PCB.png)
 
 ## Schematic
-![Schematic](./DiveComputerV2.svg)
+![Schematic](./Schematic.svg)
