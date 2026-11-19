@@ -284,13 +284,15 @@ int sim_host_take_redraw(void) {return atomic_exchange(&redraw_requested,false);
 
 #ifdef DIVE_PC_BENCH
 #include "pc_bench.h"
+#include "water.h"
+#include "water_settings.h"
 #include "scuba_model.h"
 static const struct scuba_model *calculated_watch;
 void sim_host_bench_watch(const struct scuba_model *model) {calculated_watch=model;}
 #include <stdio.h>
 int sim_host_bench_check_enabled(void) {
     const char *mode=getenv("DIVE_SIM_BENCH_CHECK");
-    return !mode?0:!strcmp(mode,"startup")?6:!strcmp(mode,"checkpoint")?5:!strcmp(mode,"gf")?4:!strcmp(mode,"restart")?3:!strcmp(mode,"calculated")?2:1;
+    return !mode?0:!strcmp(mode,"water")?7:!strcmp(mode,"startup")?6:!strcmp(mode,"checkpoint")?5:!strcmp(mode,"gf")?4:!strcmp(mode,"restart")?3:!strcmp(mode,"calculated")?2:1;
 }
 static void configure_bench_storage(void)
 {
@@ -317,7 +319,7 @@ int sim_host_bench_fresh(void)
 {
     configure_bench_storage();
     const char *path=getenv("DIVE_SIM_BENCH_PROFILE");
-    if(!path)return pc_bench_fresh(1.01325f,1025,pc_bench_two_dives,8);
+    if(!path)return pc_bench_fresh(1.01325f,water_density(water_settings_salt()),pc_bench_two_dives,8);
     FILE *file=fopen(path,"r");
     if(!file){fprintf(stderr,"Cannot open bench profile: %s\n",path);return -1;}
     ostc4_sample profile[PC_BENCH_PROFILE]; size_t count=0; char row[256];
@@ -333,7 +335,7 @@ int sim_host_bench_fresh(void)
         }
         profile[count++]=(ostc4_sample){(uint32_t)seconds,pressure};
     }
-    int result=ferror(file)?-1:pc_bench_fresh(count?profile[0].absolute_pressure_bar:0,1025,profile,count);
+    int result=ferror(file)?-1:pc_bench_fresh(count?profile[0].absolute_pressure_bar:0,water_density(water_settings_salt()),profile,count);
     fclose(file);
     if(result)fprintf(stderr,"Invalid bench pressure/time profile\n");
     return result;
@@ -351,21 +353,21 @@ int sim_host_bench_capture(unsigned milestone)
     snprintf(path,sizeof(path),"%s-%u.json",base,milestone);
     FILE *out=fopen(path,"w");if(!out)return -1;
     const struct bench_view *v=pc_bench_read();
-    fprintf(out,"{\"seconds\":%u,\"duration\":%u,\"depth_m\":%.9g,\"tissues\":[",v->seconds,v->duration,(double)v->depth_m);
+    fprintf(out,"{\"seconds\":%u,\"duration\":%u,\"depth_m\":%.9g,\"surface_bar\":%.9g,\"density_kg_m3\":%.9g,\"tissues\":[",v->seconds,v->duration,(double)v->depth_m,(double)v->surface_bar,(double)v->density_kg_m3);
     for(int i=0;i<16;++i)fprintf(out,"%s%.9g",i?",":"",(double)v->result.nitrogen_bar[i]);
     const struct recorded_dive *recording=&v->recording;
     const struct scuba_model *m=calculated_watch;
     if(!m){fclose(out);return -1;}
     fprintf(out,"],\"recording\":{\"armed\":%s,\"active\":%s,\"start_depth_dm\":%u,"
         "\"started_seconds\":%u,\"completed_seconds\":%u,\"dive_seconds\":%u,\"surface_seconds\":%u,"
-        "\"dives_started\":%u,\"dives_completed\":%u},\"automatic\":%s,\"replay\":%s,\"history_count\":%zu,\"absolute_pressure_bar\":%.9g,"
+        "\"dives_started\":%u,\"dives_completed\":%u,\"density_kg_m3\":%u,\"max_depth_dm\":%u},\"automatic\":%s,\"replay\":%s,\"history_count\":%zu,\"absolute_pressure_bar\":%.9g,"
         "\"ndl_seconds\":%d,\"tts_seconds\":%d,\"ceiling_meters\":%.9g,"
         "\"validity\":[%d,%d,%d,%d,%d],\"watch\":{\"active\":%s,\"armed\":%s,"
         "\"dive_seconds\":%u,\"surface_seconds\":%u,\"state\":%d,\"depth_dm\":%u,\"ndl_seconds\":%u,"
         "\"tts_seconds\":%u,\"stop_depth_dm\":%u,\"stop_remaining_ms\":%u,\"alerts\":%u,\"notifications\":%u},\"stop_seconds\":[",
         recording->armed?"true":"false",recording->active?"true":"false",recording->start_depth_dm,
         recording->started_seconds,recording->completed_seconds,recording->dive_seconds,recording->surface_seconds,
-        recording->dives_started,recording->dives_completed,
+        recording->dives_started,recording->dives_completed,recording->density_kg_m3,recording->max_depth_dm,
         v->automatic?"true":"false",v->replay?"true":"false",v->history_count,(double)v->result.absolute_pressure_bar,
         v->result.ndl_seconds,v->result.tts_seconds,(double)v->result.ceiling_meters,
         v->result.tissues,v->result.ndl,v->result.tts,v->result.ceiling,v->result.stops,
@@ -389,12 +391,23 @@ int sim_host_bench_capture(unsigned milestone)
         struct pc_bench_log log;
         if(pc_bench_log_read(i,&log)) {fclose(out);return -1;}
         fprintf(out,"%s{\"id\":%llu,\"active_gf\":[%u,%u],\"policy\":\"%s\","
-            "\"started_seconds\":%u,\"completed_seconds\":%u,\"automatic_completion\":%s}",
+            "\"started_seconds\":%u,\"completed_seconds\":%u,\"automatic_completion\":%s,\"water_type\":\"%s\",\"density_kg_m3\":%u,\"max_depth_dm\":",
             i?",":"",log.id,log.active_gf.low,log.active_gf.high,log.policy,
-            log.started_seconds,log.completed_seconds,log.automatic_completion?"true":"false");
+            log.started_seconds,log.completed_seconds,log.automatic_completion?"true":"false",
+            log.density_kg_m3==1000?"Fresh":log.density_kg_m3==1025?"Marine":"unknown",log.density_kg_m3);
+        if(log.density_kg_m3)fprintf(out,"%u}",log.max_depth_dm);else fprintf(out,"null}");
     }
     fprintf(out,"]}");
 
+    /* Existing engine values remain reference metres (10m/bar). Publish the
+     * physical presentation alongside them rather than changing their units. */
+    fprintf(out,",\"engine_depth_units\":\"reference_10m_per_bar\",\"physical\":{"
+        "\"ceiling_m\":%.9g,\"ceiling_dm\":%u,\"gf_low_m\":%.9g,\"gf_high_m\":%.9g,"
+        "\"stop_slot\":%u,\"stop_lower_m\":%.9g,\"stop_upper_m\":%.9g,\"in_stop\":%s,\"ppo2_bar\":%.9g}",
+        (double)water_depth(v->result.ceiling_meters/10.0f,0,v->density_kg_m3),m->calculated_ceiling_dm,
+        (double)m->calculated_gf_low_ceiling_m,(double)m->calculated_gf_high_ceiling_m,
+        m->calculated_stop_slot,(double)m->calculated_stop_lower_m,(double)m->calculated_stop_upper_m,
+        m->calculated_stop_zone?"true":"false",(double)m->calculated_ppo2_bar);
     fprintf(out,",\"gf_ceilings\":{\"low_m\":%.9g,\"high_m\":%.9g,\"validity\":[%d,%d]}",
         (double)v->result.gf_low_ceiling_meters,(double)v->result.gf_high_ceiling_meters,
         v->result.gf_low_ceiling,v->result.gf_high_ceiling);

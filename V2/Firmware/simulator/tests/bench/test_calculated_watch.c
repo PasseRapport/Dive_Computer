@@ -7,7 +7,7 @@
 int main(void)
 {
     struct scuba_model m;
-    scuba_model_init(&m);scuba_model_arm(&m,0);
+    scuba_model_init(&m);m.salt_water=true;scuba_model_arm(&m,0);
     ostc4_observation o={.tissues=OSTC4_AVAILABLE,.ndl=OSTC4_AVAILABLE,
         .tts=OSTC4_AVAILABLE,.ceiling=OSTC4_AVAILABLE,.stops=OSTC4_AVAILABLE,
         .ndl_seconds=240,.tts_seconds=600,.ceiling_meters=4.05f};
@@ -43,20 +43,20 @@ int main(void)
     CHECK(m.calculated_stop_remaining_ms==1000 && !m.deco_done);
     scuba_model_acknowledge(&m);
     CHECK(m.notifications==0 && scuba_model_stop_target(&m)==120000);
-    scuba_calculated_apply(&m,&o,101,4.04f,18,87);
+    scuba_calculated_apply(&m,&o,101,4.02f,18,87);
     CHECK(m.alerts&SCUBA_CEILING); /* raw ceiling, before decimal rounding */
     scuba_model_acknowledge(&m);
-    scuba_calculated_apply(&m,&o,102,4.04f,18,87);
+    scuba_calculated_apply(&m,&o,102,4.02f,18,87);
     CHECK(!(m.notifications&SCUBA_CEILING) && (m.alerts&SCUBA_CEILING));
     o.tts=OSTC4_INVALID;
-    scuba_calculated_apply(&m,&o,102,4.04f,18,87);
+    scuba_calculated_apply(&m,&o,102,4.02f,18,87);
     CHECK(m.calculated_state==SCUBA_CALCULATED_INVALID);
     CHECK(scuba_model_stop_depth(&m)==60); /* last known obligation retained */
     o.tts=OSTC4_UNAVAILABLE;
-    scuba_calculated_apply(&m,&o,102,4.04f,18,87);
+    scuba_calculated_apply(&m,&o,102,4.02f,18,87);
     CHECK(m.calculated_state==SCUBA_CALCULATED_UNAVAILABLE);
     o.tts=OSTC4_LIMITED;
-    scuba_calculated_apply(&m,&o,102,4.04f,18,87);
+    scuba_calculated_apply(&m,&o,102,4.02f,18,87);
     CHECK(m.calculated_state==SCUBA_CALCULATED_LIMITED);
     o.tts=OSTC4_AVAILABLE;o.tts_seconds=0;o.ceiling_meters=0;
     memset(o.stop_seconds,0,sizeof(o.stop_seconds));o.ndl_seconds=3600;

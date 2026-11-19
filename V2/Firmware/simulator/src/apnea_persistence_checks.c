@@ -1,5 +1,6 @@
 #include "apnea_persistence_checks.h"
 #include "apnea_settings.h"
+#include "scuba_ui.h"
 #include "watch_ui.h"
 #include "sim_controls.h"
 #include "sim_host.h"
@@ -37,8 +38,13 @@ bool apnea_persistence_checks_inputs(uint64_t *sample_ms)
  *sample_ms=clock_ms;
  if(step>=20||k_uptime_get()<500+(uint64_t)step*300)return false;
  if(mode==1)switch(step){
- case 0:enter();break;
- case 1:editor(false);turn(-100);turn(!salt);click();main_page();editor(false);turn(-100);turn(salt);click();main_page();break;
+ case 0:
+  /* Confirm the common choice in unlocked scuba preparation before the apnea session. */
+  scuba_ui_enter(clock_ms);scuba_ui_input(WATCH_SINGLE_TAP,0);scuba_ui_input(WATCH_CROWN,-100);
+  scuba_ui_input(WATCH_SINGLE_TAP,0);scuba_ui_input(WATCH_CROWN,-100);scuba_ui_input(WATCH_CROWN,salt);
+  scuba_ui_input(WATCH_SINGLE_TAP,0);scuba_ui_input(WATCH_DOUBLE_TAP,0);
+  enter();break;
+ case 1:editor(false);turn(-100);turn(!salt);click();main_page();break;
  case 2:editor(true);turn(-100);turn((field+1)%5);click();main_page();editor(true);turn(-100);turn(field);click();main_page();break;
  case 3:clock_ms=101000;sim_controls_set_depth_dm(123);break;
  case 4:clock_ms=161000;sim_controls_set_depth_dm(200);break;
@@ -55,7 +61,10 @@ bool apnea_persistence_checks_inputs(uint64_t *sample_ms)
  case 15:clock_ms=235000;sim_controls_set_depth_dm(0);break;
  }
  else switch(step){
- case 0:enter();break;
+ case 0:
+  turn(1);turn(24);turn(-100);turn(WATCH_DIVING);click();turn(-100);click();
+  expect(salt?"AIR  |  MARINE":"AIR  |  FRESH");capture("restored-scuba");
+  turn(2);turn(24);click();turn(-100);turn(1);click();break;
  case 2:turn(1);break;
  case 4:turn(-1);clock_ms=101000;sim_controls_set_depth_dm(123);break;
  case 5:clock_ms=161000;break;
@@ -79,7 +88,7 @@ void apnea_persistence_checks_observe(const struct watch_data *data)
   if(step==16){expect(caption(field));__ASSERT(watch_ui_salt_water()==salt&&apnea_settings_bottom_field()==field,"Cancelled or underwater edit changed applied preferences");capture("saved-main");}
   if(step==19)printk("APNEA PERSISTENCE SAVE PASS: choices%d/%d, cancellation and editors crossing immersion\n",salt,field);
  }else switch(step){
- case 1:expect(caption(field));fresh_value(field,data);__ASSERT(watch_ui_salt_water()==salt,"Water preference not restored");__ASSERT(data->total_dives==0&&!data->show_recovery&&data->runtime_s==0,"Restart restored session history");capture("restored-main");break;
+ case 1:__ASSERT(scuba_ui_model()->salt_water==salt,"Shared preference missing from scuba startup");expect(caption(field));fresh_value(field,data);__ASSERT(watch_ui_salt_water()==salt,"Water preference not restored");__ASSERT(data->total_dives==0&&!data->show_recovery&&data->runtime_s==0,"Restart restored session history");capture("restored-main");break;
  case 3:expect("SESSION TIME");expect("--");expect("0");capture("restored-statistics");break;
  case 5:expect(caption(field));live_value(field,data);capture("live-main");break;
  case 7:expect("12.3");expect("1:00");expect("1");expect("0:01:01");capture("live-statistics");break;

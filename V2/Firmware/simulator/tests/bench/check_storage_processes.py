@@ -13,8 +13,11 @@ with tempfile.TemporaryDirectory(prefix="dive-storage-test-") as tmp:
     assert run(state, "read").split()[:4] == ["40", "85", "1", "1"]
     run(state, "dives")
     records = run(state, "logs").splitlines()
-    assert records[0].startswith("LOG 1 20 60 40 90 0 "), records
-    assert records[1].startswith("LOG 2 70 70 110 445 1 "), records
+    # Marine physical 2 m is +.201036325 bar: .005 bar/s crosses at
+    # seconds 41 and 111. Surface .5 m is +.05025908125 bar: the
+    # second ascent enters surface at 145, completing 300 samples at 444.
+    assert records[0].startswith("LOG 1 20 60 41 90 0 "), records
+    assert records[1].startswith("LOG 2 70 70 111 444 1 "), records
     assert "configurable" in records[0], records
     original = {p.name: p.read_bytes() for p in state.glob("dive-*.log")}
     run(state, "set", "100", "100")

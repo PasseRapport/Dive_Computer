@@ -113,7 +113,7 @@ void apnea_settings_checks_observe(const struct watch_data *data)
  lv_obj_update_layout(lv_screen_active());if(step%2)field_bounds(lv_screen_active());
  if(step==40){expect("BOTTOM FIELD");char path[512];snprintf(path,sizeof(path),"%s/settings-bottom-x2.bmp",sim_host_gallery_path());lv_refr_now(NULL);__ASSERT(sim_host_capture(path)==0,"Capture");}
  if(step==43||step==45){expect("TEMPERATURE");expect("18°C");}
- if(step==47||step==49)__ASSERT(!watch_ui_salt_water(),"Fresh apply/cancel failed");
+ if(step==47||step==49)__ASSERT(watch_ui_salt_water(),"Session surface must keep Marine locked after Fresh attempt/cancel");
  if(step==49){__ASSERT(scuba_ui_model()->salt_water==scuba_salt&&scuba_ui_field()==scuba_bottom&&scuba_ui_ring()==scuba_ring&&!memcmp(&scuba_saved_summary,&scuba_ui_model()->summary,sizeof(scuba_saved_summary)),"Apnea changed scuba settings or stored summary");}
  if(step==53)printk("APNEA SETTINGS PASS: public apply/cancel, all fields, live records, water, phase lock, submenu continuity and reentry x1/x2\n");
  if(step==11||step==17||step==20||step==29){char path[512];snprintf(path,sizeof(path),"%s/settings-%02u.bmp",sim_host_gallery_path(),step);lv_refr_now(NULL);__ASSERT(sim_host_capture(path)==0,"Capture");}
