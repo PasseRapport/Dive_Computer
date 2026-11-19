@@ -13,11 +13,17 @@ loads=list(root.glob('choice-*-load'))
 assert len(loads)==10,'Expected ten independent restored UI captures'
 for directory in loads:
     choice=int(directory.name.split('-')[-2]);water=frame(directory,'restored-water')
+    scuba=frame(directory,'restored-scuba')
+    assert len(white(scuba,(30,70,290,180)))>100,'Restored scuba preparation is blank'
     teal=[(x,y) for y in range(80,215) for x in range(20,300)
           if (lambda p:p[0]<70 and p[1]>80 and p[2]>80)(water.getpixel((x,y)))]
     assert len(teal)>1000,'Restored water has no selected capsule'
     centre=(min(y for x,y in teal)+max(y for x,y in teal))/2
-    assert abs(centre-(112+56*(choice//5)))<8,'Restored water highlights the wrong visible row'
+    # Water uses the existing fixed-focus scrolling selector in either choice.
+    assert abs(centre-150)<5,'Restored water selection is not centred'
+    icon=white(water,(95,125,140,175))
+    assert icon,'Selected water icon missing'
+    assert (min(y for x,y in icon)<134)==(choice//5==0),'Restored water icon is wrong'
     main=frame(directory,'live-main');stats=frame(directory,'live-statistics');returned=frame(directory,'returned-main')
     assert white(main,(55,47,265,107))==white(stats,(55,47,265,107)),'Main and Statistics disagree on live depth rendering'
     assert white(main,(65,239,255,279))==white(returned,(65,239,255,279)),'Returning to Main changed the selected field/value'

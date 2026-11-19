@@ -9,6 +9,8 @@ struct pc_bench_log {
     uint64_t recording_id; /* Stable session/start identity; zero in preserved schema-1 logs. */
     uint32_t started_seconds, completed_seconds, dive_seconds;
     ostc4_gf_pair active_gf;
+    uint16_t max_depth_dm; /* Original physical peak, never reprojected from later preferences. */
+    uint16_t density_kg_m3; /* 1000/1025 for new records; 0 means unknown legacy water. */
     char policy[192];
     bool automatic_completion;
 };

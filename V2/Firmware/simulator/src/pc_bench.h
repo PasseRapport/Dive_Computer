@@ -47,6 +47,8 @@ int pc_bench_checkpoint(void);
 ostc4_restart_status pc_bench_restart(enum pc_restart_mode mode);
 void pc_bench_poll(uint32_t elapsed_ms);
 void pc_bench_pause(bool paused);
+/* Commit shared water preference without advancing/resetting exposure. */
+int pc_bench_set_water(bool salt);
 int pc_bench_set_gf_pair(int low, int high);
 int pc_bench_gf_edit_begin(void);
 int pc_bench_gf_edit_adjust(bool high_endpoint, int steps);
@@ -57,7 +59,7 @@ void pc_bench_gf_edit_cancel(void);
  * Rejected adapter inputs leave the fixture unchanged. Accepted commands release
  * replay/automatic control; no host time or intermediate tissue sample is added. */
 int pc_bench_accept_sample(const ostc4_sample *sample);
-/* Recording uses the watch/engine 10 m/bar depth convention at millimetre
+/* Recording uses the active water density and physical depth at millimetre
  * sensor resolution. Start at 0.5..10 m in 0.5 m steps (default 2 m).
  * Recording commands never initialize tissues or advance exposure. */
 int pc_bench_start_depth(uint16_t decimetres);

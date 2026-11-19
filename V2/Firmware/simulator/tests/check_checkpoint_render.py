@@ -11,6 +11,12 @@ assert "Unknown restart time" in frames[0]["recovery"]
 assert frames[1]["gf"]["preferred"] == [20,90] and frames[1]["seconds"] == 0
 assert frames[2]["gf"]["active"] == [40,85] and frames[2]["gf"]["preferred"] == [20,90]
 assert frames[2]["gf"]["locked"] and frames[2]["recording"]["active"]
+assert frames[1]["density_kg_m3"] == 1025
+assert frames[2]["density_kg_m3"] == frames[2]["recording"]["density_kg_m3"] == 1000
+assert frames[3]["density_kg_m3"] == 1025
+assert frames[3]["storage"]["logs"][0]["water_type"] == "Fresh"
+assert frames[3]["storage"]["logs"][0]["density_kg_m3"] == 1000
+assert frames[3]["storage"]["logs"][0]["max_depth_dm"] == 305
 assert not frames[2]["gap"] and frames[2]["seconds"] == 1260
 assert not frames[3]["gf"]["locked"] and frames[3]["recording"]["dives_completed"] == 1
 assert frames[3]["gf"]["active"] == [20,90] and frames[3]["storage"]["log_count"] == 1

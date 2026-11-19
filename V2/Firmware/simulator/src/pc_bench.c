@@ -1,5 +1,7 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "pc_bench.h"
+#include "water.h"
+#include "water_settings.h"
 #include "pc_bench_checkpoint_file.h"
 #include <math.h>
 #include <string.h>
@@ -19,6 +21,7 @@ static size_t checkpoint_history;
 static bool checkpoint_saved, checkpoint_eligible;
 static struct recorded_dive checkpoint_recording;
 static ostc4_gf_pair checkpoint_preferred;
+static float checkpoint_density;
 static void recording_sample(uint32_t seconds,float pressure);
 static int accept_sample(const ostc4_sample *sample);
 static void invalidate_checkpoint_configuration(void)
@@ -40,11 +43,11 @@ static void notify_observer(void)
 }
 static float depth_to_pressure(float depth)
 {
-    return view.surface_bar + depth * view.density_kg_m3 * 9.80665f / 100000.0f;
+    return water_pressure(depth,view.surface_bar,view.density_kg_m3);
 }
 static float pressure_to_depth(float pressure)
 {
-    return (pressure-view.surface_bar)*100000.0f/(view.density_kg_m3*9.80665f);
+    return water_depth(pressure,view.surface_bar,view.density_kg_m3);
 }
 int pc_bench_storage_configure(const char *directory)
 {
@@ -59,7 +62,7 @@ int pc_bench_log_read(size_t index,struct pc_bench_log *record)
 int pc_bench_fresh(float surface, float density, const ostc4_sample *profile, size_t count)
 {
     /* Validate before replacing any live fixture. */
-    if (!isfinite(surface)||surface<0.8f||surface>1.2f||!isfinite(density)||density<990||density>1040||
+    if (!isfinite(surface)||surface<0.8f||surface>1.2f||(density!=1000 && density!=1025)||
         count>PC_BENCH_PROFILE||(count && (!profile||count<2))) return -1;
     for (size_t i=0;i<count;++i) {
         if (!isfinite(profile[i].absolute_pressure_bar)||profile[i].absolute_pressure_bar<surface||
@@ -79,6 +82,7 @@ int pc_bench_fresh(float surface, float density, const ostc4_sample *profile, si
         view.storage->saved_preference:(ostc4_gf_pair){30,70};
     ostc4_exposure_set_gf_pair(view.preferred_gf.low,view.preferred_gf.high);
     view.surface_bar=surface; view.density_kg_m3=density; view.speed=1;
+    water_settings_lock_scuba(false);water_settings_restore(density==1025);
     view.replay=count!=0; view.profile_count=count;
     view.history=history; view.profile=graph; view.exposure=actual_samples; view.history_count=1;
     history[0]=(struct bench_point){0,0,false};
@@ -94,6 +98,18 @@ int pc_bench_fresh(float surface, float density, const ostc4_sample *profile, si
     ostc4_exposure_read(&view.result);
     notify_observer();
     return 0;
+}
+int pc_bench_set_water(bool salt)
+{
+    if(!view.history_count || view.recording.active || water_settings_select(salt))return -1;
+    invalidate_checkpoint_configuration();
+    view.density_kg_m3=water_density(salt);
+    view.depth_m=pressure_to_depth(view.result.absolute_pressure_bar);
+    for(size_t i=0;i<view.history_count;++i)
+        history[i].depth_m=pressure_to_depth(actual_samples[i].absolute_pressure_bar);
+    for(size_t i=0;i<view.profile_count;++i)
+        graph[i].depth_m=pressure_to_depth(samples[i].absolute_pressure_bar);
+    notify_observer();return 0;
 }
 int pc_bench_set_gf_pair(int low,int high)
 {
@@ -131,6 +147,11 @@ void pc_bench_gf_edit_cancel(void)
 static void sync_gf_lock(void)
 {
     view.gf_locked=view.recording.active;
+    water_settings_recover_scuba(view.density_kg_m3==1025,view.recording.active);
+    if(!view.recording.active) {
+        view.density_kg_m3=water_density(water_settings_preferred_salt());
+        view.depth_m=pressure_to_depth(view.result.absolute_pressure_bar);
+    }
     /* Recovered active pair remains independent of next-dive preference. */
     ostc4_exposure_set_gf_lock(view.gf_locked);
 }
@@ -140,6 +161,7 @@ int pc_bench_checkpoint(void)
         ostc4_exposure_checkpoint(checkpoint,sizeof(checkpoint))!=OSTC4_OK)return -1;
     checkpoint_saved=checkpoint_eligible=true;checkpoint_history=view.history_count;
     checkpoint_recording=view.recording;checkpoint_preferred=view.preferred_gf;
+    checkpoint_density=view.density_kg_m3;
     view.recovery="Checkpoint saved (PC memory)";return 0;
 }
 ostc4_restart_status pc_bench_restart(enum pc_restart_mode mode)
@@ -172,6 +194,8 @@ ostc4_restart_status pc_bench_restart(enum pc_restart_mode mode)
         ostc4_recovery seed={true,actual_samples[checkpoint_history-1].timestamp_seconds,0,NULL,0};
         ostc4_exposure_restore(bytes,sizeof(bytes),&seed);
         view.recording=checkpoint_recording;view.preferred_gf=checkpoint_preferred;
+        view.density_kg_m3=checkpoint_density;
+        water_settings_recover_scuba(view.density_kg_m3==1025,view.recording.active);
         ostc4_exposure_read(&view.result);view.active_gf=view.result.gf_pair;
         view.seconds=seed.restart_seconds;view.history_count=checkpoint_history;
         for(size_t n=0;n<recovery.count;++n) {
@@ -217,7 +241,7 @@ void pc_bench_recording_arm(void)
     invalidate_checkpoint_configuration();view.recording.armed=true;
     notify_observer();
 }
-static void save_completed_log(bool automatic)
+static struct pc_bench_log completed_log(bool automatic)
 {
     /* A saved session identity plus its recording ordinal is stable across
      * recovery, while identical profiles in new synthetic sessions stay distinct. */
@@ -226,15 +250,20 @@ static void save_completed_log(bool automatic)
     struct pc_bench_log record={.recording_id=identity,.started_seconds=view.recording.started_seconds,
         .completed_seconds=view.recording.completed_seconds,
         .dive_seconds=view.recording.dive_seconds,.active_gf=view.active_gf,
-        .automatic_completion=automatic};
+        .automatic_completion=automatic,.density_kg_m3=view.recording.density_kg_m3,
+        .max_depth_dm=view.recording.max_depth_dm};
     /* Numerical identity belongs to the captured pair; later preferences never
      * replace an existing immutable log. */
     strncpy(record.policy,view.gf_policy,sizeof(record.policy)-1);
-    pc_storage_reconcile_log(&record);
+    return record;
+}
+static void save_completed_log(bool automatic)
+{
+    struct pc_bench_log record=completed_log(automatic);pc_storage_reconcile_log(&record);
 }
 int pc_bench_recording_finish(void)
 {
-    long depth_mm=lroundf((view.result.absolute_pressure_bar-view.surface_bar)*10000);
+    long depth_mm=lroundf(pressure_to_depth(view.result.absolute_pressure_bar)*1000);
     if (!view.history_count || view.error || depth_mm>=500) return -1;
     invalidate_checkpoint_configuration();
     if(view.recording.active) {
@@ -251,10 +280,12 @@ int pc_bench_recording_finish(void)
 static void recording_sample(uint32_t seconds,float pressure)
 {
     struct recorded_dive *r=&view.recording;
-    uint32_t depth_mm=(uint32_t)lroundf(fmaxf(0,(pressure-view.surface_bar)*10000));
+    uint32_t depth_mm=(uint32_t)lroundf(fmaxf(0,pressure_to_depth(pressure))*1000);
     if (!r->armed) return;
     if (!r->active && depth_mm/100>=r->start_depth_dm) {
-        r->active=true;r->started_seconds=seconds;++r->dives_started;
+        r->active=true;r->density_kg_m3=(uint16_t)view.density_kg_m3;
+        r->max_depth_dm=(uint16_t)(depth_mm/100);
+        r->started_seconds=seconds;++r->dives_started;
         r->dive_seconds=r->surface_seconds=0;
         return;
     }
@@ -262,6 +293,7 @@ static void recording_sample(uint32_t seconds,float pressure)
         if(r->dives_completed && depth_mm<500)++r->surface_seconds;
         return;
     }
+    if(depth_mm/100>r->max_depth_dm)r->max_depth_dm=(uint16_t)(depth_mm/100);
     if(depth_mm>=500) {++r->dive_seconds;r->surface_seconds=0;}
     else if(++r->surface_seconds>=300) {
         r->active=false;r->completed_seconds=seconds;++r->dives_completed;
@@ -323,6 +355,8 @@ static int accept_sample(const ostc4_sample *sample)
 {
     struct recorded_dive previous_recording=view.recording;
     bool previous_lock=view.gf_locked;
+    float previous_density=view.density_kg_m3;
+    struct pc_bench_log completion={0};bool completed=false;
     uint32_t elapsed=sample->timestamp_seconds-view.seconds;
     float previous_pressure=view.result.absolute_pressure_bar;
     /* Recording follows accepted linear exposure at integer-second resolution;
@@ -331,24 +365,33 @@ static int accept_sample(const ostc4_sample *sample)
         float pressure=previous_pressure+(sample->absolute_pressure_bar-previous_pressure)*
             ((float)i/elapsed);
         if(i==elapsed)pressure=sample->absolute_pressure_bar;
+        uint32_t completions=view.recording.dives_completed;
         recording_sample(view.seconds+i,pressure);
+        if(view.recording.dives_completed!=completions) {
+            /* A linear segment can complete the old dive and later start a new
+             * one. Capture its metadata before the controller reuses the slot. */
+            completion=completed_log(true);completed=true;
+            view.density_kg_m3=water_density(water_settings_preferred_salt());
+        }
     }
     if(view.recording.dives_started!=previous_recording.dives_started) {
         view.active_gf=view.preferred_gf;
+        if(completed)ostc4_exposure_set_gf_lock(false);
         if(view.result.gf_pair.low!=view.active_gf.low || view.result.gf_pair.high!=view.active_gf.high)
             ostc4_exposure_set_gf_pair(view.active_gf.low,view.active_gf.high);
     }
     sync_gf_lock(); /* before the calculation which accepts a dive-start input */
     if(ostc4_exposure_advance(sample)!=OSTC4_OK) {
         view.recording=previous_recording;view.gf_locked=previous_lock;
+        view.density_kg_m3=previous_density;
+        water_settings_recover_scuba(previous_density==1025,previous_recording.active);
         ostc4_exposure_set_gf_lock(previous_lock);
         return -1;
     }
     if(view.recording.dives_started!=previous_recording.dives_started) {
         view.gf_editing=false;view.draft_gf=view.preferred_gf;
     }
-    if(view.recording.dives_completed!=previous_recording.dives_completed)
-        save_completed_log(true);
+    if(completed)pc_storage_reconcile_log(&completion);
     view.seconds=sample->timestamp_seconds;view.elapsed_seconds=view.seconds;
     view.depth_m=pressure_to_depth(sample->absolute_pressure_bar);
     ostc4_exposure_read(&view.result);
@@ -449,7 +492,8 @@ int pc_bench_checkpoint_export(struct pc_bench_checkpoint_state *state)
     if(!state || !view.history_count || view.error || !view.recording.session_id ||
        ostc4_exposure_checkpoint(state->core,sizeof(state->core))!=OSTC4_OK)return -1;
     state->recording=view.recording;state->preferred=view.preferred_gf;
-    state->density=view.density_kg_m3;return 0;
+    state->density=view.density_kg_m3;
+    state->preferred_density=(uint16_t)water_density(water_settings_preferred_salt());return 0;
 }
 ostc4_restart_status pc_bench_checkpoint_reject(ostc4_restart_status status)
 {
@@ -485,12 +529,15 @@ ostc4_restart_status pc_bench_checkpoint_import(const struct pc_bench_checkpoint
         return pc_bench_checkpoint_reject(status);
     }
     ostc4_gf_pair preferred=view.history_count?view.preferred_gf:state->preferred;
+    bool preferred_water=view.history_count?water_settings_preferred_salt():state->preferred_density==1025;
     uint32_t generation=view.generation+1;
     memset(&view,0,sizeof(view));view.generation=generation;
     view.storage=pc_storage_read();
     view.history=history;view.profile=graph;view.exposure=actual_samples;
     view.gf_policy=OSTC4_CONFIGURABLE_GF_POLICY;view.preferred_gf=preferred;
     view.density_kg_m3=state->density;view.speed=1;view.paused=true;
+    water_settings_restore(preferred_water);
+    water_settings_recover_scuba(state->density==1025,state->recording.active);
     view.recording=state->recording;view.active_gf=(ostc4_gf_pair){state->core[289],state->core[290]};
     /* Seed the graph at the checkpoint; no pre-checkpoint trace is invented. */
     unsigned char const *b=state->core;
@@ -515,6 +562,11 @@ ostc4_restart_status pc_bench_checkpoint_import(const struct pc_bench_checkpoint
     seconds=view.seconds;pressure=view.result.absolute_pressure_bar;
     view.seconds=view.elapsed_seconds=view.duration=seconds;
     view.depth_m=pressure_to_depth(pressure);view.gf_locked=legacy_ambiguous || view.recording.active;
+    water_settings_recover_scuba(view.density_kg_m3==1025,view.gf_locked);
+    if(!view.gf_locked) {
+        view.density_kg_m3=water_density(water_settings_preferred_salt());
+        view.depth_m=pressure_to_depth(pressure);
+    }
     ostc4_exposure_set_gf_lock(view.gf_locked);ostc4_exposure_read(&view.result);
     view.draft_gf=view.preferred_gf;checkpoint_saved=false;pending_ms=0;next_sample=1;
     if(legacy_ambiguous) {

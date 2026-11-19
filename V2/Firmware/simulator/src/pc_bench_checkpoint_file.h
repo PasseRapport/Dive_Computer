@@ -19,6 +19,7 @@ struct pc_bench_checkpoint_state {
     struct recorded_dive recording;
     ostc4_gf_pair preferred;
     float density;
+    uint16_t preferred_density;
 };
 int pc_bench_checkpoint_export(struct pc_bench_checkpoint_state *state);
 ostc4_restart_status pc_bench_checkpoint_import(const struct pc_bench_checkpoint_state *state,

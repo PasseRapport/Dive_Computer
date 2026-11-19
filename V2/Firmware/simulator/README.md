@@ -110,8 +110,10 @@ Bottom Field (Temperature/Max Depth/Underwater Time/Clock/Dives).
 Underwater Time sums every apnea in the session, including the active one,
 excludes surface pauses and uses total minutes and seconds (M:SS), without an hour field. Clock shows the current HH:MM.
 Count and underwater time start at zero; session depth starts as a placeholder. Rotation is bounded;
-tap opens or confirms and double tap cancels. Changes are surface-only, including
-confirmation of an editor opened before immersion. The applied choices survive
+tap opens or confirms and double tap cancels. Bottom-field changes are surface-only, including
+confirmation of an editor opened before immersion. Water stays locked for the complete
+freediving session, including initial surface time and recovery; set it in unlocked
+scuba preparation before entering freediving. The applied choices survive
 session changes and simulator restarts; session records always start fresh.
 **Scuba Diving** has preparation/settings, depth with its metre unit, dive time,
 NDL, display customization, stop displays, alerts and the last completed summary.
@@ -291,19 +293,21 @@ with surface pressure shown explicitly and water density 1025 kg/m3 by default.
 No display rounding feeds calculations. Depth commands hold or change depth;
 rate buttons change signed m/min, positive downward. Inputs are limited to 60 m,
 60 m/min and the engine's +6 bar envelope. Initial surface pressure is limited
-to 0.8..1.2 bar. The standalone controller also accepts densities 990..1040 kg/m3.
-The planner's ceiling/stop depths retain the upstream **10 m/bar convention**,
-shown separately from the hydrostatic graph. GF30/70 is the initial preference; the preparation editor commits an integer
+to 0.8..1.2 bar. Fresh uses exactly1000 kg/m3 and Marine1025 kg/m3.
+The planner retains its upstream **10 m/bar reference convention** and +0.3bar
+stop grid. The presentation adapter converts operational/GF ceilings and pressure
+stop slots into the active water's physical metres for watch, bench and graph. GF30/70 is the initial preference; the preparation editor commits an integer
 GF pair atomically and locks it for the complete recorded dive. Ascent 9 m/min
-and last stop/increments of 3 m remain fixed test settings. TTS=0 in upstream NDL mode
+and last stop/increments of0.3bar remain fixed test settings. TTS=0 in upstream NDL mode
 **excludes ascent travel**, and is explicitly qualified in the diagnostics.
 Unavailable, limited and invalid result flags are shown, including for every
 nitrogen tissue. Mandatory stops can be scrolled if the full list exceeds its box.
-The watch and engine use10m/bar so gauge depth, ceiling and stop labels share
-one coordinate convention. The graph and manual controls use hydrostatic metres,
-as labelled. Depth displays truncate millimetre samples to0.1m; calculated
-ceilings round upward to0.1m, while ceiling alerts compare raw depths. Stop zones
-use millimetre resolution to avoid pressure-conversion flicker at exact stops.
+Watch, bench and graphs share physical metres. Depth displays truncate
+millimetre samples to0.1m; operational ceilings round upward to0.1m and GF
+endpoints/mandatory stop labels round to the nearest tenth. Ceiling alerts compare
+physical depths before display rounding. Both stop-zone pressure boundaries
+convert independently, using millimetre resolution to avoid binary32 flicker at
+exact targets; an upper boundary is not the rounded lower label plus3m.
 Unavailable/invalid calculation states show explicitly with blank calculated
 values and an empty grey ring, retaining last known obligations. Limited results
 keep capped values on the watch (including the existing>99 NDL display),
@@ -323,7 +327,8 @@ python3 V2/Firmware/simulator/launch.py --bench-profile /absolute/path/profile.c
 CSV header: `timestamp_seconds,absolute_pressure_bar`. Start at second zero and
 surface pressure. Use strictly increasing integer seconds, finite absolute bar,
 2..1024 rows, ending before 21601 s. The first pressure supplies surface pressure;
-water density remains 1025 kg/m3. Segments assert complete, linearly changing
+the confirmed shared Fresh/Marine choice interprets physical depth without changing
+any supplied pressure or timestamp. Segments assert complete, linearly changing
 exposure. A separation over 3600 s denotes missing exposure: its graph segment is
 marked red, no line is interpolated through it, and reaching it latches INVALID
 until explicit fresh initialization. **Mark gap** explicitly reports unknown exposure of any duration, latches all
@@ -503,12 +508,16 @@ existing independently authored numerical acceptance remains a separate gate.
 
 ### Durable PC preferences and completed-dive logs
 
-Freediving uses a separate versioned `apnea-preferences.txt` in the same state
-directory convention described below. It contains only applied water type and
-bottom field; missing or invalid files use Fresh/Temperature. Loading it never
-restores session records, last-apnea data or recovery. Confirmed surface changes
-are flushed and atomically replaced; cancelled, browsed or underwater edits do
-not save. Failed writes retain the previous file and report a host diagnostic.
+Both activities share versioned `water-preferences.txt` in the state directory
+convention described below. A confirmed unlocked Fresh/Marine choice survives
+process restarts; missing or invalid shared data selects Marine. Conflicting
+legacy mode-local water values are ignored rather than guessed or migrated.
+Freediving still reads and writes its bottom field in `apnea-preferences.txt`,
+preserving the existing format and its unused legacy water field on load.
+Missing or invalid freediving data selects Temperature. Loading either file never
+restores session records, last-apnea data, tissues or recovery. Confirmed changes
+are flushed and atomically replaced; cancelled, browsed or locked edits do not
+save. Failed writes retain the previous file and report a host diagnostic.
 Scuba GF preferences, logs and checkpoints remain separate files and are not
 read or rewritten by the freediving adapter.
 
@@ -568,7 +577,8 @@ Operational ceiling violation alerts and the automatic diver keep their existing
 interpolation/anchor policy. The old main-screen CEIL note now identifies the
 mandatory STOP depth explicitly.
 
-`--gf-check` additionally captures seven paired-ceiling scenarios (frames 6–12).
+`--gf-check` additionally captures seven paired-ceiling scenarios (frames 6–12)
+and the same pressure trace in Fresh/Marine (frames13–14).
 Check them with `tests/check_gf_ceilings_render.py CAPTURE_PREFIX`; native LVGL
 assertions also check literal rounded text and glyph bounds on the 320×300 watch.
 PC/synthetic endpoint evidence is stored in `evidence/ticket13`. The additional
@@ -615,3 +625,77 @@ python3 tests/check_scroll_menus.py /tmp/menu-gallery
 This checks general/watch/dive menus, water selectors, Back without applying
 pending changes, rapid input, and x2 rendering. Watch catalog checks also cover
 the final Back card for both analog and digital faces.
+
+
+Water metadata and recovery
+---------------------------
+
+New PC dive logs use immutable schema 3 summaries containing the active reference
+water density (1000 or 1025 kg/m³) and the original physical maximum depth in
+decimetres. Water and peak depth are captured by the recording controller; changing
+the next preference cannot recalculate them. Schema 1/2 logs remain readable and
+byte-preserved. Their missing water and peak depth are unknown; exported log JSON
+uses `water_type: "unknown"`, density 0 and `max_depth_dm: null` for those records.
+The bench graph is a live projection of continuous pressure exposure under the
+current water choice, rather than an archived dive profile. Its original accepted
+pressure/time trace stays unchanged; completed record summaries retain their own
+water and depth interpretation. No new profile archive or logbook screen is added.
+The existing freediving session and last-immersion observations carry the fixed
+session density alongside their original depth statistics; they remain session
+observations, without a new persistent freediving archive.
+
+PC disk checkpoint schema 3 retains the unchanged portable numerical checkpoint
+inside the existing 364-byte envelope. It adds recording water/peak depth and the
+next preferred water reference. Explicit recovery restores active water and its
+lock independently of a later confirmed preference, including brief surface
+returns. Completion releases that active reference and immediately applies the
+next preference. A segment that completes one recording and starts another keeps
+each recording's own metadata. In-memory recovery likewise snapshots the active
+reference before replaying exact accepted pressure segments. Old active schema 2
+PC checkpoints are rejected explicitly: their earlier fixed-depth recording
+lifecycle cannot establish the new physical-depth context. Their bytes remain
+unchanged. Unknown time, missing exposure and incompatible recovery still latch
+INVALID; restoring the water preference cannot establish exposure continuity.
+
+`water_records_recovery_separate_processes` checks new and legacy record
+observations, immutable historical bytes, independently specified 20 m peaks,
+active Fresh versus next Marine, nonzero surface completion, exact next-dive
+pressure, memory replay and disk recovery/rejection through public PC commands.
+The existing rendered water journey also checks actual session/last-immersion
+water metadata in both water references. These are PC/native checks only.
+
+Water-density presentation checks preserve raw exported engine values and label
+those units as `reference_10m_per_bar`; `physical` observations separately expose
+watch ceilings and both stop boundaries. The same accepted pressure trace in the
+two waters must retain identical tissues, GF anchors, availability, NDL, TTS and
+stop durations. Equal physical-depth trajectories instead generate different
+pressures and need not produce identical decompression results. No upstream
+arithmetic, independent reference,0.006m GF bound or total-TTS-only3s allowance
+changes. Physical GF expectations intentionally change: the preserved Marine
+fixture13.3620968/7.24907494 reference metres displays13.3/7.2 physical metres;
+the44.3239403 reference-metre fixture displays44.1 physical metres.
+
+Ticket04 native verification (2026-10-29): all26 bench/reference CTests passed;
+GF/calculated-watch, bench and disk-checkpoint rendered journeys passed. The GF journey
+also checks inclusive pressure-stop edges and automatic target/watch agreement
+in both waters. Valid+6bar remains accepted even above61 physical metres in
+Fresh; pressure above+6bar is still rejected. Descend guidance uses the same
+unrounded sensor boundary as the stop zone. Evidence is PC/native only, with no target build or physical
+sensor/watch validation claimed. Superseded reference evidence is retained.
+
+`tests/check_water_csv_import.py NATIVE_BENCH_BINARY EVIDENCE_DIRECTORY` runs
+the real CSV file importer in two separate processes with restored Fresh/Marine
+preferences. It preserves a SHA256 of the unchanged input file and checks exact
+accepted pressure/time exports, supplied keyframes and tissues, independent
+physical-depth values, and settled startup/watch/bench captures. The startup
+journey's extra frame10 is taken after the explicit Start and pause; importing
+preferences alone never advances exposure.
+
+
+The calculated watch also derives air ppO₂ directly from the accepted absolute
+pressure times 0.21. Water density and surface reference therefore cannot change
+ppO₂ for identical absolute pressure. The oxygen warning and footer colour use
+the unrounded 1.4/1.6 bar boundaries; only the numeric footer rounds to hundredths.
+The scripted demonstration keeps its existing depth convention. The GF public
+journey checks 6.60/6.66/6.67/6.70 bar in both waters and two surface references,
+including literal footer text, warning transitions and retained INVALID state.

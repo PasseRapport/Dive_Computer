@@ -50,18 +50,17 @@ int sim_host_apnea_preferences_load(int *salt,int *field)
  if(failed||fields!=3||version!=1||water>1||bottom>4||expected<0||bytes!=(size_t)expected||memcmp(content,canonical,bytes))return -1;
  *salt=water;*field=bottom;return 0;
 }
-int sim_host_apnea_preferences_save(int salt,int field)
+static int save_preference(const char *name,const char *tag,const char *content)
 {
- char directory[4096],target[4096],temporary[4096],backup[4128],content[64];
- if(salt<0||salt>1||field<0||field>4)goto failed;
+ char directory[4096],target[4096],temporary[4096],backup[4128];
  int status=state_directory(directory,sizeof(directory));if(status==1)return 0;
  if(status||make_directory(directory))goto failed;
- if(snprintf(target,sizeof(target),"%s/apnea-preferences.txt",directory)>=(int)sizeof(target)||
-    snprintf(temporary,sizeof(temporary),"%s/.apnea-pending-XXXXXX",directory)>=(int)sizeof(temporary))goto failed;
+ if(snprintf(target,sizeof(target),"%s/%s",directory,name)>=(int)sizeof(target)||
+    snprintf(temporary,sizeof(temporary),"%s/.%s-pending-XXXXXX",directory,tag)>=(int)sizeof(temporary))goto failed;
  int dir=open(directory,O_RDONLY|O_DIRECTORY);if(dir<0)goto failed;
  if(fsync(dir)){close(dir);goto failed;}
  int fd=mkstemp(temporary);if(fd<0){close(dir);goto failed;}
- size_t size=snprintf(content,sizeof(content),"DIVE_WATCH_APNEA 1 %d %d\n",salt,field),offset=0;
+ size_t size=strlen(content),offset=0;
  int result=0;
  while(offset<size){ssize_t written=write(fd,content+offset,size-offset);if(written<0&&errno==EINTR)continue;if(written<=0){result=-1;break;}offset+=(size_t)written;}
  if(!result&&fsync(fd))result=-1;
@@ -81,5 +80,32 @@ int sim_host_apnea_preferences_save(int salt,int field)
  close(dir);
  if(!result)return 0;
 failed:
- fprintf(stderr,"Freediving preferences were not saved; retaining the prior file\n");return -1;
+ fprintf(stderr,"%s preferences were not saved; retaining the prior file\n",tag);return -1;
+}
+
+int sim_host_apnea_preferences_save(int salt,int field)
+{
+ if(salt<0||salt>1||field<0||field>4)return -1;
+ char content[64];snprintf(content,sizeof(content),"DIVE_WATCH_APNEA 1 %d %d\n",salt,field);
+ return save_preference("apnea-preferences.txt","apnea",content);
+}
+int sim_host_water_preferences_load(int *salt)
+{
+ char directory[4096],path[4096],content[64]={0},canonical[64];
+ int status=state_directory(directory,sizeof(directory));if(status)return status;
+ if(snprintf(path,sizeof(path),"%s/water-preferences.txt",directory)>=(int)sizeof(path))return -1;
+ FILE *file=fopen(path,"r");if(!file)return errno==ENOENT?1:-1;
+ size_t bytes=fread(content,1,sizeof(content)-1,file);
+ bool failed=ferror(file)||fgetc(file)!=EOF;if(fclose(file))failed=true;
+ unsigned version=0,water=0;
+ int fields=sscanf(content,"DIVE_WATCH_WATER %u %u",&version,&water);
+ int expected=snprintf(canonical,sizeof(canonical),"DIVE_WATCH_WATER 1 %u\n",water);
+ if(failed||fields!=2||version!=1||water>1||expected<0||bytes!=(size_t)expected||memcmp(content,canonical,bytes))return -1;
+ *salt=water;return 0;
+}
+int sim_host_water_preferences_save(int salt)
+{
+ if(salt<0||salt>1)return -1;
+ char content[64];snprintf(content,sizeof(content),"DIVE_WATCH_WATER 1 %d\n",salt);
+ return save_preference("water-preferences.txt","water",content);
 }

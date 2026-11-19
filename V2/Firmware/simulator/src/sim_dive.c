@@ -1,10 +1,14 @@
 #include "sim_dive.h"
+#include "water.h"
+#include "water_settings.h"
 
 void sim_dive_session(struct sim_dive *state, struct watch_data *data,
                       uint64_t now_ms, bool active)
 {
     if (active && !state->session_active) {
         *state = (struct sim_dive){.session_active=true,.session_start_ms=now_ms};
+        data->session_density_kg_m3=(uint16_t)water_density(water_settings_salt());
+        data->last_density_kg_m3=0;
         data->elapsed_s=data->runtime_s=data->recovery_s=0;
         data->max_dive_s=data->total_dives=data->total_underwater_s=0;
         data->last_depth_dm=data->max_depth_dm=data->current_max_depth_dm=0;
@@ -52,6 +56,7 @@ void sim_dive_update(struct sim_dive *state, struct watch_data *data,
             state->surface_ms = now_ms;
             state->last_duration_ms = duration ? duration : 1;
             data->last_depth_dm = state->peak_dm;
+            data->last_density_kg_m3=data->session_density_kg_m3;
             if (data->elapsed_s > data->max_dive_s) data->max_dive_s = data->elapsed_s;
         }
     }

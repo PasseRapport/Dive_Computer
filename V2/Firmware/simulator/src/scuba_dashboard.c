@@ -5,6 +5,7 @@
 #include "battery_icon.h"
 #include "compass_ring.h"
 #include <stdio.h>
+#include <math.h>
 
 #define CYAN 0x33dbd4
 #define GREEN 0x43e986
@@ -111,9 +112,10 @@ static void footer(struct dashboard *d,const struct scuba_model *m,const struct 
     case FIELD_SAFETY_STOP:caption="SAFETY STOP";snprintf(value,sizeof(value),m->safety_required?"3.0 m":"-- m");break;
     case FIELD_TTS:caption="TTS";snprintf(value,sizeof(value),"%u min",(scuba_model_tts(m)+59)/60);break;
     case FIELD_PPO2: {
-        unsigned pp=scuba_demo_ppo2(m->depth_dm);caption="ppO2";
+        unsigned pp=m->calculated?(unsigned)lroundf(m->calculated_ppo2_bar*100):scuba_demo_ppo2(m->depth_dm);caption="ppO2";
         snprintf(value,sizeof(value),"%u.%02u bar",pp/100,pp%100);
-        if(pp>160)ink=RED;else if(pp>140)ink=YELLOW;
+        float oxygen=m->calculated?m->calculated_ppo2_bar:pp/100.0f;
+        if(oxygen>1.6f)ink=RED;else if(oxygen>1.4f)ink=YELLOW;
         break;
     }
     case FIELD_HEADING: {
@@ -204,8 +206,12 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
     hidden(d->stop_mark,!(guidance&&stop&&!complete));
     depth_group(d,m->depth_dm);
     char text[48];
-    if(stop)snprintf(text,sizeof(text),stop_depth?"STOP %u-%u m":"STOP 3-6 m",stop_depth/10,stop_depth/10+3);
-    else if(stop_depth&&m->depth_dm<stop_depth)snprintf(text,sizeof(text),"DESCEND TO %u m",stop_depth/10);
+    if(stop && stop_depth && m->calculated)snprintf(text,sizeof(text),"STOP %.1f-%.1f m",
+        (double)m->calculated_stop_lower_m,(double)m->calculated_stop_upper_m);
+    else if(stop)snprintf(text,sizeof(text),stop_depth?"STOP %u-%u m":"STOP 3-6 m",stop_depth/10,stop_depth/10+3);
+    else if(stop_depth && m->calculated && m->calculated_stop_shallow)
+        snprintf(text,sizeof(text),"DESCEND TO %u.%u m",stop_depth/10,stop_depth%10);
+    else if(stop_depth && !m->calculated && m->depth_dm<stop_depth)snprintf(text,sizeof(text),"DESCEND TO %u m",stop_depth/10);
     else text[0]=0;
     if(!guidance)snprintf(text,sizeof(text),"%s",m->calculated_state==SCUBA_CALCULATED_INVALID?"INVALID":"");
     if(!guidance && m->data_gap.present) {
@@ -241,7 +247,8 @@ void scuba_dashboard_update(lv_obj_t *view,const struct scuba_model *m,const str
         if(!scuba_model_in_stop(m))centred(d->left_note,"PAUSED",101,197);
     } else if(stop_depth&&!complete) {
         centred(d->left_title,"DECO",101,127);snprintf(text,sizeof(text),"%u'",(scuba_model_tts(m)+59)/60);centred(d->left_value,text,101,150);
-        snprintf(text,sizeof(text),"STOP %u m",stop_depth/10);
+        if(m->calculated)snprintf(text,sizeof(text),"STOP %u.%u m",stop_depth/10,stop_depth%10);
+        else snprintf(text,sizeof(text),"STOP %u m",stop_depth/10);
         centred(d->left_note,text,101,197);
         ring_color=ORANGE;progress=scuba_ring_tts(scuba_model_tts(m));
     } else {
